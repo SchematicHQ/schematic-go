@@ -681,6 +681,22 @@ func TestSettersCompanyFeatureUsageExportMetadata(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEntityKeyDefinitionIDs", func(t *testing.T) {
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var fernTestValueEntityKeyDefinitionIDs []string
+		obj.SetEntityKeyDefinitionIDs(fernTestValueEntityKeyDefinitionIDs)
+		assert.Equal(t, fernTestValueEntityKeyDefinitionIDs, obj.EntityKeyDefinitionIDs)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetEntityTraitDefinitionIDs", func(t *testing.T) {
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var fernTestValueEntityTraitDefinitionIDs []string
+		obj.SetEntityTraitDefinitionIDs(fernTestValueEntityTraitDefinitionIDs)
+		assert.Equal(t, fernTestValueEntityTraitDefinitionIDs, obj.EntityTraitDefinitionIDs)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetFeatureIDs", func(t *testing.T) {
 		obj := &CompanyFeatureUsageExportMetadata{}
 		var fernTestValueFeatureIDs []string
@@ -892,6 +908,72 @@ func TestGettersCompanyFeatureUsageExportMetadata(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCreditTypeIDs() // Should return zero value
+	})
+
+	t.Run("GetEntityKeyDefinitionIDs", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var expected []string
+		obj.EntityKeyDefinitionIDs = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEntityKeyDefinitionIDs(), "getter should return the property value")
+	})
+
+	t.Run("GetEntityKeyDefinitionIDs_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		obj.EntityKeyDefinitionIDs = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEntityKeyDefinitionIDs(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEntityKeyDefinitionIDs_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CompanyFeatureUsageExportMetadata
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEntityKeyDefinitionIDs() // Should return zero value
+	})
+
+	t.Run("GetEntityTraitDefinitionIDs", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var expected []string
+		obj.EntityTraitDefinitionIDs = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEntityTraitDefinitionIDs(), "getter should return the property value")
+	})
+
+	t.Run("GetEntityTraitDefinitionIDs_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		obj.EntityTraitDefinitionIDs = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEntityTraitDefinitionIDs(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEntityTraitDefinitionIDs_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CompanyFeatureUsageExportMetadata
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEntityTraitDefinitionIDs() // Should return zero value
 	})
 
 	t.Run("GetFeatureIDs", func(t *testing.T) {
@@ -1530,6 +1612,68 @@ func TestSettersMarkExplicitCompanyFeatureUsageExportMetadata(t *testing.T) {
 
 		// Act
 		obj.SetCreditTypeIDs(fernTestValueCreditTypeIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEntityKeyDefinitionIDs_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var fernTestValueEntityKeyDefinitionIDs []string
+
+		// Act
+		obj.SetEntityKeyDefinitionIDs(fernTestValueEntityKeyDefinitionIDs)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEntityTraitDefinitionIDs_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var fernTestValueEntityTraitDefinitionIDs []string
+
+		// Act
+		obj.SetEntityTraitDefinitionIDs(fernTestValueEntityTraitDefinitionIDs)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

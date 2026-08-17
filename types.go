@@ -1249,30 +1249,33 @@ func (b BillingCreditAutoTopupAvailability) Ptr() *BillingCreditAutoTopupAvailab
 var (
 	billingCreditBundleResponseDataFieldBillingInvoiceID  = big.NewInt(1 << 0)
 	billingCreditBundleResponseDataFieldBundleType        = big.NewInt(1 << 1)
-	billingCreditBundleResponseDataFieldCreatedAt         = big.NewInt(1 << 2)
-	billingCreditBundleResponseDataFieldCreditDescription = big.NewInt(1 << 3)
-	billingCreditBundleResponseDataFieldCreditIcon        = big.NewInt(1 << 4)
-	billingCreditBundleResponseDataFieldCreditID          = big.NewInt(1 << 5)
-	billingCreditBundleResponseDataFieldCreditName        = big.NewInt(1 << 6)
-	billingCreditBundleResponseDataFieldCurrencyPrices    = big.NewInt(1 << 7)
-	billingCreditBundleResponseDataFieldExpiryType        = big.NewInt(1 << 8)
-	billingCreditBundleResponseDataFieldExpiryUnit        = big.NewInt(1 << 9)
-	billingCreditBundleResponseDataFieldExpiryUnitCount   = big.NewInt(1 << 10)
-	billingCreditBundleResponseDataFieldHasGrants         = big.NewInt(1 << 11)
-	billingCreditBundleResponseDataFieldID                = big.NewInt(1 << 12)
-	billingCreditBundleResponseDataFieldName              = big.NewInt(1 << 13)
-	billingCreditBundleResponseDataFieldPluralName        = big.NewInt(1 << 14)
-	billingCreditBundleResponseDataFieldPrice             = big.NewInt(1 << 15)
-	billingCreditBundleResponseDataFieldQuantity          = big.NewInt(1 << 16)
-	billingCreditBundleResponseDataFieldSingularName      = big.NewInt(1 << 17)
-	billingCreditBundleResponseDataFieldStatus            = big.NewInt(1 << 18)
-	billingCreditBundleResponseDataFieldUnitPrice         = big.NewInt(1 << 19)
-	billingCreditBundleResponseDataFieldUpdatedAt         = big.NewInt(1 << 20)
+	billingCreditBundleResponseDataFieldCompatiblePlanIDs = big.NewInt(1 << 2)
+	billingCreditBundleResponseDataFieldCreatedAt         = big.NewInt(1 << 3)
+	billingCreditBundleResponseDataFieldCreditDescription = big.NewInt(1 << 4)
+	billingCreditBundleResponseDataFieldCreditIcon        = big.NewInt(1 << 5)
+	billingCreditBundleResponseDataFieldCreditID          = big.NewInt(1 << 6)
+	billingCreditBundleResponseDataFieldCreditName        = big.NewInt(1 << 7)
+	billingCreditBundleResponseDataFieldCurrencyPrices    = big.NewInt(1 << 8)
+	billingCreditBundleResponseDataFieldExpiryType        = big.NewInt(1 << 9)
+	billingCreditBundleResponseDataFieldExpiryUnit        = big.NewInt(1 << 10)
+	billingCreditBundleResponseDataFieldExpiryUnitCount   = big.NewInt(1 << 11)
+	billingCreditBundleResponseDataFieldHasGrants         = big.NewInt(1 << 12)
+	billingCreditBundleResponseDataFieldID                = big.NewInt(1 << 13)
+	billingCreditBundleResponseDataFieldName              = big.NewInt(1 << 14)
+	billingCreditBundleResponseDataFieldPluralName        = big.NewInt(1 << 15)
+	billingCreditBundleResponseDataFieldPrice             = big.NewInt(1 << 16)
+	billingCreditBundleResponseDataFieldQuantity          = big.NewInt(1 << 17)
+	billingCreditBundleResponseDataFieldSingularName      = big.NewInt(1 << 18)
+	billingCreditBundleResponseDataFieldStatus            = big.NewInt(1 << 19)
+	billingCreditBundleResponseDataFieldUnitPrice         = big.NewInt(1 << 20)
+	billingCreditBundleResponseDataFieldUpdatedAt         = big.NewInt(1 << 21)
 )
 
 type BillingCreditBundleResponseData struct {
-	BillingInvoiceID  *string                                  `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
-	BundleType        BillingCreditBundleType                  `json:"bundle_type" url:"bundle_type"`
+	BillingInvoiceID *string                 `json:"billing_invoice_id,omitempty" url:"billing_invoice_id,omitempty"`
+	BundleType       BillingCreditBundleType `json:"bundle_type" url:"bundle_type"`
+	// Plans whose companies may purchase this bundle. Empty means the bundle is purchasable on every plan.
+	CompatiblePlanIDs []string                                 `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	CreatedAt         time.Time                                `json:"created_at" url:"created_at"`
 	CreditDescription *string                                  `json:"credit_description,omitempty" url:"credit_description,omitempty"`
 	CreditIcon        *string                                  `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
@@ -1305,6 +1308,13 @@ func (b *BillingCreditBundleResponseData) GetBillingInvoiceID() *string {
 		return nil
 	}
 	return b.BillingInvoiceID
+}
+
+func (b *BillingCreditBundleResponseData) GetCompatiblePlanIDs() []string {
+	if b == nil {
+		return nil
+	}
+	return b.CompatiblePlanIDs
 }
 
 func (b *BillingCreditBundleResponseData) GetCreatedAt() time.Time {
@@ -1466,6 +1476,13 @@ func (b *BillingCreditBundleResponseData) SetBillingInvoiceID(billingInvoiceID *
 func (b *BillingCreditBundleResponseData) SetBundleType(bundleType BillingCreditBundleType) {
 	b.BundleType = bundleType
 	b.require(billingCreditBundleResponseDataFieldBundleType)
+}
+
+// SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditBundleResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
+	b.CompatiblePlanIDs = compatiblePlanIDs
+	b.require(billingCreditBundleResponseDataFieldCompatiblePlanIDs)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -2842,28 +2859,29 @@ var (
 	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdCredits = big.NewInt(1 << 8)
 	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent = big.NewInt(1 << 9)
 	billingPlanCreditGrantResponseDataFieldCanBuyBundles             = big.NewInt(1 << 10)
-	billingPlanCreditGrantResponseDataFieldCreatedAt                 = big.NewInt(1 << 11)
-	billingPlanCreditGrantResponseDataFieldCredit                    = big.NewInt(1 << 12)
-	billingPlanCreditGrantResponseDataFieldCreditAmount              = big.NewInt(1 << 13)
-	billingPlanCreditGrantResponseDataFieldCreditID                  = big.NewInt(1 << 14)
-	billingPlanCreditGrantResponseDataFieldCreditName                = big.NewInt(1 << 15)
-	billingPlanCreditGrantResponseDataFieldCreditPluralName          = big.NewInt(1 << 16)
-	billingPlanCreditGrantResponseDataFieldCreditSingularName        = big.NewInt(1 << 17)
-	billingPlanCreditGrantResponseDataFieldExpiryType                = big.NewInt(1 << 18)
-	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 19)
-	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 20)
-	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 21)
-	billingPlanCreditGrantResponseDataFieldLicenseID                 = big.NewInt(1 << 22)
-	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 23)
-	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 24)
-	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 25)
-	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 26)
-	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 27)
-	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 28)
-	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 29)
-	billingPlanCreditGrantResponseDataFieldRolloverPercentage        = big.NewInt(1 << 30)
-	billingPlanCreditGrantResponseDataFieldScaling                   = big.NewInt(1 << 31)
-	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 32)
+	billingPlanCreditGrantResponseDataFieldCompanyCreditAmount       = big.NewInt(1 << 11)
+	billingPlanCreditGrantResponseDataFieldCreatedAt                 = big.NewInt(1 << 12)
+	billingPlanCreditGrantResponseDataFieldCredit                    = big.NewInt(1 << 13)
+	billingPlanCreditGrantResponseDataFieldCreditAmount              = big.NewInt(1 << 14)
+	billingPlanCreditGrantResponseDataFieldCreditID                  = big.NewInt(1 << 15)
+	billingPlanCreditGrantResponseDataFieldCreditName                = big.NewInt(1 << 16)
+	billingPlanCreditGrantResponseDataFieldCreditPluralName          = big.NewInt(1 << 17)
+	billingPlanCreditGrantResponseDataFieldCreditSingularName        = big.NewInt(1 << 18)
+	billingPlanCreditGrantResponseDataFieldExpiryType                = big.NewInt(1 << 19)
+	billingPlanCreditGrantResponseDataFieldExpiryUnit                = big.NewInt(1 << 20)
+	billingPlanCreditGrantResponseDataFieldExpiryUnitCount           = big.NewInt(1 << 21)
+	billingPlanCreditGrantResponseDataFieldID                        = big.NewInt(1 << 22)
+	billingPlanCreditGrantResponseDataFieldLicenseID                 = big.NewInt(1 << 23)
+	billingPlanCreditGrantResponseDataFieldPlan                      = big.NewInt(1 << 24)
+	billingPlanCreditGrantResponseDataFieldPlanID                    = big.NewInt(1 << 25)
+	billingPlanCreditGrantResponseDataFieldPlanName                  = big.NewInt(1 << 26)
+	billingPlanCreditGrantResponseDataFieldPlanVersionID             = big.NewInt(1 << 27)
+	billingPlanCreditGrantResponseDataFieldResetCadence              = big.NewInt(1 << 28)
+	billingPlanCreditGrantResponseDataFieldResetStart                = big.NewInt(1 << 29)
+	billingPlanCreditGrantResponseDataFieldResetType                 = big.NewInt(1 << 30)
+	billingPlanCreditGrantResponseDataFieldRolloverPercentage        = big.NewInt(1 << 31)
+	billingPlanCreditGrantResponseDataFieldScaling                   = big.NewInt(1 << 32)
+	billingPlanCreditGrantResponseDataFieldUpdatedAt                 = big.NewInt(1 << 33)
 )
 
 type BillingPlanCreditGrantResponseData struct {
@@ -2880,11 +2898,13 @@ type BillingPlanCreditGrantResponseData struct {
 	AutoTopupThresholdCredits *int64 `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64 `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	// Whether buyers can purchase one-time credit bundles on this grant, independent of auto top-up availability.
-	CanBuyBundles bool                       `json:"can_buy_bundles" url:"can_buy_bundles"`
-	CreatedAt     time.Time                  `json:"created_at" url:"created_at"`
-	Credit        *BillingCreditResponseData `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditAmount  int64                      `json:"credit_amount" url:"credit_amount"`
-	CreditID      string                     `json:"credit_id" url:"credit_id"`
+	CanBuyBundles bool `json:"can_buy_bundles" url:"can_buy_bundles"`
+	// Credits granted once per company on top of the per-license amount. Always 0 when scaling is fixed.
+	CompanyCreditAmount int64                      `json:"company_credit_amount" url:"company_credit_amount"`
+	CreatedAt           time.Time                  `json:"created_at" url:"created_at"`
+	Credit              *BillingCreditResponseData `json:"credit,omitempty" url:"credit,omitempty"`
+	CreditAmount        int64                      `json:"credit_amount" url:"credit_amount"`
+	CreditID            string                     `json:"credit_id" url:"credit_id"`
 	// Use credit.name from the nested credit object instead
 	CreditName string `json:"credit_name" url:"credit_name"`
 	// Use plural_name from the nested credit object instead
@@ -2993,6 +3013,13 @@ func (b *BillingPlanCreditGrantResponseData) GetCanBuyBundles() bool {
 		return false
 	}
 	return b.CanBuyBundles
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetCompanyCreditAmount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.CompanyCreditAmount
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetCreatedAt() time.Time {
@@ -3238,6 +3265,13 @@ func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdPercent(autoTo
 func (b *BillingPlanCreditGrantResponseData) SetCanBuyBundles(canBuyBundles bool) {
 	b.CanBuyBundles = canBuyBundles
 	b.require(billingPlanCreditGrantResponseDataFieldCanBuyBundles)
+}
+
+// SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetCompanyCreditAmount(companyCreditAmount int64) {
+	b.CompanyCreditAmount = companyCreditAmount
+	b.require(billingPlanCreditGrantResponseDataFieldCompanyCreditAmount)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -7295,6 +7329,28 @@ func (c ChargeType) Ptr() *ChargeType {
 	return &c
 }
 
+type CheckoutBundlePurchaseBehavior string
+
+const (
+	CheckoutBundlePurchaseBehaviorIndividual CheckoutBundlePurchaseBehavior = "individual"
+	CheckoutBundlePurchaseBehaviorQuantity   CheckoutBundlePurchaseBehavior = "quantity"
+)
+
+func NewCheckoutBundlePurchaseBehaviorFromString(s string) (CheckoutBundlePurchaseBehavior, error) {
+	switch s {
+	case "individual":
+		return CheckoutBundlePurchaseBehaviorIndividual, nil
+	case "quantity":
+		return CheckoutBundlePurchaseBehaviorQuantity, nil
+	}
+	var t CheckoutBundlePurchaseBehavior
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CheckoutBundlePurchaseBehavior) Ptr() *CheckoutBundlePurchaseBehavior {
+	return &c
+}
+
 var (
 	checkoutFieldValueFieldID    = big.NewInt(1 << 0)
 	checkoutFieldValueFieldValue = big.NewInt(1 << 1)
@@ -9227,29 +9283,30 @@ var (
 	companyPlanCreditGrantViewFieldCompanyAutoTopupAmount                 = big.NewInt(1 << 11)
 	companyPlanCreditGrantViewFieldCompanyAutoTopupEnabled                = big.NewInt(1 << 12)
 	companyPlanCreditGrantViewFieldCompanyAutoTopupThresholdCredits       = big.NewInt(1 << 13)
-	companyPlanCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 14)
-	companyPlanCreditGrantViewFieldCredit                                 = big.NewInt(1 << 15)
-	companyPlanCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 16)
-	companyPlanCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 17)
-	companyPlanCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 18)
-	companyPlanCreditGrantViewFieldCreditID                               = big.NewInt(1 << 19)
-	companyPlanCreditGrantViewFieldCreditName                             = big.NewInt(1 << 20)
-	companyPlanCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 21)
-	companyPlanCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 22)
-	companyPlanCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 23)
-	companyPlanCreditGrantViewFieldID                                     = big.NewInt(1 << 24)
-	companyPlanCreditGrantViewFieldLicenseID                              = big.NewInt(1 << 25)
-	companyPlanCreditGrantViewFieldPlan                                   = big.NewInt(1 << 26)
-	companyPlanCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 27)
-	companyPlanCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 28)
-	companyPlanCreditGrantViewFieldPluralName                             = big.NewInt(1 << 29)
-	companyPlanCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 30)
-	companyPlanCreditGrantViewFieldResetStart                             = big.NewInt(1 << 31)
-	companyPlanCreditGrantViewFieldResetType                              = big.NewInt(1 << 32)
-	companyPlanCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 33)
-	companyPlanCreditGrantViewFieldScaling                                = big.NewInt(1 << 34)
-	companyPlanCreditGrantViewFieldSingularName                           = big.NewInt(1 << 35)
-	companyPlanCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 36)
+	companyPlanCreditGrantViewFieldCompanyCreditAmount                    = big.NewInt(1 << 14)
+	companyPlanCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 15)
+	companyPlanCreditGrantViewFieldCredit                                 = big.NewInt(1 << 16)
+	companyPlanCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 17)
+	companyPlanCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 18)
+	companyPlanCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 19)
+	companyPlanCreditGrantViewFieldCreditID                               = big.NewInt(1 << 20)
+	companyPlanCreditGrantViewFieldCreditName                             = big.NewInt(1 << 21)
+	companyPlanCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 22)
+	companyPlanCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 23)
+	companyPlanCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 24)
+	companyPlanCreditGrantViewFieldID                                     = big.NewInt(1 << 25)
+	companyPlanCreditGrantViewFieldLicenseID                              = big.NewInt(1 << 26)
+	companyPlanCreditGrantViewFieldPlan                                   = big.NewInt(1 << 27)
+	companyPlanCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 28)
+	companyPlanCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 29)
+	companyPlanCreditGrantViewFieldPluralName                             = big.NewInt(1 << 30)
+	companyPlanCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 31)
+	companyPlanCreditGrantViewFieldResetStart                             = big.NewInt(1 << 32)
+	companyPlanCreditGrantViewFieldResetType                              = big.NewInt(1 << 33)
+	companyPlanCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 34)
+	companyPlanCreditGrantViewFieldScaling                                = big.NewInt(1 << 35)
+	companyPlanCreditGrantViewFieldSingularName                           = big.NewInt(1 << 36)
+	companyPlanCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 37)
 )
 
 type CompanyPlanCreditGrantView struct {
@@ -9267,6 +9324,7 @@ type CompanyPlanCreditGrantView struct {
 	CompanyAutoTopupAmount                 *int64                              `json:"company_auto_topup_amount,omitempty" url:"company_auto_topup_amount,omitempty"`
 	CompanyAutoTopupEnabled                *bool                               `json:"company_auto_topup_enabled,omitempty" url:"company_auto_topup_enabled,omitempty"`
 	CompanyAutoTopupThresholdCredits       *int64                              `json:"company_auto_topup_threshold_credits,omitempty" url:"company_auto_topup_threshold_credits,omitempty"`
+	CompanyCreditAmount                    int64                               `json:"company_credit_amount" url:"company_credit_amount"`
 	CreatedAt                              time.Time                           `json:"created_at" url:"created_at"`
 	Credit                                 *BillingCreditView                  `json:"credit,omitempty" url:"credit,omitempty"`
 	CreditAmount                           int64                               `json:"credit_amount" url:"credit_amount"`
@@ -9399,6 +9457,13 @@ func (c *CompanyPlanCreditGrantView) GetCompanyAutoTopupThresholdCredits() *int6
 		return nil
 	}
 	return c.CompanyAutoTopupThresholdCredits
+}
+
+func (c *CompanyPlanCreditGrantView) GetCompanyCreditAmount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.CompanyCreditAmount
 }
 
 func (c *CompanyPlanCreditGrantView) GetCreatedAt() time.Time {
@@ -9672,6 +9737,13 @@ func (c *CompanyPlanCreditGrantView) SetCompanyAutoTopupEnabled(companyAutoTopup
 func (c *CompanyPlanCreditGrantView) SetCompanyAutoTopupThresholdCredits(companyAutoTopupThresholdCredits *int64) {
 	c.CompanyAutoTopupThresholdCredits = companyAutoTopupThresholdCredits
 	c.require(companyPlanCreditGrantViewFieldCompanyAutoTopupThresholdCredits)
+}
+
+// SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetCompanyCreditAmount(companyCreditAmount int64) {
+	c.CompanyCreditAmount = companyCreditAmount
+	c.require(companyPlanCreditGrantViewFieldCompanyCreditAmount)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -13562,19 +13634,20 @@ var (
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 9)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 10)
 	createBillingPlanCreditGrantRequestBodyFieldCanBuyBundles             = big.NewInt(1 << 11)
-	createBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 12)
-	createBillingPlanCreditGrantRequestBodyFieldCreditID                  = big.NewInt(1 << 13)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 14)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 15)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 16)
-	createBillingPlanCreditGrantRequestBodyFieldLicenseID                 = big.NewInt(1 << 17)
-	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 18)
-	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 19)
-	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 20)
-	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 21)
-	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 22)
-	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 23)
-	createBillingPlanCreditGrantRequestBodyFieldScaling                   = big.NewInt(1 << 24)
+	createBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount       = big.NewInt(1 << 12)
+	createBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 13)
+	createBillingPlanCreditGrantRequestBodyFieldCreditID                  = big.NewInt(1 << 14)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 15)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 16)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 17)
+	createBillingPlanCreditGrantRequestBodyFieldLicenseID                 = big.NewInt(1 << 18)
+	createBillingPlanCreditGrantRequestBodyFieldPlanID                    = big.NewInt(1 << 19)
+	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID             = big.NewInt(1 << 20)
+	createBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 21)
+	createBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 22)
+	createBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 23)
+	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 24)
+	createBillingPlanCreditGrantRequestBodyFieldScaling                   = big.NewInt(1 << 25)
 )
 
 type CreateBillingPlanCreditGrantRequestBody struct {
@@ -13590,11 +13663,13 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	CanBuyBundles             *bool                               `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
-	CreditAmount              int64                               `json:"credit_amount" url:"credit_amount"`
-	CreditID                  string                              `json:"credit_id" url:"credit_id"`
-	ExpiryType                *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit                *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount           *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	// Credits granted once per company on top of the per-license amount. Only valid when scaling is per_license. Defaults to 0.
+	CompanyCreditAmount *int64                   `json:"company_credit_amount,omitempty" url:"company_credit_amount,omitempty"`
+	CreditAmount        int64                    `json:"credit_amount" url:"credit_amount"`
+	CreditID            string                   `json:"credit_id" url:"credit_id"`
+	ExpiryType          *BillingCreditExpiryType `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit          *BillingCreditExpiryUnit `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount     *int64                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	// The license whose quantity scales this grant. Required when scaling is per_license.
 	LicenseID     *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	PlanID        string                             `json:"plan_id" url:"plan_id"`
@@ -13689,6 +13764,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetCanBuyBundles() *bool {
 		return nil
 	}
 	return c.CanBuyBundles
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetCompanyCreditAmount() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyCreditAmount
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetCreditAmount() int64 {
@@ -13878,6 +13960,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(a
 func (c *CreateBillingPlanCreditGrantRequestBody) SetCanBuyBundles(canBuyBundles *bool) {
 	c.CanBuyBundles = canBuyBundles
 	c.require(createBillingPlanCreditGrantRequestBodyFieldCanBuyBundles)
+}
+
+// SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetCompanyCreditAmount(companyCreditAmount *int64) {
+	c.CompanyCreditAmount = companyCreditAmount
+	c.require(createBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount)
 }
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
@@ -16459,34 +16548,40 @@ func (c CustomPlanActivationStrategy) Ptr() *CustomPlanActivationStrategy {
 
 var (
 	customPlanBillingResponseDataFieldActivationStrategy = big.NewInt(1 << 0)
-	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 1)
-	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 2)
-	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 3)
-	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 4)
-	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 5)
-	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 6)
-	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 7)
-	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 8)
-	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 11)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldBillingCycleAnchor = big.NewInt(1 << 1)
+	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 2)
+	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 3)
+	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 4)
+	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 5)
+	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 6)
+	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 7)
+	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 8)
+	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 9)
+	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 13)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 14)
 )
 
 type CustomPlanBillingResponseData struct {
 	ActivationStrategy CustomPlanActivationStrategy `json:"activation_strategy" url:"activation_strategy"`
-	CompanyID          string                       `json:"company_id" url:"company_id"`
-	CreatedAt          time.Time                    `json:"created_at" url:"created_at"`
-	DaysUntilDue       int64                        `json:"days_until_due" url:"days_until_due"`
-	ExternalInvoiceID  *string                      `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
-	ID                 string                       `json:"id" url:"id"`
-	PaidAt             *time.Time                   `json:"paid_at,omitempty" url:"paid_at,omitempty"`
-	PlanID             string                       `json:"plan_id" url:"plan_id"`
-	PublishedAt        *time.Time                   `json:"published_at,omitempty" url:"published_at,omitempty"`
-	SendInvoice        bool                         `json:"send_invoice" url:"send_invoice"`
-	Status             CustomPlanBillingStatus      `json:"status" url:"status"`
-	StripeInvoiceURL   *string                      `json:"stripe_invoice_url,omitempty" url:"stripe_invoice_url,omitempty"`
-	UpdatedAt          time.Time                    `json:"updated_at" url:"updated_at"`
+	// The billing period renewal date pinned when the subscription started, when one was set. When no invoice exists yet, the first invoice is raised on this date.
+	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
+	CompanyID          string     `json:"company_id" url:"company_id"`
+	CreatedAt          time.Time  `json:"created_at" url:"created_at"`
+	DaysUntilDue       int64      `json:"days_until_due" url:"days_until_due"`
+	ExternalInvoiceID  *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
+	ID                 string     `json:"id" url:"id"`
+	PaidAt             *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
+	// The flow that created this billing record: a custom plan, or a standard plan assigned by invoice through Manage Plan.
+	PlanBillingSource PlanBillingSource       `json:"plan_billing_source" url:"plan_billing_source"`
+	PlanID            string                  `json:"plan_id" url:"plan_id"`
+	PublishedAt       *time.Time              `json:"published_at,omitempty" url:"published_at,omitempty"`
+	SendInvoice       bool                    `json:"send_invoice" url:"send_invoice"`
+	Status            CustomPlanBillingStatus `json:"status" url:"status"`
+	StripeInvoiceURL  *string                 `json:"stripe_invoice_url,omitempty" url:"stripe_invoice_url,omitempty"`
+	UpdatedAt         time.Time               `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -16500,6 +16595,13 @@ func (c *CustomPlanBillingResponseData) GetActivationStrategy() CustomPlanActiva
 		return ""
 	}
 	return c.ActivationStrategy
+}
+
+func (c *CustomPlanBillingResponseData) GetBillingCycleAnchor() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCycleAnchor
 }
 
 func (c *CustomPlanBillingResponseData) GetCompanyID() string {
@@ -16542,6 +16644,13 @@ func (c *CustomPlanBillingResponseData) GetPaidAt() *time.Time {
 		return nil
 	}
 	return c.PaidAt
+}
+
+func (c *CustomPlanBillingResponseData) GetPlanBillingSource() PlanBillingSource {
+	if c == nil {
+		return ""
+	}
+	return c.PlanBillingSource
 }
 
 func (c *CustomPlanBillingResponseData) GetPlanID() string {
@@ -16607,6 +16716,13 @@ func (c *CustomPlanBillingResponseData) SetActivationStrategy(activationStrategy
 	c.require(customPlanBillingResponseDataFieldActivationStrategy)
 }
 
+// SetBillingCycleAnchor sets the BillingCycleAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
+	c.BillingCycleAnchor = billingCycleAnchor
+	c.require(customPlanBillingResponseDataFieldBillingCycleAnchor)
+}
+
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CustomPlanBillingResponseData) SetCompanyID(companyID string) {
@@ -16647,6 +16763,13 @@ func (c *CustomPlanBillingResponseData) SetID(id string) {
 func (c *CustomPlanBillingResponseData) SetPaidAt(paidAt *time.Time) {
 	c.PaidAt = paidAt
 	c.require(customPlanBillingResponseDataFieldPaidAt)
+}
+
+// SetPlanBillingSource sets the PlanBillingSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetPlanBillingSource(planBillingSource PlanBillingSource) {
+	c.PlanBillingSource = planBillingSource
+	c.require(customPlanBillingResponseDataFieldPlanBillingSource)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -16695,10 +16818,11 @@ func (c *CustomPlanBillingResponseData) UnmarshalJSON(data []byte) error {
 	type embed CustomPlanBillingResponseData
 	var unmarshaler = struct {
 		embed
-		CreatedAt   *internal.DateTime `json:"created_at"`
-		PaidAt      *internal.DateTime `json:"paid_at,omitempty"`
-		PublishedAt *internal.DateTime `json:"published_at,omitempty"`
-		UpdatedAt   *internal.DateTime `json:"updated_at"`
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		CreatedAt          *internal.DateTime `json:"created_at"`
+		PaidAt             *internal.DateTime `json:"paid_at,omitempty"`
+		PublishedAt        *internal.DateTime `json:"published_at,omitempty"`
+		UpdatedAt          *internal.DateTime `json:"updated_at"`
 	}{
 		embed: embed(*c),
 	}
@@ -16706,6 +16830,7 @@ func (c *CustomPlanBillingResponseData) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CustomPlanBillingResponseData(unmarshaler.embed)
+	c.BillingCycleAnchor = unmarshaler.BillingCycleAnchor.TimePtr()
 	c.CreatedAt = unmarshaler.CreatedAt.Time()
 	c.PaidAt = unmarshaler.PaidAt.TimePtr()
 	c.PublishedAt = unmarshaler.PublishedAt.TimePtr()
@@ -16723,16 +16848,18 @@ func (c *CustomPlanBillingResponseData) MarshalJSON() ([]byte, error) {
 	type embed CustomPlanBillingResponseData
 	var marshaler = struct {
 		embed
-		CreatedAt   *internal.DateTime `json:"created_at"`
-		PaidAt      *internal.DateTime `json:"paid_at,omitempty"`
-		PublishedAt *internal.DateTime `json:"published_at,omitempty"`
-		UpdatedAt   *internal.DateTime `json:"updated_at"`
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		CreatedAt          *internal.DateTime `json:"created_at"`
+		PaidAt             *internal.DateTime `json:"paid_at,omitempty"`
+		PublishedAt        *internal.DateTime `json:"published_at,omitempty"`
+		UpdatedAt          *internal.DateTime `json:"updated_at"`
 	}{
-		embed:       embed(*c),
-		CreatedAt:   internal.NewDateTime(c.CreatedAt),
-		PaidAt:      internal.NewOptionalDateTime(c.PaidAt),
-		PublishedAt: internal.NewOptionalDateTime(c.PublishedAt),
-		UpdatedAt:   internal.NewDateTime(c.UpdatedAt),
+		embed:              embed(*c),
+		BillingCycleAnchor: internal.NewOptionalDateTime(c.BillingCycleAnchor),
+		CreatedAt:          internal.NewDateTime(c.CreatedAt),
+		PaidAt:             internal.NewOptionalDateTime(c.PaidAt),
+		PublishedAt:        internal.NewOptionalDateTime(c.PublishedAt),
+		UpdatedAt:          internal.NewDateTime(c.UpdatedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -24769,6 +24896,28 @@ func (m MetricPeriodMonthReset) Ptr() *MetricPeriodMonthReset {
 	return &m
 }
 
+type MigrationProrationBehavior string
+
+const (
+	MigrationProrationBehaviorAlwaysInvoice    MigrationProrationBehavior = "always_invoice"
+	MigrationProrationBehaviorCreateProrations MigrationProrationBehavior = "create_prorations"
+)
+
+func NewMigrationProrationBehaviorFromString(s string) (MigrationProrationBehavior, error) {
+	switch s {
+	case "always_invoice":
+		return MigrationProrationBehaviorAlwaysInvoice, nil
+	case "create_prorations":
+		return MigrationProrationBehaviorCreateProrations, nil
+	}
+	var t MigrationProrationBehavior
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (m MigrationProrationBehavior) Ptr() *MigrationProrationBehavior {
+	return &m
+}
+
 var (
 	paymentMethodRequestBodyFieldAccountLast4       = big.NewInt(1 << 0)
 	paymentMethodRequestBodyFieldAccountName        = big.NewInt(1 << 1)
@@ -25381,6 +25530,28 @@ func (p *PaymentMethodResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+type PlanBillingSource string
+
+const (
+	PlanBillingSourceCustomPlan PlanBillingSource = "custom_plan"
+	PlanBillingSourceManagePlan PlanBillingSource = "manage_plan"
+)
+
+func NewPlanBillingSourceFromString(s string) (PlanBillingSource, error) {
+	switch s {
+	case "custom_plan":
+		return PlanBillingSourceCustomPlan, nil
+	case "manage_plan":
+		return PlanBillingSourceManagePlan, nil
+	}
+	var t PlanBillingSource
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanBillingSource) Ptr() *PlanBillingSource {
+	return &p
+}
+
 var (
 	planCatalogMembershipResponseDataFieldID   = big.NewInt(1 << 0)
 	planCatalogMembershipResponseDataFieldName = big.NewInt(1 << 1)
@@ -25515,29 +25686,30 @@ var (
 	planCreditGrantViewFieldBillingCreditAutoTopupThresholdCredits = big.NewInt(1 << 8)
 	planCreditGrantViewFieldBillingCreditAutoTopupThresholdPercent = big.NewInt(1 << 9)
 	planCreditGrantViewFieldBillingCreditCanBuyBundles             = big.NewInt(1 << 10)
-	planCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 11)
-	planCreditGrantViewFieldCredit                                 = big.NewInt(1 << 12)
-	planCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 13)
-	planCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 14)
-	planCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 15)
-	planCreditGrantViewFieldCreditID                               = big.NewInt(1 << 16)
-	planCreditGrantViewFieldCreditName                             = big.NewInt(1 << 17)
-	planCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 18)
-	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 19)
-	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 20)
-	planCreditGrantViewFieldID                                     = big.NewInt(1 << 21)
-	planCreditGrantViewFieldLicenseID                              = big.NewInt(1 << 22)
-	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 23)
-	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 24)
-	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 25)
-	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 26)
-	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 27)
-	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 28)
-	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 29)
-	planCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 30)
-	planCreditGrantViewFieldScaling                                = big.NewInt(1 << 31)
-	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 32)
-	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 33)
+	planCreditGrantViewFieldCompanyCreditAmount                    = big.NewInt(1 << 11)
+	planCreditGrantViewFieldCreatedAt                              = big.NewInt(1 << 12)
+	planCreditGrantViewFieldCredit                                 = big.NewInt(1 << 13)
+	planCreditGrantViewFieldCreditAmount                           = big.NewInt(1 << 14)
+	planCreditGrantViewFieldCreditDescription                      = big.NewInt(1 << 15)
+	planCreditGrantViewFieldCreditIcon                             = big.NewInt(1 << 16)
+	planCreditGrantViewFieldCreditID                               = big.NewInt(1 << 17)
+	planCreditGrantViewFieldCreditName                             = big.NewInt(1 << 18)
+	planCreditGrantViewFieldExpiryType                             = big.NewInt(1 << 19)
+	planCreditGrantViewFieldExpiryUnit                             = big.NewInt(1 << 20)
+	planCreditGrantViewFieldExpiryUnitCount                        = big.NewInt(1 << 21)
+	planCreditGrantViewFieldID                                     = big.NewInt(1 << 22)
+	planCreditGrantViewFieldLicenseID                              = big.NewInt(1 << 23)
+	planCreditGrantViewFieldPlan                                   = big.NewInt(1 << 24)
+	planCreditGrantViewFieldPlanID                                 = big.NewInt(1 << 25)
+	planCreditGrantViewFieldPlanVersionID                          = big.NewInt(1 << 26)
+	planCreditGrantViewFieldPluralName                             = big.NewInt(1 << 27)
+	planCreditGrantViewFieldResetCadence                           = big.NewInt(1 << 28)
+	planCreditGrantViewFieldResetStart                             = big.NewInt(1 << 29)
+	planCreditGrantViewFieldResetType                              = big.NewInt(1 << 30)
+	planCreditGrantViewFieldRolloverPercentage                     = big.NewInt(1 << 31)
+	planCreditGrantViewFieldScaling                                = big.NewInt(1 << 32)
+	planCreditGrantViewFieldSingularName                           = big.NewInt(1 << 33)
+	planCreditGrantViewFieldUpdatedAt                              = big.NewInt(1 << 34)
 )
 
 type PlanCreditGrantView struct {
@@ -25552,6 +25724,7 @@ type PlanCreditGrantView struct {
 	BillingCreditAutoTopupThresholdCredits *int64                              `json:"billing_credit_auto_topup_threshold_credits,omitempty" url:"billing_credit_auto_topup_threshold_credits,omitempty"`
 	BillingCreditAutoTopupThresholdPercent *int64                              `json:"billing_credit_auto_topup_threshold_percent,omitempty" url:"billing_credit_auto_topup_threshold_percent,omitempty"`
 	BillingCreditCanBuyBundles             bool                                `json:"billing_credit_can_buy_bundles" url:"billing_credit_can_buy_bundles"`
+	CompanyCreditAmount                    int64                               `json:"company_credit_amount" url:"company_credit_amount"`
 	CreatedAt                              time.Time                           `json:"created_at" url:"created_at"`
 	Credit                                 *BillingCreditView                  `json:"credit,omitempty" url:"credit,omitempty"`
 	CreditAmount                           int64                               `json:"credit_amount" url:"credit_amount"`
@@ -25663,6 +25836,13 @@ func (p *PlanCreditGrantView) GetBillingCreditCanBuyBundles() bool {
 		return false
 	}
 	return p.BillingCreditCanBuyBundles
+}
+
+func (p *PlanCreditGrantView) GetCompanyCreditAmount() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.CompanyCreditAmount
 }
 
 func (p *PlanCreditGrantView) GetCreatedAt() time.Time {
@@ -25915,6 +26095,13 @@ func (p *PlanCreditGrantView) SetBillingCreditAutoTopupThresholdPercent(billingC
 func (p *PlanCreditGrantView) SetBillingCreditCanBuyBundles(billingCreditCanBuyBundles bool) {
 	p.BillingCreditCanBuyBundles = billingCreditCanBuyBundles
 	p.require(planCreditGrantViewFieldBillingCreditCanBuyBundles)
+}
+
+// SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetCompanyCreditAmount(companyCreditAmount int64) {
+	p.CompanyCreditAmount = companyCreditAmount
+	p.require(planCreditGrantViewFieldCompanyCreditAmount)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -35377,16 +35564,17 @@ var (
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits = big.NewInt(1 << 9)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent = big.NewInt(1 << 10)
 	updateBillingPlanCreditGrantRequestBodyFieldCanBuyBundles             = big.NewInt(1 << 11)
-	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 12)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 13)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 14)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 15)
-	updateBillingPlanCreditGrantRequestBodyFieldLicenseID                 = big.NewInt(1 << 16)
-	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 17)
-	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 18)
-	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 19)
-	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 20)
-	updateBillingPlanCreditGrantRequestBodyFieldScaling                   = big.NewInt(1 << 21)
+	updateBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount       = big.NewInt(1 << 12)
+	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount              = big.NewInt(1 << 13)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                = big.NewInt(1 << 14)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                = big.NewInt(1 << 15)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount           = big.NewInt(1 << 16)
+	updateBillingPlanCreditGrantRequestBodyFieldLicenseID                 = big.NewInt(1 << 17)
+	updateBillingPlanCreditGrantRequestBodyFieldResetCadence              = big.NewInt(1 << 18)
+	updateBillingPlanCreditGrantRequestBodyFieldResetStart                = big.NewInt(1 << 19)
+	updateBillingPlanCreditGrantRequestBodyFieldResetType                 = big.NewInt(1 << 20)
+	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage        = big.NewInt(1 << 21)
+	updateBillingPlanCreditGrantRequestBodyFieldScaling                   = big.NewInt(1 << 22)
 )
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
@@ -35402,18 +35590,20 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
 	CanBuyBundles             *bool                               `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
-	CreditAmount              *int64                              `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
-	ExpiryType                *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit                *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount           *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	// The license whose quantity scales this grant. Cannot be changed after creation.
+	// Credits granted once per company on top of the per-license amount. Only valid when the grant scales per license.
+	CompanyCreditAmount *int64                   `json:"company_credit_amount,omitempty" url:"company_credit_amount,omitempty"`
+	CreditAmount        *int64                   `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`
+	ExpiryType          *BillingCreditExpiryType `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit          *BillingCreditExpiryUnit `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount     *int64                   `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	// The license whose quantity scales this grant. Cleared when the grant moves off per-license scaling.
 	LicenseID    *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	ResetCadence BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
 	ResetStart   BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
 	ResetType    *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
-	// Whether the grant is a fixed amount per company, or issued once per license the company holds. Cannot be changed after creation.
+	// Whether the grant is a fixed amount per company, or issued once per license the company holds. Changing this re-issues the credits companies already hold for this grant.
 	Scaling *PlanCreditGrantScaling `json:"scaling,omitempty" url:"scaling,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -35498,6 +35688,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetCanBuyBundles() *bool {
 		return nil
 	}
 	return u.CanBuyBundles
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetCompanyCreditAmount() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.CompanyCreditAmount
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetCreditAmount() *int64 {
@@ -35666,6 +35863,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(a
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetCanBuyBundles(canBuyBundles *bool) {
 	u.CanBuyBundles = canBuyBundles
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldCanBuyBundles)
+}
+
+// SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetCompanyCreditAmount(companyCreditAmount *int64) {
+	u.CompanyCreditAmount = companyCreditAmount
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount)
 }
 
 // SetCreditAmount sets the CreditAmount field and marks it as non-optional;
@@ -36555,8 +36759,9 @@ var (
 	upsertUserSubRequestBodyFieldKeys       = big.NewInt(1 << 3)
 	upsertUserSubRequestBodyFieldLastSeenAt = big.NewInt(1 << 4)
 	upsertUserSubRequestBodyFieldName       = big.NewInt(1 << 5)
-	upsertUserSubRequestBodyFieldTraits     = big.NewInt(1 << 6)
-	upsertUserSubRequestBodyFieldUpdateOnly = big.NewInt(1 << 7)
+	upsertUserSubRequestBodyFieldRemoveKeys = big.NewInt(1 << 6)
+	upsertUserSubRequestBodyFieldTraits     = big.NewInt(1 << 7)
+	upsertUserSubRequestBodyFieldUpdateOnly = big.NewInt(1 << 8)
 )
 
 type UpsertUserSubRequestBody struct {
@@ -36570,6 +36775,8 @@ type UpsertUserSubRequestBody struct {
 	Keys       map[string]string `json:"keys" url:"keys"`
 	LastSeenAt *time.Time        `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
 	Name       *string           `json:"name,omitempty" url:"name,omitempty"`
+	// Names of keys to remove from the user. Removing a key the user does not have does nothing, and a user must keep at least one key.
+	RemoveKeys []string `json:"remove_keys,omitempty" url:"remove_keys,omitempty"`
 	// A map of trait names to trait values
 	Traits     map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
 	UpdateOnly *bool          `json:"update_only,omitempty" url:"update_only,omitempty"`
@@ -36621,6 +36828,13 @@ func (u *UpsertUserSubRequestBody) GetName() *string {
 		return nil
 	}
 	return u.Name
+}
+
+func (u *UpsertUserSubRequestBody) GetRemoveKeys() []string {
+	if u == nil {
+		return nil
+	}
+	return u.RemoveKeys
 }
 
 func (u *UpsertUserSubRequestBody) GetTraits() map[string]any {
@@ -36691,6 +36905,13 @@ func (u *UpsertUserSubRequestBody) SetLastSeenAt(lastSeenAt *time.Time) {
 func (u *UpsertUserSubRequestBody) SetName(name *string) {
 	u.Name = name
 	u.require(upsertUserSubRequestBodyFieldName)
+}
+
+// SetRemoveKeys sets the RemoveKeys field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertUserSubRequestBody) SetRemoveKeys(removeKeys []string) {
+	u.RemoveKeys = removeKeys
+	u.require(upsertUserSubRequestBodyFieldRemoveKeys)
 }
 
 // SetTraits sets the Traits field and marks it as non-optional;

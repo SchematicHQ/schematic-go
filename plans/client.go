@@ -36,14 +36,14 @@ func NewClient(options *core.RequestOptions) *Client {
 
 func (c *Client) UpdateCompanyPlans(
 	ctx context.Context,
-	// company_plan_id
-	companyPlanID string,
+	// company_id
+	companyID string,
 	request *schematichq.UpdateCompanyPlansRequestBody,
 	opts ...option.RequestOption,
 ) (*schematichq.UpdateCompanyPlansResponse, error) {
 	response, err := c.WithRawResponse.UpdateCompanyPlans(
 		ctx,
-		companyPlanID,
+		companyID,
 		request,
 		opts...,
 	)
@@ -311,14 +311,14 @@ func (c *Client) ListPlanIssues(
 
 func (c *Client) DeletePlanVersion(
 	ctx context.Context,
-	// plan_id
-	planID string,
+	// plan_version_id
+	planVersionID string,
 	request *schematichq.DeletePlanVersionRequest,
 	opts ...option.RequestOption,
 ) (*schematichq.DeletePlanVersionResponse, error) {
 	response, err := c.WithRawResponse.DeletePlanVersion(
 		ctx,
-		planID,
+		planVersionID,
 		request,
 		opts...,
 	)
@@ -330,14 +330,14 @@ func (c *Client) DeletePlanVersion(
 
 func (c *Client) PublishPlanVersion(
 	ctx context.Context,
-	// plan_id
-	planID string,
+	// plan_version_id
+	planVersionID string,
 	request *schematichq.PublishPlanVersionRequestBody,
 	opts ...option.RequestOption,
 ) (*schematichq.PublishPlanVersionResponse, error) {
 	response, err := c.WithRawResponse.PublishPlanVersion(
 		ctx,
-		planID,
+		planVersionID,
 		request,
 		opts...,
 	)

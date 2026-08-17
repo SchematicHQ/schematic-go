@@ -296,24 +296,26 @@ func (a *AuditLogExportMetadata) String() string {
 var (
 	companyFeatureUsageExportMetadataFieldCompanyIDs                               = big.NewInt(1 << 0)
 	companyFeatureUsageExportMetadataFieldCreditTypeIDs                            = big.NewInt(1 << 1)
-	companyFeatureUsageExportMetadataFieldFeatureIDs                               = big.NewInt(1 << 2)
-	companyFeatureUsageExportMetadataFieldHasScheduledDowngrade                    = big.NewInt(1 << 3)
-	companyFeatureUsageExportMetadataFieldMonetizedSubscriptions                   = big.NewInt(1 << 4)
-	companyFeatureUsageExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 5)
-	companyFeatureUsageExportMetadataFieldPlanID                                   = big.NewInt(1 << 6)
-	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 7)
-	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 8)
-	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 9)
-	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 10)
-	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 11)
-	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 12)
-	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 13)
-	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 14)
-	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 15)
-	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 16)
-	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 17)
-	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 18)
-	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 19)
+	companyFeatureUsageExportMetadataFieldEntityKeyDefinitionIDs                   = big.NewInt(1 << 2)
+	companyFeatureUsageExportMetadataFieldEntityTraitDefinitionIDs                 = big.NewInt(1 << 3)
+	companyFeatureUsageExportMetadataFieldFeatureIDs                               = big.NewInt(1 << 4)
+	companyFeatureUsageExportMetadataFieldHasScheduledDowngrade                    = big.NewInt(1 << 5)
+	companyFeatureUsageExportMetadataFieldMonetizedSubscriptions                   = big.NewInt(1 << 6)
+	companyFeatureUsageExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 7)
+	companyFeatureUsageExportMetadataFieldPlanID                                   = big.NewInt(1 << 8)
+	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 9)
+	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 10)
+	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 11)
+	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 12)
+	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 13)
+	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 14)
+	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 15)
+	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 16)
+	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 17)
+	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 18)
+	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 19)
+	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 20)
+	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 21)
 )
 
 type CompanyFeatureUsageExportMetadata struct {
@@ -321,6 +323,10 @@ type CompanyFeatureUsageExportMetadata struct {
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Restrict the export to companies with these billing credit type IDs
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
+	// Company key definition IDs to include as columns, one column per definition, mirroring the companies list
+	EntityKeyDefinitionIDs []string `json:"entity_key_definition_ids,omitempty" url:"entity_key_definition_ids,omitempty"`
+	// Company trait definition IDs to include as columns, one column per definition, mirroring the companies list
+	EntityTraitDefinitionIDs []string `json:"entity_trait_definition_ids,omitempty" url:"entity_trait_definition_ids,omitempty"`
 	// Schematic feature IDs (starting with 'feat_') to include as usage columns; empty means no usage columns
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
 	// Restrict the export to companies that do (or do not) have a scheduled downgrade
@@ -377,6 +383,20 @@ func (c *CompanyFeatureUsageExportMetadata) GetCreditTypeIDs() []string {
 		return nil
 	}
 	return c.CreditTypeIDs
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetEntityKeyDefinitionIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.EntityKeyDefinitionIDs
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetEntityTraitDefinitionIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.EntityTraitDefinitionIDs
 }
 
 func (c *CompanyFeatureUsageExportMetadata) GetFeatureIDs() []string {
@@ -531,6 +551,20 @@ func (c *CompanyFeatureUsageExportMetadata) SetCompanyIDs(companyIDs []string) {
 func (c *CompanyFeatureUsageExportMetadata) SetCreditTypeIDs(creditTypeIDs []string) {
 	c.CreditTypeIDs = creditTypeIDs
 	c.require(companyFeatureUsageExportMetadataFieldCreditTypeIDs)
+}
+
+// SetEntityKeyDefinitionIDs sets the EntityKeyDefinitionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetEntityKeyDefinitionIDs(entityKeyDefinitionIDs []string) {
+	c.EntityKeyDefinitionIDs = entityKeyDefinitionIDs
+	c.require(companyFeatureUsageExportMetadataFieldEntityKeyDefinitionIDs)
+}
+
+// SetEntityTraitDefinitionIDs sets the EntityTraitDefinitionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetEntityTraitDefinitionIDs(entityTraitDefinitionIDs []string) {
+	c.EntityTraitDefinitionIDs = entityTraitDefinitionIDs
+	c.require(companyFeatureUsageExportMetadataFieldEntityTraitDefinitionIDs)
 }
 
 // SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;

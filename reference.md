@@ -1212,6 +1212,103 @@ client.Accounts.DeleteEnvironment(
 </dl>
 </details>
 
+<details><summary><code>client.Accounts.GetOnboardingState() -> *schematichq.GetOnboardingStateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Accounts.GetOnboardingState(
+        context.TODO(),
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Accounts.UpdateOnboardingState(request) -> *schematichq.UpdateOnboardingStateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateOnboardingStateRequestBody{}
+client.Accounts.UpdateOnboardingState(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**path:** `*schematichq.OnboardingPath` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**pricingPageURL:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**track:** `*schematichq.OnboardingTrack` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**websiteURL:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Accounts.Quickstart() -> *schematichq.QuickstartResponse</code></summary>
 <dl>
 <dd>
@@ -4662,6 +4759,14 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
+**compatiblePlanIDs:** `[]string` — Plans whose companies may purchase this bundle. Omitted or empty means the bundle is purchasable on every plan.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **creditID:** `string` 
     
 </dd>
@@ -4836,6 +4941,14 @@ client.Credits.UpdateCreditBundleDetails(
 <dd>
 
 **bundleName:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**compatiblePlanIDs:** `[]string` — Plans whose companies may purchase this bundle. Omitted leaves compatibility unchanged; empty resets the bundle to purchasable on every plan.
     
 </dd>
 </dl>
@@ -9886,6 +9999,94 @@ client.Companies.UpdateEntityTraitDefinition(
 </dl>
 </details>
 
+<details><summary><code>client.Companies.DeleteEntityTraitDefinition(EntityTraitDefinitionID) -> *schematichq.DeleteEntityTraitDefinitionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Companies.DeleteEntityTraitDefinition(
+        context.TODO(),
+        "entity_trait_definition_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**entityTraitDefinitionID:** `string` — entity_trait_definition_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Companies.GetEntityTraitDefinitionUsage(EntityTraitDefinitionID) -> *schematichq.GetEntityTraitDefinitionUsageResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Companies.GetEntityTraitDefinitionUsage(
+        context.TODO(),
+        "entity_trait_definition_id",
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**entityTraitDefinitionID:** `string` — entity_trait_definition_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Companies.CountEntityTraitDefinitions() -> *schematichq.CountEntityTraitDefinitionsResponse</code></summary>
 <dl>
 <dd>
@@ -10079,6 +10280,86 @@ client.Companies.GetEntityTraitValues(
 </dl>
 </details>
 
+<details><summary><code>client.Companies.CountEntityTraits() -> *schematichq.CountEntityTraitsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountEntityTraitsRequest{
+        DefinitionID: schematichq.String(
+            "definition_id",
+        ),
+        EntityType: schematichq.EntityTypeCompany.Ptr(),
+        Limit: schematichq.Int64(
+            int64(1000000),
+        ),
+        Offset: schematichq.Int64(
+            int64(1000000),
+        ),
+    }
+client.Companies.CountEntityTraits(
+        context.TODO(),
+        request,
+    )
+}
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**definitionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**entityType:** `*schematichq.EntityType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Companies.ListPlanChanges() -> *schematichq.ListPlanChangesResponse</code></summary>
 <dl>
 <dd>
@@ -10101,11 +10382,6 @@ request := &schematichq.ListPlanChangesRequest{
         CompanyIDs: []*string{
             schematichq.String(
                 "company_ids",
-            ),
-        },
-        PlanIDs: []*string{
-            schematichq.String(
-                "plan_ids",
             ),
         },
         Limit: schematichq.Int64(
@@ -10159,14 +10435,6 @@ client.Companies.ListPlanChanges(
 <dd>
 
 **companyIDs:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**planIDs:** `*string` 
     
 </dd>
 </dl>
@@ -14063,7 +14331,7 @@ client.Entitlements.GetUserUsageDetail(
 </details>
 
 ## plans
-<details><summary><code>client.Plans.UpdateCompanyPlans(CompanyPlanID, request) -> *schematichq.UpdateCompanyPlansResponse</code></summary>
+<details><summary><code>client.Plans.UpdateCompanyPlans(CompanyID, request) -> *schematichq.UpdateCompanyPlansResponse</code></summary>
 <dl>
 <dd>
 
@@ -14083,7 +14351,7 @@ request := &schematichq.UpdateCompanyPlansRequestBody{
     }
 client.Plans.UpdateCompanyPlans(
         context.TODO(),
-        "company_plan_id",
+        "company_id",
         request,
     )
 }
@@ -14101,7 +14369,7 @@ client.Plans.UpdateCompanyPlans(
 <dl>
 <dd>
 
-**companyPlanID:** `string` — company_plan_id
+**companyID:** `string` — company_id
     
 </dd>
 </dl>
@@ -14149,6 +14417,7 @@ request := &schematichq.ListCustomPlanBillingsRequest{
         PlanID: schematichq.String(
             "plan_id",
         ),
+        PlanBillingSource: schematichq.PlanBillingSourceCustomPlan.Ptr(),
         Status: schematichq.CustomPlanBillingStatusActive.Ptr(),
         Statuses: []*schematichq.CustomPlanBillingStatus{
             schematichq.CustomPlanBillingStatusActive.Ptr(),
@@ -14188,6 +14457,14 @@ client.Plans.ListCustomPlanBillings(
 <dd>
 
 **planID:** `*string` — Filter by plan ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planBillingSource:** `*schematichq.PlanBillingSource` — Filter by the flow that created the billing record. Defaults to custom_plan.
     
 </dd>
 </dl>
@@ -15479,7 +15756,7 @@ client.Plans.ListPlanIssues(
 </dl>
 </details>
 
-<details><summary><code>client.Plans.DeletePlanVersion(PlanID) -> *schematichq.DeletePlanVersionResponse</code></summary>
+<details><summary><code>client.Plans.DeletePlanVersion(PlanVersionID) -> *schematichq.DeletePlanVersionResponse</code></summary>
 <dl>
 <dd>
 
@@ -15499,7 +15776,7 @@ request := &schematichq.DeletePlanVersionRequest{
     }
 client.Plans.DeletePlanVersion(
         context.TODO(),
-        "plan_id",
+        "plan_version_id",
         request,
     )
 }
@@ -15517,7 +15794,7 @@ client.Plans.DeletePlanVersion(
 <dl>
 <dd>
 
-**planID:** `string` — plan_id
+**planVersionID:** `string` — plan_version_id
     
 </dd>
 </dl>
@@ -15537,7 +15814,7 @@ client.Plans.DeletePlanVersion(
 </dl>
 </details>
 
-<details><summary><code>client.Plans.PublishPlanVersion(PlanID, request) -> *schematichq.PublishPlanVersionResponse</code></summary>
+<details><summary><code>client.Plans.PublishPlanVersion(PlanVersionID, request) -> *schematichq.PublishPlanVersionResponse</code></summary>
 <dl>
 <dd>
 
@@ -15558,7 +15835,7 @@ request := &schematichq.PublishPlanVersionRequestBody{
     }
 client.Plans.PublishPlanVersion(
         context.TODO(),
-        "plan_id",
+        "plan_version_id",
         request,
     )
 }
@@ -15576,7 +15853,7 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**planID:** `string` — plan_id
+**planVersionID:** `string` — plan_version_id
     
 </dd>
 </dl>
@@ -15649,6 +15926,14 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **phone:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorationBehavior:** `*schematichq.MigrationProrationBehavior` 
     
 </dd>
 </dl>
@@ -16314,7 +16599,7 @@ client.Planbundle.CreatePlanBundle(
 </dl>
 </details>
 
-<details><summary><code>client.Planbundle.UpdatePlanBundle(PlanBundleID, request) -> *schematichq.UpdatePlanBundleResponse</code></summary>
+<details><summary><code>client.Planbundle.UpdatePlanBundle(PlanID, request) -> *schematichq.UpdatePlanBundleResponse</code></summary>
 <dl>
 <dd>
 
@@ -16336,7 +16621,7 @@ request := &schematichq.UpdatePlanBundleRequestBody{
     }
 client.Planbundle.UpdatePlanBundle(
         context.TODO(),
-        "plan_bundle_id",
+        "plan_id",
         request,
     )
 }
@@ -16354,7 +16639,7 @@ client.Planbundle.UpdatePlanBundle(
 <dl>
 <dd>
 
-**planBundleID:** `string` — plan_bundle_id
+**planID:** `string` — plan_id
     
 </dd>
 </dl>
@@ -19576,9 +19861,11 @@ request := &schematichq.CreatePlanGroupRequestBody{
         AddOnIDs: []string{
             "add_on_ids",
         },
+        CheckoutBundlePurchaseBehavior: schematichq.CheckoutBundlePurchaseBehaviorIndividual,
         CheckoutCollectAddress: true,
         CheckoutCollectEmail: true,
         CheckoutCollectPhone: true,
+        CheckoutCollectTaxID: true,
         EnableTaxCollection: true,
         OptInEnabled: true,
         OrderedAddOns: []*schematichq.OrderedPlansInGroup{
@@ -19642,6 +19929,14 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
+**checkoutBundlePurchaseBehavior:** `*schematichq.CheckoutBundlePurchaseBehavior` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **checkoutCollectAddress:** `bool` 
     
 </dd>
@@ -19659,6 +19954,14 @@ client.Plangroups.CreatePlanGroup(
 <dd>
 
 **checkoutCollectPhone:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**checkoutCollectTaxID:** `bool` 
     
 </dd>
 </dl>
@@ -19935,9 +20238,11 @@ request := &schematichq.UpdatePlanGroupRequestBody{
         AddOnIDs: []string{
             "add_on_ids",
         },
+        CheckoutBundlePurchaseBehavior: schematichq.CheckoutBundlePurchaseBehaviorIndividual,
         CheckoutCollectAddress: true,
         CheckoutCollectEmail: true,
         CheckoutCollectPhone: true,
+        CheckoutCollectTaxID: true,
         EnableTaxCollection: true,
         OptInEnabled: true,
         OrderedAddOns: []*schematichq.OrderedPlansInGroup{
@@ -20010,6 +20315,14 @@ client.Plangroups.UpdatePlanGroup(
 <dl>
 <dd>
 
+**checkoutBundlePurchaseBehavior:** `*schematichq.CheckoutBundlePurchaseBehavior` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **checkoutCollectAddress:** `bool` 
     
 </dd>
@@ -20027,6 +20340,14 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **checkoutCollectPhone:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**checkoutCollectTaxID:** `bool` 
     
 </dd>
 </dl>
@@ -20607,17 +20928,8 @@ client.Planmigrations.ListMigrations(
 
 ```go
 request := &schematichq.CreateMigrationInput{
-        CompanyIDs: []string{
-            "company_ids",
-        },
-        ExcludedCompanyIDs: []string{
-            "excluded_company_ids",
-        },
         PlanID: "plan_id",
         PlanVersionIDTo: "plan_version_id_to",
-        PlanVersionIDsFrom: []string{
-            "plan_version_ids_from",
-        },
         Strategy: schematichq.PlanVersionMigrationStrategyImmediate,
         TargetPlanType: schematichq.PlanTypePlan,
     }
@@ -20673,6 +20985,14 @@ client.Planmigrations.CreateMigration(
 <dd>
 
 **planVersionIDsFrom:** `[]string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorationBehavior:** `*schematichq.MigrationProrationBehavior` 
     
 </dd>
 </dl>
@@ -20896,9 +21216,6 @@ client.Planmigrations.CountMigrations(
 
 ```go
 request := &schematichq.PreviewMigrationRequestBody{
-        CompanyIDs: []string{
-            "company_ids",
-        },
         PlanID: "plan_id",
         PlanVersionIDTo: "plan_version_id_to",
         TargetPlanType: schematichq.PlanTypePlan,
@@ -20939,6 +21256,14 @@ client.Planmigrations.PreviewMigration(
 <dd>
 
 **planVersionIDTo:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionIDsFrom:** `[]string` 
     
 </dd>
 </dl>

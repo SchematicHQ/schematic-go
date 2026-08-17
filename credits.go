@@ -665,21 +665,24 @@ func (c *CreateBillingCreditRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	createCreditBundleRequestBodyFieldBundleName          = big.NewInt(1 << 0)
 	createCreditBundleRequestBodyFieldBundleType          = big.NewInt(1 << 1)
-	createCreditBundleRequestBodyFieldCreditID            = big.NewInt(1 << 2)
-	createCreditBundleRequestBodyFieldCurrency            = big.NewInt(1 << 3)
-	createCreditBundleRequestBodyFieldCurrencyPrices      = big.NewInt(1 << 4)
-	createCreditBundleRequestBodyFieldExpiryType          = big.NewInt(1 << 5)
-	createCreditBundleRequestBodyFieldExpiryUnit          = big.NewInt(1 << 6)
-	createCreditBundleRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 7)
-	createCreditBundleRequestBodyFieldPricePerUnit        = big.NewInt(1 << 8)
-	createCreditBundleRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 9)
-	createCreditBundleRequestBodyFieldQuantity            = big.NewInt(1 << 10)
-	createCreditBundleRequestBodyFieldStatus              = big.NewInt(1 << 11)
+	createCreditBundleRequestBodyFieldCompatiblePlanIDs   = big.NewInt(1 << 2)
+	createCreditBundleRequestBodyFieldCreditID            = big.NewInt(1 << 3)
+	createCreditBundleRequestBodyFieldCurrency            = big.NewInt(1 << 4)
+	createCreditBundleRequestBodyFieldCurrencyPrices      = big.NewInt(1 << 5)
+	createCreditBundleRequestBodyFieldExpiryType          = big.NewInt(1 << 6)
+	createCreditBundleRequestBodyFieldExpiryUnit          = big.NewInt(1 << 7)
+	createCreditBundleRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 8)
+	createCreditBundleRequestBodyFieldPricePerUnit        = big.NewInt(1 << 9)
+	createCreditBundleRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 10)
+	createCreditBundleRequestBodyFieldQuantity            = big.NewInt(1 << 11)
+	createCreditBundleRequestBodyFieldStatus              = big.NewInt(1 << 12)
 )
 
 type CreateCreditBundleRequestBody struct {
-	BundleName          string                                  `json:"bundle_name" url:"-"`
-	BundleType          *BillingCreditBundleType                `json:"bundle_type,omitempty" url:"-"`
+	BundleName string                   `json:"bundle_name" url:"-"`
+	BundleType *BillingCreditBundleType `json:"bundle_type,omitempty" url:"-"`
+	// Plans whose companies may purchase this bundle. Omitted or empty means the bundle is purchasable on every plan.
+	CompatiblePlanIDs   []string                                `json:"compatible_plan_ids,omitempty" url:"-"`
 	CreditID            string                                  `json:"credit_id" url:"-"`
 	Currency            string                                  `json:"currency" url:"-"`
 	CurrencyPrices      []*CreditBundleCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
@@ -714,6 +717,13 @@ func (c *CreateCreditBundleRequestBody) SetBundleName(bundleName string) {
 func (c *CreateCreditBundleRequestBody) SetBundleType(bundleType *BillingCreditBundleType) {
 	c.BundleType = bundleType
 	c.require(createCreditBundleRequestBodyFieldBundleType)
+}
+
+// SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditBundleRequestBody) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
+	c.CompatiblePlanIDs = compatiblePlanIDs
+	c.require(createCreditBundleRequestBodyFieldCompatiblePlanIDs)
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -1486,45 +1496,51 @@ func (l *ListGrantsForCreditRequest) SetOffset(offset *int64) {
 
 var (
 	billingCreditGrantResponseDataFieldCompanyID         = big.NewInt(1 << 0)
-	billingCreditGrantResponseDataFieldCompanyName       = big.NewInt(1 << 1)
-	billingCreditGrantResponseDataFieldCreatedAt         = big.NewInt(1 << 2)
-	billingCreditGrantResponseDataFieldCreditIcon        = big.NewInt(1 << 3)
-	billingCreditGrantResponseDataFieldCreditID          = big.NewInt(1 << 4)
-	billingCreditGrantResponseDataFieldCreditName        = big.NewInt(1 << 5)
-	billingCreditGrantResponseDataFieldCurrency          = big.NewInt(1 << 6)
-	billingCreditGrantResponseDataFieldExpiresAt         = big.NewInt(1 << 7)
-	billingCreditGrantResponseDataFieldGrantReason       = big.NewInt(1 << 8)
-	billingCreditGrantResponseDataFieldID                = big.NewInt(1 << 9)
-	billingCreditGrantResponseDataFieldPlanID            = big.NewInt(1 << 10)
-	billingCreditGrantResponseDataFieldPlanName          = big.NewInt(1 << 11)
-	billingCreditGrantResponseDataFieldPrice             = big.NewInt(1 << 12)
-	billingCreditGrantResponseDataFieldQuantity          = big.NewInt(1 << 13)
-	billingCreditGrantResponseDataFieldQuantityRemaining = big.NewInt(1 << 14)
-	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 15)
-	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 16)
-	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 17)
-	billingCreditGrantResponseDataFieldReserved          = big.NewInt(1 << 18)
-	billingCreditGrantResponseDataFieldSettled           = big.NewInt(1 << 19)
-	billingCreditGrantResponseDataFieldSourceGrantID     = big.NewInt(1 << 20)
-	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 21)
-	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 22)
-	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 23)
-	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 24)
-	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 25)
-	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 26)
+	billingCreditGrantResponseDataFieldCompanyLicenseID  = big.NewInt(1 << 1)
+	billingCreditGrantResponseDataFieldCompanyName       = big.NewInt(1 << 2)
+	billingCreditGrantResponseDataFieldCreatedAt         = big.NewInt(1 << 3)
+	billingCreditGrantResponseDataFieldCreditIcon        = big.NewInt(1 << 4)
+	billingCreditGrantResponseDataFieldCreditID          = big.NewInt(1 << 5)
+	billingCreditGrantResponseDataFieldCreditName        = big.NewInt(1 << 6)
+	billingCreditGrantResponseDataFieldCurrency          = big.NewInt(1 << 7)
+	billingCreditGrantResponseDataFieldExpiresAt         = big.NewInt(1 << 8)
+	billingCreditGrantResponseDataFieldGrantReason       = big.NewInt(1 << 9)
+	billingCreditGrantResponseDataFieldID                = big.NewInt(1 << 10)
+	billingCreditGrantResponseDataFieldLicenseName       = big.NewInt(1 << 11)
+	billingCreditGrantResponseDataFieldPlanID            = big.NewInt(1 << 12)
+	billingCreditGrantResponseDataFieldPlanName          = big.NewInt(1 << 13)
+	billingCreditGrantResponseDataFieldPrice             = big.NewInt(1 << 14)
+	billingCreditGrantResponseDataFieldQuantity          = big.NewInt(1 << 15)
+	billingCreditGrantResponseDataFieldQuantityRemaining = big.NewInt(1 << 16)
+	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 17)
+	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 18)
+	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 19)
+	billingCreditGrantResponseDataFieldReserved          = big.NewInt(1 << 20)
+	billingCreditGrantResponseDataFieldSettled           = big.NewInt(1 << 21)
+	billingCreditGrantResponseDataFieldSourceGrantID     = big.NewInt(1 << 22)
+	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 23)
+	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 24)
+	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 25)
+	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 26)
+	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 27)
+	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 28)
 )
 
 type BillingCreditGrantResponseData struct {
-	CompanyID         string                              `json:"company_id" url:"company_id"`
-	CompanyName       string                              `json:"company_name" url:"company_name"`
-	CreatedAt         time.Time                           `json:"created_at" url:"created_at"`
-	CreditIcon        *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditID          string                              `json:"credit_id" url:"credit_id"`
-	CreditName        string                              `json:"credit_name" url:"credit_name"`
-	Currency          *string                             `json:"currency,omitempty" url:"currency,omitempty"`
-	ExpiresAt         *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
-	GrantReason       BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
-	ID                string                              `json:"id" url:"id"`
+	CompanyID string `json:"company_id" url:"company_id"`
+	// The license instance this grant was issued for. Set only when a per-license plan grant issued it; null on a plan's own grant.
+	CompanyLicenseID *string                  `json:"company_license_id,omitempty" url:"company_license_id,omitempty"`
+	CompanyName      string                   `json:"company_name" url:"company_name"`
+	CreatedAt        time.Time                `json:"created_at" url:"created_at"`
+	CreditIcon       *string                  `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID         string                   `json:"credit_id" url:"credit_id"`
+	CreditName       string                   `json:"credit_name" url:"credit_name"`
+	Currency         *string                  `json:"currency,omitempty" url:"currency,omitempty"`
+	ExpiresAt        *time.Time               `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	GrantReason      BillingCreditGrantReason `json:"grant_reason" url:"grant_reason"`
+	ID               string                   `json:"id" url:"id"`
+	// Name of the license this grant was issued for, when it came from a per-license plan grant.
+	LicenseName       *string                             `json:"license_name,omitempty" url:"license_name,omitempty"`
 	PlanID            *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanName          *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	Price             *BillingPriceResponseData           `json:"price,omitempty" url:"price,omitempty"`
@@ -1556,6 +1572,13 @@ func (b *BillingCreditGrantResponseData) GetCompanyID() string {
 		return ""
 	}
 	return b.CompanyID
+}
+
+func (b *BillingCreditGrantResponseData) GetCompanyLicenseID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CompanyLicenseID
 }
 
 func (b *BillingCreditGrantResponseData) GetCompanyName() string {
@@ -1619,6 +1642,13 @@ func (b *BillingCreditGrantResponseData) GetID() string {
 		return ""
 	}
 	return b.ID
+}
+
+func (b *BillingCreditGrantResponseData) GetLicenseName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.LicenseName
 }
 
 func (b *BillingCreditGrantResponseData) GetPlanID() *string {
@@ -1761,6 +1791,13 @@ func (b *BillingCreditGrantResponseData) SetCompanyID(companyID string) {
 	b.require(billingCreditGrantResponseDataFieldCompanyID)
 }
 
+// SetCompanyLicenseID sets the CompanyLicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetCompanyLicenseID(companyLicenseID *string) {
+	b.CompanyLicenseID = companyLicenseID
+	b.require(billingCreditGrantResponseDataFieldCompanyLicenseID)
+}
+
 // SetCompanyName sets the CompanyName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingCreditGrantResponseData) SetCompanyName(companyName string) {
@@ -1822,6 +1859,13 @@ func (b *BillingCreditGrantResponseData) SetGrantReason(grantReason BillingCredi
 func (b *BillingCreditGrantResponseData) SetID(id string) {
 	b.ID = id
 	b.require(billingCreditGrantResponseDataFieldID)
+}
+
+// SetLicenseName sets the LicenseName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetLicenseName(licenseName *string) {
+	b.LicenseName = licenseName
+	b.require(billingCreditGrantResponseDataFieldLicenseName)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -9195,18 +9239,21 @@ func (u *UpdateBillingCreditRequestBody) MarshalJSON() ([]byte, error) {
 
 var (
 	updateCreditBundleDetailsRequestBodyFieldBundleName          = big.NewInt(1 << 0)
-	updateCreditBundleDetailsRequestBodyFieldCurrencyPrices      = big.NewInt(1 << 1)
-	updateCreditBundleDetailsRequestBodyFieldExpiryType          = big.NewInt(1 << 2)
-	updateCreditBundleDetailsRequestBodyFieldExpiryUnit          = big.NewInt(1 << 3)
-	updateCreditBundleDetailsRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 4)
-	updateCreditBundleDetailsRequestBodyFieldPricePerUnit        = big.NewInt(1 << 5)
-	updateCreditBundleDetailsRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 6)
-	updateCreditBundleDetailsRequestBodyFieldQuantity            = big.NewInt(1 << 7)
-	updateCreditBundleDetailsRequestBodyFieldStatus              = big.NewInt(1 << 8)
+	updateCreditBundleDetailsRequestBodyFieldCompatiblePlanIDs   = big.NewInt(1 << 1)
+	updateCreditBundleDetailsRequestBodyFieldCurrencyPrices      = big.NewInt(1 << 2)
+	updateCreditBundleDetailsRequestBodyFieldExpiryType          = big.NewInt(1 << 3)
+	updateCreditBundleDetailsRequestBodyFieldExpiryUnit          = big.NewInt(1 << 4)
+	updateCreditBundleDetailsRequestBodyFieldExpiryUnitCount     = big.NewInt(1 << 5)
+	updateCreditBundleDetailsRequestBodyFieldPricePerUnit        = big.NewInt(1 << 6)
+	updateCreditBundleDetailsRequestBodyFieldPricePerUnitDecimal = big.NewInt(1 << 7)
+	updateCreditBundleDetailsRequestBodyFieldQuantity            = big.NewInt(1 << 8)
+	updateCreditBundleDetailsRequestBodyFieldStatus              = big.NewInt(1 << 9)
 )
 
 type UpdateCreditBundleDetailsRequestBody struct {
-	BundleName          string                                  `json:"bundle_name" url:"-"`
+	BundleName string `json:"bundle_name" url:"-"`
+	// Plans whose companies may purchase this bundle. Omitted leaves compatibility unchanged; empty resets the bundle to purchasable on every plan.
+	CompatiblePlanIDs   []string                                `json:"compatible_plan_ids,omitempty" url:"-"`
 	CurrencyPrices      []*CreditBundleCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
 	ExpiryType          *BillingCreditExpiryType                `json:"expiry_type,omitempty" url:"-"`
 	ExpiryUnit          *BillingCreditExpiryUnit                `json:"expiry_unit,omitempty" url:"-"`
@@ -9232,6 +9279,13 @@ func (u *UpdateCreditBundleDetailsRequestBody) require(field *big.Int) {
 func (u *UpdateCreditBundleDetailsRequestBody) SetBundleName(bundleName string) {
 	u.BundleName = bundleName
 	u.require(updateCreditBundleDetailsRequestBodyFieldBundleName)
+}
+
+// SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCreditBundleDetailsRequestBody) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
+	u.CompatiblePlanIDs = compatiblePlanIDs
+	u.require(updateCreditBundleDetailsRequestBodyFieldCompatiblePlanIDs)
 }
 
 // SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;

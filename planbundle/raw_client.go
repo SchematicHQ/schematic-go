@@ -122,8 +122,8 @@ func (r *RawClient) CreatePlanBundle(
 
 func (r *RawClient) UpdatePlanBundle(
 	ctx context.Context,
-	// plan_bundle_id
-	planBundleID string,
+	// plan_id
+	planID string,
 	request *schematichq.UpdatePlanBundleRequestBody,
 	opts ...option.RequestOption,
 ) (*core.Response[*schematichq.UpdatePlanBundleResponse], error) {
@@ -135,7 +135,7 @@ func (r *RawClient) UpdatePlanBundle(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/plan-bundles/%v",
-		planBundleID,
+		planID,
 	)
 	headers := internal.MergeHeaders(
 		r.options.ToHeader(),

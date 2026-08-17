@@ -438,12 +438,13 @@ func (l *ListBillingProductMatchCompaniesRequest) SetOffset(offset *int64) {
 }
 
 var (
-	listCustomPlanBillingsRequestFieldCompanyID = big.NewInt(1 << 0)
-	listCustomPlanBillingsRequestFieldPlanID    = big.NewInt(1 << 1)
-	listCustomPlanBillingsRequestFieldStatus    = big.NewInt(1 << 2)
-	listCustomPlanBillingsRequestFieldStatuses  = big.NewInt(1 << 3)
-	listCustomPlanBillingsRequestFieldLimit     = big.NewInt(1 << 4)
-	listCustomPlanBillingsRequestFieldOffset    = big.NewInt(1 << 5)
+	listCustomPlanBillingsRequestFieldCompanyID         = big.NewInt(1 << 0)
+	listCustomPlanBillingsRequestFieldPlanID            = big.NewInt(1 << 1)
+	listCustomPlanBillingsRequestFieldPlanBillingSource = big.NewInt(1 << 2)
+	listCustomPlanBillingsRequestFieldStatus            = big.NewInt(1 << 3)
+	listCustomPlanBillingsRequestFieldStatuses          = big.NewInt(1 << 4)
+	listCustomPlanBillingsRequestFieldLimit             = big.NewInt(1 << 5)
+	listCustomPlanBillingsRequestFieldOffset            = big.NewInt(1 << 6)
 )
 
 type ListCustomPlanBillingsRequest struct {
@@ -451,6 +452,8 @@ type ListCustomPlanBillingsRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
 	// Filter by plan ID
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
+	// Filter by the flow that created the billing record. Defaults to custom_plan.
+	PlanBillingSource *PlanBillingSource `json:"-" url:"plan_billing_source,omitempty"`
 	// Filter by billing status
 	Status *CustomPlanBillingStatus `json:"-" url:"status,omitempty"`
 	// Filter by multiple billing statuses
@@ -483,6 +486,13 @@ func (l *ListCustomPlanBillingsRequest) SetCompanyID(companyID *string) {
 func (l *ListCustomPlanBillingsRequest) SetPlanID(planID *string) {
 	l.PlanID = planID
 	l.require(listCustomPlanBillingsRequestFieldPlanID)
+}
+
+// SetPlanBillingSource sets the PlanBillingSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCustomPlanBillingsRequest) SetPlanBillingSource(planBillingSource *PlanBillingSource) {
+	l.PlanBillingSource = planBillingSource
+	l.require(listCustomPlanBillingsRequestFieldPlanBillingSource)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -740,8 +750,9 @@ var (
 	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 6)
 	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 7)
 	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 8)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 9)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 9)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 11)
 )
 
 type PublishPlanVersionRequestBody struct {
@@ -754,6 +765,7 @@ type PublishPlanVersionRequestBody struct {
 	ExcludedCompanyIDs []string                      `json:"excluded_company_ids" url:"-"`
 	MigrationStrategy  PlanVersionMigrationStrategy  `json:"migration_strategy" url:"-"`
 	Phone              *string                       `json:"phone,omitempty" url:"-"`
+	ProrationBehavior  *MigrationProrationBehavior   `json:"proration_behavior,omitempty" url:"-"`
 	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
 	SendInvoice *bool       `json:"send_invoice,omitempty" url:"-"`
 	TaxID       *TaxIDInput `json:"tax_id,omitempty" url:"-"`
@@ -830,6 +842,13 @@ func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy P
 func (p *PublishPlanVersionRequestBody) SetPhone(phone *string) {
 	p.Phone = phone
 	p.require(publishPlanVersionRequestBodyFieldPhone)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
+	p.ProrationBehavior = prorationBehavior
+	p.require(publishPlanVersionRequestBodyFieldProrationBehavior)
 }
 
 // SetSendInvoice sets the SendInvoice field and marks it as non-optional;
@@ -2553,12 +2572,13 @@ func (l *ListBillingProductMatchCompaniesResponse) String() string {
 
 // Input parameters
 var (
-	listCustomPlanBillingsParamsFieldCompanyID = big.NewInt(1 << 0)
-	listCustomPlanBillingsParamsFieldLimit     = big.NewInt(1 << 1)
-	listCustomPlanBillingsParamsFieldOffset    = big.NewInt(1 << 2)
-	listCustomPlanBillingsParamsFieldPlanID    = big.NewInt(1 << 3)
-	listCustomPlanBillingsParamsFieldStatus    = big.NewInt(1 << 4)
-	listCustomPlanBillingsParamsFieldStatuses  = big.NewInt(1 << 5)
+	listCustomPlanBillingsParamsFieldCompanyID         = big.NewInt(1 << 0)
+	listCustomPlanBillingsParamsFieldLimit             = big.NewInt(1 << 1)
+	listCustomPlanBillingsParamsFieldOffset            = big.NewInt(1 << 2)
+	listCustomPlanBillingsParamsFieldPlanBillingSource = big.NewInt(1 << 3)
+	listCustomPlanBillingsParamsFieldPlanID            = big.NewInt(1 << 4)
+	listCustomPlanBillingsParamsFieldStatus            = big.NewInt(1 << 5)
+	listCustomPlanBillingsParamsFieldStatuses          = big.NewInt(1 << 6)
 )
 
 type ListCustomPlanBillingsParams struct {
@@ -2568,6 +2588,8 @@ type ListCustomPlanBillingsParams struct {
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Filter by the flow that created the billing record. Defaults to custom_plan.
+	PlanBillingSource *PlanBillingSource `json:"plan_billing_source,omitempty" url:"plan_billing_source,omitempty"`
 	// Filter by plan ID
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Filter by billing status
@@ -2601,6 +2623,13 @@ func (l *ListCustomPlanBillingsParams) GetOffset() *int64 {
 		return nil
 	}
 	return l.Offset
+}
+
+func (l *ListCustomPlanBillingsParams) GetPlanBillingSource() *PlanBillingSource {
+	if l == nil {
+		return nil
+	}
+	return l.PlanBillingSource
 }
 
 func (l *ListCustomPlanBillingsParams) GetPlanID() *string {
@@ -2657,6 +2686,13 @@ func (l *ListCustomPlanBillingsParams) SetLimit(limit *int64) {
 func (l *ListCustomPlanBillingsParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCustomPlanBillingsParamsFieldOffset)
+}
+
+// SetPlanBillingSource sets the PlanBillingSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCustomPlanBillingsParams) SetPlanBillingSource(planBillingSource *PlanBillingSource) {
+	l.PlanBillingSource = planBillingSource
+	l.require(listCustomPlanBillingsParamsFieldPlanBillingSource)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;

@@ -68,14 +68,14 @@ func (c *Client) CreatePlanBundle(
 
 func (c *Client) UpdatePlanBundle(
 	ctx context.Context,
-	// plan_bundle_id
-	planBundleID string,
+	// plan_id
+	planID string,
 	request *schematichq.UpdatePlanBundleRequestBody,
 	opts ...option.RequestOption,
 ) (*schematichq.UpdatePlanBundleResponse, error) {
 	response, err := c.WithRawResponse.UpdatePlanBundle(
 		ctx,
-		planBundleID,
+		planID,
 		request,
 		opts...,
 	)

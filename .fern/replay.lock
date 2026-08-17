@@ -185,24 +185,3 @@ patches:
                     docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml down
                   fi
     user_owned: true
-  - id: patch-9b95120f
-    content_hash: sha256:a6beb631b35fe6d0b4f98e996edb118bbff02eedddbdf9f85c6a7157db4d6973
-    original_commit: 9b95120fb6a66e21a6494b83df047161862350eb
-    original_message: "chore: update rules engine WASM to v0.6.0 (#190)"
-    original_author: Schematic Bot <bot@schematichq.com>
-    base_generation: fb43e53b5bf81b5447cf60dd0e8067d6991954b8
-    files:
-      - WASM_VERSION
-      - rulesengine/wasm/rulesengine.wasm
-    patch_content: |
-      diff --git a/WASM_VERSION b/WASM_VERSION
-      new file mode 100644
-      index 0000000..a918a2a
-      --- /dev/null
-      +++ b/WASM_VERSION
-      @@ -0,0 +1 @@
-      +0.6.0
-    theirs_snapshot:
-      WASM_VERSION: |
-        0.6.0
-    user_owned: true

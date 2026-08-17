@@ -34,8 +34,8 @@ func NewRawClient(options *core.RequestOptions) *RawClient {
 
 func (r *RawClient) UpdateCompanyPlans(
 	ctx context.Context,
-	// company_plan_id
-	companyPlanID string,
+	// company_id
+	companyID string,
 	request *schematichq.UpdateCompanyPlansRequestBody,
 	opts ...option.RequestOption,
 ) (*core.Response[*schematichq.UpdateCompanyPlansResponse], error) {
@@ -47,7 +47,7 @@ func (r *RawClient) UpdateCompanyPlans(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/company-plans/%v",
-		companyPlanID,
+		companyID,
 	)
 	headers := internal.MergeHeaders(
 		r.options.ToHeader(),
@@ -801,8 +801,8 @@ func (r *RawClient) ListPlanIssues(
 
 func (r *RawClient) DeletePlanVersion(
 	ctx context.Context,
-	// plan_id
-	planID string,
+	// plan_version_id
+	planVersionID string,
 	request *schematichq.DeletePlanVersionRequest,
 	opts ...option.RequestOption,
 ) (*core.Response[*schematichq.DeletePlanVersionResponse], error) {
@@ -814,7 +814,7 @@ func (r *RawClient) DeletePlanVersion(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/plans/version/%v",
-		planID,
+		planVersionID,
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
@@ -855,8 +855,8 @@ func (r *RawClient) DeletePlanVersion(
 
 func (r *RawClient) PublishPlanVersion(
 	ctx context.Context,
-	// plan_id
-	planID string,
+	// plan_version_id
+	planVersionID string,
 	request *schematichq.PublishPlanVersionRequestBody,
 	opts ...option.RequestOption,
 ) (*core.Response[*schematichq.PublishPlanVersionResponse], error) {
@@ -868,7 +868,7 @@ func (r *RawClient) PublishPlanVersion(
 	)
 	endpointURL := internal.EncodeURL(
 		baseURL+"/plans/version/%v/publish",
-		planID,
+		planVersionID,
 	)
 	headers := internal.MergeHeaders(
 		r.options.ToHeader(),

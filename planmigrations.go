@@ -133,16 +133,18 @@ var (
 	createMigrationInputFieldPlanID             = big.NewInt(1 << 2)
 	createMigrationInputFieldPlanVersionIDTo    = big.NewInt(1 << 3)
 	createMigrationInputFieldPlanVersionIDsFrom = big.NewInt(1 << 4)
-	createMigrationInputFieldStrategy           = big.NewInt(1 << 5)
-	createMigrationInputFieldTargetPlanType     = big.NewInt(1 << 6)
+	createMigrationInputFieldProrationBehavior  = big.NewInt(1 << 5)
+	createMigrationInputFieldStrategy           = big.NewInt(1 << 6)
+	createMigrationInputFieldTargetPlanType     = big.NewInt(1 << 7)
 )
 
 type CreateMigrationInput struct {
-	CompanyIDs         []string                     `json:"company_ids" url:"-"`
-	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"-"`
+	CompanyIDs         []string                     `json:"company_ids,omitempty" url:"-"`
+	ExcludedCompanyIDs []string                     `json:"excluded_company_ids,omitempty" url:"-"`
 	PlanID             string                       `json:"plan_id" url:"-"`
 	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"-"`
-	PlanVersionIDsFrom []string                     `json:"plan_version_ids_from" url:"-"`
+	PlanVersionIDsFrom []string                     `json:"plan_version_ids_from,omitempty" url:"-"`
+	ProrationBehavior  *MigrationProrationBehavior  `json:"proration_behavior,omitempty" url:"-"`
 	Strategy           PlanVersionMigrationStrategy `json:"strategy" url:"-"`
 	TargetPlanType     PlanType                     `json:"target_plan_type" url:"-"`
 
@@ -190,6 +192,13 @@ func (c *CreateMigrationInput) SetPlanVersionIDTo(planVersionIDTo string) {
 func (c *CreateMigrationInput) SetPlanVersionIDsFrom(planVersionIDsFrom []string) {
 	c.PlanVersionIDsFrom = planVersionIDsFrom
 	c.require(createMigrationInputFieldPlanVersionIDsFrom)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateMigrationInput) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
+	c.ProrationBehavior = prorationBehavior
+	c.require(createMigrationInputFieldProrationBehavior)
 }
 
 // SetStrategy sets the Strategy field and marks it as non-optional;
@@ -345,17 +354,19 @@ func (l *ListMigrationsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	previewMigrationRequestBodyFieldCompanyIDs      = big.NewInt(1 << 0)
-	previewMigrationRequestBodyFieldPlanID          = big.NewInt(1 << 1)
-	previewMigrationRequestBodyFieldPlanVersionIDTo = big.NewInt(1 << 2)
-	previewMigrationRequestBodyFieldTargetPlanType  = big.NewInt(1 << 3)
+	previewMigrationRequestBodyFieldCompanyIDs         = big.NewInt(1 << 0)
+	previewMigrationRequestBodyFieldPlanID             = big.NewInt(1 << 1)
+	previewMigrationRequestBodyFieldPlanVersionIDTo    = big.NewInt(1 << 2)
+	previewMigrationRequestBodyFieldPlanVersionIDsFrom = big.NewInt(1 << 3)
+	previewMigrationRequestBodyFieldTargetPlanType     = big.NewInt(1 << 4)
 )
 
 type PreviewMigrationRequestBody struct {
-	CompanyIDs      []string `json:"company_ids" url:"-"`
-	PlanID          string   `json:"plan_id" url:"-"`
-	PlanVersionIDTo string   `json:"plan_version_id_to" url:"-"`
-	TargetPlanType  PlanType `json:"target_plan_type" url:"-"`
+	CompanyIDs         []string `json:"company_ids,omitempty" url:"-"`
+	PlanID             string   `json:"plan_id" url:"-"`
+	PlanVersionIDTo    string   `json:"plan_version_id_to" url:"-"`
+	PlanVersionIDsFrom []string `json:"plan_version_ids_from,omitempty" url:"-"`
+	TargetPlanType     PlanType `json:"target_plan_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -387,6 +398,13 @@ func (p *PreviewMigrationRequestBody) SetPlanID(planID string) {
 func (p *PreviewMigrationRequestBody) SetPlanVersionIDTo(planVersionIDTo string) {
 	p.PlanVersionIDTo = planVersionIDTo
 	p.require(previewMigrationRequestBodyFieldPlanVersionIDTo)
+}
+
+// SetPlanVersionIDsFrom sets the PlanVersionIDsFrom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewMigrationRequestBody) SetPlanVersionIDsFrom(planVersionIDsFrom []string) {
+	p.PlanVersionIDsFrom = planVersionIDsFrom
+	p.require(previewMigrationRequestBodyFieldPlanVersionIDsFrom)
 }
 
 // SetTargetPlanType sets the TargetPlanType field and marks it as non-optional;
@@ -991,11 +1009,13 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) String() string {
 }
 
 var (
-	planVersionMigrationPreviewResponseDataFieldCompanies = big.NewInt(1 << 0)
+	planVersionMigrationPreviewResponseDataFieldCompanies         = big.NewInt(1 << 0)
+	planVersionMigrationPreviewResponseDataFieldHasBillingChanges = big.NewInt(1 << 1)
 )
 
 type PlanVersionMigrationPreviewResponseData struct {
-	Companies []*PlanVersionMigrationPreviewCompanyResponseData `json:"companies" url:"companies"`
+	Companies         []*PlanVersionMigrationPreviewCompanyResponseData `json:"companies" url:"companies"`
+	HasBillingChanges bool                                              `json:"has_billing_changes" url:"has_billing_changes"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1009,6 +1029,13 @@ func (p *PlanVersionMigrationPreviewResponseData) GetCompanies() []*PlanVersionM
 		return nil
 	}
 	return p.Companies
+}
+
+func (p *PlanVersionMigrationPreviewResponseData) GetHasBillingChanges() bool {
+	if p == nil {
+		return false
+	}
+	return p.HasBillingChanges
 }
 
 func (p *PlanVersionMigrationPreviewResponseData) GetExtraProperties() map[string]interface{} {
@@ -1030,6 +1057,13 @@ func (p *PlanVersionMigrationPreviewResponseData) require(field *big.Int) {
 func (p *PlanVersionMigrationPreviewResponseData) SetCompanies(companies []*PlanVersionMigrationPreviewCompanyResponseData) {
 	p.Companies = companies
 	p.require(planVersionMigrationPreviewResponseDataFieldCompanies)
+}
+
+// SetHasBillingChanges sets the HasBillingChanges field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewResponseData) SetHasBillingChanges(hasBillingChanges bool) {
+	p.HasBillingChanges = hasBillingChanges
+	p.require(planVersionMigrationPreviewResponseDataFieldHasBillingChanges)
 }
 
 func (p *PlanVersionMigrationPreviewResponseData) UnmarshalJSON(data []byte) error {
@@ -1085,12 +1119,13 @@ var (
 	planVersionMigrationResponseDataFieldPlanVersionIDFrom  = big.NewInt(1 << 7)
 	planVersionMigrationResponseDataFieldPlanVersionIDTo    = big.NewInt(1 << 8)
 	planVersionMigrationResponseDataFieldPlanVersionIDsFrom = big.NewInt(1 << 9)
-	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 10)
-	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 11)
-	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 12)
-	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 13)
-	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 14)
-	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 15)
+	planVersionMigrationResponseDataFieldProrationBehavior  = big.NewInt(1 << 10)
+	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 11)
+	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 12)
+	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 13)
+	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 14)
+	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 15)
+	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 16)
 )
 
 type PlanVersionMigrationResponseData struct {
@@ -1104,6 +1139,7 @@ type PlanVersionMigrationResponseData struct {
 	PlanVersionIDFrom  *string                      `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
 	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"plan_version_id_to"`
 	PlanVersionIDsFrom []string                     `json:"plan_version_ids_from" url:"plan_version_ids_from"`
+	ProrationBehavior  *MigrationProrationBehavior  `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
 	SkippedCompanies   int64                        `json:"skipped_companies" url:"skipped_companies"`
 	StartedAt          *time.Time                   `json:"started_at,omitempty" url:"started_at,omitempty"`
 	Status             PlanVersionMigrationStatus   `json:"status" url:"status"`
@@ -1186,6 +1222,13 @@ func (p *PlanVersionMigrationResponseData) GetPlanVersionIDsFrom() []string {
 		return nil
 	}
 	return p.PlanVersionIDsFrom
+}
+
+func (p *PlanVersionMigrationResponseData) GetProrationBehavior() *MigrationProrationBehavior {
+	if p == nil {
+		return nil
+	}
+	return p.ProrationBehavior
 }
 
 func (p *PlanVersionMigrationResponseData) GetSkippedCompanies() int64 {
@@ -1312,6 +1355,13 @@ func (p *PlanVersionMigrationResponseData) SetPlanVersionIDTo(planVersionIDTo st
 func (p *PlanVersionMigrationResponseData) SetPlanVersionIDsFrom(planVersionIDsFrom []string) {
 	p.PlanVersionIDsFrom = planVersionIDsFrom
 	p.require(planVersionMigrationResponseDataFieldPlanVersionIDsFrom)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationResponseData) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
+	p.ProrationBehavior = prorationBehavior
+	p.require(planVersionMigrationResponseDataFieldProrationBehavior)
 }
 
 // SetSkippedCompanies sets the SkippedCompanies field and marks it as non-optional;

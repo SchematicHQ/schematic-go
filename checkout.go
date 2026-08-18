@@ -140,6 +140,28 @@ func (c *CheckoutDataRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
+type BillingCollectionMethod string
+
+const (
+	BillingCollectionMethodChargeAutomatically BillingCollectionMethod = "charge_automatically"
+	BillingCollectionMethodSendInvoice         BillingCollectionMethod = "send_invoice"
+)
+
+func NewBillingCollectionMethodFromString(s string) (BillingCollectionMethod, error) {
+	switch s {
+	case "charge_automatically":
+		return BillingCollectionMethodChargeAutomatically, nil
+	case "send_invoice":
+		return BillingCollectionMethodSendInvoice, nil
+	}
+	var t BillingCollectionMethod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BillingCollectionMethod) Ptr() *BillingCollectionMethod {
+	return &b
+}
+
 var (
 	changeSubscriptionInternalRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
 	changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)
@@ -1308,12 +1330,14 @@ var (
 	companyBillingCheckoutSettingsFieldCollectAddress = big.NewInt(1 << 0)
 	companyBillingCheckoutSettingsFieldCollectEmail   = big.NewInt(1 << 1)
 	companyBillingCheckoutSettingsFieldCollectPhone   = big.NewInt(1 << 2)
+	companyBillingCheckoutSettingsFieldCollectTaxID   = big.NewInt(1 << 3)
 )
 
 type CompanyBillingCheckoutSettings struct {
 	CollectAddress bool `json:"collect_address" url:"collect_address"`
 	CollectEmail   bool `json:"collect_email" url:"collect_email"`
 	CollectPhone   bool `json:"collect_phone" url:"collect_phone"`
+	CollectTaxID   bool `json:"collect_tax_id" url:"collect_tax_id"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1341,6 +1365,13 @@ func (c *CompanyBillingCheckoutSettings) GetCollectPhone() bool {
 		return false
 	}
 	return c.CollectPhone
+}
+
+func (c *CompanyBillingCheckoutSettings) GetCollectTaxID() bool {
+	if c == nil {
+		return false
+	}
+	return c.CollectTaxID
 }
 
 func (c *CompanyBillingCheckoutSettings) GetExtraProperties() map[string]interface{} {
@@ -1376,6 +1407,13 @@ func (c *CompanyBillingCheckoutSettings) SetCollectEmail(collectEmail bool) {
 func (c *CompanyBillingCheckoutSettings) SetCollectPhone(collectPhone bool) {
 	c.CollectPhone = collectPhone
 	c.require(companyBillingCheckoutSettingsFieldCollectPhone)
+}
+
+// SetCollectTaxID sets the CollectTaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingCheckoutSettings) SetCollectTaxID(collectTaxID bool) {
+	c.CollectTaxID = collectTaxID
+	c.require(companyBillingCheckoutSettingsFieldCollectTaxID)
 }
 
 func (c *CompanyBillingCheckoutSettings) UnmarshalJSON(data []byte) error {
@@ -1933,48 +1971,76 @@ func (m *ManagePlanPreviewResponseResponseData) String() string {
 }
 
 var (
-	managePlanRequestFieldAddOnSelections          = big.NewInt(1 << 0)
-	managePlanRequestFieldBasePlanID               = big.NewInt(1 << 1)
-	managePlanRequestFieldBasePlanPriceID          = big.NewInt(1 << 2)
-	managePlanRequestFieldBasePlanVersionID        = big.NewInt(1 << 3)
-	managePlanRequestFieldBillingEntityID          = big.NewInt(1 << 4)
-	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 5)
-	managePlanRequestFieldCompanyID                = big.NewInt(1 << 6)
-	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 7)
-	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 8)
-	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 9)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 10)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 11)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 12)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 13)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 14)
+	managePlanRequestFieldActivateOnPayment        = big.NewInt(1 << 0)
+	managePlanRequestFieldAddOnSelections          = big.NewInt(1 << 1)
+	managePlanRequestFieldBasePlanID               = big.NewInt(1 << 2)
+	managePlanRequestFieldBasePlanPriceID          = big.NewInt(1 << 3)
+	managePlanRequestFieldBasePlanVersionID        = big.NewInt(1 << 4)
+	managePlanRequestFieldBillingCycleAnchor       = big.NewInt(1 << 5)
+	managePlanRequestFieldBillingEmail             = big.NewInt(1 << 6)
+	managePlanRequestFieldBillingEntityID          = big.NewInt(1 << 7)
+	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 8)
+	managePlanRequestFieldCollectionMethod         = big.NewInt(1 << 9)
+	managePlanRequestFieldCompanyID                = big.NewInt(1 << 10)
+	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 11)
+	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 12)
+	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 13)
+	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 14)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 15)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 16)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 17)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 18)
+	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 19)
+	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 20)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 21)
 )
 
 type ManagePlanRequest struct {
+	// If true, the company gets the plan only once the first invoice is paid. Only applies to an invoiced subscription. Defaults to false.
+	ActivateOnPayment *bool            `json:"activate_on_payment,omitempty" url:"activate_on_payment,omitempty"`
 	AddOnSelections   []*PlanSelection `json:"add_on_selections" url:"add_on_selections"`
 	BasePlanID        *string          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
 	BasePlanPriceID   *string          `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
 	BasePlanVersionID *string          `json:"base_plan_version_id,omitempty" url:"base_plan_version_id,omitempty"`
+	// The date the subscription's billing period renews on. Only honored when starting a new subscription; changing the anchor on an existing subscription is not supported.
+	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
+	// Address the invoice is sent to. Required when collection_method is send_invoice.
+	BillingEmail *string `json:"billing_email,omitempty" url:"billing_email,omitempty"`
 	// The company that pays for this subscription. Must already have a Stripe customer. Only honored when starting a new subscription.
 	BillingEntityID *string `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
 	// If false, subscription cancels at period end. Only applies when removing all plans. Defaults to true.
-	CancelImmediately        *bool                            `json:"cancel_immediately,omitempty" url:"cancel_immediately,omitempty"`
-	CompanyID                string                           `json:"company_id" url:"company_id"`
-	CouponExternalID         *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
-	CreditBundles            []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
-	CustomFieldValues        []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
+	CancelImmediately *bool `json:"cancel_immediately,omitempty" url:"cancel_immediately,omitempty"`
+	// How the subscription is paid: charged to a payment method on file, or invoiced with payment terms. Invoicing is only available when starting a new subscription. Defaults to charge_automatically.
+	CollectionMethod  *BillingCollectionMethod         `json:"collection_method,omitempty" url:"collection_method,omitempty"`
+	CompanyID         string                           `json:"company_id" url:"company_id"`
+	CouponExternalID  *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	CreditBundles     []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
+	CustomFieldValues []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
+	// Payment terms in days for an invoiced subscription. Defaults to 30.
+	DaysUntilDue             *int64                           `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
 	PayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance_entitlements" url:"pay_in_advance_entitlements"`
 	PaymentMethodExternalID  *string                          `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
 	PromoCode                *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
 	// If true and cancel_immediately is true, issue prorated credit. Only applies when removing all plans. Defaults to true.
-	Prorate  *bool      `json:"prorate,omitempty" url:"prorate,omitempty"`
-	TrialEnd *time.Time `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	Prorate *bool `json:"prorate,omitempty" url:"prorate,omitempty"`
+	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
+	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"prorate_first_period,omitempty"`
+	// Whether Stripe emails the invoice when it is finalized. Only applies to an invoiced subscription. Defaults to true.
+	SendInvoice *bool      `json:"send_invoice,omitempty" url:"send_invoice,omitempty"`
+	TrialEnd    *time.Time `json:"trial_end,omitempty" url:"trial_end,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (m *ManagePlanRequest) GetActivateOnPayment() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.ActivateOnPayment
 }
 
 func (m *ManagePlanRequest) GetAddOnSelections() []*PlanSelection {
@@ -2005,6 +2071,20 @@ func (m *ManagePlanRequest) GetBasePlanVersionID() *string {
 	return m.BasePlanVersionID
 }
 
+func (m *ManagePlanRequest) GetBillingCycleAnchor() *time.Time {
+	if m == nil {
+		return nil
+	}
+	return m.BillingCycleAnchor
+}
+
+func (m *ManagePlanRequest) GetBillingEmail() *string {
+	if m == nil {
+		return nil
+	}
+	return m.BillingEmail
+}
+
 func (m *ManagePlanRequest) GetBillingEntityID() *string {
 	if m == nil {
 		return nil
@@ -2017,6 +2097,13 @@ func (m *ManagePlanRequest) GetCancelImmediately() *bool {
 		return nil
 	}
 	return m.CancelImmediately
+}
+
+func (m *ManagePlanRequest) GetCollectionMethod() *BillingCollectionMethod {
+	if m == nil {
+		return nil
+	}
+	return m.CollectionMethod
 }
 
 func (m *ManagePlanRequest) GetCompanyID() string {
@@ -2047,6 +2134,13 @@ func (m *ManagePlanRequest) GetCustomFieldValues() []*CheckoutFieldValue {
 	return m.CustomFieldValues
 }
 
+func (m *ManagePlanRequest) GetDaysUntilDue() *int64 {
+	if m == nil {
+		return nil
+	}
+	return m.DaysUntilDue
+}
+
 func (m *ManagePlanRequest) GetPayInAdvanceEntitlements() []*UpdatePayInAdvanceRequestBody {
 	if m == nil {
 		return nil
@@ -2075,6 +2169,20 @@ func (m *ManagePlanRequest) GetProrate() *bool {
 	return m.Prorate
 }
 
+func (m *ManagePlanRequest) GetProrateFirstPeriod() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.ProrateFirstPeriod
+}
+
+func (m *ManagePlanRequest) GetSendInvoice() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.SendInvoice
+}
+
 func (m *ManagePlanRequest) GetTrialEnd() *time.Time {
 	if m == nil {
 		return nil
@@ -2094,6 +2202,13 @@ func (m *ManagePlanRequest) require(field *big.Int) {
 		m.explicitFields = big.NewInt(0)
 	}
 	m.explicitFields.Or(m.explicitFields, field)
+}
+
+// SetActivateOnPayment sets the ActivateOnPayment field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetActivateOnPayment(activateOnPayment *bool) {
+	m.ActivateOnPayment = activateOnPayment
+	m.require(managePlanRequestFieldActivateOnPayment)
 }
 
 // SetAddOnSelections sets the AddOnSelections field and marks it as non-optional;
@@ -2124,6 +2239,20 @@ func (m *ManagePlanRequest) SetBasePlanVersionID(basePlanVersionID *string) {
 	m.require(managePlanRequestFieldBasePlanVersionID)
 }
 
+// SetBillingCycleAnchor sets the BillingCycleAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
+	m.BillingCycleAnchor = billingCycleAnchor
+	m.require(managePlanRequestFieldBillingCycleAnchor)
+}
+
+// SetBillingEmail sets the BillingEmail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetBillingEmail(billingEmail *string) {
+	m.BillingEmail = billingEmail
+	m.require(managePlanRequestFieldBillingEmail)
+}
+
 // SetBillingEntityID sets the BillingEntityID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (m *ManagePlanRequest) SetBillingEntityID(billingEntityID *string) {
@@ -2136,6 +2265,13 @@ func (m *ManagePlanRequest) SetBillingEntityID(billingEntityID *string) {
 func (m *ManagePlanRequest) SetCancelImmediately(cancelImmediately *bool) {
 	m.CancelImmediately = cancelImmediately
 	m.require(managePlanRequestFieldCancelImmediately)
+}
+
+// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetCollectionMethod(collectionMethod *BillingCollectionMethod) {
+	m.CollectionMethod = collectionMethod
+	m.require(managePlanRequestFieldCollectionMethod)
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -2166,6 +2302,13 @@ func (m *ManagePlanRequest) SetCustomFieldValues(customFieldValues []*CheckoutFi
 	m.require(managePlanRequestFieldCustomFieldValues)
 }
 
+// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetDaysUntilDue(daysUntilDue *int64) {
+	m.DaysUntilDue = daysUntilDue
+	m.require(managePlanRequestFieldDaysUntilDue)
+}
+
 // SetPayInAdvanceEntitlements sets the PayInAdvanceEntitlements field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (m *ManagePlanRequest) SetPayInAdvanceEntitlements(payInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody) {
@@ -2194,6 +2337,20 @@ func (m *ManagePlanRequest) SetProrate(prorate *bool) {
 	m.require(managePlanRequestFieldProrate)
 }
 
+// SetProrateFirstPeriod sets the ProrateFirstPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetProrateFirstPeriod(prorateFirstPeriod *bool) {
+	m.ProrateFirstPeriod = prorateFirstPeriod
+	m.require(managePlanRequestFieldProrateFirstPeriod)
+}
+
+// SetSendInvoice sets the SendInvoice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetSendInvoice(sendInvoice *bool) {
+	m.SendInvoice = sendInvoice
+	m.require(managePlanRequestFieldSendInvoice)
+}
+
 // SetTrialEnd sets the TrialEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (m *ManagePlanRequest) SetTrialEnd(trialEnd *time.Time) {
@@ -2205,7 +2362,8 @@ func (m *ManagePlanRequest) UnmarshalJSON(data []byte) error {
 	type embed ManagePlanRequest
 	var unmarshaler = struct {
 		embed
-		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		TrialEnd           *internal.DateTime `json:"trial_end,omitempty"`
 	}{
 		embed: embed(*m),
 	}
@@ -2213,6 +2371,7 @@ func (m *ManagePlanRequest) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*m = ManagePlanRequest(unmarshaler.embed)
+	m.BillingCycleAnchor = unmarshaler.BillingCycleAnchor.TimePtr()
 	m.TrialEnd = unmarshaler.TrialEnd.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *m)
 	if err != nil {
@@ -2227,10 +2386,12 @@ func (m *ManagePlanRequest) MarshalJSON() ([]byte, error) {
 	type embed ManagePlanRequest
 	var marshaler = struct {
 		embed
-		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		TrialEnd           *internal.DateTime `json:"trial_end,omitempty"`
 	}{
-		embed:    embed(*m),
-		TrialEnd: internal.NewOptionalDateTime(m.TrialEnd),
+		embed:              embed(*m),
+		BillingCycleAnchor: internal.NewOptionalDateTime(m.BillingCycleAnchor),
+		TrialEnd:           internal.NewOptionalDateTime(m.TrialEnd),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -3065,24 +3226,26 @@ func (p *PreviewSubscriptionDiscountResponseData) String() string {
 
 var (
 	previewSubscriptionFinanceResponseDataFieldAmountOff                = big.NewInt(1 << 0)
-	previewSubscriptionFinanceResponseDataFieldDiscounts                = big.NewInt(1 << 1)
-	previewSubscriptionFinanceResponseDataFieldDueNow                   = big.NewInt(1 << 2)
-	previewSubscriptionFinanceResponseDataFieldNewCharges               = big.NewInt(1 << 3)
-	previewSubscriptionFinanceResponseDataFieldPercentOff               = big.NewInt(1 << 4)
-	previewSubscriptionFinanceResponseDataFieldPeriodEnd                = big.NewInt(1 << 5)
-	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 6)
-	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 7)
-	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 8)
-	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 9)
-	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 10)
-	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 11)
-	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 12)
-	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 13)
-	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 14)
+	previewSubscriptionFinanceResponseDataFieldDiscountAmount           = big.NewInt(1 << 1)
+	previewSubscriptionFinanceResponseDataFieldDiscounts                = big.NewInt(1 << 2)
+	previewSubscriptionFinanceResponseDataFieldDueNow                   = big.NewInt(1 << 3)
+	previewSubscriptionFinanceResponseDataFieldNewCharges               = big.NewInt(1 << 4)
+	previewSubscriptionFinanceResponseDataFieldPercentOff               = big.NewInt(1 << 5)
+	previewSubscriptionFinanceResponseDataFieldPeriodEnd                = big.NewInt(1 << 6)
+	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 7)
+	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 8)
+	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 9)
+	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 10)
+	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 11)
+	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 12)
+	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 13)
+	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 14)
+	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 15)
 )
 
 type PreviewSubscriptionFinanceResponseData struct {
 	AmountOff                int64                                          `json:"amount_off" url:"amount_off"`
+	DiscountAmount           int64                                          `json:"discount_amount" url:"discount_amount"`
 	Discounts                []*PreviewSubscriptionDiscountResponseData     `json:"discounts" url:"discounts"`
 	DueNow                   int64                                          `json:"due_now" url:"due_now"`
 	NewCharges               int64                                          `json:"new_charges" url:"new_charges"`
@@ -3110,6 +3273,13 @@ func (p *PreviewSubscriptionFinanceResponseData) GetAmountOff() int64 {
 		return 0
 	}
 	return p.AmountOff
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetDiscountAmount() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.DiscountAmount
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) GetDiscounts() []*PreviewSubscriptionDiscountResponseData {
@@ -3229,6 +3399,13 @@ func (p *PreviewSubscriptionFinanceResponseData) require(field *big.Int) {
 func (p *PreviewSubscriptionFinanceResponseData) SetAmountOff(amountOff int64) {
 	p.AmountOff = amountOff
 	p.require(previewSubscriptionFinanceResponseDataFieldAmountOff)
+}
+
+// SetDiscountAmount sets the DiscountAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionFinanceResponseData) SetDiscountAmount(discountAmount int64) {
+	p.DiscountAmount = discountAmount
+	p.require(previewSubscriptionFinanceResponseDataFieldDiscountAmount)
 }
 
 // SetDiscounts sets the Discounts field and marks it as non-optional;

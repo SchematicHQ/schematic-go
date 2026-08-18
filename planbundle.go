@@ -1279,6 +1279,7 @@ var (
 	planBundleResponseDataFieldCreditGrants   = big.NewInt(1 << 1)
 	planBundleResponseDataFieldEntitlements   = big.NewInt(1 << 2)
 	planBundleResponseDataFieldPlan           = big.NewInt(1 << 3)
+	planBundleResponseDataFieldPlanVersion    = big.NewInt(1 << 4)
 )
 
 type PlanBundleResponseData struct {
@@ -1286,6 +1287,7 @@ type PlanBundleResponseData struct {
 	CreditGrants   []*BillingPlanCreditGrantResponseData `json:"credit_grants,omitempty" url:"credit_grants,omitempty"`
 	Entitlements   []*PlanEntitlementResponseData        `json:"entitlements,omitempty" url:"entitlements,omitempty"`
 	Plan           *PlanResponseData                     `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanVersion    *PlanVersionResponseData              `json:"plan_version,omitempty" url:"plan_version,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1320,6 +1322,13 @@ func (p *PlanBundleResponseData) GetPlan() *PlanResponseData {
 		return nil
 	}
 	return p.Plan
+}
+
+func (p *PlanBundleResponseData) GetPlanVersion() *PlanVersionResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.PlanVersion
 }
 
 func (p *PlanBundleResponseData) GetExtraProperties() map[string]interface{} {
@@ -1362,6 +1371,13 @@ func (p *PlanBundleResponseData) SetEntitlements(entitlements []*PlanEntitlement
 func (p *PlanBundleResponseData) SetPlan(plan *PlanResponseData) {
 	p.Plan = plan
 	p.require(planBundleResponseDataFieldPlan)
+}
+
+// SetPlanVersion sets the PlanVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanBundleResponseData) SetPlanVersion(planVersion *PlanVersionResponseData) {
+	p.PlanVersion = planVersion
+	p.require(planBundleResponseDataFieldPlanVersion)
 }
 
 func (p *PlanBundleResponseData) UnmarshalJSON(data []byte) error {

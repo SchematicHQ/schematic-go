@@ -417,6 +417,40 @@ func (c *Client) UpdateEntityTraitDefinition(
 	return response.Body, nil
 }
 
+func (c *Client) DeleteEntityTraitDefinition(
+	ctx context.Context,
+	// entity_trait_definition_id
+	entityTraitDefinitionID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteEntityTraitDefinitionResponse, error) {
+	response, err := c.WithRawResponse.DeleteEntityTraitDefinition(
+		ctx,
+		entityTraitDefinitionID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) GetEntityTraitDefinitionUsage(
+	ctx context.Context,
+	// entity_trait_definition_id
+	entityTraitDefinitionID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetEntityTraitDefinitionUsageResponse, error) {
+	response, err := c.WithRawResponse.GetEntityTraitDefinitionUsage(
+		ctx,
+		entityTraitDefinitionID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) CountEntityTraitDefinitions(
 	ctx context.Context,
 	request *schematichq.CountEntityTraitDefinitionsRequest,
@@ -439,6 +473,22 @@ func (c *Client) GetEntityTraitValues(
 	opts ...option.RequestOption,
 ) (*schematichq.GetEntityTraitValuesResponse, error) {
 	response, err := c.WithRawResponse.GetEntityTraitValues(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) CountEntityTraits(
+	ctx context.Context,
+	request *schematichq.CountEntityTraitsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountEntityTraitsResponse, error) {
+	response, err := c.WithRawResponse.CountEntityTraits(
 		ctx,
 		request,
 		opts...,

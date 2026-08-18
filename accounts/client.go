@@ -318,6 +318,36 @@ func (c *Client) DeleteEnvironment(
 	return response.Body, nil
 }
 
+func (c *Client) GetOnboardingState(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetOnboardingStateResponse, error) {
+	response, err := c.WithRawResponse.GetOnboardingState(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+func (c *Client) UpdateOnboardingState(
+	ctx context.Context,
+	request *schematichq.UpdateOnboardingStateRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateOnboardingStateResponse, error) {
+	response, err := c.WithRawResponse.UpdateOnboardingState(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
 func (c *Client) Quickstart(
 	ctx context.Context,
 	opts ...option.RequestOption,

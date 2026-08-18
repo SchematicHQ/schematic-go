@@ -13,49 +13,53 @@ import (
 var (
 	createPlanGroupRequestBodyFieldAddOnCompatibilities                   = big.NewInt(1 << 0)
 	createPlanGroupRequestBodyFieldAddOnIDs                               = big.NewInt(1 << 1)
-	createPlanGroupRequestBodyFieldCheckoutCollectAddress                 = big.NewInt(1 << 2)
-	createPlanGroupRequestBodyFieldCheckoutCollectEmail                   = big.NewInt(1 << 3)
-	createPlanGroupRequestBodyFieldCheckoutCollectPhone                   = big.NewInt(1 << 4)
-	createPlanGroupRequestBodyFieldCustomCheckoutFields                   = big.NewInt(1 << 5)
-	createPlanGroupRequestBodyFieldCustomPlanConfig                       = big.NewInt(1 << 6)
-	createPlanGroupRequestBodyFieldCustomPlanID                           = big.NewInt(1 << 7)
-	createPlanGroupRequestBodyFieldEnableTaxCollection                    = big.NewInt(1 << 8)
-	createPlanGroupRequestBodyFieldFallbackPlanID                         = big.NewInt(1 << 9)
-	createPlanGroupRequestBodyFieldInitialPlanID                          = big.NewInt(1 << 10)
-	createPlanGroupRequestBodyFieldInitialPlanPriceID                     = big.NewInt(1 << 11)
-	createPlanGroupRequestBodyFieldOptInEnabled                           = big.NewInt(1 << 12)
-	createPlanGroupRequestBodyFieldOptInText                              = big.NewInt(1 << 13)
-	createPlanGroupRequestBodyFieldOptInTitle                             = big.NewInt(1 << 14)
-	createPlanGroupRequestBodyFieldOrderedAddOns                          = big.NewInt(1 << 15)
-	createPlanGroupRequestBodyFieldOrderedBundleList                      = big.NewInt(1 << 16)
-	createPlanGroupRequestBodyFieldOrderedPlans                           = big.NewInt(1 << 17)
-	createPlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 18)
-	createPlanGroupRequestBodyFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 19)
-	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 20)
-	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 21)
-	createPlanGroupRequestBodyFieldProrationBehavior                      = big.NewInt(1 << 22)
-	createPlanGroupRequestBodyFieldScheduledDowngradeBehavior             = big.NewInt(1 << 23)
-	createPlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 24)
-	createPlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 25)
-	createPlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 26)
-	createPlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 27)
-	createPlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 28)
-	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 29)
-	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 30)
-	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 31)
-	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 32)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 33)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 34)
-	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 35)
+	createPlanGroupRequestBodyFieldCheckoutBundlePurchaseBehavior         = big.NewInt(1 << 2)
+	createPlanGroupRequestBodyFieldCheckoutCollectAddress                 = big.NewInt(1 << 3)
+	createPlanGroupRequestBodyFieldCheckoutCollectEmail                   = big.NewInt(1 << 4)
+	createPlanGroupRequestBodyFieldCheckoutCollectPhone                   = big.NewInt(1 << 5)
+	createPlanGroupRequestBodyFieldCheckoutCollectTaxID                   = big.NewInt(1 << 6)
+	createPlanGroupRequestBodyFieldCustomCheckoutFields                   = big.NewInt(1 << 7)
+	createPlanGroupRequestBodyFieldCustomPlanConfig                       = big.NewInt(1 << 8)
+	createPlanGroupRequestBodyFieldCustomPlanID                           = big.NewInt(1 << 9)
+	createPlanGroupRequestBodyFieldEnableTaxCollection                    = big.NewInt(1 << 10)
+	createPlanGroupRequestBodyFieldFallbackPlanID                         = big.NewInt(1 << 11)
+	createPlanGroupRequestBodyFieldInitialPlanID                          = big.NewInt(1 << 12)
+	createPlanGroupRequestBodyFieldInitialPlanPriceID                     = big.NewInt(1 << 13)
+	createPlanGroupRequestBodyFieldOptInEnabled                           = big.NewInt(1 << 14)
+	createPlanGroupRequestBodyFieldOptInText                              = big.NewInt(1 << 15)
+	createPlanGroupRequestBodyFieldOptInTitle                             = big.NewInt(1 << 16)
+	createPlanGroupRequestBodyFieldOrderedAddOns                          = big.NewInt(1 << 17)
+	createPlanGroupRequestBodyFieldOrderedBundleList                      = big.NewInt(1 << 18)
+	createPlanGroupRequestBodyFieldOrderedPlans                           = big.NewInt(1 << 19)
+	createPlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 20)
+	createPlanGroupRequestBodyFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 21)
+	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 22)
+	createPlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 23)
+	createPlanGroupRequestBodyFieldProrationBehavior                      = big.NewInt(1 << 24)
+	createPlanGroupRequestBodyFieldScheduledDowngradeBehavior             = big.NewInt(1 << 25)
+	createPlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 26)
+	createPlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 27)
+	createPlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 28)
+	createPlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 29)
+	createPlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 30)
+	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 31)
+	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 32)
+	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 33)
+	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 34)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 35)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 36)
+	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 37)
 )
 
 type CreatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
 	AddOnIDs                               []string                          `json:"add_on_ids" url:"-"`
+	CheckoutBundlePurchaseBehavior         CheckoutBundlePurchaseBehavior    `json:"checkout_bundle_purchase_behavior" url:"-"`
 	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
 	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
 	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
+	CheckoutCollectTaxID                   bool                              `json:"checkout_collect_tax_id" url:"-"`
 	CustomCheckoutFields                   []*CheckoutFieldInput             `json:"custom_checkout_fields,omitempty" url:"-"`
 	CustomPlanConfig                       *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"-"`
 	CustomPlanID                           *string                           `json:"custom_plan_id,omitempty" url:"-"`
@@ -113,6 +117,13 @@ func (c *CreatePlanGroupRequestBody) SetAddOnIDs(addOnIDs []string) {
 	c.require(createPlanGroupRequestBodyFieldAddOnIDs)
 }
 
+// SetCheckoutBundlePurchaseBehavior sets the CheckoutBundlePurchaseBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetCheckoutBundlePurchaseBehavior(checkoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior) {
+	c.CheckoutBundlePurchaseBehavior = checkoutBundlePurchaseBehavior
+	c.require(createPlanGroupRequestBodyFieldCheckoutBundlePurchaseBehavior)
+}
+
 // SetCheckoutCollectAddress sets the CheckoutCollectAddress field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreatePlanGroupRequestBody) SetCheckoutCollectAddress(checkoutCollectAddress bool) {
@@ -132,6 +143,13 @@ func (c *CreatePlanGroupRequestBody) SetCheckoutCollectEmail(checkoutCollectEmai
 func (c *CreatePlanGroupRequestBody) SetCheckoutCollectPhone(checkoutCollectPhone bool) {
 	c.CheckoutCollectPhone = checkoutCollectPhone
 	c.require(createPlanGroupRequestBodyFieldCheckoutCollectPhone)
+}
+
+// SetCheckoutCollectTaxID sets the CheckoutCollectTaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetCheckoutCollectTaxID(checkoutCollectTaxID bool) {
+	c.CheckoutCollectTaxID = checkoutCollectTaxID
+	c.require(createPlanGroupRequestBodyFieldCheckoutCollectTaxID)
 }
 
 // SetCustomCheckoutFields sets the CustomCheckoutFields field and marks it as non-optional;
@@ -802,27 +820,38 @@ func (c *CheckoutFieldResponseData) String() string {
 }
 
 var (
-	checkoutSettingsResponseDataFieldCollectAddress = big.NewInt(1 << 0)
-	checkoutSettingsResponseDataFieldCollectEmail   = big.NewInt(1 << 1)
-	checkoutSettingsResponseDataFieldCollectPhone   = big.NewInt(1 << 2)
-	checkoutSettingsResponseDataFieldOptInEnabled   = big.NewInt(1 << 3)
-	checkoutSettingsResponseDataFieldOptInText      = big.NewInt(1 << 4)
-	checkoutSettingsResponseDataFieldOptInTitle     = big.NewInt(1 << 5)
+	checkoutSettingsResponseDataFieldBundlePurchaseBehavior = big.NewInt(1 << 0)
+	checkoutSettingsResponseDataFieldCollectAddress         = big.NewInt(1 << 1)
+	checkoutSettingsResponseDataFieldCollectEmail           = big.NewInt(1 << 2)
+	checkoutSettingsResponseDataFieldCollectPhone           = big.NewInt(1 << 3)
+	checkoutSettingsResponseDataFieldCollectTaxID           = big.NewInt(1 << 4)
+	checkoutSettingsResponseDataFieldOptInEnabled           = big.NewInt(1 << 5)
+	checkoutSettingsResponseDataFieldOptInText              = big.NewInt(1 << 6)
+	checkoutSettingsResponseDataFieldOptInTitle             = big.NewInt(1 << 7)
 )
 
 type CheckoutSettingsResponseData struct {
-	CollectAddress bool    `json:"collect_address" url:"collect_address"`
-	CollectEmail   bool    `json:"collect_email" url:"collect_email"`
-	CollectPhone   bool    `json:"collect_phone" url:"collect_phone"`
-	OptInEnabled   bool    `json:"opt_in_enabled" url:"opt_in_enabled"`
-	OptInText      *string `json:"opt_in_text,omitempty" url:"opt_in_text,omitempty"`
-	OptInTitle     *string `json:"opt_in_title,omitempty" url:"opt_in_title,omitempty"`
+	BundlePurchaseBehavior CheckoutBundlePurchaseBehavior `json:"bundle_purchase_behavior" url:"bundle_purchase_behavior"`
+	CollectAddress         bool                           `json:"collect_address" url:"collect_address"`
+	CollectEmail           bool                           `json:"collect_email" url:"collect_email"`
+	CollectPhone           bool                           `json:"collect_phone" url:"collect_phone"`
+	CollectTaxID           bool                           `json:"collect_tax_id" url:"collect_tax_id"`
+	OptInEnabled           bool                           `json:"opt_in_enabled" url:"opt_in_enabled"`
+	OptInText              *string                        `json:"opt_in_text,omitempty" url:"opt_in_text,omitempty"`
+	OptInTitle             *string                        `json:"opt_in_title,omitempty" url:"opt_in_title,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutSettingsResponseData) GetBundlePurchaseBehavior() CheckoutBundlePurchaseBehavior {
+	if c == nil {
+		return ""
+	}
+	return c.BundlePurchaseBehavior
 }
 
 func (c *CheckoutSettingsResponseData) GetCollectAddress() bool {
@@ -844,6 +873,13 @@ func (c *CheckoutSettingsResponseData) GetCollectPhone() bool {
 		return false
 	}
 	return c.CollectPhone
+}
+
+func (c *CheckoutSettingsResponseData) GetCollectTaxID() bool {
+	if c == nil {
+		return false
+	}
+	return c.CollectTaxID
 }
 
 func (c *CheckoutSettingsResponseData) GetOptInEnabled() bool {
@@ -881,6 +917,13 @@ func (c *CheckoutSettingsResponseData) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetBundlePurchaseBehavior sets the BundlePurchaseBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSettingsResponseData) SetBundlePurchaseBehavior(bundlePurchaseBehavior CheckoutBundlePurchaseBehavior) {
+	c.BundlePurchaseBehavior = bundlePurchaseBehavior
+	c.require(checkoutSettingsResponseDataFieldBundlePurchaseBehavior)
+}
+
 // SetCollectAddress sets the CollectAddress field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CheckoutSettingsResponseData) SetCollectAddress(collectAddress bool) {
@@ -900,6 +943,13 @@ func (c *CheckoutSettingsResponseData) SetCollectEmail(collectEmail bool) {
 func (c *CheckoutSettingsResponseData) SetCollectPhone(collectPhone bool) {
 	c.CollectPhone = collectPhone
 	c.require(checkoutSettingsResponseDataFieldCollectPhone)
+}
+
+// SetCollectTaxID sets the CollectTaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSettingsResponseData) SetCollectTaxID(collectTaxID bool) {
+	c.CollectTaxID = collectTaxID
+	c.require(checkoutSettingsResponseDataFieldCollectTaxID)
 }
 
 // SetOptInEnabled sets the OptInEnabled field and marks it as non-optional;
@@ -3318,49 +3368,53 @@ func (u *UpdatePlanGroupResponse) String() string {
 var (
 	updatePlanGroupRequestBodyFieldAddOnCompatibilities                   = big.NewInt(1 << 0)
 	updatePlanGroupRequestBodyFieldAddOnIDs                               = big.NewInt(1 << 1)
-	updatePlanGroupRequestBodyFieldCheckoutCollectAddress                 = big.NewInt(1 << 2)
-	updatePlanGroupRequestBodyFieldCheckoutCollectEmail                   = big.NewInt(1 << 3)
-	updatePlanGroupRequestBodyFieldCheckoutCollectPhone                   = big.NewInt(1 << 4)
-	updatePlanGroupRequestBodyFieldCustomCheckoutFields                   = big.NewInt(1 << 5)
-	updatePlanGroupRequestBodyFieldCustomPlanConfig                       = big.NewInt(1 << 6)
-	updatePlanGroupRequestBodyFieldCustomPlanID                           = big.NewInt(1 << 7)
-	updatePlanGroupRequestBodyFieldEnableTaxCollection                    = big.NewInt(1 << 8)
-	updatePlanGroupRequestBodyFieldFallbackPlanID                         = big.NewInt(1 << 9)
-	updatePlanGroupRequestBodyFieldInitialPlanID                          = big.NewInt(1 << 10)
-	updatePlanGroupRequestBodyFieldInitialPlanPriceID                     = big.NewInt(1 << 11)
-	updatePlanGroupRequestBodyFieldOptInEnabled                           = big.NewInt(1 << 12)
-	updatePlanGroupRequestBodyFieldOptInText                              = big.NewInt(1 << 13)
-	updatePlanGroupRequestBodyFieldOptInTitle                             = big.NewInt(1 << 14)
-	updatePlanGroupRequestBodyFieldOrderedAddOns                          = big.NewInt(1 << 15)
-	updatePlanGroupRequestBodyFieldOrderedBundleList                      = big.NewInt(1 << 16)
-	updatePlanGroupRequestBodyFieldOrderedPlans                           = big.NewInt(1 << 17)
-	updatePlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 18)
-	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 19)
-	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 20)
-	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 21)
-	updatePlanGroupRequestBodyFieldProrationBehavior                      = big.NewInt(1 << 22)
-	updatePlanGroupRequestBodyFieldScheduledDowngradeBehavior             = big.NewInt(1 << 23)
-	updatePlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 24)
-	updatePlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 25)
-	updatePlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 26)
-	updatePlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 27)
-	updatePlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 28)
-	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 29)
-	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 30)
-	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 31)
-	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 32)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 33)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 34)
-	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 35)
+	updatePlanGroupRequestBodyFieldCheckoutBundlePurchaseBehavior         = big.NewInt(1 << 2)
+	updatePlanGroupRequestBodyFieldCheckoutCollectAddress                 = big.NewInt(1 << 3)
+	updatePlanGroupRequestBodyFieldCheckoutCollectEmail                   = big.NewInt(1 << 4)
+	updatePlanGroupRequestBodyFieldCheckoutCollectPhone                   = big.NewInt(1 << 5)
+	updatePlanGroupRequestBodyFieldCheckoutCollectTaxID                   = big.NewInt(1 << 6)
+	updatePlanGroupRequestBodyFieldCustomCheckoutFields                   = big.NewInt(1 << 7)
+	updatePlanGroupRequestBodyFieldCustomPlanConfig                       = big.NewInt(1 << 8)
+	updatePlanGroupRequestBodyFieldCustomPlanID                           = big.NewInt(1 << 9)
+	updatePlanGroupRequestBodyFieldEnableTaxCollection                    = big.NewInt(1 << 10)
+	updatePlanGroupRequestBodyFieldFallbackPlanID                         = big.NewInt(1 << 11)
+	updatePlanGroupRequestBodyFieldInitialPlanID                          = big.NewInt(1 << 12)
+	updatePlanGroupRequestBodyFieldInitialPlanPriceID                     = big.NewInt(1 << 13)
+	updatePlanGroupRequestBodyFieldOptInEnabled                           = big.NewInt(1 << 14)
+	updatePlanGroupRequestBodyFieldOptInText                              = big.NewInt(1 << 15)
+	updatePlanGroupRequestBodyFieldOptInTitle                             = big.NewInt(1 << 16)
+	updatePlanGroupRequestBodyFieldOrderedAddOns                          = big.NewInt(1 << 17)
+	updatePlanGroupRequestBodyFieldOrderedBundleList                      = big.NewInt(1 << 18)
+	updatePlanGroupRequestBodyFieldOrderedPlans                           = big.NewInt(1 << 19)
+	updatePlanGroupRequestBodyFieldPreventDowngradesWhenOverLimit         = big.NewInt(1 << 20)
+	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngrade            = big.NewInt(1 << 21)
+	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeButtonText  = big.NewInt(1 << 22)
+	updatePlanGroupRequestBodyFieldPreventSelfServiceDowngradeURL         = big.NewInt(1 << 23)
+	updatePlanGroupRequestBodyFieldProrationBehavior                      = big.NewInt(1 << 24)
+	updatePlanGroupRequestBodyFieldScheduledDowngradeBehavior             = big.NewInt(1 << 25)
+	updatePlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 26)
+	updatePlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 27)
+	updatePlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 28)
+	updatePlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 29)
+	updatePlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 30)
+	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 31)
+	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 32)
+	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 33)
+	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 34)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 35)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 36)
+	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 37)
 )
 
 type UpdatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
 	AddOnIDs                               []string                          `json:"add_on_ids" url:"-"`
+	CheckoutBundlePurchaseBehavior         CheckoutBundlePurchaseBehavior    `json:"checkout_bundle_purchase_behavior" url:"-"`
 	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
 	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
 	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
+	CheckoutCollectTaxID                   bool                              `json:"checkout_collect_tax_id" url:"-"`
 	CustomCheckoutFields                   []*CheckoutFieldInput             `json:"custom_checkout_fields,omitempty" url:"-"`
 	CustomPlanConfig                       *CustomPlanConfig                 `json:"custom_plan_config,omitempty" url:"-"`
 	CustomPlanID                           *string                           `json:"custom_plan_id,omitempty" url:"-"`
@@ -3418,6 +3472,13 @@ func (u *UpdatePlanGroupRequestBody) SetAddOnIDs(addOnIDs []string) {
 	u.require(updatePlanGroupRequestBodyFieldAddOnIDs)
 }
 
+// SetCheckoutBundlePurchaseBehavior sets the CheckoutBundlePurchaseBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetCheckoutBundlePurchaseBehavior(checkoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior) {
+	u.CheckoutBundlePurchaseBehavior = checkoutBundlePurchaseBehavior
+	u.require(updatePlanGroupRequestBodyFieldCheckoutBundlePurchaseBehavior)
+}
+
 // SetCheckoutCollectAddress sets the CheckoutCollectAddress field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdatePlanGroupRequestBody) SetCheckoutCollectAddress(checkoutCollectAddress bool) {
@@ -3437,6 +3498,13 @@ func (u *UpdatePlanGroupRequestBody) SetCheckoutCollectEmail(checkoutCollectEmai
 func (u *UpdatePlanGroupRequestBody) SetCheckoutCollectPhone(checkoutCollectPhone bool) {
 	u.CheckoutCollectPhone = checkoutCollectPhone
 	u.require(updatePlanGroupRequestBodyFieldCheckoutCollectPhone)
+}
+
+// SetCheckoutCollectTaxID sets the CheckoutCollectTaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetCheckoutCollectTaxID(checkoutCollectTaxID bool) {
+	u.CheckoutCollectTaxID = checkoutCollectTaxID
+	u.require(updatePlanGroupRequestBodyFieldCheckoutCollectTaxID)
 }
 
 // SetCustomCheckoutFields sets the CustomCheckoutFields field and marks it as non-optional;

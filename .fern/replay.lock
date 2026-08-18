@@ -66,14 +66,20 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-go-sdk: 1.46.4
-current_generation: fb43e53b5bf81b5447cf60dd0e8067d6991954b8
+  - commit_sha: 6fba0cae7c84f4bf7992883b093c86857508ca7e
+    tree_hash: dbb5218acdcfed4179c8d8a43da871c85c0406a5
+    timestamp: 2026-08-17T10:10:31.892Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-go-sdk: 1.46.4
+current_generation: 6fba0cae7c84f4bf7992883b093c86857508ca7e
 patches:
   - id: patch-c1dec125
     content_hash: sha256:3602badfd6867857bc1f9fc1eddae9cba4a3e8016e6f7211a1339d67bb73c8d2
     original_commit: c1dec12524ae4d861b313c6edb5d4c61b2b2b3a7
     original_message: "chore(deps): bump actions/setup-go from 4 to 6 (#165)"
     original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    base_generation: fb43e53b5bf81b5447cf60dd0e8067d6991954b8
+    base_generation: 6fba0cae7c84f4bf7992883b093c86857508ca7e
     files:
       - .github/workflows/ci.yml
     patch_content: |
@@ -184,25 +190,4 @@ patches:
                   if [ -f wiremock/docker-compose.test.yml ]; then
                     docker compose -p "$PROJECT_NAME" -f wiremock/docker-compose.test.yml down
                   fi
-    user_owned: true
-  - id: patch-9b95120f
-    content_hash: sha256:a6beb631b35fe6d0b4f98e996edb118bbff02eedddbdf9f85c6a7157db4d6973
-    original_commit: 9b95120fb6a66e21a6494b83df047161862350eb
-    original_message: "chore: update rules engine WASM to v0.6.0 (#190)"
-    original_author: Schematic Bot <bot@schematichq.com>
-    base_generation: fb43e53b5bf81b5447cf60dd0e8067d6991954b8
-    files:
-      - WASM_VERSION
-      - rulesengine/wasm/rulesengine.wasm
-    patch_content: |
-      diff --git a/WASM_VERSION b/WASM_VERSION
-      new file mode 100644
-      index 0000000..a918a2a
-      --- /dev/null
-      +++ b/WASM_VERSION
-      @@ -0,0 +1 @@
-      +0.6.0
-    theirs_snapshot:
-      WASM_VERSION: |
-        0.6.0
     user_owned: true

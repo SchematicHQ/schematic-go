@@ -246,29 +246,31 @@ func (p *PreviewComponentDataRequest) SetComponentID(componentID *string) {
 
 var (
 	billingCreditBundleViewFieldBundleType        = big.NewInt(1 << 0)
-	billingCreditBundleViewFieldCreatedAt         = big.NewInt(1 << 1)
-	billingCreditBundleViewFieldCreditDescription = big.NewInt(1 << 2)
-	billingCreditBundleViewFieldCreditIcon        = big.NewInt(1 << 3)
-	billingCreditBundleViewFieldCreditID          = big.NewInt(1 << 4)
-	billingCreditBundleViewFieldCreditName        = big.NewInt(1 << 5)
-	billingCreditBundleViewFieldCurrencyPrices    = big.NewInt(1 << 6)
-	billingCreditBundleViewFieldExpiryType        = big.NewInt(1 << 7)
-	billingCreditBundleViewFieldExpiryUnit        = big.NewInt(1 << 8)
-	billingCreditBundleViewFieldExpiryUnitCount   = big.NewInt(1 << 9)
-	billingCreditBundleViewFieldHasGrants         = big.NewInt(1 << 10)
-	billingCreditBundleViewFieldID                = big.NewInt(1 << 11)
-	billingCreditBundleViewFieldName              = big.NewInt(1 << 12)
-	billingCreditBundleViewFieldPluralName        = big.NewInt(1 << 13)
-	billingCreditBundleViewFieldPrice             = big.NewInt(1 << 14)
-	billingCreditBundleViewFieldQuantity          = big.NewInt(1 << 15)
-	billingCreditBundleViewFieldSingularName      = big.NewInt(1 << 16)
-	billingCreditBundleViewFieldStatus            = big.NewInt(1 << 17)
-	billingCreditBundleViewFieldUnitPrice         = big.NewInt(1 << 18)
-	billingCreditBundleViewFieldUpdatedAt         = big.NewInt(1 << 19)
+	billingCreditBundleViewFieldCompatiblePlanIDs = big.NewInt(1 << 1)
+	billingCreditBundleViewFieldCreatedAt         = big.NewInt(1 << 2)
+	billingCreditBundleViewFieldCreditDescription = big.NewInt(1 << 3)
+	billingCreditBundleViewFieldCreditIcon        = big.NewInt(1 << 4)
+	billingCreditBundleViewFieldCreditID          = big.NewInt(1 << 5)
+	billingCreditBundleViewFieldCreditName        = big.NewInt(1 << 6)
+	billingCreditBundleViewFieldCurrencyPrices    = big.NewInt(1 << 7)
+	billingCreditBundleViewFieldExpiryType        = big.NewInt(1 << 8)
+	billingCreditBundleViewFieldExpiryUnit        = big.NewInt(1 << 9)
+	billingCreditBundleViewFieldExpiryUnitCount   = big.NewInt(1 << 10)
+	billingCreditBundleViewFieldHasGrants         = big.NewInt(1 << 11)
+	billingCreditBundleViewFieldID                = big.NewInt(1 << 12)
+	billingCreditBundleViewFieldName              = big.NewInt(1 << 13)
+	billingCreditBundleViewFieldPluralName        = big.NewInt(1 << 14)
+	billingCreditBundleViewFieldPrice             = big.NewInt(1 << 15)
+	billingCreditBundleViewFieldQuantity          = big.NewInt(1 << 16)
+	billingCreditBundleViewFieldSingularName      = big.NewInt(1 << 17)
+	billingCreditBundleViewFieldStatus            = big.NewInt(1 << 18)
+	billingCreditBundleViewFieldUnitPrice         = big.NewInt(1 << 19)
+	billingCreditBundleViewFieldUpdatedAt         = big.NewInt(1 << 20)
 )
 
 type BillingCreditBundleView struct {
 	BundleType        BillingCreditBundleType          `json:"bundle_type" url:"bundle_type"`
+	CompatiblePlanIDs []string                         `json:"compatible_plan_ids" url:"compatible_plan_ids"`
 	CreatedAt         time.Time                        `json:"created_at" url:"created_at"`
 	CreditDescription *string                          `json:"credit_description,omitempty" url:"credit_description,omitempty"`
 	CreditIcon        *string                          `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
@@ -294,6 +296,13 @@ type BillingCreditBundleView struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingCreditBundleView) GetCompatiblePlanIDs() []string {
+	if b == nil {
+		return nil
+	}
+	return b.CompatiblePlanIDs
 }
 
 func (b *BillingCreditBundleView) GetCreatedAt() time.Time {
@@ -448,6 +457,13 @@ func (b *BillingCreditBundleView) require(field *big.Int) {
 func (b *BillingCreditBundleView) SetBundleType(bundleType BillingCreditBundleType) {
 	b.BundleType = bundleType
 	b.require(billingCreditBundleViewFieldBundleType)
+}
+
+// SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditBundleView) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
+	b.CompatiblePlanIDs = compatiblePlanIDs
+	b.require(billingCreditBundleViewFieldCompatiblePlanIDs)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -1829,25 +1845,36 @@ func (c CompanyPlanInvalidReason) Ptr() *CompanyPlanInvalidReason {
 }
 
 var (
-	componentCheckoutSettingsFieldCollectAddress       = big.NewInt(1 << 0)
-	componentCheckoutSettingsFieldCollectEmail         = big.NewInt(1 << 1)
-	componentCheckoutSettingsFieldCollectPhone         = big.NewInt(1 << 2)
-	componentCheckoutSettingsFieldProrationBehavior    = big.NewInt(1 << 3)
-	componentCheckoutSettingsFieldTaxCollectionEnabled = big.NewInt(1 << 4)
+	componentCheckoutSettingsFieldBundlePurchaseBehavior = big.NewInt(1 << 0)
+	componentCheckoutSettingsFieldCollectAddress         = big.NewInt(1 << 1)
+	componentCheckoutSettingsFieldCollectEmail           = big.NewInt(1 << 2)
+	componentCheckoutSettingsFieldCollectPhone           = big.NewInt(1 << 3)
+	componentCheckoutSettingsFieldCollectTaxID           = big.NewInt(1 << 4)
+	componentCheckoutSettingsFieldProrationBehavior      = big.NewInt(1 << 5)
+	componentCheckoutSettingsFieldTaxCollectionEnabled   = big.NewInt(1 << 6)
 )
 
 type ComponentCheckoutSettings struct {
-	CollectAddress       bool              `json:"collect_address" url:"collect_address"`
-	CollectEmail         bool              `json:"collect_email" url:"collect_email"`
-	CollectPhone         bool              `json:"collect_phone" url:"collect_phone"`
-	ProrationBehavior    ProrationBehavior `json:"proration_behavior" url:"proration_behavior"`
-	TaxCollectionEnabled bool              `json:"tax_collection_enabled" url:"tax_collection_enabled"`
+	BundlePurchaseBehavior CheckoutBundlePurchaseBehavior `json:"bundle_purchase_behavior" url:"bundle_purchase_behavior"`
+	CollectAddress         bool                           `json:"collect_address" url:"collect_address"`
+	CollectEmail           bool                           `json:"collect_email" url:"collect_email"`
+	CollectPhone           bool                           `json:"collect_phone" url:"collect_phone"`
+	CollectTaxID           bool                           `json:"collect_tax_id" url:"collect_tax_id"`
+	ProrationBehavior      ProrationBehavior              `json:"proration_behavior" url:"proration_behavior"`
+	TaxCollectionEnabled   bool                           `json:"tax_collection_enabled" url:"tax_collection_enabled"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *ComponentCheckoutSettings) GetBundlePurchaseBehavior() CheckoutBundlePurchaseBehavior {
+	if c == nil {
+		return ""
+	}
+	return c.BundlePurchaseBehavior
 }
 
 func (c *ComponentCheckoutSettings) GetCollectAddress() bool {
@@ -1869,6 +1896,13 @@ func (c *ComponentCheckoutSettings) GetCollectPhone() bool {
 		return false
 	}
 	return c.CollectPhone
+}
+
+func (c *ComponentCheckoutSettings) GetCollectTaxID() bool {
+	if c == nil {
+		return false
+	}
+	return c.CollectTaxID
 }
 
 func (c *ComponentCheckoutSettings) GetProrationBehavior() ProrationBehavior {
@@ -1899,6 +1933,13 @@ func (c *ComponentCheckoutSettings) require(field *big.Int) {
 	c.explicitFields.Or(c.explicitFields, field)
 }
 
+// SetBundlePurchaseBehavior sets the BundlePurchaseBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentCheckoutSettings) SetBundlePurchaseBehavior(bundlePurchaseBehavior CheckoutBundlePurchaseBehavior) {
+	c.BundlePurchaseBehavior = bundlePurchaseBehavior
+	c.require(componentCheckoutSettingsFieldBundlePurchaseBehavior)
+}
+
 // SetCollectAddress sets the CollectAddress field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *ComponentCheckoutSettings) SetCollectAddress(collectAddress bool) {
@@ -1918,6 +1959,13 @@ func (c *ComponentCheckoutSettings) SetCollectEmail(collectEmail bool) {
 func (c *ComponentCheckoutSettings) SetCollectPhone(collectPhone bool) {
 	c.CollectPhone = collectPhone
 	c.require(componentCheckoutSettingsFieldCollectPhone)
+}
+
+// SetCollectTaxID sets the CollectTaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentCheckoutSettings) SetCollectTaxID(collectTaxID bool) {
+	c.CollectTaxID = collectTaxID
+	c.require(componentCheckoutSettingsFieldCollectTaxID)
 }
 
 // SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
@@ -2848,44 +2896,47 @@ var (
 	creditCompanyGrantViewFieldBillingCreditBundleID = big.NewInt(1 << 0)
 	creditCompanyGrantViewFieldBillingCreditID       = big.NewInt(1 << 1)
 	creditCompanyGrantViewFieldCompanyID             = big.NewInt(1 << 2)
-	creditCompanyGrantViewFieldCompanyName           = big.NewInt(1 << 3)
-	creditCompanyGrantViewFieldCreatedAt             = big.NewInt(1 << 4)
-	creditCompanyGrantViewFieldCreditDescription     = big.NewInt(1 << 5)
-	creditCompanyGrantViewFieldCreditIcon            = big.NewInt(1 << 6)
-	creditCompanyGrantViewFieldCreditName            = big.NewInt(1 << 7)
-	creditCompanyGrantViewFieldCurrency              = big.NewInt(1 << 8)
-	creditCompanyGrantViewFieldExhaustedAt           = big.NewInt(1 << 9)
-	creditCompanyGrantViewFieldExpiresAt             = big.NewInt(1 << 10)
-	creditCompanyGrantViewFieldExpiryType            = big.NewInt(1 << 11)
-	creditCompanyGrantViewFieldExpiryUnit            = big.NewInt(1 << 12)
-	creditCompanyGrantViewFieldExpiryUnitCount       = big.NewInt(1 << 13)
-	creditCompanyGrantViewFieldGrantReason           = big.NewInt(1 << 14)
-	creditCompanyGrantViewFieldID                    = big.NewInt(1 << 15)
-	creditCompanyGrantViewFieldPlanID                = big.NewInt(1 << 16)
-	creditCompanyGrantViewFieldPlanName              = big.NewInt(1 << 17)
-	creditCompanyGrantViewFieldPluralName            = big.NewInt(1 << 18)
-	creditCompanyGrantViewFieldPrice                 = big.NewInt(1 << 19)
-	creditCompanyGrantViewFieldQuantity              = big.NewInt(1 << 20)
-	creditCompanyGrantViewFieldQuantityRemaining     = big.NewInt(1 << 21)
-	creditCompanyGrantViewFieldQuantityUsed          = big.NewInt(1 << 22)
-	creditCompanyGrantViewFieldRenewalEnabled        = big.NewInt(1 << 23)
-	creditCompanyGrantViewFieldRenewalPeriod         = big.NewInt(1 << 24)
-	creditCompanyGrantViewFieldReserved              = big.NewInt(1 << 25)
-	creditCompanyGrantViewFieldSettled               = big.NewInt(1 << 26)
-	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 27)
-	creditCompanyGrantViewFieldSourceGrantID         = big.NewInt(1 << 28)
-	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 29)
-	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 30)
-	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 31)
-	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 32)
-	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 33)
-	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 34)
+	creditCompanyGrantViewFieldCompanyLicenseID      = big.NewInt(1 << 3)
+	creditCompanyGrantViewFieldCompanyName           = big.NewInt(1 << 4)
+	creditCompanyGrantViewFieldCreatedAt             = big.NewInt(1 << 5)
+	creditCompanyGrantViewFieldCreditDescription     = big.NewInt(1 << 6)
+	creditCompanyGrantViewFieldCreditIcon            = big.NewInt(1 << 7)
+	creditCompanyGrantViewFieldCreditName            = big.NewInt(1 << 8)
+	creditCompanyGrantViewFieldCurrency              = big.NewInt(1 << 9)
+	creditCompanyGrantViewFieldExhaustedAt           = big.NewInt(1 << 10)
+	creditCompanyGrantViewFieldExpiresAt             = big.NewInt(1 << 11)
+	creditCompanyGrantViewFieldExpiryType            = big.NewInt(1 << 12)
+	creditCompanyGrantViewFieldExpiryUnit            = big.NewInt(1 << 13)
+	creditCompanyGrantViewFieldExpiryUnitCount       = big.NewInt(1 << 14)
+	creditCompanyGrantViewFieldGrantReason           = big.NewInt(1 << 15)
+	creditCompanyGrantViewFieldID                    = big.NewInt(1 << 16)
+	creditCompanyGrantViewFieldLicenseName           = big.NewInt(1 << 17)
+	creditCompanyGrantViewFieldPlanID                = big.NewInt(1 << 18)
+	creditCompanyGrantViewFieldPlanName              = big.NewInt(1 << 19)
+	creditCompanyGrantViewFieldPluralName            = big.NewInt(1 << 20)
+	creditCompanyGrantViewFieldPrice                 = big.NewInt(1 << 21)
+	creditCompanyGrantViewFieldQuantity              = big.NewInt(1 << 22)
+	creditCompanyGrantViewFieldQuantityRemaining     = big.NewInt(1 << 23)
+	creditCompanyGrantViewFieldQuantityUsed          = big.NewInt(1 << 24)
+	creditCompanyGrantViewFieldRenewalEnabled        = big.NewInt(1 << 25)
+	creditCompanyGrantViewFieldRenewalPeriod         = big.NewInt(1 << 26)
+	creditCompanyGrantViewFieldReserved              = big.NewInt(1 << 27)
+	creditCompanyGrantViewFieldSettled               = big.NewInt(1 << 28)
+	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 29)
+	creditCompanyGrantViewFieldSourceGrantID         = big.NewInt(1 << 30)
+	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 31)
+	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 32)
+	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 33)
+	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 34)
+	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 35)
+	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 36)
 )
 
 type CreditCompanyGrantView struct {
 	BillingCreditBundleID *string                             `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
 	BillingCreditID       string                              `json:"billing_credit_id" url:"billing_credit_id"`
 	CompanyID             string                              `json:"company_id" url:"company_id"`
+	CompanyLicenseID      *string                             `json:"company_license_id,omitempty" url:"company_license_id,omitempty"`
 	CompanyName           string                              `json:"company_name" url:"company_name"`
 	CreatedAt             time.Time                           `json:"created_at" url:"created_at"`
 	CreditDescription     string                              `json:"credit_description" url:"credit_description"`
@@ -2899,6 +2950,7 @@ type CreditCompanyGrantView struct {
 	ExpiryUnitCount       *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
 	GrantReason           BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
 	ID                    string                              `json:"id" url:"id"`
+	LicenseName           *string                             `json:"license_name,omitempty" url:"license_name,omitempty"`
 	PlanID                *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	PlanName              *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	PluralName            *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
@@ -2945,6 +2997,13 @@ func (c *CreditCompanyGrantView) GetCompanyID() string {
 		return ""
 	}
 	return c.CompanyID
+}
+
+func (c *CreditCompanyGrantView) GetCompanyLicenseID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyLicenseID
 }
 
 func (c *CreditCompanyGrantView) GetCompanyName() string {
@@ -3036,6 +3095,13 @@ func (c *CreditCompanyGrantView) GetID() string {
 		return ""
 	}
 	return c.ID
+}
+
+func (c *CreditCompanyGrantView) GetLicenseName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LicenseName
 }
 
 func (c *CreditCompanyGrantView) GetPlanID() *string {
@@ -3206,6 +3272,13 @@ func (c *CreditCompanyGrantView) SetCompanyID(companyID string) {
 	c.require(creditCompanyGrantViewFieldCompanyID)
 }
 
+// SetCompanyLicenseID sets the CompanyLicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetCompanyLicenseID(companyLicenseID *string) {
+	c.CompanyLicenseID = companyLicenseID
+	c.require(creditCompanyGrantViewFieldCompanyLicenseID)
+}
+
 // SetCompanyName sets the CompanyName field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreditCompanyGrantView) SetCompanyName(companyName string) {
@@ -3295,6 +3368,13 @@ func (c *CreditCompanyGrantView) SetGrantReason(grantReason BillingCreditGrantRe
 func (c *CreditCompanyGrantView) SetID(id string) {
 	c.ID = id
 	c.require(creditCompanyGrantViewFieldID)
+}
+
+// SetLicenseName sets the LicenseName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetLicenseName(licenseName *string) {
+	c.LicenseName = licenseName
+	c.require(creditCompanyGrantViewFieldLicenseName)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;

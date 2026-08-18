@@ -27,6 +27,14 @@ func TestSettersCreatePlanGroupRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCheckoutBundlePurchaseBehavior", func(t *testing.T) {
+		obj := &CreatePlanGroupRequestBody{}
+		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
+		assert.Equal(t, fernTestValueCheckoutBundlePurchaseBehavior, obj.CheckoutBundlePurchaseBehavior)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCheckoutCollectAddress", func(t *testing.T) {
 		obj := &CreatePlanGroupRequestBody{}
 		var fernTestValueCheckoutCollectAddress bool
@@ -48,6 +56,14 @@ func TestSettersCreatePlanGroupRequestBody(t *testing.T) {
 		var fernTestValueCheckoutCollectPhone bool
 		obj.SetCheckoutCollectPhone(fernTestValueCheckoutCollectPhone)
 		assert.Equal(t, fernTestValueCheckoutCollectPhone, obj.CheckoutCollectPhone)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetCheckoutCollectTaxID", func(t *testing.T) {
+		obj := &CreatePlanGroupRequestBody{}
+		var fernTestValueCheckoutCollectTaxID bool
+		obj.SetCheckoutCollectTaxID(fernTestValueCheckoutCollectTaxID)
+		assert.Equal(t, fernTestValueCheckoutCollectTaxID, obj.CheckoutCollectTaxID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -364,6 +380,37 @@ func TestSettersMarkExplicitCreatePlanGroupRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetCheckoutBundlePurchaseBehavior_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreatePlanGroupRequestBody{}
+		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+
+		// Act
+		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCheckoutCollectAddress_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -434,6 +481,37 @@ func TestSettersMarkExplicitCreatePlanGroupRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetCheckoutCollectPhone(fernTestValueCheckoutCollectPhone)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCheckoutCollectTaxID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreatePlanGroupRequestBody{}
+		var fernTestValueCheckoutCollectTaxID bool
+
+		// Act
+		obj.SetCheckoutCollectTaxID(fernTestValueCheckoutCollectTaxID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -2526,6 +2604,14 @@ func TestSettersMarkExplicitCheckoutFieldResponseData(t *testing.T) {
 }
 
 func TestSettersCheckoutSettingsResponseData(t *testing.T) {
+	t.Run("SetBundlePurchaseBehavior", func(t *testing.T) {
+		obj := &CheckoutSettingsResponseData{}
+		var fernTestValueBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		obj.SetBundlePurchaseBehavior(fernTestValueBundlePurchaseBehavior)
+		assert.Equal(t, fernTestValueBundlePurchaseBehavior, obj.BundlePurchaseBehavior)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCollectAddress", func(t *testing.T) {
 		obj := &CheckoutSettingsResponseData{}
 		var fernTestValueCollectAddress bool
@@ -2547,6 +2633,14 @@ func TestSettersCheckoutSettingsResponseData(t *testing.T) {
 		var fernTestValueCollectPhone bool
 		obj.SetCollectPhone(fernTestValueCollectPhone)
 		assert.Equal(t, fernTestValueCollectPhone, obj.CollectPhone)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetCollectTaxID", func(t *testing.T) {
+		obj := &CheckoutSettingsResponseData{}
+		var fernTestValueCollectTaxID bool
+		obj.SetCollectTaxID(fernTestValueCollectTaxID)
+		assert.Equal(t, fernTestValueCollectTaxID, obj.CollectTaxID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -2577,6 +2671,29 @@ func TestSettersCheckoutSettingsResponseData(t *testing.T) {
 }
 
 func TestGettersCheckoutSettingsResponseData(t *testing.T) {
+	t.Run("GetBundlePurchaseBehavior", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSettingsResponseData{}
+		var expected CheckoutBundlePurchaseBehavior
+		obj.BundlePurchaseBehavior = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBundlePurchaseBehavior(), "getter should return the property value")
+	})
+
+	t.Run("GetBundlePurchaseBehavior_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutSettingsResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBundlePurchaseBehavior() // Should return zero value
+	})
+
 	t.Run("GetCollectAddress", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -2644,6 +2761,29 @@ func TestGettersCheckoutSettingsResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCollectPhone() // Should return zero value
+	})
+
+	t.Run("GetCollectTaxID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSettingsResponseData{}
+		var expected bool
+		obj.CollectTaxID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCollectTaxID(), "getter should return the property value")
+	})
+
+	t.Run("GetCollectTaxID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutSettingsResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCollectTaxID() // Should return zero value
 	})
 
 	t.Run("GetOptInEnabled", func(t *testing.T) {
@@ -2738,6 +2878,37 @@ func TestGettersCheckoutSettingsResponseData(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCheckoutSettingsResponseData(t *testing.T) {
+	t.Run("SetBundlePurchaseBehavior_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSettingsResponseData{}
+		var fernTestValueBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+
+		// Act
+		obj.SetBundlePurchaseBehavior(fernTestValueBundlePurchaseBehavior)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCollectAddress_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -2808,6 +2979,37 @@ func TestSettersMarkExplicitCheckoutSettingsResponseData(t *testing.T) {
 
 		// Act
 		obj.SetCollectPhone(fernTestValueCollectPhone)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCollectTaxID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSettingsResponseData{}
+		var fernTestValueCollectTaxID bool
+
+		// Act
+		obj.SetCollectTaxID(fernTestValueCollectTaxID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -9220,6 +9422,14 @@ func TestSettersUpdatePlanGroupRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCheckoutBundlePurchaseBehavior", func(t *testing.T) {
+		obj := &UpdatePlanGroupRequestBody{}
+		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
+		assert.Equal(t, fernTestValueCheckoutBundlePurchaseBehavior, obj.CheckoutBundlePurchaseBehavior)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCheckoutCollectAddress", func(t *testing.T) {
 		obj := &UpdatePlanGroupRequestBody{}
 		var fernTestValueCheckoutCollectAddress bool
@@ -9241,6 +9451,14 @@ func TestSettersUpdatePlanGroupRequestBody(t *testing.T) {
 		var fernTestValueCheckoutCollectPhone bool
 		obj.SetCheckoutCollectPhone(fernTestValueCheckoutCollectPhone)
 		assert.Equal(t, fernTestValueCheckoutCollectPhone, obj.CheckoutCollectPhone)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetCheckoutCollectTaxID", func(t *testing.T) {
+		obj := &UpdatePlanGroupRequestBody{}
+		var fernTestValueCheckoutCollectTaxID bool
+		obj.SetCheckoutCollectTaxID(fernTestValueCheckoutCollectTaxID)
+		assert.Equal(t, fernTestValueCheckoutCollectTaxID, obj.CheckoutCollectTaxID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -9557,6 +9775,37 @@ func TestSettersMarkExplicitUpdatePlanGroupRequestBody(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetCheckoutBundlePurchaseBehavior_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdatePlanGroupRequestBody{}
+		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+
+		// Act
+		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCheckoutCollectAddress_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -9627,6 +9876,37 @@ func TestSettersMarkExplicitUpdatePlanGroupRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetCheckoutCollectPhone(fernTestValueCheckoutCollectPhone)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCheckoutCollectTaxID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdatePlanGroupRequestBody{}
+		var fernTestValueCheckoutCollectTaxID bool
+
+		// Act
+		obj.SetCheckoutCollectTaxID(fernTestValueCheckoutCollectTaxID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

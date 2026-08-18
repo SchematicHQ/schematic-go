@@ -1461,6 +1461,567 @@ func (e *EnvironmentDetailResponseData) String() string {
 }
 
 var (
+	getOnboardingStateRespFieldEnvironmentID = big.NewInt(1 << 0)
+	getOnboardingStateRespFieldMilestones    = big.NewInt(1 << 1)
+	getOnboardingStateRespFieldPath          = big.NewInt(1 << 2)
+	getOnboardingStateRespFieldRequirements  = big.NewInt(1 << 3)
+	getOnboardingStateRespFieldSuggestedNext = big.NewInt(1 << 4)
+	getOnboardingStateRespFieldTrack         = big.NewInt(1 << 5)
+)
+
+type GetOnboardingStateResp struct {
+	EnvironmentID *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	Milestones    []*OnboardingMilestoneView   `json:"milestones" url:"milestones"`
+	Path          *OnboardingPath              `json:"path,omitempty" url:"path,omitempty"`
+	Requirements  []*OnboardingRequirementView `json:"requirements" url:"requirements"`
+	SuggestedNext []OnboardingRequirement      `json:"suggested_next" url:"suggested_next"`
+	Track         *OnboardingTrack             `json:"track,omitempty" url:"track,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetOnboardingStateResp) GetEnvironmentID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.EnvironmentID
+}
+
+func (g *GetOnboardingStateResp) GetMilestones() []*OnboardingMilestoneView {
+	if g == nil {
+		return nil
+	}
+	return g.Milestones
+}
+
+func (g *GetOnboardingStateResp) GetPath() *OnboardingPath {
+	if g == nil {
+		return nil
+	}
+	return g.Path
+}
+
+func (g *GetOnboardingStateResp) GetRequirements() []*OnboardingRequirementView {
+	if g == nil {
+		return nil
+	}
+	return g.Requirements
+}
+
+func (g *GetOnboardingStateResp) GetSuggestedNext() []OnboardingRequirement {
+	if g == nil {
+		return nil
+	}
+	return g.SuggestedNext
+}
+
+func (g *GetOnboardingStateResp) GetTrack() *OnboardingTrack {
+	if g == nil {
+		return nil
+	}
+	return g.Track
+}
+
+func (g *GetOnboardingStateResp) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetOnboardingStateResp) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetEnvironmentID(environmentID *string) {
+	g.EnvironmentID = environmentID
+	g.require(getOnboardingStateRespFieldEnvironmentID)
+}
+
+// SetMilestones sets the Milestones field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetMilestones(milestones []*OnboardingMilestoneView) {
+	g.Milestones = milestones
+	g.require(getOnboardingStateRespFieldMilestones)
+}
+
+// SetPath sets the Path field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetPath(path *OnboardingPath) {
+	g.Path = path
+	g.require(getOnboardingStateRespFieldPath)
+}
+
+// SetRequirements sets the Requirements field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetRequirements(requirements []*OnboardingRequirementView) {
+	g.Requirements = requirements
+	g.require(getOnboardingStateRespFieldRequirements)
+}
+
+// SetSuggestedNext sets the SuggestedNext field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetSuggestedNext(suggestedNext []OnboardingRequirement) {
+	g.SuggestedNext = suggestedNext
+	g.require(getOnboardingStateRespFieldSuggestedNext)
+}
+
+// SetTrack sets the Track field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetTrack(track *OnboardingTrack) {
+	g.Track = track
+	g.require(getOnboardingStateRespFieldTrack)
+}
+
+func (g *GetOnboardingStateResp) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetOnboardingStateResp
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetOnboardingStateResp(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetOnboardingStateResp) MarshalJSON() ([]byte, error) {
+	type embed GetOnboardingStateResp
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetOnboardingStateResp) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type OnboardingMilestone string
+
+const (
+	OnboardingMilestoneEvaluated   OnboardingMilestone = "evaluated"
+	OnboardingMilestoneImplemented OnboardingMilestone = "implemented"
+)
+
+func NewOnboardingMilestoneFromString(s string) (OnboardingMilestone, error) {
+	switch s {
+	case "evaluated":
+		return OnboardingMilestoneEvaluated, nil
+	case "implemented":
+		return OnboardingMilestoneImplemented, nil
+	}
+	var t OnboardingMilestone
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnboardingMilestone) Ptr() *OnboardingMilestone {
+	return &o
+}
+
+var (
+	onboardingMilestoneViewFieldID        = big.NewInt(1 << 0)
+	onboardingMilestoneViewFieldMissing   = big.NewInt(1 << 1)
+	onboardingMilestoneViewFieldProgress  = big.NewInt(1 << 2)
+	onboardingMilestoneViewFieldReachedAt = big.NewInt(1 << 3)
+)
+
+type OnboardingMilestoneView struct {
+	ID        OnboardingMilestone     `json:"id" url:"id"`
+	Missing   []OnboardingRequirement `json:"missing" url:"missing"`
+	Progress  float64                 `json:"progress" url:"progress"`
+	ReachedAt *time.Time              `json:"reached_at,omitempty" url:"reached_at,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OnboardingMilestoneView) GetID() OnboardingMilestone {
+	if o == nil {
+		return ""
+	}
+	return o.ID
+}
+
+func (o *OnboardingMilestoneView) GetMissing() []OnboardingRequirement {
+	if o == nil {
+		return nil
+	}
+	return o.Missing
+}
+
+func (o *OnboardingMilestoneView) GetProgress() float64 {
+	if o == nil {
+		return 0
+	}
+	return o.Progress
+}
+
+func (o *OnboardingMilestoneView) GetReachedAt() *time.Time {
+	if o == nil {
+		return nil
+	}
+	return o.ReachedAt
+}
+
+func (o *OnboardingMilestoneView) GetExtraProperties() map[string]interface{} {
+	if o == nil {
+		return nil
+	}
+	return o.extraProperties
+}
+
+func (o *OnboardingMilestoneView) require(field *big.Int) {
+	if o.explicitFields == nil {
+		o.explicitFields = big.NewInt(0)
+	}
+	o.explicitFields.Or(o.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingMilestoneView) SetID(id OnboardingMilestone) {
+	o.ID = id
+	o.require(onboardingMilestoneViewFieldID)
+}
+
+// SetMissing sets the Missing field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingMilestoneView) SetMissing(missing []OnboardingRequirement) {
+	o.Missing = missing
+	o.require(onboardingMilestoneViewFieldMissing)
+}
+
+// SetProgress sets the Progress field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingMilestoneView) SetProgress(progress float64) {
+	o.Progress = progress
+	o.require(onboardingMilestoneViewFieldProgress)
+}
+
+// SetReachedAt sets the ReachedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingMilestoneView) SetReachedAt(reachedAt *time.Time) {
+	o.ReachedAt = reachedAt
+	o.require(onboardingMilestoneViewFieldReachedAt)
+}
+
+func (o *OnboardingMilestoneView) UnmarshalJSON(data []byte) error {
+	type embed OnboardingMilestoneView
+	var unmarshaler = struct {
+		embed
+		ReachedAt *internal.DateTime `json:"reached_at,omitempty"`
+	}{
+		embed: embed(*o),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*o = OnboardingMilestoneView(unmarshaler.embed)
+	o.ReachedAt = unmarshaler.ReachedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OnboardingMilestoneView) MarshalJSON() ([]byte, error) {
+	type embed OnboardingMilestoneView
+	var marshaler = struct {
+		embed
+		ReachedAt *internal.DateTime `json:"reached_at,omitempty"`
+	}{
+		embed:     embed(*o),
+		ReachedAt: internal.NewOptionalDateTime(o.ReachedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, o.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (o *OnboardingMilestoneView) String() string {
+	if o == nil {
+		return "<nil>"
+	}
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+type OnboardingPath string
+
+const (
+	OnboardingPathAgent OnboardingPath = "agent"
+	OnboardingPathApp   OnboardingPath = "app"
+)
+
+func NewOnboardingPathFromString(s string) (OnboardingPath, error) {
+	switch s {
+	case "agent":
+		return OnboardingPathAgent, nil
+	case "app":
+		return OnboardingPathApp, nil
+	}
+	var t OnboardingPath
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnboardingPath) Ptr() *OnboardingPath {
+	return &o
+}
+
+type OnboardingRequirement string
+
+const (
+	OnboardingRequirementConnectBilling  OnboardingRequirement = "connect_billing"
+	OnboardingRequirementCreateAPIKey    OnboardingRequirement = "create_api_key"
+	OnboardingRequirementFirstFlagCheck  OnboardingRequirement = "first_flag_check"
+	OnboardingRequirementImportCompanies OnboardingRequirement = "import_companies"
+	OnboardingRequirementModelPackaging  OnboardingRequirement = "model_packaging"
+	OnboardingRequirementSendEvents      OnboardingRequirement = "send_events"
+)
+
+func NewOnboardingRequirementFromString(s string) (OnboardingRequirement, error) {
+	switch s {
+	case "connect_billing":
+		return OnboardingRequirementConnectBilling, nil
+	case "create_api_key":
+		return OnboardingRequirementCreateAPIKey, nil
+	case "first_flag_check":
+		return OnboardingRequirementFirstFlagCheck, nil
+	case "import_companies":
+		return OnboardingRequirementImportCompanies, nil
+	case "model_packaging":
+		return OnboardingRequirementModelPackaging, nil
+	case "send_events":
+		return OnboardingRequirementSendEvents, nil
+	}
+	var t OnboardingRequirement
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnboardingRequirement) Ptr() *OnboardingRequirement {
+	return &o
+}
+
+type OnboardingRequirementStatus string
+
+const (
+	OnboardingRequirementStatusAvailable OnboardingRequirementStatus = "available"
+	OnboardingRequirementStatusBlocked   OnboardingRequirementStatus = "blocked"
+	OnboardingRequirementStatusComplete  OnboardingRequirementStatus = "complete"
+)
+
+func NewOnboardingRequirementStatusFromString(s string) (OnboardingRequirementStatus, error) {
+	switch s {
+	case "available":
+		return OnboardingRequirementStatusAvailable, nil
+	case "blocked":
+		return OnboardingRequirementStatusBlocked, nil
+	case "complete":
+		return OnboardingRequirementStatusComplete, nil
+	}
+	var t OnboardingRequirementStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnboardingRequirementStatus) Ptr() *OnboardingRequirementStatus {
+	return &o
+}
+
+var (
+	onboardingRequirementViewFieldBlockedBy   = big.NewInt(1 << 0)
+	onboardingRequirementViewFieldID          = big.NewInt(1 << 1)
+	onboardingRequirementViewFieldSatisfiedBy = big.NewInt(1 << 2)
+	onboardingRequirementViewFieldStatus      = big.NewInt(1 << 3)
+)
+
+type OnboardingRequirementView struct {
+	BlockedBy   []OnboardingRequirement     `json:"blocked_by,omitempty" url:"blocked_by,omitempty"`
+	ID          OnboardingRequirement       `json:"id" url:"id"`
+	SatisfiedBy *string                     `json:"satisfied_by,omitempty" url:"satisfied_by,omitempty"`
+	Status      OnboardingRequirementStatus `json:"status" url:"status"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OnboardingRequirementView) GetBlockedBy() []OnboardingRequirement {
+	if o == nil {
+		return nil
+	}
+	return o.BlockedBy
+}
+
+func (o *OnboardingRequirementView) GetID() OnboardingRequirement {
+	if o == nil {
+		return ""
+	}
+	return o.ID
+}
+
+func (o *OnboardingRequirementView) GetSatisfiedBy() *string {
+	if o == nil {
+		return nil
+	}
+	return o.SatisfiedBy
+}
+
+func (o *OnboardingRequirementView) GetStatus() OnboardingRequirementStatus {
+	if o == nil {
+		return ""
+	}
+	return o.Status
+}
+
+func (o *OnboardingRequirementView) GetExtraProperties() map[string]interface{} {
+	if o == nil {
+		return nil
+	}
+	return o.extraProperties
+}
+
+func (o *OnboardingRequirementView) require(field *big.Int) {
+	if o.explicitFields == nil {
+		o.explicitFields = big.NewInt(0)
+	}
+	o.explicitFields.Or(o.explicitFields, field)
+}
+
+// SetBlockedBy sets the BlockedBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRequirementView) SetBlockedBy(blockedBy []OnboardingRequirement) {
+	o.BlockedBy = blockedBy
+	o.require(onboardingRequirementViewFieldBlockedBy)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRequirementView) SetID(id OnboardingRequirement) {
+	o.ID = id
+	o.require(onboardingRequirementViewFieldID)
+}
+
+// SetSatisfiedBy sets the SatisfiedBy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRequirementView) SetSatisfiedBy(satisfiedBy *string) {
+	o.SatisfiedBy = satisfiedBy
+	o.require(onboardingRequirementViewFieldSatisfiedBy)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRequirementView) SetStatus(status OnboardingRequirementStatus) {
+	o.Status = status
+	o.require(onboardingRequirementViewFieldStatus)
+}
+
+func (o *OnboardingRequirementView) UnmarshalJSON(data []byte) error {
+	type unmarshaler OnboardingRequirementView
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*o = OnboardingRequirementView(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OnboardingRequirementView) MarshalJSON() ([]byte, error) {
+	type embed OnboardingRequirementView
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*o),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, o.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (o *OnboardingRequirementView) String() string {
+	if o == nil {
+		return "<nil>"
+	}
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+type OnboardingTrack string
+
+const (
+	OnboardingTrackCatalog    OnboardingTrack = "catalog"
+	OnboardingTrackSinglePlan OnboardingTrack = "single_plan"
+)
+
+func NewOnboardingTrackFromString(s string) (OnboardingTrack, error) {
+	switch s {
+	case "catalog":
+		return OnboardingTrackCatalog, nil
+	case "single_plan":
+		return OnboardingTrackSinglePlan, nil
+	}
+	var t OnboardingTrack
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnboardingTrack) Ptr() *OnboardingTrack {
+	return &o
+}
+
+var (
 	quickstartRespFieldOk = big.NewInt(1 << 0)
 )
 
@@ -1545,27 +2106,29 @@ func (q *QuickstartResp) String() string {
 }
 
 var (
-	whoAmIResponseDataFieldAccountID     = big.NewInt(1 << 0)
-	whoAmIResponseDataFieldAccountName   = big.NewInt(1 << 1)
-	whoAmIResponseDataFieldActorType     = big.NewInt(1 << 2)
-	whoAmIResponseDataFieldAPIKeyID      = big.NewInt(1 << 3)
-	whoAmIResponseDataFieldEnvironmentID = big.NewInt(1 << 4)
-	whoAmIResponseDataFieldEnvironments  = big.NewInt(1 << 5)
-	whoAmIResponseDataFieldStripeUserID  = big.NewInt(1 << 6)
-	whoAmIResponseDataFieldUserID        = big.NewInt(1 << 7)
-	whoAmIResponseDataFieldUserName      = big.NewInt(1 << 8)
+	whoAmIResponseDataFieldAccountID          = big.NewInt(1 << 0)
+	whoAmIResponseDataFieldAccountName        = big.NewInt(1 << 1)
+	whoAmIResponseDataFieldActorType          = big.NewInt(1 << 2)
+	whoAmIResponseDataFieldAPIKeyID           = big.NewInt(1 << 3)
+	whoAmIResponseDataFieldEnvironmentID      = big.NewInt(1 << 4)
+	whoAmIResponseDataFieldEnvironments       = big.NewInt(1 << 5)
+	whoAmIResponseDataFieldOnboardingComplete = big.NewInt(1 << 6)
+	whoAmIResponseDataFieldStripeUserID       = big.NewInt(1 << 7)
+	whoAmIResponseDataFieldUserID             = big.NewInt(1 << 8)
+	whoAmIResponseDataFieldUserName           = big.NewInt(1 << 9)
 )
 
 type WhoAmIResponseData struct {
-	AccountID     string                     `json:"account_id" url:"account_id"`
-	AccountName   string                     `json:"account_name" url:"account_name"`
-	ActorType     ActorType                  `json:"actor_type" url:"actor_type"`
-	APIKeyID      *string                    `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
-	EnvironmentID *string                    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	Environments  []*EnvironmentResponseData `json:"environments" url:"environments"`
-	StripeUserID  *string                    `json:"stripe_user_id,omitempty" url:"stripe_user_id,omitempty"`
-	UserID        *string                    `json:"user_id,omitempty" url:"user_id,omitempty"`
-	UserName      *string                    `json:"user_name,omitempty" url:"user_name,omitempty"`
+	AccountID          string                     `json:"account_id" url:"account_id"`
+	AccountName        string                     `json:"account_name" url:"account_name"`
+	ActorType          ActorType                  `json:"actor_type" url:"actor_type"`
+	APIKeyID           *string                    `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
+	EnvironmentID      *string                    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	Environments       []*EnvironmentResponseData `json:"environments" url:"environments"`
+	OnboardingComplete bool                       `json:"onboarding_complete" url:"onboarding_complete"`
+	StripeUserID       *string                    `json:"stripe_user_id,omitempty" url:"stripe_user_id,omitempty"`
+	UserID             *string                    `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName           *string                    `json:"user_name,omitempty" url:"user_name,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1614,6 +2177,13 @@ func (w *WhoAmIResponseData) GetEnvironments() []*EnvironmentResponseData {
 		return nil
 	}
 	return w.Environments
+}
+
+func (w *WhoAmIResponseData) GetOnboardingComplete() bool {
+	if w == nil {
+		return false
+	}
+	return w.OnboardingComplete
 }
 
 func (w *WhoAmIResponseData) GetStripeUserID() *string {
@@ -1691,6 +2261,13 @@ func (w *WhoAmIResponseData) SetEnvironmentID(environmentID *string) {
 func (w *WhoAmIResponseData) SetEnvironments(environments []*EnvironmentResponseData) {
 	w.Environments = environments
 	w.require(whoAmIResponseDataFieldEnvironments)
+}
+
+// SetOnboardingComplete sets the OnboardingComplete field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WhoAmIResponseData) SetOnboardingComplete(onboardingComplete bool) {
+	w.OnboardingComplete = onboardingComplete
+	w.require(whoAmIResponseDataFieldOnboardingComplete)
 }
 
 // SetStripeUserID sets the StripeUserID field and marks it as non-optional;
@@ -3351,6 +3928,107 @@ func (g *GetEnvironmentResponse) String() string {
 }
 
 var (
+	getOnboardingStateResponseFieldData   = big.NewInt(1 << 0)
+	getOnboardingStateResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetOnboardingStateResponse struct {
+	Data *GetOnboardingStateResp `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetOnboardingStateResponse) GetData() *GetOnboardingStateResp {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetOnboardingStateResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetOnboardingStateResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetOnboardingStateResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResponse) SetData(data *GetOnboardingStateResp) {
+	g.Data = data
+	g.require(getOnboardingStateResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getOnboardingStateResponseFieldParams)
+}
+
+func (g *GetOnboardingStateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetOnboardingStateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetOnboardingStateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetOnboardingStateResponse) MarshalJSON() ([]byte, error) {
+	type embed GetOnboardingStateResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetOnboardingStateResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	getWhoAmIResponseFieldData   = big.NewInt(1 << 0)
 	getWhoAmIResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -4761,6 +5439,107 @@ func (u *UpdateEnvironmentResponse) String() string {
 }
 
 var (
+	updateOnboardingStateResponseFieldData   = big.NewInt(1 << 0)
+	updateOnboardingStateResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpdateOnboardingStateResponse struct {
+	Data *GetOnboardingStateResp `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateOnboardingStateResponse) GetData() *GetOnboardingStateResp {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateOnboardingStateResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdateOnboardingStateResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateOnboardingStateResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateResponse) SetData(data *GetOnboardingStateResp) {
+	u.Data = data
+	u.require(updateOnboardingStateResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(updateOnboardingStateResponseFieldParams)
+}
+
+func (u *UpdateOnboardingStateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateOnboardingStateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateOnboardingStateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateOnboardingStateResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateOnboardingStateResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateOnboardingStateResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
 	updateAPIKeyRequestBodyFieldDescription      = big.NewInt(1 << 0)
 	updateAPIKeyRequestBodyFieldName             = big.NewInt(1 << 1)
 	updateAPIKeyRequestBodyFieldRateLimitPercent = big.NewInt(1 << 2)
@@ -4870,6 +5649,79 @@ func (u *UpdateEnvironmentRequestBody) UnmarshalJSON(data []byte) error {
 
 func (u *UpdateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
 	type embed UpdateEnvironmentRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	updateOnboardingStateRequestBodyFieldPath           = big.NewInt(1 << 0)
+	updateOnboardingStateRequestBodyFieldPricingPageURL = big.NewInt(1 << 1)
+	updateOnboardingStateRequestBodyFieldTrack          = big.NewInt(1 << 2)
+	updateOnboardingStateRequestBodyFieldWebsiteURL     = big.NewInt(1 << 3)
+)
+
+type UpdateOnboardingStateRequestBody struct {
+	Path           *OnboardingPath  `json:"path,omitempty" url:"-"`
+	PricingPageURL *string          `json:"pricing_page_url,omitempty" url:"-"`
+	Track          *OnboardingTrack `json:"track,omitempty" url:"-"`
+	WebsiteURL     *string          `json:"website_url,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpdateOnboardingStateRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetPath sets the Path field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateRequestBody) SetPath(path *OnboardingPath) {
+	u.Path = path
+	u.require(updateOnboardingStateRequestBodyFieldPath)
+}
+
+// SetPricingPageURL sets the PricingPageURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateRequestBody) SetPricingPageURL(pricingPageURL *string) {
+	u.PricingPageURL = pricingPageURL
+	u.require(updateOnboardingStateRequestBodyFieldPricingPageURL)
+}
+
+// SetTrack sets the Track field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateRequestBody) SetTrack(track *OnboardingTrack) {
+	u.Track = track
+	u.require(updateOnboardingStateRequestBodyFieldTrack)
+}
+
+// SetWebsiteURL sets the WebsiteURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateRequestBody) SetWebsiteURL(websiteURL *string) {
+	u.WebsiteURL = websiteURL
+	u.require(updateOnboardingStateRequestBodyFieldWebsiteURL)
+}
+
+func (u *UpdateOnboardingStateRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateOnboardingStateRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateOnboardingStateRequestBody(body)
+	return nil
+}
+
+func (u *UpdateOnboardingStateRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateOnboardingStateRequestBody
 	var marshaler = struct {
 		embed
 	}{

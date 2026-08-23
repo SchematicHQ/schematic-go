@@ -33,6 +33,8 @@ client/schematic_client.go
 client/schematic_client_test.go
 client/logger_config_test.go
 datastream/cache.go
+datastream/cache_test.go
+datastream/cache_tls_test.go
 datastream/client.go
 datastream/resource_cache.go
 datastream/client_test.go

@@ -25,7 +25,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	}
 
 	// Build a shared Redis client (if configured) for all cache providers
-	redisClient := buildRedisClient(configurationOptions)
+	redisClient := buildRedisClient(configurationOptions, options.Logger)
 
 	// Get or create cache providers based on options
 	companyCacheProvider, userCacheProvider := getCacheProviders(options, configurationOptions, redisClient)

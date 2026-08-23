@@ -1,8 +1,10 @@
 package core
 
 import (
+	"crypto/tls"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
 )
@@ -166,6 +168,18 @@ type CacheConfig interface {
 }
 
 type RedisCacheConfig struct {
+	// URL is a Redis connection URL, e.g. redis://host:6379/0 or
+	// rediss://user:pass@host:6379 for TLS, which yields a TLSConfig with
+	// ServerName already set. It takes precedence over Addr, and an Addr carrying
+	// a scheme is treated as a URL too.
+	//
+	// Any field below set to a non-zero value overrides what the URL derived. Only
+	// non-zero ones, so a URL-derived setting cannot be turned back off here: drop
+	// it from the URL instead.
+	//
+	// A URL that does not parse, or names no host, leaves the datastream on its
+	// local cache rather than being dialed as-is.
+	URL                   string
 	Network               string
 	Addr                  string
 	ClientName            string
@@ -192,6 +206,9 @@ type RedisCacheConfig struct {
 	DisableIdentity       bool
 	IdentitySuffix        string
 	UnstableResp3         bool
+	// TLSConfig enables TLS for the connection. Nil, the zero value, means
+	// plaintext, which is go-redis' default.
+	TLSConfig *tls.Config
 }
 
 func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
@@ -199,6 +216,15 @@ func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
 }
 
 type RedisCacheClusterConfig struct {
+	// URL is a Redis connection URL for the cluster — an ElastiCache or Valkey
+	// configuration endpoint, typically. It follows RedisCacheConfig.URL's rules,
+	// and takes precedence over Addrs, which is then ignored; name further nodes
+	// with go-redis' ?addr=host:port parameter.
+	//
+	// A single entry in Addrs carrying a scheme is treated as this URL too, with
+	// the remaining bare entries kept as additional nodes. Two of them is an error:
+	// each carries its own credentials and TLS, with nothing to choose between them.
+	URL                   string
 	Addrs                 []string
 	MaxRedirects          int
 	RouteByLatency        bool
@@ -225,14 +251,40 @@ type RedisCacheClusterConfig struct {
 	DisableIdentity       bool
 	IdentitySuffix        string
 	UnstableResp3         bool
+	// TLSConfig enables TLS for connections to every node in the cluster. Nil,
+	// the zero value, means plaintext, which is go-redis' default.
+	TLSConfig *tls.Config
 }
 
 func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {
 	opts.CacheConfig = c
 }
 
+// RedisClientConfig hands the datastream a Redis client the caller has already
+// built, instead of describing one field by field. Prefer it when the
+// application constructs its own client: the field-by-field configs map a fixed
+// set of go-redis options, so anything outside that set — a custom dialer, a
+// hook, a tracing wrapper — cannot be expressed through them at all.
+//
+// The SDK shares the client across every datastream cache and never closes it;
+// its lifecycle stays with the caller.
+type RedisClientConfig struct {
+	Client redis.UniversalClient
+}
+
+func (c RedisClientConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
+}
+
 func WithRedisCache(opts CacheConfig) CacheConfig {
 	return opts
+}
+
+// WithRedisClient wraps an existing Redis client as a datastream cache config.
+// The client may be any redis.UniversalClient — single-node, cluster or
+// failover.
+func WithRedisClient(client redis.UniversalClient) CacheConfig {
+	return RedisClientConfig{Client: client}
 }
 
 type ClientOptUseDatastream struct {

@@ -17,6 +17,7 @@ var WithLogger = core.WithLogger
 var WithLogLevel = core.WithLogLevel
 var WithDatastream = core.WithDatastream
 var WithRedisCache = core.WithRedisCache
+var WithRedisClient = core.WithRedisClient
 var WithCacheTTL = core.WithCacheTTL
 var WithReplicatorMode = core.WithReplicatorMode
 var WithReplicatorHealthURL = core.WithReplicatorHealthURL
@@ -24,6 +25,7 @@ var WithReplicatorHealthInterval = core.WithReplicatorHealthInterval
 
 type RedisCacheConfig = core.RedisCacheConfig
 type RedisCacheClusterConfig = core.RedisCacheClusterConfig
+type RedisClientConfig = core.RedisClientConfig
 type LogLevel = core.LogLevel
 
 const (

@@ -579,6 +579,10 @@ options := &schematicoption.DatastreamOptions{
 }
 ```
 
+`Addr` also accepts a connection URL — `redis://host:6379` or `rediss://host:6380`
+for TLS — in which case any credentials, database index or TLS implied by the URL
+are used unless the config sets them explicitly.
+
 #### 2. Redis Cluster
 
 To use a Redis cluster, create a `RedisCacheClusterConfig` and pass it to the `DatastreamOptions`.
@@ -598,6 +602,38 @@ options := &schematicoption.DatastreamOptions{
 		RouteByLatency:   true,            // Route requests to the node with the lowest latency
 		RouteRandomly:    false,           // Disable random routing
 	},
+}
+```
+
+#### 3. TLS
+
+Both configs take a `TLSConfig`. Leave it nil for a plaintext connection. Against a
+server with a publicly-trusted certificate — AWS ElastiCache with encryption in
+transit, for example — an otherwise-empty `tls.Config` is enough, and hostname
+verification stays on:
+
+```go
+options := &schematicoption.DatastreamOptions{
+	CacheConfig: &schematicoption.RedisCacheClusterConfig{
+		Addrs:     []string{"clustercfg.my-cache.abc123.use1.cache.amazonaws.com:6379"},
+		Username:  "schematic",
+		Password:  os.Getenv("REDIS_PASSWORD"),
+		TLSConfig: &tls.Config{MinVersion: tls.VersionTLS12},
+	},
+}
+```
+
+#### 4. Bringing your own client
+
+If your application already constructs a Redis client — with its own TLS, pool
+sizing and timeouts — hand it to the datastream directly instead of restating
+every field. The SDK shares the client across all of its caches and does not
+close it; the caller owns its lifecycle.
+
+```go
+options := &schematicoption.DatastreamOptions{
+	CacheTTL:    5 * time.Minute,
+	CacheConfig: schematicoption.WithRedisClient(myRedisClient), // any redis.UniversalClient
 }
 ```
 

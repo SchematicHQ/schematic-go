@@ -1,8 +1,10 @@
 package core
 
 import (
+	"crypto/tls"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
 )
@@ -192,6 +194,11 @@ type RedisCacheConfig struct {
 	DisableIdentity       bool
 	IdentitySuffix        string
 	UnstableResp3         bool
+
+	// TLSConfig enables TLS for the connection. Leave nil for plaintext. An
+	// empty &tls.Config{} is enough for a server with a publicly-trusted
+	// certificate; hostname verification stays on.
+	TLSConfig *tls.Config
 }
 
 func (c RedisCacheConfig) applyDatastreamOptions(opts *DatastreamOptions) {
@@ -225,14 +232,38 @@ type RedisCacheClusterConfig struct {
 	DisableIdentity       bool
 	IdentitySuffix        string
 	UnstableResp3         bool
+
+	// TLSConfig enables TLS for the connection. Leave nil for plaintext. An
+	// empty &tls.Config{} is enough for a server with a publicly-trusted
+	// certificate; hostname verification stays on.
+	TLSConfig *tls.Config
 }
 
 func (c RedisCacheClusterConfig) applyDatastreamOptions(opts *DatastreamOptions) {
 	opts.CacheConfig = c
 }
 
+// RedisClientConfig hands the datastream an already-constructed Redis client
+// instead of describing one field by field. Use it when the caller already
+// builds a client — with its own TLS, pool sizing and timeouts — and wants the
+// SDK to share it rather than re-derive it.
+//
+// The SDK does not close the client; the caller owns its lifecycle.
+type RedisClientConfig struct {
+	Client redis.UniversalClient
+}
+
+func (c RedisClientConfig) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.CacheConfig = c
+}
+
 func WithRedisCache(opts CacheConfig) CacheConfig {
 	return opts
+}
+
+// WithRedisClient wraps an existing Redis client as a datastream cache config.
+func WithRedisClient(client redis.UniversalClient) CacheConfig {
+	return RedisClientConfig{Client: client}
 }
 
 type ClientOptUseDatastream struct {

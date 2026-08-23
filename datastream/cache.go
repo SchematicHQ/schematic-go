@@ -1,6 +1,8 @@
 package datastream
 
 import (
+	"strings"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
@@ -81,6 +83,10 @@ func buildRedisClient(configOpt *core.DatastreamOptions) redis.UniversalClient {
 	case core.RedisCacheClusterConfig:
 		config := configOpt.CacheConfig.(core.RedisCacheClusterConfig)
 		return redis.NewClusterClient(ToRedisClusterOptions(&config))
+	case *core.RedisClientConfig:
+		return configOpt.CacheConfig.(*core.RedisClientConfig).Client
+	case core.RedisClientConfig:
+		return configOpt.CacheConfig.(core.RedisClientConfig).Client
 	}
 
 	return nil
@@ -121,7 +127,7 @@ func buildLocalCache(opt *core.DatastreamOptions) (CompanyCacheProvider, UserCac
 }
 
 func ToRedisOptions(config *core.RedisCacheConfig) *redis.Options {
-	return &redis.Options{
+	opts := &redis.Options{
 		Network:               config.Network,
 		Addr:                  config.Addr,
 		ClientName:            config.ClientName,
@@ -148,6 +154,44 @@ func ToRedisOptions(config *core.RedisCacheConfig) *redis.Options {
 		DisableIdentity:       config.DisableIdentity,
 		IdentitySuffix:        config.IdentitySuffix,
 		UnstableResp3:         config.UnstableResp3,
+		TLSConfig:             config.TLSConfig,
+	}
+
+	applyRedisURL(opts, config.Addr)
+
+	return opts
+}
+
+// applyRedisURL lets Addr be a connection URL ("redis://host:6379",
+// "rediss://host:6380") as well as the bare "host:port" go-redis expects.
+// Anything the URL carries that the config didn't set explicitly — credentials,
+// DB index, TLS for the rediss scheme — is filled in from it; explicit config
+// fields always win. A non-URL Addr is left untouched.
+func applyRedisURL(opts *redis.Options, addr string) {
+	if !strings.Contains(addr, "://") {
+		return
+	}
+
+	parsed, err := redis.ParseURL(addr)
+	if err != nil {
+		// Not something go-redis understands; leave Addr as given so the dial
+		// error names the address the caller actually configured.
+		return
+	}
+
+	opts.Addr = parsed.Addr
+	opts.Network = parsed.Network
+	if opts.Username == "" {
+		opts.Username = parsed.Username
+	}
+	if opts.Password == "" {
+		opts.Password = parsed.Password
+	}
+	if opts.DB == 0 {
+		opts.DB = parsed.DB
+	}
+	if opts.TLSConfig == nil {
+		opts.TLSConfig = parsed.TLSConfig
 	}
 }
 
@@ -179,5 +223,6 @@ func ToRedisClusterOptions(config *core.RedisCacheClusterConfig) *redis.ClusterO
 		DisableIdentity:       config.DisableIdentity,
 		IdentitySuffix:        config.IdentitySuffix,
 		UnstableResp3:         config.UnstableResp3,
+		TLSConfig:             config.TLSConfig,
 	}
 }

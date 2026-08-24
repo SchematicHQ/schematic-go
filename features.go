@@ -551,13 +551,16 @@ func (l *ListFlagsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	checkFlagRequestBodyFieldCompany = big.NewInt(1 << 0)
-	checkFlagRequestBodyFieldUser    = big.NewInt(1 << 1)
+	checkFlagRequestBodyFieldCompany   = big.NewInt(1 << 0)
+	checkFlagRequestBodyFieldPreflight = big.NewInt(1 << 1)
+	checkFlagRequestBodyFieldUser      = big.NewInt(1 << 2)
 )
 
 type CheckFlagRequestBody struct {
 	Company map[string]string `json:"company,omitempty" url:"company,omitempty"`
-	User    map[string]string `json:"user,omitempty" url:"user,omitempty"`
+	// Hypothetical usage to evaluate the flag against, for answering "would this action be allowed?" before performing it. Only supported when checking a single flag. Values are caller-asserted and can widen a verdict as well as narrow it, so do not forward untrusted input here when the result gates access. Only the flag value reflects the preflight; the entitlement and usage figures in the response are the company's current, unsimulated ones
+	Preflight *PreflightRequestBody `json:"preflight,omitempty" url:"preflight,omitempty"`
+	User      map[string]string     `json:"user,omitempty" url:"user,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -571,6 +574,13 @@ func (c *CheckFlagRequestBody) GetCompany() map[string]string {
 		return nil
 	}
 	return c.Company
+}
+
+func (c *CheckFlagRequestBody) GetPreflight() *PreflightRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.Preflight
 }
 
 func (c *CheckFlagRequestBody) GetUser() map[string]string {
@@ -599,6 +609,13 @@ func (c *CheckFlagRequestBody) require(field *big.Int) {
 func (c *CheckFlagRequestBody) SetCompany(company map[string]string) {
 	c.Company = company
 	c.require(checkFlagRequestBodyFieldCompany)
+}
+
+// SetPreflight sets the Preflight field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckFlagRequestBody) SetPreflight(preflight *PreflightRequestBody) {
+	c.Preflight = preflight
+	c.require(checkFlagRequestBodyFieldPreflight)
 }
 
 // SetUser sets the User field and marks it as non-optional;
@@ -2619,6 +2636,227 @@ func (f *FlagResponseData) String() string {
 }
 
 var (
+	preflightEventUsageRequestBodyFieldEventSubtype = big.NewInt(1 << 0)
+	preflightEventUsageRequestBodyFieldQuantity     = big.NewInt(1 << 1)
+)
+
+type PreflightEventUsageRequestBody struct {
+	// The event subtype the usage would be recorded under
+	EventSubtype string `json:"event_subtype" url:"event_subtype"`
+	// How many units of the event subtype the action would record. Zero has no effect
+	Quantity int64 `json:"quantity" url:"quantity"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreflightEventUsageRequestBody) GetEventSubtype() string {
+	if p == nil {
+		return ""
+	}
+	return p.EventSubtype
+}
+
+func (p *PreflightEventUsageRequestBody) GetQuantity() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Quantity
+}
+
+func (p *PreflightEventUsageRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreflightEventUsageRequestBody) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightEventUsageRequestBody) SetEventSubtype(eventSubtype string) {
+	p.EventSubtype = eventSubtype
+	p.require(preflightEventUsageRequestBodyFieldEventSubtype)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightEventUsageRequestBody) SetQuantity(quantity int64) {
+	p.Quantity = quantity
+	p.require(preflightEventUsageRequestBodyFieldQuantity)
+}
+
+func (p *PreflightEventUsageRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreflightEventUsageRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreflightEventUsageRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreflightEventUsageRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PreflightEventUsageRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreflightEventUsageRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	preflightRequestBodyFieldCreditCost = big.NewInt(1 << 0)
+	preflightRequestBodyFieldEventUsage = big.NewInt(1 << 1)
+	preflightRequestBodyFieldUsage      = big.NewInt(1 << 2)
+)
+
+type PreflightRequestBody struct {
+	// Cost in credits of the action, keyed by credit ID, for callers that have already computed it. Takes precedence over usage and event_usage on credit balance conditions for the same credit. A cost of zero means the action is free, not that the input is absent
+	CreditCost map[string]float64 `json:"credit_cost,omitempty" url:"credit_cost,omitempty"`
+	// Usage of a specific event subtype. Preferred over usage when the subtype is known, since it only affects conditions measuring that subtype
+	EventUsage *PreflightEventUsageRequestBody `json:"event_usage,omitempty" url:"event_usage,omitempty"`
+	// Quantity of usage to simulate against any numeric condition encountered while evaluating the flag. Zero has no effect
+	Usage *int64 `json:"usage,omitempty" url:"usage,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreflightRequestBody) GetCreditCost() map[string]float64 {
+	if p == nil {
+		return nil
+	}
+	return p.CreditCost
+}
+
+func (p *PreflightRequestBody) GetEventUsage() *PreflightEventUsageRequestBody {
+	if p == nil {
+		return nil
+	}
+	return p.EventUsage
+}
+
+func (p *PreflightRequestBody) GetUsage() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.Usage
+}
+
+func (p *PreflightRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreflightRequestBody) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetCreditCost sets the CreditCost field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightRequestBody) SetCreditCost(creditCost map[string]float64) {
+	p.CreditCost = creditCost
+	p.require(preflightRequestBodyFieldCreditCost)
+}
+
+// SetEventUsage sets the EventUsage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightRequestBody) SetEventUsage(eventUsage *PreflightEventUsageRequestBody) {
+	p.EventUsage = eventUsage
+	p.require(preflightRequestBodyFieldEventUsage)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightRequestBody) SetUsage(usage *int64) {
+	p.Usage = usage
+	p.require(preflightRequestBodyFieldUsage)
+}
+
+func (p *PreflightRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreflightRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreflightRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreflightRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PreflightRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreflightRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
 	rulesDetailResponseDataFieldFlag  = big.NewInt(1 << 0)
 	rulesDetailResponseDataFieldRules = big.NewInt(1 << 1)
 )
@@ -2716,31 +2954,6 @@ func (r *RulesDetailResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", r)
-}
-
-type TrialStatus string
-
-const (
-	TrialStatusActive    TrialStatus = "active"
-	TrialStatusConverted TrialStatus = "converted"
-	TrialStatusExpired   TrialStatus = "expired"
-)
-
-func NewTrialStatusFromString(s string) (TrialStatus, error) {
-	switch s {
-	case "active":
-		return TrialStatusActive, nil
-	case "converted":
-		return TrialStatusConverted, nil
-	case "expired":
-		return TrialStatusExpired, nil
-	}
-	var t TrialStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (t TrialStatus) Ptr() *TrialStatus {
-	return &t
 }
 
 var (

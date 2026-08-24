@@ -34,6 +34,26 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListCatalogsRequest{
+//	    IsDefault: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Catalogs.ListCatalogs(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCatalogs(
 	ctx context.Context,
 	request *schematichq.ListCatalogsRequest,
@@ -50,6 +70,15 @@ func (c *Client) ListCatalogs(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCatalogRequestBody{
+//	    Name: "name",
+//	}
+//	client.Catalogs.CreateCatalog(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateCatalog(
 	ctx context.Context,
 	request *schematichq.CreateCatalogRequestBody,
@@ -66,6 +95,12 @@ func (c *Client) CreateCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.GetCatalog(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
 func (c *Client) GetCatalog(
 	ctx context.Context,
 	// catalog_id
@@ -83,6 +118,14 @@ func (c *Client) GetCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateCatalogRequestBody{}
+//	client.Catalogs.UpdateCatalog(
+//	    context.TODO(),
+//	    "catalog_id",
+//	    request,
+//	)
 func (c *Client) UpdateCatalog(
 	ctx context.Context,
 	// catalog_id
@@ -102,6 +145,12 @@ func (c *Client) UpdateCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.DeleteCatalog(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
 func (c *Client) DeleteCatalog(
 	ctx context.Context,
 	// catalog_id
@@ -119,6 +168,12 @@ func (c *Client) DeleteCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.GetConfiguration(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
 func (c *Client) GetConfiguration(
 	ctx context.Context,
 	// catalog_id
@@ -136,6 +191,14 @@ func (c *Client) GetConfiguration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateCatalogConfigurationRequestBody{}
+//	client.Catalogs.UpdateConfiguration(
+//	    context.TODO(),
+//	    "catalog_id",
+//	    request,
+//	)
 func (c *Client) UpdateConfiguration(
 	ctx context.Context,
 	// catalog_id
@@ -155,6 +218,12 @@ func (c *Client) UpdateConfiguration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.GetCreditBundlesInCatalog(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
 func (c *Client) GetCreditBundlesInCatalog(
 	ctx context.Context,
 	// catalog_id
@@ -172,6 +241,13 @@ func (c *Client) GetCreditBundlesInCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.AddCreditBundle(
+//	    context.TODO(),
+//	    "catalog_id",
+//	    "credit_bundle_id",
+//	)
 func (c *Client) AddCreditBundle(
 	ctx context.Context,
 	// catalog_id
@@ -192,6 +268,13 @@ func (c *Client) AddCreditBundle(
 	return nil
 }
 
+// Example:
+//
+//	client.Catalogs.RemoveCreditBundle(
+//	    context.TODO(),
+//	    "catalog_id",
+//	    "credit_bundle_id",
+//	)
 func (c *Client) RemoveCreditBundle(
 	ctx context.Context,
 	// catalog_id
@@ -212,6 +295,12 @@ func (c *Client) RemoveCreditBundle(
 	return nil
 }
 
+// Example:
+//
+//	client.Catalogs.GetDerivedFeatures(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
 func (c *Client) GetDerivedFeatures(
 	ctx context.Context,
 	// catalog_id
@@ -229,6 +318,12 @@ func (c *Client) GetDerivedFeatures(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.GetPlansInCatalog(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
 func (c *Client) GetPlansInCatalog(
 	ctx context.Context,
 	// catalog_id
@@ -246,6 +341,13 @@ func (c *Client) GetPlansInCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Catalogs.AddPlan(
+//	    context.TODO(),
+//	    "catalog_id",
+//	    "plan_id",
+//	)
 func (c *Client) AddPlan(
 	ctx context.Context,
 	// catalog_id
@@ -266,6 +368,13 @@ func (c *Client) AddPlan(
 	return nil
 }
 
+// Example:
+//
+//	client.Catalogs.RemovePlan(
+//	    context.TODO(),
+//	    "catalog_id",
+//	    "plan_id",
+//	)
 func (c *Client) RemovePlan(
 	ctx context.Context,
 	// catalog_id

@@ -34,6 +34,28 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListBillingCreditsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListBillingCredits(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListBillingCredits(
 	ctx context.Context,
 	request *schematichq.ListBillingCreditsRequest,
@@ -50,6 +72,17 @@ func (c *Client) ListBillingCredits(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingCreditRequestBody{
+//	    Currency: "currency",
+//	    Description: "description",
+//	    Name: "name",
+//	}
+//	client.Credits.CreateBillingCredit(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateBillingCredit(
 	ctx context.Context,
 	request *schematichq.CreateBillingCreditRequestBody,
@@ -66,6 +99,12 @@ func (c *Client) CreateBillingCredit(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Credits.GetSingleBillingCredit(
+//	    context.TODO(),
+//	    "credit_id",
+//	)
 func (c *Client) GetSingleBillingCredit(
 	ctx context.Context,
 	// credit_id
@@ -83,6 +122,17 @@ func (c *Client) GetSingleBillingCredit(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateBillingCreditRequestBody{
+//	    Description: "description",
+//	    Name: "name",
+//	}
+//	client.Credits.UpdateBillingCredit(
+//	    context.TODO(),
+//	    "credit_id",
+//	    request,
+//	)
 func (c *Client) UpdateBillingCredit(
 	ctx context.Context,
 	// credit_id
@@ -102,6 +152,12 @@ func (c *Client) UpdateBillingCredit(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Credits.SoftDeleteBillingCredit(
+//	    context.TODO(),
+//	    "credit_id",
+//	)
 func (c *Client) SoftDeleteBillingCredit(
 	ctx context.Context,
 	// credit_id
@@ -119,6 +175,15 @@ func (c *Client) SoftDeleteBillingCredit(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCompanyCreditBalancesRequest{
+//	    CompanyID: "company_id",
+//	}
+//	client.Credits.ListCompanyCreditBalances(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCompanyCreditBalances(
 	ctx context.Context,
 	request *schematichq.ListCompanyCreditBalancesRequest,
@@ -135,6 +200,32 @@ func (c *Client) ListCompanyCreditBalances(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCreditBundlesRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    CreditID: schematichq.String(
+//	        "credit_id",
+//	    ),
+//	    Status: schematichq.BillingCreditBundleStatusActive.Ptr(),
+//	    BundleType: schematichq.String(
+//	        "fixed",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListCreditBundles(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCreditBundles(
 	ctx context.Context,
 	request *schematichq.ListCreditBundlesRequest,
@@ -151,6 +242,18 @@ func (c *Client) ListCreditBundles(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCreditBundleRequestBody{
+//	    BundleName: "bundle_name",
+//	    CreditID: "credit_id",
+//	    Currency: "currency",
+//	    PricePerUnit: int64(1000000),
+//	}
+//	client.Credits.CreateCreditBundle(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateCreditBundle(
 	ctx context.Context,
 	request *schematichq.CreateCreditBundleRequestBody,
@@ -167,6 +270,12 @@ func (c *Client) CreateCreditBundle(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Credits.GetCreditBundle(
+//	    context.TODO(),
+//	    "bundle_id",
+//	)
 func (c *Client) GetCreditBundle(
 	ctx context.Context,
 	// bundle_id
@@ -184,6 +293,17 @@ func (c *Client) GetCreditBundle(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateCreditBundleDetailsRequestBody{
+//	    BundleName: "bundle_name",
+//	    PricePerUnit: int64(1000000),
+//	}
+//	client.Credits.UpdateCreditBundleDetails(
+//	    context.TODO(),
+//	    "bundle_id",
+//	    request,
+//	)
 func (c *Client) UpdateCreditBundleDetails(
 	ctx context.Context,
 	// bundle_id
@@ -203,6 +323,12 @@ func (c *Client) UpdateCreditBundleDetails(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Credits.DeleteCreditBundle(
+//	    context.TODO(),
+//	    "bundle_id",
+//	)
 func (c *Client) DeleteCreditBundle(
 	ctx context.Context,
 	// bundle_id
@@ -220,6 +346,32 @@ func (c *Client) DeleteCreditBundle(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCreditBundlesRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    CreditID: schematichq.String(
+//	        "credit_id",
+//	    ),
+//	    Status: schematichq.BillingCreditBundleStatusActive.Ptr(),
+//	    BundleType: schematichq.String(
+//	        "fixed",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountCreditBundles(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCreditBundles(
 	ctx context.Context,
 	request *schematichq.CountCreditBundlesRequest,
@@ -236,6 +388,28 @@ func (c *Client) CountCreditBundles(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountBillingCreditsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountBillingCredits(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountBillingCredits(
 	ctx context.Context,
 	request *schematichq.CountBillingCreditsRequest,
@@ -252,6 +426,14 @@ func (c *Client) CountBillingCredits(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ZeroOutGrantRequestBody{}
+//	client.Credits.ZeroOutGrant(
+//	    context.TODO(),
+//	    "grant_id",
+//	    request,
+//	)
 func (c *Client) ZeroOutGrant(
 	ctx context.Context,
 	// grant_id
@@ -271,6 +453,18 @@ func (c *Client) ZeroOutGrant(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCompanyCreditGrant{
+//	    CompanyID: "company_id",
+//	    CreditID: "credit_id",
+//	    Quantity: int64(1000000),
+//	    Reason: schematichq.BillingCreditGrantReasonAdjustment,
+//	}
+//	client.Credits.GrantBillingCreditsToCompany(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GrantBillingCreditsToCompany(
 	ctx context.Context,
 	request *schematichq.CreateCompanyCreditGrant,
@@ -287,6 +481,23 @@ func (c *Client) GrantBillingCreditsToCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCompanyGrantsRequest{
+//	    CompanyID: "company_id",
+//	    Order: schematichq.CreditGrantSortOrderCreatedAt.Ptr(),
+//	    Dir: schematichq.SortDirectionAsc.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountCompanyGrants(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCompanyGrants(
 	ctx context.Context,
 	request *schematichq.CountCompanyGrantsRequest,
@@ -303,6 +514,23 @@ func (c *Client) CountCompanyGrants(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCompanyGrantsRequest{
+//	    CompanyID: "company_id",
+//	    Order: schematichq.CreditGrantSortOrderCreatedAt.Ptr(),
+//	    Dir: schematichq.SortDirectionAsc.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListCompanyGrants(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCompanyGrants(
 	ctx context.Context,
 	request *schematichq.ListCompanyGrantsRequest,
@@ -319,6 +547,28 @@ func (c *Client) ListCompanyGrants(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountBillingCreditsGrantsRequest{
+//	    CreditID: schematichq.String(
+//	        "credit_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountBillingCreditsGrants(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountBillingCreditsGrants(
 	ctx context.Context,
 	request *schematichq.CountBillingCreditsGrantsRequest,
@@ -335,6 +585,28 @@ func (c *Client) CountBillingCreditsGrants(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListGrantsForCreditRequest{
+//	    CreditID: schematichq.String(
+//	        "credit_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListGrantsForCredit(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListGrantsForCredit(
 	ctx context.Context,
 	request *schematichq.ListGrantsForCreditRequest,
@@ -351,6 +623,17 @@ func (c *Client) ListGrantsForCredit(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.AcquireCreditLeaseRequestBody{
+//	    CompanyID: "company_id",
+//	    CreditTypeID: "credit_type_id",
+//	    RequestedAmount: 1.1,
+//	}
+//	client.Credits.AcquireCreditLease(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) AcquireCreditLease(
 	ctx context.Context,
 	request *schematichq.AcquireCreditLeaseRequestBody,
@@ -367,6 +650,16 @@ func (c *Client) AcquireCreditLease(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ExtendCreditLeaseRequestBody{
+//	    AdditionalAmount: 1.1,
+//	}
+//	client.Credits.ExtendCreditLease(
+//	    context.TODO(),
+//	    "lease_id",
+//	    request,
+//	)
 func (c *Client) ExtendCreditLease(
 	ctx context.Context,
 	// lease_id
@@ -386,6 +679,16 @@ func (c *Client) ExtendCreditLease(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := map[string]any{
+//	    "key": "value",
+//	}
+//	client.Credits.ReleaseCreditLease(
+//	    context.TODO(),
+//	    "lease_id",
+//	    request,
+//	)
 func (c *Client) ReleaseCreditLease(
 	ctx context.Context,
 	// lease_id
@@ -405,6 +708,44 @@ func (c *Client) ReleaseCreditLease(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListBillingPlanCreditGrantsRequest{
+//	    CreditID: schematichq.String(
+//	        "credit_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanIDs: []*string{
+//	        schematichq.String(
+//	            "plan_ids",
+//	        ),
+//	    },
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    PlanVersionIDs: []*string{
+//	        schematichq.String(
+//	            "plan_version_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListBillingPlanCreditGrants(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListBillingPlanCreditGrants(
 	ctx context.Context,
 	request *schematichq.ListBillingPlanCreditGrantsRequest,
@@ -421,6 +762,19 @@ func (c *Client) ListBillingPlanCreditGrants(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingPlanCreditGrantRequestBody{
+//	    CreditAmount: int64(1000000),
+//	    CreditID: "credit_id",
+//	    PlanID: "plan_id",
+//	    ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
+//	    ResetStart: schematichq.BillingPlanCreditGrantResetStartBillingPeriod,
+//	}
+//	client.Credits.CreateBillingPlanCreditGrant(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateBillingPlanCreditGrant(
 	ctx context.Context,
 	request *schematichq.CreateBillingPlanCreditGrantRequestBody,
@@ -437,6 +791,12 @@ func (c *Client) CreateBillingPlanCreditGrant(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Credits.GetSingleBillingPlanCreditGrant(
+//	    context.TODO(),
+//	    "plan_grant_id",
+//	)
 func (c *Client) GetSingleBillingPlanCreditGrant(
 	ctx context.Context,
 	// plan_grant_id
@@ -454,6 +814,17 @@ func (c *Client) GetSingleBillingPlanCreditGrant(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateBillingPlanCreditGrantRequestBody{
+//	    ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
+//	    ResetStart: schematichq.BillingPlanCreditGrantResetStartBillingPeriod,
+//	}
+//	client.Credits.UpdateBillingPlanCreditGrant(
+//	    context.TODO(),
+//	    "plan_grant_id",
+//	    request,
+//	)
 func (c *Client) UpdateBillingPlanCreditGrant(
 	ctx context.Context,
 	// plan_grant_id
@@ -473,6 +844,18 @@ func (c *Client) UpdateBillingPlanCreditGrant(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.DeleteBillingPlanCreditGrantRequest{
+//	    ApplyToExisting: schematichq.Bool(
+//	        true,
+//	    ),
+//	}
+//	client.Credits.DeleteBillingPlanCreditGrant(
+//	    context.TODO(),
+//	    "plan_grant_id",
+//	    request,
+//	)
 func (c *Client) DeleteBillingPlanCreditGrant(
 	ctx context.Context,
 	// plan_grant_id
@@ -492,6 +875,44 @@ func (c *Client) DeleteBillingPlanCreditGrant(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountBillingPlanCreditGrantsRequest{
+//	    CreditID: schematichq.String(
+//	        "credit_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanIDs: []*string{
+//	        schematichq.String(
+//	            "plan_ids",
+//	        ),
+//	    },
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    PlanVersionIDs: []*string{
+//	        schematichq.String(
+//	            "plan_version_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountBillingPlanCreditGrants(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountBillingPlanCreditGrants(
 	ctx context.Context,
 	request *schematichq.CountBillingPlanCreditGrantsRequest,
@@ -508,6 +929,34 @@ func (c *Client) CountBillingPlanCreditGrants(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCreditEventLedgerRequest{
+//	    BillingCreditID: schematichq.String(
+//	        "billing_credit_id",
+//	    ),
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.String(
+//	        "end_time",
+//	    ),
+//	    EventType: schematichq.CreditEventTypeGrant.Ptr(),
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    StartTime: schematichq.String(
+//	        "start_time",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListCreditEventLedger(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCreditEventLedger(
 	ctx context.Context,
 	request *schematichq.ListCreditEventLedgerRequest,
@@ -524,6 +973,34 @@ func (c *Client) ListCreditEventLedger(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCreditEventLedgerRequest{
+//	    BillingCreditID: schematichq.String(
+//	        "billing_credit_id",
+//	    ),
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.String(
+//	        "end_time",
+//	    ),
+//	    EventType: schematichq.CreditEventTypeGrant.Ptr(),
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    StartTime: schematichq.String(
+//	        "start_time",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountCreditEventLedger(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCreditEventLedger(
 	ctx context.Context,
 	request *schematichq.CountCreditEventLedgerRequest,

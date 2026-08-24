@@ -34,6 +34,47 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ChangeSubscriptionInternalRequestBody{
+//	    AddOnIDs: []*schematichq.UpdateAddOnRequestBody{
+//	        &schematichq.UpdateAddOnRequestBody{
+//	            AddOnID: "add_on_id",
+//	            PriceID: "price_id",
+//	        },
+//	    },
+//	    AutoTopupOverrides: []*schematichq.UpdateAutoTopupOverrideRequestBody{
+//	        &schematichq.UpdateAutoTopupOverrideRequestBody{
+//	            PlanCreditGrantID: "plan_credit_grant_id",
+//	        },
+//	    },
+//	    CompanyID: "company_id",
+//	    CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
+//	        &schematichq.UpdateCreditBundleRequestBody{
+//	            BundleID: "bundle_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	    CustomFieldValues: []*schematichq.CheckoutFieldValue{
+//	        &schematichq.CheckoutFieldValue{
+//	            ID: "id",
+//	            Value: "value",
+//	        },
+//	    },
+//	    NewPlanID: "new_plan_id",
+//	    NewPriceID: "new_price_id",
+//	    PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
+//	        &schematichq.UpdatePayInAdvanceRequestBody{
+//	            PriceID: "price_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	    SkipTrial: true,
+//	}
+//	client.Checkout.Internal(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) Internal(
 	ctx context.Context,
 	request *schematichq.ChangeSubscriptionInternalRequestBody,
@@ -50,6 +91,15 @@ func (c *Client) Internal(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CheckoutDataRequestBody{
+//	    CompanyID: "company_id",
+//	}
+//	client.Checkout.GetCheckoutData(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetCheckoutData(
 	ctx context.Context,
 	request *schematichq.CheckoutDataRequestBody,
@@ -66,6 +116,47 @@ func (c *Client) GetCheckoutData(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ChangeSubscriptionInternalRequestBody{
+//	    AddOnIDs: []*schematichq.UpdateAddOnRequestBody{
+//	        &schematichq.UpdateAddOnRequestBody{
+//	            AddOnID: "add_on_id",
+//	            PriceID: "price_id",
+//	        },
+//	    },
+//	    AutoTopupOverrides: []*schematichq.UpdateAutoTopupOverrideRequestBody{
+//	        &schematichq.UpdateAutoTopupOverrideRequestBody{
+//	            PlanCreditGrantID: "plan_credit_grant_id",
+//	        },
+//	    },
+//	    CompanyID: "company_id",
+//	    CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
+//	        &schematichq.UpdateCreditBundleRequestBody{
+//	            BundleID: "bundle_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	    CustomFieldValues: []*schematichq.CheckoutFieldValue{
+//	        &schematichq.CheckoutFieldValue{
+//	            ID: "id",
+//	            Value: "value",
+//	        },
+//	    },
+//	    NewPlanID: "new_plan_id",
+//	    NewPriceID: "new_price_id",
+//	    PayInAdvance: []*schematichq.UpdatePayInAdvanceRequestBody{
+//	        &schematichq.UpdatePayInAdvanceRequestBody{
+//	            PriceID: "price_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	    SkipTrial: true,
+//	}
+//	client.Checkout.PreviewCheckoutInternal(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) PreviewCheckoutInternal(
 	ctx context.Context,
 	request *schematichq.ChangeSubscriptionInternalRequestBody,
@@ -82,6 +173,12 @@ func (c *Client) PreviewCheckoutInternal(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Checkout.GetCompanyBillingDetails(
+//	    context.TODO(),
+//	    "company_id",
+//	)
 func (c *Client) GetCompanyBillingDetails(
 	ctx context.Context,
 	// company_id
@@ -99,6 +196,21 @@ func (c *Client) GetCompanyBillingDetails(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateCompanyBillingDetailsRequestBody{
+//	    Values: []*schematichq.CheckoutFieldValue{
+//	        &schematichq.CheckoutFieldValue{
+//	            ID: "id",
+//	            Value: "value",
+//	        },
+//	    },
+//	}
+//	client.Checkout.UpdateCompanyBillingDetails(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
 func (c *Client) UpdateCompanyBillingDetails(
 	ctx context.Context,
 	// company_id
@@ -118,6 +230,38 @@ func (c *Client) UpdateCompanyBillingDetails(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ManagePlanRequest{
+//	    AddOnSelections: []*schematichq.PlanSelection{
+//	        &schematichq.PlanSelection{
+//	            PlanID: "plan_id",
+//	        },
+//	    },
+//	    CompanyID: "company_id",
+//	    CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
+//	        &schematichq.UpdateCreditBundleRequestBody{
+//	            BundleID: "bundle_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	    CustomFieldValues: []*schematichq.CheckoutFieldValue{
+//	        &schematichq.CheckoutFieldValue{
+//	            ID: "id",
+//	            Value: "value",
+//	        },
+//	    },
+//	    PayInAdvanceEntitlements: []*schematichq.UpdatePayInAdvanceRequestBody{
+//	        &schematichq.UpdatePayInAdvanceRequestBody{
+//	            PriceID: "price_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	}
+//	client.Checkout.ManagePlan(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ManagePlan(
 	ctx context.Context,
 	request *schematichq.ManagePlanRequest,
@@ -134,6 +278,38 @@ func (c *Client) ManagePlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ManagePlanRequest{
+//	    AddOnSelections: []*schematichq.PlanSelection{
+//	        &schematichq.PlanSelection{
+//	            PlanID: "plan_id",
+//	        },
+//	    },
+//	    CompanyID: "company_id",
+//	    CreditBundles: []*schematichq.UpdateCreditBundleRequestBody{
+//	        &schematichq.UpdateCreditBundleRequestBody{
+//	            BundleID: "bundle_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	    CustomFieldValues: []*schematichq.CheckoutFieldValue{
+//	        &schematichq.CheckoutFieldValue{
+//	            ID: "id",
+//	            Value: "value",
+//	        },
+//	    },
+//	    PayInAdvanceEntitlements: []*schematichq.UpdatePayInAdvanceRequestBody{
+//	        &schematichq.UpdatePayInAdvanceRequestBody{
+//	            PriceID: "price_id",
+//	            Quantity: int64(1000000),
+//	        },
+//	    },
+//	}
+//	client.Checkout.PreviewManagePlan(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) PreviewManagePlan(
 	ctx context.Context,
 	request *schematichq.ManagePlanRequest,
@@ -150,6 +326,15 @@ func (c *Client) PreviewManagePlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CancelSubscriptionRequest{
+//	    CompanyID: "company_id",
+//	}
+//	client.Checkout.CancelSubscription(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CancelSubscription(
 	ctx context.Context,
 	request *schematichq.CancelSubscriptionRequest,
@@ -166,6 +351,14 @@ func (c *Client) CancelSubscription(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateTrialEndRequestBody{}
+//	client.Checkout.UpdateCustomerSubscriptionTrialEnd(
+//	    context.TODO(),
+//	    "subscription_id",
+//	    request,
+//	)
 func (c *Client) UpdateCustomerSubscriptionTrialEnd(
 	ctx context.Context,
 	// subscription_id

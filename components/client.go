@@ -34,6 +34,23 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListComponentsRequest{
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Components.ListComponents(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListComponents(
 	ctx context.Context,
 	request *schematichq.ListComponentsRequest,
@@ -50,6 +67,16 @@ func (c *Client) ListComponents(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateComponentRequestBody{
+//	    EntityType: schematichq.ComponentEntityTypeBilling,
+//	    Name: "name",
+//	}
+//	client.Components.CreateComponent(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateComponent(
 	ctx context.Context,
 	request *schematichq.CreateComponentRequestBody,
@@ -66,6 +93,12 @@ func (c *Client) CreateComponent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Components.GetComponent(
+//	    context.TODO(),
+//	    "component_id",
+//	)
 func (c *Client) GetComponent(
 	ctx context.Context,
 	// component_id
@@ -83,6 +116,14 @@ func (c *Client) GetComponent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateComponentRequestBody{}
+//	client.Components.UpdateComponent(
+//	    context.TODO(),
+//	    "component_id",
+//	    request,
+//	)
 func (c *Client) UpdateComponent(
 	ctx context.Context,
 	// component_id
@@ -102,6 +143,12 @@ func (c *Client) UpdateComponent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Components.DeleteComponent(
+//	    context.TODO(),
+//	    "component_id",
+//	)
 func (c *Client) DeleteComponent(
 	ctx context.Context,
 	// component_id
@@ -119,6 +166,14 @@ func (c *Client) DeleteComponent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.BindCatalogRequestBody{}
+//	client.Components.BindCatalog(
+//	    context.TODO(),
+//	    "component_id",
+//	    request,
+//	)
 func (c *Client) BindCatalog(
 	ctx context.Context,
 	// component_id
@@ -138,6 +193,23 @@ func (c *Client) BindCatalog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountComponentsRequest{
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Components.CountComponents(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountComponents(
 	ctx context.Context,
 	request *schematichq.CountComponentsRequest,
@@ -154,6 +226,20 @@ func (c *Client) CountComponents(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.PreviewComponentDataRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    ComponentID: schematichq.String(
+//	        "component_id",
+//	    ),
+//	}
+//	client.Components.PreviewComponentData(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) PreviewComponentData(
 	ctx context.Context,
 	request *schematichq.PreviewComponentDataRequest,

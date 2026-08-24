@@ -2588,6 +2588,14 @@ func TestSettersMarkExplicitAPIKeyCreateResponseData(t *testing.T) {
 }
 
 func TestSettersAuditLogResponseData(t *testing.T) {
+	t.Run("SetAccountMemberID", func(t *testing.T) {
+		obj := &AuditLogResponseData{}
+		var fernTestValueAccountMemberID *string
+		obj.SetAccountMemberID(fernTestValueAccountMemberID)
+		assert.Equal(t, fernTestValueAccountMemberID, obj.AccountMemberID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetActorType", func(t *testing.T) {
 		obj := &AuditLogResponseData{}
 		var fernTestValueActorType ActorType
@@ -2751,6 +2759,39 @@ func TestSettersAuditLogResponseData(t *testing.T) {
 }
 
 func TestGettersAuditLogResponseData(t *testing.T) {
+	t.Run("GetAccountMemberID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var expected *string
+		obj.AccountMemberID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAccountMemberID(), "getter should return the property value")
+	})
+
+	t.Run("GetAccountMemberID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		obj.AccountMemberID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAccountMemberID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAccountMemberID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *AuditLogResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAccountMemberID() // Should return zero value
+	})
+
 	t.Run("GetActorType", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -3364,6 +3405,37 @@ func TestGettersAuditLogResponseData(t *testing.T) {
 }
 
 func TestSettersMarkExplicitAuditLogResponseData(t *testing.T) {
+	t.Run("SetAccountMemberID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var fernTestValueAccountMemberID *string
+
+		// Act
+		obj.SetAccountMemberID(fernTestValueAccountMemberID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetActorType_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -5112,6 +5184,14 @@ func TestSettersOnboardingRequirementView(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetReachedAt", func(t *testing.T) {
+		obj := &OnboardingRequirementView{}
+		var fernTestValueReachedAt *time.Time
+		obj.SetReachedAt(fernTestValueReachedAt)
+		assert.Equal(t, fernTestValueReachedAt, obj.ReachedAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetSatisfiedBy", func(t *testing.T) {
 		obj := &OnboardingRequirementView{}
 		var fernTestValueSatisfiedBy *string
@@ -5185,6 +5265,39 @@ func TestGettersOnboardingRequirementView(t *testing.T) {
 			}
 		}()
 		_ = obj.GetID() // Should return zero value
+	})
+
+	t.Run("GetReachedAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &OnboardingRequirementView{}
+		var expected *time.Time
+		obj.ReachedAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetReachedAt(), "getter should return the property value")
+	})
+
+	t.Run("GetReachedAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &OnboardingRequirementView{}
+		obj.ReachedAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetReachedAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetReachedAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *OnboardingRequirementView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetReachedAt() // Should return zero value
 	})
 
 	t.Run("GetSatisfiedBy", func(t *testing.T) {
@@ -5285,6 +5398,37 @@ func TestSettersMarkExplicitOnboardingRequirementView(t *testing.T) {
 
 		// Act
 		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetReachedAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &OnboardingRequirementView{}
+		var fernTestValueReachedAt *time.Time
+
+		// Act
+		obj.SetReachedAt(fernTestValueReachedAt)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

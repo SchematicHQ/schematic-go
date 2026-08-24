@@ -34,6 +34,19 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.CreateEventBatchRequestBody{
+//	    Events: []*schematichq.CreateEventRequestBody{
+//	        &schematichq.CreateEventRequestBody{
+//	            EventType: schematichq.EventTypeFlagCheck,
+//	        },
+//	    },
+//	}
+//	client.Events.CreateEventBatch(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateEventBatch(
 	ctx context.Context,
 	request *schematichq.CreateEventBatchRequestBody,
@@ -50,6 +63,28 @@ func (c *Client) CreateEventBatch(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetEventSummariesRequest{
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    EventSubtypes: []*string{
+//	        schematichq.String(
+//	            "event_subtypes",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Events.GetEventSummaries(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetEventSummaries(
 	ctx context.Context,
 	request *schematichq.GetEventSummariesRequest,
@@ -66,6 +101,38 @@ func (c *Client) GetEventSummaries(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListEventsRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    EventSubtype: schematichq.String(
+//	        "event_subtype",
+//	    ),
+//	    EventTypes: []*schematichq.EventType{
+//	        schematichq.EventTypeFlagCheck.Ptr(),
+//	    },
+//	    FlagID: schematichq.String(
+//	        "flag_id",
+//	    ),
+//	    IdempotencyKey: schematichq.String(
+//	        "idempotency_key",
+//	    ),
+//	    UserID: schematichq.String(
+//	        "user_id",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Events.ListEvents(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListEvents(
 	ctx context.Context,
 	request *schematichq.ListEventsRequest,
@@ -82,6 +149,15 @@ func (c *Client) ListEvents(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateEventRequestBody{
+//	    EventType: schematichq.EventTypeFlagCheck,
+//	}
+//	client.Events.CreateEvent(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateEvent(
 	ctx context.Context,
 	request *schematichq.CreateEventRequestBody,
@@ -98,6 +174,12 @@ func (c *Client) CreateEvent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Events.GetEvent(
+//	    context.TODO(),
+//	    "event_id",
+//	)
 func (c *Client) GetEvent(
 	ctx context.Context,
 	// event_id
@@ -115,6 +197,11 @@ func (c *Client) GetEvent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Events.GetSegmentIntegrationStatus(
+//	    context.TODO(),
+//	)
 func (c *Client) GetSegmentIntegrationStatus(
 	ctx context.Context,
 	opts ...option.RequestOption,

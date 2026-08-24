@@ -9189,6 +9189,14 @@ func TestSettersPreviewSubscriptionFinanceResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetProrationBilledAt", func(t *testing.T) {
+		obj := &PreviewSubscriptionFinanceResponseData{}
+		var fernTestValueProrationBilledAt *time.Time
+		obj.SetProrationBilledAt(fernTestValueProrationBilledAt)
+		assert.Equal(t, fernTestValueProrationBilledAt, obj.ProrationBilledAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetTaxAmount", func(t *testing.T) {
 		obj := &PreviewSubscriptionFinanceResponseData{}
 		var fernTestValueTaxAmount *int64
@@ -9478,6 +9486,39 @@ func TestGettersPreviewSubscriptionFinanceResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetProration() // Should return zero value
+	})
+
+	t.Run("GetProrationBilledAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PreviewSubscriptionFinanceResponseData{}
+		var expected *time.Time
+		obj.ProrationBilledAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetProrationBilledAt(), "getter should return the property value")
+	})
+
+	t.Run("GetProrationBilledAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PreviewSubscriptionFinanceResponseData{}
+		obj.ProrationBilledAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetProrationBilledAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetProrationBilledAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *PreviewSubscriptionFinanceResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetProrationBilledAt() // Should return zero value
 	})
 
 	t.Run("GetTaxAmount", func(t *testing.T) {
@@ -9948,6 +9989,37 @@ func TestSettersMarkExplicitPreviewSubscriptionFinanceResponseData(t *testing.T)
 
 		// Act
 		obj.SetProration(fernTestValueProration)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetProrationBilledAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PreviewSubscriptionFinanceResponseData{}
+		var fernTestValueProrationBilledAt *time.Time
+
+		// Act
+		obj.SetProrationBilledAt(fernTestValueProrationBilledAt)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

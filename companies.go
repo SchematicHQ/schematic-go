@@ -19,18 +19,19 @@ var (
 	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
 	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
 	countCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 7)
-	countCompaniesRequestFieldQ                         = big.NewInt(1 << 8)
-	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 9)
-	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 10)
-	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 11)
-	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 12)
-	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 13)
-	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 14)
-	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 15)
-	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 16)
-	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 17)
-	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 18)
-	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 19)
+	countCompaniesRequestFieldPlanVersionUnpublished    = big.NewInt(1 << 8)
+	countCompaniesRequestFieldQ                         = big.NewInt(1 << 9)
+	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 10)
+	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 11)
+	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 12)
+	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 13)
+	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 14)
+	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
+	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 16)
+	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 17)
+	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 18)
+	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 19)
+	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 20)
 )
 
 type CountCompaniesRequest struct {
@@ -50,6 +51,8 @@ type CountCompaniesRequest struct {
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
 	PlanVersionIDs []*string `json:"-" url:"plan_version_ids,omitempty"`
+	// Filter companies assigned to a plan version that is no longer published, meaning the plan has since moved on to a newer version
+	PlanVersionUnpublished *bool `json:"-" url:"plan_version_unpublished,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -140,6 +143,13 @@ func (c *CountCompaniesRequest) SetPlanVersionID(planVersionID *string) {
 func (c *CountCompaniesRequest) SetPlanVersionIDs(planVersionIDs []*string) {
 	c.PlanVersionIDs = planVersionIDs
 	c.require(countCompaniesRequestFieldPlanVersionIDs)
+}
+
+// SetPlanVersionUnpublished sets the PlanVersionUnpublished field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetPlanVersionUnpublished(planVersionUnpublished *bool) {
+	c.PlanVersionUnpublished = planVersionUnpublished
+	c.require(countCompaniesRequestFieldPlanVersionUnpublished)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -719,7 +729,7 @@ var (
 )
 
 type GetBillingEntityChildSubscriptionsRequest struct {
-	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	CompanyID string `json:"-" url:"company_id"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -734,7 +744,7 @@ func (g *GetBillingEntityChildSubscriptionsRequest) require(field *big.Int) {
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetBillingEntityChildSubscriptionsRequest) SetCompanyID(companyID *string) {
+func (g *GetBillingEntityChildSubscriptionsRequest) SetCompanyID(companyID string) {
 	g.CompanyID = companyID
 	g.require(getBillingEntityChildSubscriptionsRequestFieldCompanyID)
 }
@@ -744,7 +754,7 @@ var (
 )
 
 type GetCompanyBillingEntityRequest struct {
-	CompanyID *string `json:"-" url:"company_id,omitempty"`
+	CompanyID string `json:"-" url:"company_id"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -759,7 +769,7 @@ func (g *GetCompanyBillingEntityRequest) require(field *big.Int) {
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (g *GetCompanyBillingEntityRequest) SetCompanyID(companyID *string) {
+func (g *GetCompanyBillingEntityRequest) SetCompanyID(companyID string) {
 	g.CompanyID = companyID
 	g.require(getCompanyBillingEntityRequestFieldCompanyID)
 }
@@ -955,18 +965,19 @@ var (
 	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
 	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
 	listCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 7)
-	listCompaniesRequestFieldQ                         = big.NewInt(1 << 8)
-	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 9)
-	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 10)
-	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 11)
-	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 12)
-	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 13)
-	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 14)
-	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 15)
-	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 16)
-	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 17)
-	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 18)
-	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 19)
+	listCompaniesRequestFieldPlanVersionUnpublished    = big.NewInt(1 << 8)
+	listCompaniesRequestFieldQ                         = big.NewInt(1 << 9)
+	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 10)
+	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 11)
+	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 12)
+	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 13)
+	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 14)
+	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
+	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 16)
+	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 17)
+	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 18)
+	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 19)
+	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 20)
 )
 
 type ListCompaniesRequest struct {
@@ -986,6 +997,8 @@ type ListCompaniesRequest struct {
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
 	PlanVersionIDs []*string `json:"-" url:"plan_version_ids,omitempty"`
+	// Filter companies assigned to a plan version that is no longer published, meaning the plan has since moved on to a newer version
+	PlanVersionUnpublished *bool `json:"-" url:"plan_version_unpublished,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -1076,6 +1089,13 @@ func (l *ListCompaniesRequest) SetPlanVersionID(planVersionID *string) {
 func (l *ListCompaniesRequest) SetPlanVersionIDs(planVersionIDs []*string) {
 	l.PlanVersionIDs = planVersionIDs
 	l.require(listCompaniesRequestFieldPlanVersionIDs)
+}
+
+// SetPlanVersionUnpublished sets the PlanVersionUnpublished field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetPlanVersionUnpublished(planVersionUnpublished *bool) {
+	l.PlanVersionUnpublished = planVersionUnpublished
+	l.require(listCompaniesRequestFieldPlanVersionUnpublished)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -2923,9 +2943,12 @@ var (
 	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 18)
 	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 19)
 	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 20)
-	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 21)
-	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 22)
-	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 23)
+	planChangeResponseDataFieldTrialConvertedAt         = big.NewInt(1 << 21)
+	planChangeResponseDataFieldTrialExpiresAt           = big.NewInt(1 << 22)
+	planChangeResponseDataFieldTrialStatus              = big.NewInt(1 << 23)
+	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 24)
+	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 25)
+	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 26)
 )
 
 type PlanChangeResponseData struct {
@@ -2957,9 +2980,15 @@ type PlanChangeResponseData struct {
 	SubscriptionChangeAction *PlanChangeSubscriptionAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
 	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
 	TraitsUpdated []*SubscriptionTraitUpdate `json:"traits_updated" url:"traits_updated"`
-	UpdatedAt     time.Time                  `json:"updated_at" url:"updated_at"`
-	UserID        *string                    `json:"user_id,omitempty" url:"user_id,omitempty"`
-	UserName      *string                    `json:"user_name,omitempty" url:"user_name,omitempty"`
+	// When the company's trial had converted to a paid subscription as of this change. Null when the trial had not converted, or for changes recorded before trial status was tracked.
+	TrialConvertedAt *time.Time `json:"trial_converted_at,omitempty" url:"trial_converted_at,omitempty"`
+	// When the company's trial was set to end as of this change. Null when the company had never trialed, or for changes recorded before trial status was tracked.
+	TrialExpiresAt *time.Time `json:"trial_expires_at,omitempty" url:"trial_expires_at,omitempty"`
+	// The company's trial status. Null when the company had never trialed, or for changes recorded before trial status was tracked.
+	TrialStatus *TrialStatus `json:"trial_status,omitempty" url:"trial_status,omitempty"`
+	UpdatedAt   time.Time    `json:"updated_at" url:"updated_at"`
+	UserID      *string      `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserName    *string      `json:"user_name,omitempty" url:"user_name,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3113,6 +3142,27 @@ func (p *PlanChangeResponseData) GetTraitsUpdated() []*SubscriptionTraitUpdate {
 		return nil
 	}
 	return p.TraitsUpdated
+}
+
+func (p *PlanChangeResponseData) GetTrialConvertedAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.TrialConvertedAt
+}
+
+func (p *PlanChangeResponseData) GetTrialExpiresAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.TrialExpiresAt
+}
+
+func (p *PlanChangeResponseData) GetTrialStatus() *TrialStatus {
+	if p == nil {
+		return nil
+	}
+	return p.TrialStatus
 }
 
 func (p *PlanChangeResponseData) GetUpdatedAt() time.Time {
@@ -3297,6 +3347,27 @@ func (p *PlanChangeResponseData) SetTraitsUpdated(traitsUpdated []*SubscriptionT
 	p.require(planChangeResponseDataFieldTraitsUpdated)
 }
 
+// SetTrialConvertedAt sets the TrialConvertedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetTrialConvertedAt(trialConvertedAt *time.Time) {
+	p.TrialConvertedAt = trialConvertedAt
+	p.require(planChangeResponseDataFieldTrialConvertedAt)
+}
+
+// SetTrialExpiresAt sets the TrialExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetTrialExpiresAt(trialExpiresAt *time.Time) {
+	p.TrialExpiresAt = trialExpiresAt
+	p.require(planChangeResponseDataFieldTrialExpiresAt)
+}
+
+// SetTrialStatus sets the TrialStatus field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetTrialStatus(trialStatus *TrialStatus) {
+	p.TrialStatus = trialStatus
+	p.require(planChangeResponseDataFieldTrialStatus)
+}
+
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanChangeResponseData) SetUpdatedAt(updatedAt time.Time) {
@@ -3322,8 +3393,10 @@ func (p *PlanChangeResponseData) UnmarshalJSON(data []byte) error {
 	type embed PlanChangeResponseData
 	var unmarshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
+		CreatedAt        *internal.DateTime `json:"created_at"`
+		TrialConvertedAt *internal.DateTime `json:"trial_converted_at,omitempty"`
+		TrialExpiresAt   *internal.DateTime `json:"trial_expires_at,omitempty"`
+		UpdatedAt        *internal.DateTime `json:"updated_at"`
 	}{
 		embed: embed(*p),
 	}
@@ -3332,6 +3405,8 @@ func (p *PlanChangeResponseData) UnmarshalJSON(data []byte) error {
 	}
 	*p = PlanChangeResponseData(unmarshaler.embed)
 	p.CreatedAt = unmarshaler.CreatedAt.Time()
+	p.TrialConvertedAt = unmarshaler.TrialConvertedAt.TimePtr()
+	p.TrialExpiresAt = unmarshaler.TrialExpiresAt.TimePtr()
 	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
@@ -3346,12 +3421,16 @@ func (p *PlanChangeResponseData) MarshalJSON() ([]byte, error) {
 	type embed PlanChangeResponseData
 	var marshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		UpdatedAt *internal.DateTime `json:"updated_at"`
+		CreatedAt        *internal.DateTime `json:"created_at"`
+		TrialConvertedAt *internal.DateTime `json:"trial_converted_at,omitempty"`
+		TrialExpiresAt   *internal.DateTime `json:"trial_expires_at,omitempty"`
+		UpdatedAt        *internal.DateTime `json:"updated_at"`
 	}{
-		embed:     embed(*p),
-		CreatedAt: internal.NewDateTime(p.CreatedAt),
-		UpdatedAt: internal.NewDateTime(p.UpdatedAt),
+		embed:            embed(*p),
+		CreatedAt:        internal.NewDateTime(p.CreatedAt),
+		TrialConvertedAt: internal.NewOptionalDateTime(p.TrialConvertedAt),
+		TrialExpiresAt:   internal.NewOptionalDateTime(p.TrialExpiresAt),
+		UpdatedAt:        internal.NewDateTime(p.UpdatedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -5160,16 +5239,17 @@ var (
 	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
 	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
 	countCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 9)
-	countCompaniesParamsFieldQ                         = big.NewInt(1 << 10)
-	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 11)
-	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 12)
-	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 13)
-	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 14)
-	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 15)
-	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 16)
-	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 17)
-	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 18)
-	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 19)
+	countCompaniesParamsFieldPlanVersionUnpublished    = big.NewInt(1 << 10)
+	countCompaniesParamsFieldQ                         = big.NewInt(1 << 11)
+	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 12)
+	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 13)
+	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 14)
+	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 15)
+	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 16)
+	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 17)
+	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 18)
+	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 19)
+	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 20)
 )
 
 type CountCompaniesParams struct {
@@ -5193,6 +5273,8 @@ type CountCompaniesParams struct {
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
 	PlanVersionIDs []string `json:"plan_version_ids,omitempty" url:"plan_version_ids,omitempty"`
+	// Filter companies assigned to a plan version that is no longer published, meaning the plan has since moved on to a newer version
+	PlanVersionUnpublished *bool `json:"plan_version_unpublished,omitempty" url:"plan_version_unpublished,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -5289,6 +5371,13 @@ func (c *CountCompaniesParams) GetPlanVersionIDs() []string {
 		return nil
 	}
 	return c.PlanVersionIDs
+}
+
+func (c *CountCompaniesParams) GetPlanVersionUnpublished() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionUnpublished
 }
 
 func (c *CountCompaniesParams) GetQ() *string {
@@ -5443,6 +5532,13 @@ func (c *CountCompaniesParams) SetPlanVersionID(planVersionID *string) {
 func (c *CountCompaniesParams) SetPlanVersionIDs(planVersionIDs []string) {
 	c.PlanVersionIDs = planVersionIDs
 	c.require(countCompaniesParamsFieldPlanVersionIDs)
+}
+
+// SetPlanVersionUnpublished sets the PlanVersionUnpublished field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetPlanVersionUnpublished(planVersionUnpublished *bool) {
+	c.PlanVersionUnpublished = planVersionUnpublished
+	c.require(countCompaniesParamsFieldPlanVersionUnpublished)
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -9880,16 +9976,17 @@ var (
 	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
 	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
 	listCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 9)
-	listCompaniesParamsFieldQ                         = big.NewInt(1 << 10)
-	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 11)
-	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 12)
-	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 13)
-	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 14)
-	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 15)
-	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 16)
-	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 17)
-	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 18)
-	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 19)
+	listCompaniesParamsFieldPlanVersionUnpublished    = big.NewInt(1 << 10)
+	listCompaniesParamsFieldQ                         = big.NewInt(1 << 11)
+	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 12)
+	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 13)
+	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 14)
+	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 15)
+	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 16)
+	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 17)
+	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 18)
+	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 19)
+	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 20)
 )
 
 type ListCompaniesParams struct {
@@ -9913,6 +10010,8 @@ type ListCompaniesParams struct {
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Filter companies by one or more plan version IDs (each ID starts with plvr_). Takes precedence over plan_version_id when set.
 	PlanVersionIDs []string `json:"plan_version_ids,omitempty" url:"plan_version_ids,omitempty"`
+	// Filter companies assigned to a plan version that is no longer published, meaning the plan has since moved on to a newer version
+	PlanVersionUnpublished *bool `json:"plan_version_unpublished,omitempty" url:"plan_version_unpublished,omitempty"`
 	// Search for companies by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort by (e.g. name, created_at, last_seen_at)
@@ -10009,6 +10108,13 @@ func (l *ListCompaniesParams) GetPlanVersionIDs() []string {
 		return nil
 	}
 	return l.PlanVersionIDs
+}
+
+func (l *ListCompaniesParams) GetPlanVersionUnpublished() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionUnpublished
 }
 
 func (l *ListCompaniesParams) GetQ() *string {
@@ -10163,6 +10269,13 @@ func (l *ListCompaniesParams) SetPlanVersionID(planVersionID *string) {
 func (l *ListCompaniesParams) SetPlanVersionIDs(planVersionIDs []string) {
 	l.PlanVersionIDs = planVersionIDs
 	l.require(listCompaniesParamsFieldPlanVersionIDs)
+}
+
+// SetPlanVersionUnpublished sets the PlanVersionUnpublished field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetPlanVersionUnpublished(planVersionUnpublished *bool) {
+	l.PlanVersionUnpublished = planVersionUnpublished
+	l.require(listCompaniesParamsFieldPlanVersionUnpublished)
 }
 
 // SetQ sets the Q field and marks it as non-optional;

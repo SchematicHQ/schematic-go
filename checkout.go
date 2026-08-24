@@ -3235,12 +3235,13 @@ var (
 	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 7)
 	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 8)
 	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 9)
-	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 10)
-	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 11)
-	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 12)
-	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 13)
-	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 14)
-	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 15)
+	previewSubscriptionFinanceResponseDataFieldProrationBilledAt        = big.NewInt(1 << 10)
+	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 11)
+	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 12)
+	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 13)
+	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 14)
+	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 15)
+	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 16)
 )
 
 type PreviewSubscriptionFinanceResponseData struct {
@@ -3254,6 +3255,7 @@ type PreviewSubscriptionFinanceResponseData struct {
 	PeriodStart              time.Time                                      `json:"period_start" url:"period_start"`
 	PromoCodeApplied         bool                                           `json:"promo_code_applied" url:"promo_code_applied"`
 	Proration                int64                                          `json:"proration" url:"proration"`
+	ProrationBilledAt        *time.Time                                     `json:"proration_billed_at,omitempty" url:"proration_billed_at,omitempty"`
 	TaxAmount                *int64                                         `json:"tax_amount,omitempty" url:"tax_amount,omitempty"`
 	TaxDisplayName           *string                                        `json:"tax_display_name,omitempty" url:"tax_display_name,omitempty"`
 	TaxRequireBillingDetails bool                                           `json:"tax_require_billing_details" url:"tax_require_billing_details"`
@@ -3336,6 +3338,13 @@ func (p *PreviewSubscriptionFinanceResponseData) GetProration() int64 {
 		return 0
 	}
 	return p.Proration
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetProrationBilledAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.ProrationBilledAt
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) GetTaxAmount() *int64 {
@@ -3464,6 +3473,13 @@ func (p *PreviewSubscriptionFinanceResponseData) SetProration(proration int64) {
 	p.require(previewSubscriptionFinanceResponseDataFieldProration)
 }
 
+// SetProrationBilledAt sets the ProrationBilledAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionFinanceResponseData) SetProrationBilledAt(prorationBilledAt *time.Time) {
+	p.ProrationBilledAt = prorationBilledAt
+	p.require(previewSubscriptionFinanceResponseDataFieldProrationBilledAt)
+}
+
 // SetTaxAmount sets the TaxAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PreviewSubscriptionFinanceResponseData) SetTaxAmount(taxAmount *int64) {
@@ -3510,9 +3526,10 @@ func (p *PreviewSubscriptionFinanceResponseData) UnmarshalJSON(data []byte) erro
 	type embed PreviewSubscriptionFinanceResponseData
 	var unmarshaler = struct {
 		embed
-		PeriodEnd   *internal.DateTime `json:"period_end"`
-		PeriodStart *internal.DateTime `json:"period_start"`
-		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
+		PeriodEnd         *internal.DateTime `json:"period_end"`
+		PeriodStart       *internal.DateTime `json:"period_start"`
+		ProrationBilledAt *internal.DateTime `json:"proration_billed_at,omitempty"`
+		TrialEnd          *internal.DateTime `json:"trial_end,omitempty"`
 	}{
 		embed: embed(*p),
 	}
@@ -3522,6 +3539,7 @@ func (p *PreviewSubscriptionFinanceResponseData) UnmarshalJSON(data []byte) erro
 	*p = PreviewSubscriptionFinanceResponseData(unmarshaler.embed)
 	p.PeriodEnd = unmarshaler.PeriodEnd.Time()
 	p.PeriodStart = unmarshaler.PeriodStart.Time()
+	p.ProrationBilledAt = unmarshaler.ProrationBilledAt.TimePtr()
 	p.TrialEnd = unmarshaler.TrialEnd.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
@@ -3536,14 +3554,16 @@ func (p *PreviewSubscriptionFinanceResponseData) MarshalJSON() ([]byte, error) {
 	type embed PreviewSubscriptionFinanceResponseData
 	var marshaler = struct {
 		embed
-		PeriodEnd   *internal.DateTime `json:"period_end"`
-		PeriodStart *internal.DateTime `json:"period_start"`
-		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
+		PeriodEnd         *internal.DateTime `json:"period_end"`
+		PeriodStart       *internal.DateTime `json:"period_start"`
+		ProrationBilledAt *internal.DateTime `json:"proration_billed_at,omitempty"`
+		TrialEnd          *internal.DateTime `json:"trial_end,omitempty"`
 	}{
-		embed:       embed(*p),
-		PeriodEnd:   internal.NewDateTime(p.PeriodEnd),
-		PeriodStart: internal.NewDateTime(p.PeriodStart),
-		TrialEnd:    internal.NewOptionalDateTime(p.TrialEnd),
+		embed:             embed(*p),
+		PeriodEnd:         internal.NewDateTime(p.PeriodEnd),
+		PeriodStart:       internal.NewDateTime(p.PeriodStart),
+		ProrationBilledAt: internal.NewOptionalDateTime(p.ProrationBilledAt),
+		TrialEnd:          internal.NewOptionalDateTime(p.TrialEnd),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
 	return json.Marshal(explicitMarshaler)

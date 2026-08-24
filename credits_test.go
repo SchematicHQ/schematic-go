@@ -817,7 +817,7 @@ func TestSettersMarkExplicitCountBillingPlanCreditGrantsRequest(t *testing.T) {
 func TestSettersCountCompanyGrantsRequest(t *testing.T) {
 	t.Run("SetCompanyID", func(t *testing.T) {
 		obj := &CountCompanyGrantsRequest{}
-		var fernTestValueCompanyID *string
+		var fernTestValueCompanyID string
 		obj.SetCompanyID(fernTestValueCompanyID)
 		assert.Equal(t, fernTestValueCompanyID, obj.CompanyID)
 		assert.NotNil(t, obj.explicitFields)
@@ -862,7 +862,7 @@ func TestSettersMarkExplicitCountCompanyGrantsRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CountCompanyGrantsRequest{}
-		var fernTestValueCompanyID *string
+		var fernTestValueCompanyID string
 
 		// Act
 		obj.SetCompanyID(fernTestValueCompanyID)
@@ -3730,7 +3730,7 @@ func TestSettersMarkExplicitListCompanyCreditBalancesRequest(t *testing.T) {
 func TestSettersListCompanyGrantsRequest(t *testing.T) {
 	t.Run("SetCompanyID", func(t *testing.T) {
 		obj := &ListCompanyGrantsRequest{}
-		var fernTestValueCompanyID *string
+		var fernTestValueCompanyID string
 		obj.SetCompanyID(fernTestValueCompanyID)
 		assert.Equal(t, fernTestValueCompanyID, obj.CompanyID)
 		assert.NotNil(t, obj.explicitFields)
@@ -3775,7 +3775,7 @@ func TestSettersMarkExplicitListCompanyGrantsRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListCompanyGrantsRequest{}
-		var fernTestValueCompanyID *string
+		var fernTestValueCompanyID string
 
 		// Act
 		obj.SetCompanyID(fernTestValueCompanyID)

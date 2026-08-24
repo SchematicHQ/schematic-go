@@ -29,7 +29,7 @@ func TestSettersCreatePlanGroupRequestBody(t *testing.T) {
 
 	t.Run("SetCheckoutBundlePurchaseBehavior", func(t *testing.T) {
 		obj := &CreatePlanGroupRequestBody{}
-		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		var fernTestValueCheckoutBundlePurchaseBehavior *CheckoutBundlePurchaseBehavior
 		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
 		assert.Equal(t, fernTestValueCheckoutBundlePurchaseBehavior, obj.CheckoutBundlePurchaseBehavior)
 		assert.NotNil(t, obj.explicitFields)
@@ -384,7 +384,7 @@ func TestSettersMarkExplicitCreatePlanGroupRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreatePlanGroupRequestBody{}
-		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		var fernTestValueCheckoutBundlePurchaseBehavior *CheckoutBundlePurchaseBehavior
 
 		// Act
 		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
@@ -9424,7 +9424,7 @@ func TestSettersUpdatePlanGroupRequestBody(t *testing.T) {
 
 	t.Run("SetCheckoutBundlePurchaseBehavior", func(t *testing.T) {
 		obj := &UpdatePlanGroupRequestBody{}
-		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		var fernTestValueCheckoutBundlePurchaseBehavior *CheckoutBundlePurchaseBehavior
 		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)
 		assert.Equal(t, fernTestValueCheckoutBundlePurchaseBehavior, obj.CheckoutBundlePurchaseBehavior)
 		assert.NotNil(t, obj.explicitFields)
@@ -9779,7 +9779,7 @@ func TestSettersMarkExplicitUpdatePlanGroupRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpdatePlanGroupRequestBody{}
-		var fernTestValueCheckoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior
+		var fernTestValueCheckoutBundlePurchaseBehavior *CheckoutBundlePurchaseBehavior
 
 		// Act
 		obj.SetCheckoutBundlePurchaseBehavior(fernTestValueCheckoutBundlePurchaseBehavior)

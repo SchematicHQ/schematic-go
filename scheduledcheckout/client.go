@@ -34,6 +34,24 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListScheduledCheckoutsRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    Status: schematichq.ScheduledCheckoutStatusCancelled.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Scheduledcheckout.ListScheduledCheckouts(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListScheduledCheckouts(
 	ctx context.Context,
 	request *schematichq.ListScheduledCheckoutsRequest,
@@ -50,6 +68,20 @@ func (c *Client) ListScheduledCheckouts(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateScheduledCheckoutRequest{
+//	    CompanyID: "company_id",
+//	    ExecuteAfter: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    FromPlanID: "from_plan_id",
+//	    ToPlanID: "to_plan_id",
+//	}
+//	client.Scheduledcheckout.CreateScheduledCheckout(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateScheduledCheckout(
 	ctx context.Context,
 	request *schematichq.CreateScheduledCheckoutRequest,
@@ -66,6 +98,12 @@ func (c *Client) CreateScheduledCheckout(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Scheduledcheckout.GetScheduledCheckout(
+//	    context.TODO(),
+//	    "scheduled_checkout_id",
+//	)
 func (c *Client) GetScheduledCheckout(
 	ctx context.Context,
 	// scheduled_checkout_id
@@ -83,6 +121,14 @@ func (c *Client) GetScheduledCheckout(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateScheduledCheckoutRequest{}
+//	client.Scheduledcheckout.UpdateScheduledCheckout(
+//	    context.TODO(),
+//	    "scheduled_checkout_id",
+//	    request,
+//	)
 func (c *Client) UpdateScheduledCheckout(
 	ctx context.Context,
 	// scheduled_checkout_id

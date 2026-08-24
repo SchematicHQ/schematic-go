@@ -251,15 +251,17 @@ func (c *CountPlansRequest) SetOffset(offset *int64) {
 var (
 	createCustomPlanRequestBodyFieldCompanyID        = big.NewInt(1 << 0)
 	createCustomPlanRequestBodyFieldCopiedFromPlanID = big.NewInt(1 << 1)
-	createCustomPlanRequestBodyFieldDescription      = big.NewInt(1 << 2)
-	createCustomPlanRequestBodyFieldIcon             = big.NewInt(1 << 3)
-	createCustomPlanRequestBodyFieldName             = big.NewInt(1 << 4)
+	createCustomPlanRequestBodyFieldCopiedPriceID    = big.NewInt(1 << 2)
+	createCustomPlanRequestBodyFieldDescription      = big.NewInt(1 << 3)
+	createCustomPlanRequestBodyFieldIcon             = big.NewInt(1 << 4)
+	createCustomPlanRequestBodyFieldName             = big.NewInt(1 << 5)
 )
 
 type CreateCustomPlanRequestBody struct {
 	CompanyID        string    `json:"company_id" url:"-"`
 	CopiedFromPlanID *string   `json:"copied_from_plan_id,omitempty" url:"-"`
-	Description      string    `json:"description" url:"-"`
+	CopiedPriceID    *string   `json:"copied_price_id,omitempty" url:"-"`
+	Description      *string   `json:"description,omitempty" url:"-"`
 	Icon             *PlanIcon `json:"icon,omitempty" url:"-"`
 	Name             string    `json:"name" url:"-"`
 
@@ -288,9 +290,16 @@ func (c *CreateCustomPlanRequestBody) SetCopiedFromPlanID(copiedFromPlanID *stri
 	c.require(createCustomPlanRequestBodyFieldCopiedFromPlanID)
 }
 
+// SetCopiedPriceID sets the CopiedPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanRequestBody) SetCopiedPriceID(copiedPriceID *string) {
+	c.CopiedPriceID = copiedPriceID
+	c.require(createCustomPlanRequestBodyFieldCopiedPriceID)
+}
+
 // SetDescription sets the Description field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCustomPlanRequestBody) SetDescription(description string) {
+func (c *CreateCustomPlanRequestBody) SetDescription(description *string) {
 	c.Description = description
 	c.require(createCustomPlanRequestBodyFieldDescription)
 }
@@ -751,8 +760,9 @@ var (
 	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 7)
 	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 8)
 	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 9)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 10)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 12)
 )
 
 type PublishPlanVersionRequestBody struct {
@@ -766,6 +776,8 @@ type PublishPlanVersionRequestBody struct {
 	MigrationStrategy  PlanVersionMigrationStrategy  `json:"migration_strategy" url:"-"`
 	Phone              *string                       `json:"phone,omitempty" url:"-"`
 	ProrationBehavior  *MigrationProrationBehavior   `json:"proration_behavior,omitempty" url:"-"`
+	// Refuse the publish if any company would be migrated onto the new version
+	RequireNoMigration *bool `json:"require_no_migration,omitempty" url:"-"`
 	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
 	SendInvoice *bool       `json:"send_invoice,omitempty" url:"-"`
 	TaxID       *TaxIDInput `json:"tax_id,omitempty" url:"-"`
@@ -849,6 +861,13 @@ func (p *PublishPlanVersionRequestBody) SetPhone(phone *string) {
 func (p *PublishPlanVersionRequestBody) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
 	p.ProrationBehavior = prorationBehavior
 	p.require(publishPlanVersionRequestBodyFieldProrationBehavior)
+}
+
+// SetRequireNoMigration sets the RequireNoMigration field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetRequireNoMigration(requireNoMigration *bool) {
+	p.RequireNoMigration = requireNoMigration
+	p.require(publishPlanVersionRequestBodyFieldRequireNoMigration)
 }
 
 // SetSendInvoice sets the SendInvoice field and marks it as non-optional;
@@ -4291,7 +4310,7 @@ var (
 
 type CreateBillingLinkedPlanRequestBody struct {
 	BillingProvider         BillingProviderType `json:"billing_provider" url:"-"`
-	Description             string              `json:"description" url:"-"`
+	Description             *string             `json:"description,omitempty" url:"-"`
 	ExternalResourceID      string              `json:"external_resource_id" url:"-"`
 	ExternalResourceVersion *string             `json:"external_resource_version,omitempty" url:"-"`
 	Icon                    *PlanIcon           `json:"icon,omitempty" url:"-"`
@@ -4318,7 +4337,7 @@ func (c *CreateBillingLinkedPlanRequestBody) SetBillingProvider(billingProvider 
 
 // SetDescription sets the Description field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingLinkedPlanRequestBody) SetDescription(description string) {
+func (c *CreateBillingLinkedPlanRequestBody) SetDescription(description *string) {
 	c.Description = description
 	c.require(createBillingLinkedPlanRequestBodyFieldDescription)
 }

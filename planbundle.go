@@ -17,10 +17,10 @@ var (
 )
 
 type CreateCustomPlanBundleRequestBody struct {
-	BillingProduct *UpsertBillingProductRequestBody       `json:"billing_product,omitempty" url:"-"`
+	BillingProduct *UpsertBillingProductRequestBody       `json:"billing_product" url:"-"`
 	CreditGrants   []*PlanBundleCreditGrantRequestBody    `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody    `json:"entitlements" url:"-"`
-	Plan           *CreateCustomPlanBundlePlanRequestBody `json:"plan,omitempty" url:"-"`
+	Plan           *CreateCustomPlanBundlePlanRequestBody `json:"plan" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -93,7 +93,7 @@ type CreatePlanBundleRequestBody struct {
 	BillingProduct *UpsertBillingProductRequestBody    `json:"billing_product,omitempty" url:"-"`
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
-	Plan           *CreatePlanRequestBody              `json:"plan,omitempty" url:"-"`
+	Plan           *CreatePlanRequestBody              `json:"plan" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -164,7 +164,7 @@ var (
 
 type CreateCustomPlanBundlePlanRequestBody struct {
 	CompanyID   string    `json:"company_id" url:"company_id"`
-	Description string    `json:"description" url:"description"`
+	Description *string   `json:"description,omitempty" url:"description,omitempty"`
 	Icon        *PlanIcon `json:"icon,omitempty" url:"icon,omitempty"`
 	Name        string    `json:"name" url:"name"`
 
@@ -182,9 +182,9 @@ func (c *CreateCustomPlanBundlePlanRequestBody) GetCompanyID() string {
 	return c.CompanyID
 }
 
-func (c *CreateCustomPlanBundlePlanRequestBody) GetDescription() string {
+func (c *CreateCustomPlanBundlePlanRequestBody) GetDescription() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.Description
 }
@@ -226,7 +226,7 @@ func (c *CreateCustomPlanBundlePlanRequestBody) SetCompanyID(companyID string) {
 
 // SetDescription sets the Description field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateCustomPlanBundlePlanRequestBody) SetDescription(description string) {
+func (c *CreateCustomPlanBundlePlanRequestBody) SetDescription(description *string) {
 	c.Description = description
 	c.require(createCustomPlanBundlePlanRequestBodyFieldDescription)
 }
@@ -1737,7 +1737,7 @@ type UpdatePlanBundleRequestBody struct {
 	BillingProduct *UpsertBillingProductRequestBody    `json:"billing_product,omitempty" url:"-"`
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
-	Plan           *UpdatePlanRequestBody              `json:"plan,omitempty" url:"-"`
+	Plan           *UpdatePlanRequestBody              `json:"plan" url:"-"`
 	PlanVersionID  *string                             `json:"plan_version_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted

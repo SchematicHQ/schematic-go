@@ -35,6 +35,22 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListDataExportsRequest{
+//	    ExportType: schematichq.DataExportTypeAuditLog.Ptr(),
+//	    Status: schematichq.DataExportStatusFailure.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Dataexports.ListDataExports(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListDataExports(
 	ctx context.Context,
 	request *schematichq.ListDataExportsRequest,
@@ -51,6 +67,16 @@ func (c *Client) ListDataExports(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateDataExportRequestBody{
+//	    ExportType: schematichq.DataExportTypeAuditLog,
+//	    OutputFileType: schematichq.DataExportOutputFileTypeCsv,
+//	}
+//	client.Dataexports.CreateDataExport(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateDataExport(
 	ctx context.Context,
 	request *schematichq.CreateDataExportRequestBody,
@@ -67,6 +93,12 @@ func (c *Client) CreateDataExport(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Dataexports.GetDataExport(
+//	    context.TODO(),
+//	    "data_export_id",
+//	)
 func (c *Client) GetDataExport(
 	ctx context.Context,
 	// data_export_id
@@ -84,6 +116,12 @@ func (c *Client) GetDataExport(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Dataexports.GetDataExportArtifact(
+//	    context.TODO(),
+//	    "data_export_id",
+//	)
 func (c *Client) GetDataExportArtifact(
 	ctx context.Context,
 	// data_export_id

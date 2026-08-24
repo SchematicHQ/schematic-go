@@ -34,6 +34,27 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCustomPlanBundleRequestBody{
+//	    BillingProduct: &schematichq.UpsertBillingProductRequestBody{
+//	        ChargeType: schematichq.ChargeTypeFree,
+//	        IsTrialable: true,
+//	    },
+//	    Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+//	        &schematichq.PlanBundleEntitlementRequestBody{
+//	            Action: schematichq.PlanBundleActionCreate,
+//	        },
+//	    },
+//	    Plan: &schematichq.CreateCustomPlanBundlePlanRequestBody{
+//	        CompanyID: "company_id",
+//	        Name: "name",
+//	    },
+//	}
+//	client.Planbundle.CreateCustomPlanBundle(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateCustomPlanBundle(
 	ctx context.Context,
 	request *schematichq.CreateCustomPlanBundleRequestBody,
@@ -50,6 +71,23 @@ func (c *Client) CreateCustomPlanBundle(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreatePlanBundleRequestBody{
+//	    Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+//	        &schematichq.PlanBundleEntitlementRequestBody{
+//	            Action: schematichq.PlanBundleActionCreate,
+//	        },
+//	    },
+//	    Plan: &schematichq.CreatePlanRequestBody{
+//	        Name: "name",
+//	        PlanType: schematichq.PlanTypePlan,
+//	    },
+//	}
+//	client.Planbundle.CreatePlanBundle(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreatePlanBundle(
 	ctx context.Context,
 	request *schematichq.CreatePlanBundleRequestBody,
@@ -66,6 +104,23 @@ func (c *Client) CreatePlanBundle(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdatePlanBundleRequestBody{
+//	    Entitlements: []*schematichq.PlanBundleEntitlementRequestBody{
+//	        &schematichq.PlanBundleEntitlementRequestBody{
+//	            Action: schematichq.PlanBundleActionCreate,
+//	        },
+//	    },
+//	    Plan: &schematichq.UpdatePlanRequestBody{
+//	        Name: "name",
+//	    },
+//	}
+//	client.Planbundle.UpdatePlanBundle(
+//	    context.TODO(),
+//	    "plan_id",
+//	    request,
+//	)
 func (c *Client) UpdatePlanBundle(
 	ctx context.Context,
 	// plan_id

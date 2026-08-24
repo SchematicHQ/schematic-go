@@ -1838,6 +1838,7 @@ var (
 	stripeIntegrationConfigFieldIsSandbox         = big.NewInt(1 << 3)
 	stripeIntegrationConfigFieldLiveMode          = big.NewInt(1 << 4)
 	stripeIntegrationConfigFieldOnboardURL        = big.NewInt(1 << 5)
+	stripeIntegrationConfigFieldReturnTo          = big.NewInt(1 << 6)
 )
 
 type StripeIntegrationConfig struct {
@@ -1853,6 +1854,8 @@ type StripeIntegrationConfig struct {
 	LiveMode bool `json:"live_mode" url:"live_mode"`
 	// Onboarding URL returned during the v2 (Connect) install flow before activation
 	OnboardURL *string `json:"onboard_url,omitempty" url:"onboard_url,omitempty"`
+	// App location that started the connect flow; the OAuth callback redirects back there on success
+	ReturnTo *string `json:"return_to,omitempty" url:"return_to,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1901,6 +1904,13 @@ func (s *StripeIntegrationConfig) GetOnboardURL() *string {
 		return nil
 	}
 	return s.OnboardURL
+}
+
+func (s *StripeIntegrationConfig) GetReturnTo() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ReturnTo
 }
 
 func (s *StripeIntegrationConfig) GetExtraProperties() map[string]interface{} {
@@ -1957,6 +1967,13 @@ func (s *StripeIntegrationConfig) SetLiveMode(liveMode bool) {
 func (s *StripeIntegrationConfig) SetOnboardURL(onboardURL *string) {
 	s.OnboardURL = onboardURL
 	s.require(stripeIntegrationConfigFieldOnboardURL)
+}
+
+// SetReturnTo sets the ReturnTo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetReturnTo(returnTo *string) {
+	s.ReturnTo = returnTo
+	s.require(stripeIntegrationConfigFieldReturnTo)
 }
 
 func (s *StripeIntegrationConfig) UnmarshalJSON(data []byte) error {

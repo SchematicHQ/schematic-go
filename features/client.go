@@ -34,6 +34,44 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListFeaturesRequest{
+//	    BooleanRequireEvent: schematichq.Bool(
+//	        true,
+//	    ),
+//	    FeatureType: []*schematichq.FeatureType{
+//	        schematichq.FeatureTypeBoolean.Ptr(),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WithoutCompanyOverrideFor: schematichq.String(
+//	        "without_company_override_for",
+//	    ),
+//	    WithoutPlanEntitlementFor: schematichq.String(
+//	        "without_plan_entitlement_for",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Features.ListFeatures(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListFeatures(
 	ctx context.Context,
 	request *schematichq.ListFeaturesRequest,
@@ -50,6 +88,17 @@ func (c *Client) ListFeatures(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateFeatureRequestBody{
+//	    Description: "description",
+//	    FeatureType: schematichq.FeatureTypeBoolean,
+//	    Name: "name",
+//	}
+//	client.Features.CreateFeature(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateFeature(
 	ctx context.Context,
 	request *schematichq.CreateFeatureRequestBody,
@@ -66,6 +115,12 @@ func (c *Client) CreateFeature(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Features.GetFeature(
+//	    context.TODO(),
+//	    "feature_id",
+//	)
 func (c *Client) GetFeature(
 	ctx context.Context,
 	// feature_id
@@ -83,6 +138,14 @@ func (c *Client) GetFeature(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateFeatureRequestBody{}
+//	client.Features.UpdateFeature(
+//	    context.TODO(),
+//	    "feature_id",
+//	    request,
+//	)
 func (c *Client) UpdateFeature(
 	ctx context.Context,
 	// feature_id
@@ -102,6 +165,12 @@ func (c *Client) UpdateFeature(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Features.DeleteFeature(
+//	    context.TODO(),
+//	    "feature_id",
+//	)
 func (c *Client) DeleteFeature(
 	ctx context.Context,
 	// feature_id
@@ -119,6 +188,19 @@ func (c *Client) DeleteFeature(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingLinkedFeatureRequestBody{
+//	    BillingProvider: schematichq.BillingProviderTypeMetronome,
+//	    Description: "description",
+//	    ExternalResourceID: "external_resource_id",
+//	    FeatureType: schematichq.FeatureTypeBoolean,
+//	    Name: "name",
+//	}
+//	client.Features.UpsertFeatureForBillingProduct(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertFeatureForBillingProduct(
 	ctx context.Context,
 	request *schematichq.CreateBillingLinkedFeatureRequestBody,
@@ -135,6 +217,44 @@ func (c *Client) UpsertFeatureForBillingProduct(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountFeaturesRequest{
+//	    BooleanRequireEvent: schematichq.Bool(
+//	        true,
+//	    ),
+//	    FeatureType: []*schematichq.FeatureType{
+//	        schematichq.FeatureTypeBoolean.Ptr(),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WithoutCompanyOverrideFor: schematichq.String(
+//	        "without_company_override_for",
+//	    ),
+//	    WithoutPlanEntitlementFor: schematichq.String(
+//	        "without_plan_entitlement_for",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Features.CountFeatures(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountFeatures(
 	ctx context.Context,
 	request *schematichq.CountFeaturesRequest,
@@ -151,6 +271,31 @@ func (c *Client) CountFeatures(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListFlagsRequest{
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Features.ListFlags(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListFlags(
 	ctx context.Context,
 	request *schematichq.ListFlagsRequest,
@@ -167,6 +312,21 @@ func (c *Client) ListFlags(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateFlagRequestBody{
+//	    DefaultValue: true,
+//	    Description: "description",
+//	    FlagType: schematichq.FlagType(
+//	        "boolean",
+//	    ),
+//	    Key: "key",
+//	    Name: "name",
+//	}
+//	client.Features.CreateFlag(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateFlag(
 	ctx context.Context,
 	request *schematichq.CreateFlagRequestBody,
@@ -183,6 +343,12 @@ func (c *Client) CreateFlag(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Features.GetFlag(
+//	    context.TODO(),
+//	    "flag_id",
+//	)
 func (c *Client) GetFlag(
 	ctx context.Context,
 	// flag_id
@@ -200,6 +366,22 @@ func (c *Client) GetFlag(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateFlagRequestBody{
+//	    DefaultValue: true,
+//	    Description: "description",
+//	    FlagType: schematichq.FlagType(
+//	        "boolean",
+//	    ),
+//	    Key: "key",
+//	    Name: "name",
+//	}
+//	client.Features.UpdateFlag(
+//	    context.TODO(),
+//	    "flag_id",
+//	    request,
+//	)
 func (c *Client) UpdateFlag(
 	ctx context.Context,
 	// flag_id
@@ -219,6 +401,12 @@ func (c *Client) UpdateFlag(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Features.DeleteFlag(
+//	    context.TODO(),
+//	    "flag_id",
+//	)
 func (c *Client) DeleteFlag(
 	ctx context.Context,
 	// flag_id
@@ -236,6 +424,44 @@ func (c *Client) DeleteFlag(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateFlagRulesRequestBody{
+//	    Rules: []*schematichq.CreateOrUpdateRuleRequestBody{
+//	        &schematichq.CreateOrUpdateRuleRequestBody{
+//	            ConditionGroups: []*schematichq.CreateOrUpdateConditionGroupRequestBody{
+//	                &schematichq.CreateOrUpdateConditionGroupRequestBody{
+//	                    Conditions: []*schematichq.CreateOrUpdateConditionRequestBody{
+//	                        &schematichq.CreateOrUpdateConditionRequestBody{
+//	                            ConditionType: schematichq.ConditionTypeBasePlan,
+//	                            Operator: schematichq.ComparableOperatorEq,
+//	                            ResourceIDs: []string{
+//	                                "resource_ids",
+//	                            },
+//	                        },
+//	                    },
+//	                },
+//	            },
+//	            Conditions: []*schematichq.CreateOrUpdateConditionRequestBody{
+//	                &schematichq.CreateOrUpdateConditionRequestBody{
+//	                    ConditionType: schematichq.ConditionTypeBasePlan,
+//	                    Operator: schematichq.ComparableOperatorEq,
+//	                    ResourceIDs: []string{
+//	                        "resource_ids",
+//	                    },
+//	                },
+//	            },
+//	            Name: "name",
+//	            Priority: int64(1000000),
+//	            Value: true,
+//	        },
+//	    },
+//	}
+//	client.Features.UpdateFlagRules(
+//	    context.TODO(),
+//	    "flag_id",
+//	    request,
+//	)
 func (c *Client) UpdateFlagRules(
 	ctx context.Context,
 	// flag_id
@@ -255,6 +481,14 @@ func (c *Client) UpdateFlagRules(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CheckFlagRequestBody{}
+//	client.Features.CheckFlag(
+//	    context.TODO(),
+//	    "key",
+//	    request,
+//	)
 func (c *Client) CheckFlag(
 	ctx context.Context,
 	// key
@@ -274,6 +508,13 @@ func (c *Client) CheckFlag(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CheckFlagRequestBody{}
+//	client.Features.CheckFlags(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CheckFlags(
 	ctx context.Context,
 	request *schematichq.CheckFlagRequestBody,
@@ -290,6 +531,17 @@ func (c *Client) CheckFlags(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CheckFlagsBulkRequestBody{
+//	    Contexts: []*schematichq.CheckFlagRequestBody{
+//	        &schematichq.CheckFlagRequestBody{},
+//	    },
+//	}
+//	client.Features.CheckFlagsBulk(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CheckFlagsBulk(
 	ctx context.Context,
 	request *schematichq.CheckFlagsBulkRequestBody,
@@ -306,6 +558,31 @@ func (c *Client) CheckFlagsBulk(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountFlagsRequest{
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Features.CountFlags(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountFlags(
 	ctx context.Context,
 	request *schematichq.CountFlagsRequest,

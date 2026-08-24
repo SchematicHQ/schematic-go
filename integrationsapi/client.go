@@ -34,6 +34,12 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	client.Integrationsapi.RunIntegration(
+//	    context.TODO(),
+//	    "integration_id",
+//	)
 func (c *Client) RunIntegration(
 	ctx context.Context,
 	// integration_id
@@ -51,6 +57,33 @@ func (c *Client) RunIntegration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListIntegrationsRequest{
+//	    BillingOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ExcludeIDs: []*string{
+//	        schematichq.String(
+//	            "exclude_ids",
+//	        ),
+//	    },
+//	    ID: schematichq.String(
+//	        "id",
+//	    ),
+//	    State: schematichq.IntegrationStateActive.Ptr(),
+//	    Type: schematichq.IntegrationTypeClerk.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Integrationsapi.ListIntegrations(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListIntegrations(
 	ctx context.Context,
 	request *schematichq.ListIntegrationsRequest,
@@ -67,6 +100,12 @@ func (c *Client) ListIntegrations(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Integrationsapi.GetIntegrationWebhookURL(
+//	    context.TODO(),
+//	    "type",
+//	)
 func (c *Client) GetIntegrationWebhookURL(
 	ctx context.Context,
 	// type
@@ -84,6 +123,15 @@ func (c *Client) GetIntegrationWebhookURL(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.InstallIntegrationRequestBody{
+//	    Type: schematichq.IntegrationTypeClerk,
+//	}
+//	client.Integrationsapi.InstallIntegration(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) InstallIntegration(
 	ctx context.Context,
 	request *schematichq.InstallIntegrationRequestBody,
@@ -100,6 +148,15 @@ func (c *Client) InstallIntegration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.StartDataImportRequestBody{
+//	    IntegrationID: "integration_id",
+//	}
+//	client.Integrationsapi.StartDataImport(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) StartDataImport(
 	ctx context.Context,
 	request *schematichq.StartDataImportRequestBody,
@@ -116,6 +173,11 @@ func (c *Client) StartDataImport(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Integrationsapi.LoadSampleDataSet(
+//	    context.TODO(),
+//	)
 func (c *Client) LoadSampleDataSet(
 	ctx context.Context,
 	opts ...option.RequestOption,
@@ -130,6 +192,15 @@ func (c *Client) LoadSampleDataSet(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.InstallIntegrationRequestBody{
+//	    Type: schematichq.IntegrationTypeClerk,
+//	}
+//	client.Integrationsapi.AssumeStripeInstalled(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) AssumeStripeInstalled(
 	ctx context.Context,
 	request *schematichq.InstallIntegrationRequestBody,
@@ -146,6 +217,15 @@ func (c *Client) AssumeStripeInstalled(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.InstallIntegrationRequestBody{
+//	    Type: schematichq.IntegrationTypeClerk,
+//	}
+//	client.Integrationsapi.InstallStripe(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) InstallStripe(
 	ctx context.Context,
 	request *schematichq.InstallIntegrationRequestBody,
@@ -162,6 +242,12 @@ func (c *Client) InstallStripe(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Integrationsapi.UninstallIntegration(
+//	    context.TODO(),
+//	    "integration_id",
+//	)
 func (c *Client) UninstallIntegration(
 	ctx context.Context,
 	// integration_id

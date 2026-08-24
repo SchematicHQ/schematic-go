@@ -34,6 +34,31 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListWebhookEventsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WebhookID: schematichq.String(
+//	        "webhook_id",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Webhooks.ListWebhookEvents(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListWebhookEvents(
 	ctx context.Context,
 	request *schematichq.ListWebhookEventsRequest,
@@ -50,6 +75,12 @@ func (c *Client) ListWebhookEvents(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Webhooks.GetWebhookEvent(
+//	    context.TODO(),
+//	    "webhook_event_id",
+//	)
 func (c *Client) GetWebhookEvent(
 	ctx context.Context,
 	// webhook_event_id
@@ -67,6 +98,31 @@ func (c *Client) GetWebhookEvent(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountWebhookEventsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WebhookID: schematichq.String(
+//	        "webhook_id",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Webhooks.CountWebhookEvents(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountWebhookEvents(
 	ctx context.Context,
 	request *schematichq.CountWebhookEventsRequest,
@@ -83,6 +139,23 @@ func (c *Client) CountWebhookEvents(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListWebhooksRequest{
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Webhooks.ListWebhooks(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListWebhooks(
 	ctx context.Context,
 	request *schematichq.ListWebhooksRequest,
@@ -99,6 +172,19 @@ func (c *Client) ListWebhooks(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateWebhookRequestBody{
+//	    Name: "name",
+//	    RequestTypes: []schematichq.WebhookRequestType{
+//	        schematichq.WebhookRequestTypeSubscriptionTrialEnded,
+//	    },
+//	    URL: "url",
+//	}
+//	client.Webhooks.CreateWebhook(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateWebhook(
 	ctx context.Context,
 	request *schematichq.CreateWebhookRequestBody,
@@ -115,6 +201,12 @@ func (c *Client) CreateWebhook(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Webhooks.GetWebhook(
+//	    context.TODO(),
+//	    "webhook_id",
+//	)
 func (c *Client) GetWebhook(
 	ctx context.Context,
 	// webhook_id
@@ -132,6 +224,14 @@ func (c *Client) GetWebhook(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateWebhookRequestBody{}
+//	client.Webhooks.UpdateWebhook(
+//	    context.TODO(),
+//	    "webhook_id",
+//	    request,
+//	)
 func (c *Client) UpdateWebhook(
 	ctx context.Context,
 	// webhook_id
@@ -151,6 +251,12 @@ func (c *Client) UpdateWebhook(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Webhooks.DeleteWebhook(
+//	    context.TODO(),
+//	    "webhook_id",
+//	)
 func (c *Client) DeleteWebhook(
 	ctx context.Context,
 	// webhook_id
@@ -168,6 +274,16 @@ func (c *Client) DeleteWebhook(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.TestWebhookRequestBody{
+//	    RequestType: schematichq.WebhookRequestTypeSubscriptionTrialEnded,
+//	}
+//	client.Webhooks.SendTestWebhookAction(
+//	    context.TODO(),
+//	    "webhook_id",
+//	    request,
+//	)
 func (c *Client) SendTestWebhookAction(
 	ctx context.Context,
 	// webhook_id
@@ -187,6 +303,23 @@ func (c *Client) SendTestWebhookAction(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountWebhooksRequest{
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Webhooks.CountWebhooks(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountWebhooks(
 	ctx context.Context,
 	request *schematichq.CountWebhooksRequest,

@@ -34,6 +34,29 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListAccountMembersRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Role: schematichq.AccountMemberRoleAdmin.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.ListAccountMembers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListAccountMembers(
 	ctx context.Context,
 	request *schematichq.ListAccountMembersRequest,
@@ -50,6 +73,12 @@ func (c *Client) ListAccountMembers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.GetAccountMember(
+//	    context.TODO(),
+//	    "account_member_id",
+//	)
 func (c *Client) GetAccountMember(
 	ctx context.Context,
 	// account_member_id
@@ -67,6 +96,29 @@ func (c *Client) GetAccountMember(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountAccountMembersRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Role: schematichq.AccountMemberRoleAdmin.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.CountAccountMembers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountAccountMembers(
 	ctx context.Context,
 	request *schematichq.CountAccountMembersRequest,
@@ -83,6 +135,24 @@ func (c *Client) CountAccountMembers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListAPIKeysRequest{
+//	    EnvironmentID: schematichq.String(
+//	        "environment_id",
+//	    ),
+//	    RequireEnvironment: true,
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.ListAPIKeys(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListAPIKeys(
 	ctx context.Context,
 	request *schematichq.ListAPIKeysRequest,
@@ -99,6 +169,15 @@ func (c *Client) ListAPIKeys(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateAPIKeyRequestBody{
+//	    Name: "name",
+//	}
+//	client.Accounts.CreateAPIKey(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateAPIKey(
 	ctx context.Context,
 	request *schematichq.CreateAPIKeyRequestBody,
@@ -115,6 +194,12 @@ func (c *Client) CreateAPIKey(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.GetAPIKey(
+//	    context.TODO(),
+//	    "api_key_id",
+//	)
 func (c *Client) GetAPIKey(
 	ctx context.Context,
 	// api_key_id
@@ -132,6 +217,14 @@ func (c *Client) GetAPIKey(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateAPIKeyRequestBody{}
+//	client.Accounts.UpdateAPIKey(
+//	    context.TODO(),
+//	    "api_key_id",
+//	    request,
+//	)
 func (c *Client) UpdateAPIKey(
 	ctx context.Context,
 	// api_key_id
@@ -151,6 +244,12 @@ func (c *Client) UpdateAPIKey(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.DeleteAPIKey(
+//	    context.TODO(),
+//	    "api_key_id",
+//	)
 func (c *Client) DeleteAPIKey(
 	ctx context.Context,
 	// api_key_id
@@ -168,6 +267,24 @@ func (c *Client) DeleteAPIKey(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountAPIKeysRequest{
+//	    EnvironmentID: schematichq.String(
+//	        "environment_id",
+//	    ),
+//	    RequireEnvironment: true,
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.CountAPIKeys(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountAPIKeys(
 	ctx context.Context,
 	request *schematichq.CountAPIKeysRequest,
@@ -184,6 +301,37 @@ func (c *Client) CountAPIKeys(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListAuditLogsRequest{
+//	    ActorType: schematichq.ActorTypeAPIKey.Ptr(),
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    EnvironmentID: schematichq.String(
+//	        "environment_id",
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.ListAuditLogs(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListAuditLogs(
 	ctx context.Context,
 	request *schematichq.ListAuditLogsRequest,
@@ -200,6 +348,12 @@ func (c *Client) ListAuditLogs(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.GetAuditLog(
+//	    context.TODO(),
+//	    "audit_log_id",
+//	)
 func (c *Client) GetAuditLog(
 	ctx context.Context,
 	// audit_log_id
@@ -217,6 +371,37 @@ func (c *Client) GetAuditLog(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountAuditLogsRequest{
+//	    ActorType: schematichq.ActorTypeAPIKey.Ptr(),
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    EnvironmentID: schematichq.String(
+//	        "environment_id",
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.CountAuditLogs(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountAuditLogs(
 	ctx context.Context,
 	request *schematichq.CountAuditLogsRequest,
@@ -233,6 +418,25 @@ func (c *Client) CountAuditLogs(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListEnvironmentsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Accounts.ListEnvironments(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListEnvironments(
 	ctx context.Context,
 	request *schematichq.ListEnvironmentsRequest,
@@ -249,6 +453,16 @@ func (c *Client) ListEnvironments(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateEnvironmentRequestBody{
+//	    EnvironmentType: schematichq.EnvironmentTypeDevelopment,
+//	    Name: "name",
+//	}
+//	client.Accounts.CreateEnvironment(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateEnvironment(
 	ctx context.Context,
 	request *schematichq.CreateEnvironmentRequestBody,
@@ -265,6 +479,12 @@ func (c *Client) CreateEnvironment(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.GetEnvironment(
+//	    context.TODO(),
+//	    "environment_id",
+//	)
 func (c *Client) GetEnvironment(
 	ctx context.Context,
 	// environment_id
@@ -282,6 +502,14 @@ func (c *Client) GetEnvironment(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateEnvironmentRequestBody{}
+//	client.Accounts.UpdateEnvironment(
+//	    context.TODO(),
+//	    "environment_id",
+//	    request,
+//	)
 func (c *Client) UpdateEnvironment(
 	ctx context.Context,
 	// environment_id
@@ -301,6 +529,12 @@ func (c *Client) UpdateEnvironment(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.DeleteEnvironment(
+//	    context.TODO(),
+//	    "environment_id",
+//	)
 func (c *Client) DeleteEnvironment(
 	ctx context.Context,
 	// environment_id
@@ -318,6 +552,11 @@ func (c *Client) DeleteEnvironment(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.GetOnboardingState(
+//	    context.TODO(),
+//	)
 func (c *Client) GetOnboardingState(
 	ctx context.Context,
 	opts ...option.RequestOption,
@@ -332,6 +571,13 @@ func (c *Client) GetOnboardingState(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateOnboardingStateRequestBody{}
+//	client.Accounts.UpdateOnboardingState(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpdateOnboardingState(
 	ctx context.Context,
 	request *schematichq.UpdateOnboardingStateRequestBody,
@@ -348,6 +594,11 @@ func (c *Client) UpdateOnboardingState(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.Quickstart(
+//	    context.TODO(),
+//	)
 func (c *Client) Quickstart(
 	ctx context.Context,
 	opts ...option.RequestOption,
@@ -362,6 +613,11 @@ func (c *Client) Quickstart(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Accounts.GetWhoAmI(
+//	    context.TODO(),
+//	)
 func (c *Client) GetWhoAmI(
 	ctx context.Context,
 	opts ...option.RequestOption,

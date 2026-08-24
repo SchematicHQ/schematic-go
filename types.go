@@ -2897,7 +2897,7 @@ type BillingPlanCreditGrantResponseData struct {
 	AutoTopupSelfService      bool   `json:"auto_topup_self_service" url:"auto_topup_self_service"`
 	AutoTopupThresholdCredits *int64 `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64 `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	// Whether buyers can purchase one-time credit bundles on this grant, independent of auto top-up availability.
+	// Deprecated: bundle availability is a per-bundle plan compatibility set now; use compatible_plan_ids on credit bundles instead.
 	CanBuyBundles bool `json:"can_buy_bundles" url:"can_buy_bundles"`
 	// Credits granted once per company on top of the per-license amount. Always 0 when scaling is fixed.
 	CompanyCreditAmount int64                      `json:"company_credit_amount" url:"company_credit_amount"`
@@ -11014,7 +11014,7 @@ type ComponentHydrateResponseData struct {
 	StripeEmbed                           *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
 	Subscription                          *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
 	TrialPaymentMethodRequired            *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
-	UpcomingInvoice                       *InvoiceResponseData                 `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
+	UpcomingInvoice                       *UpcomingInvoiceResponseData         `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -11205,7 +11205,7 @@ func (c *ComponentHydrateResponseData) GetTrialPaymentMethodRequired() *bool {
 	return c.TrialPaymentMethodRequired
 }
 
-func (c *ComponentHydrateResponseData) GetUpcomingInvoice() *InvoiceResponseData {
+func (c *ComponentHydrateResponseData) GetUpcomingInvoice() *UpcomingInvoiceResponseData {
 	if c == nil {
 		return nil
 	}
@@ -11410,7 +11410,7 @@ func (c *ComponentHydrateResponseData) SetTrialPaymentMethodRequired(trialPaymen
 
 // SetUpcomingInvoice sets the UpcomingInvoice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentHydrateResponseData) SetUpcomingInvoice(upcomingInvoice *InvoiceResponseData) {
+func (c *ComponentHydrateResponseData) SetUpcomingInvoice(upcomingInvoice *UpcomingInvoiceResponseData) {
 	c.UpcomingInvoice = upcomingInvoice
 	c.require(componentHydrateResponseDataFieldUpcomingInvoice)
 }
@@ -13662,7 +13662,8 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupSelfService      *bool                               `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
 	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CanBuyBundles             *bool                               `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
+	// Deprecated: use compatible_plan_ids on credit bundles instead. Still accepted; writes through to the credit's bundle compatibility.
+	CanBuyBundles *bool `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
 	// Credits granted once per company on top of the per-license amount. Only valid when scaling is per_license. Defaults to 0.
 	CompanyCreditAmount *int64                   `json:"company_credit_amount,omitempty" url:"company_credit_amount,omitempty"`
 	CreditAmount        int64                    `json:"credit_amount" url:"credit_amount"`
@@ -14322,7 +14323,7 @@ var (
 )
 
 type CreatePlanRequestBody struct {
-	Description string    `json:"description" url:"description"`
+	Description *string   `json:"description,omitempty" url:"description,omitempty"`
 	Icon        *PlanIcon `json:"icon,omitempty" url:"icon,omitempty"`
 	Name        string    `json:"name" url:"name"`
 	PlanType    PlanType  `json:"plan_type" url:"plan_type"`
@@ -14334,9 +14335,9 @@ type CreatePlanRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreatePlanRequestBody) GetDescription() string {
+func (c *CreatePlanRequestBody) GetDescription() *string {
 	if c == nil {
-		return ""
+		return nil
 	}
 	return c.Description
 }
@@ -14378,7 +14379,7 @@ func (c *CreatePlanRequestBody) require(field *big.Int) {
 
 // SetDescription sets the Description field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanRequestBody) SetDescription(description string) {
+func (c *CreatePlanRequestBody) SetDescription(description *string) {
 	c.Description = description
 	c.require(createPlanRequestBodyFieldDescription)
 }
@@ -24901,6 +24902,7 @@ type MigrationProrationBehavior string
 const (
 	MigrationProrationBehaviorAlwaysInvoice    MigrationProrationBehavior = "always_invoice"
 	MigrationProrationBehaviorCreateProrations MigrationProrationBehavior = "create_prorations"
+	MigrationProrationBehaviorNone             MigrationProrationBehavior = "none"
 )
 
 func NewMigrationProrationBehaviorFromString(s string) (MigrationProrationBehavior, error) {
@@ -24909,6 +24911,8 @@ func NewMigrationProrationBehaviorFromString(s string) (MigrationProrationBehavi
 		return MigrationProrationBehaviorAlwaysInvoice, nil
 	case "create_prorations":
 		return MigrationProrationBehaviorCreateProrations, nil
+	case "none":
+		return MigrationProrationBehaviorNone, nil
 	}
 	var t MigrationProrationBehavior
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -31794,14 +31798,14 @@ func (r *RuleView) String() string {
 type RulesEngineSchemaVersion string
 
 const (
-	RulesEngineSchemaVersionV5B3E7220                       RulesEngineSchemaVersion = "v5b3e7220"
+	RulesEngineSchemaVersionVc8Eb8Df4                       RulesEngineSchemaVersion = "vc8eb8df4"
 	RulesEngineSchemaVersionPlaceholderForFernCompatibility RulesEngineSchemaVersion = "placeholder-for-fern-compatibility"
 )
 
 func NewRulesEngineSchemaVersionFromString(s string) (RulesEngineSchemaVersion, error) {
 	switch s {
-	case "v5b3e7220":
-		return RulesEngineSchemaVersionV5B3E7220, nil
+	case "vc8eb8df4":
+		return RulesEngineSchemaVersionVc8Eb8Df4, nil
 	case "placeholder-for-fern-compatibility":
 		return RulesEngineSchemaVersionPlaceholderForFernCompatibility, nil
 	}
@@ -35551,6 +35555,31 @@ func (t TraitType) Ptr() *TraitType {
 	return &t
 }
 
+type TrialStatus string
+
+const (
+	TrialStatusActive    TrialStatus = "active"
+	TrialStatusConverted TrialStatus = "converted"
+	TrialStatusExpired   TrialStatus = "expired"
+)
+
+func NewTrialStatusFromString(s string) (TrialStatus, error) {
+	switch s {
+	case "active":
+		return TrialStatusActive, nil
+	case "converted":
+		return TrialStatusConverted, nil
+	case "expired":
+		return TrialStatusExpired, nil
+	}
+	var t TrialStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TrialStatus) Ptr() *TrialStatus {
+	return &t
+}
+
 var (
 	updateBillingPlanCreditGrantRequestBodyFieldApplyToExisting           = big.NewInt(1 << 0)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupAmount           = big.NewInt(1 << 1)
@@ -35589,7 +35618,8 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupSelfService      *bool                               `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
 	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
-	CanBuyBundles             *bool                               `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
+	// Deprecated: use compatible_plan_ids on credit bundles instead. Still accepted; writes through to the credit's bundle compatibility.
+	CanBuyBundles *bool `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
 	// Credits granted once per company on top of the per-license amount. Only valid when the grant scales per license.
 	CompanyCreditAmount *int64                   `json:"company_credit_amount,omitempty" url:"company_credit_amount,omitempty"`
 	CreditAmount        *int64                   `json:"credit_amount,omitempty" url:"credit_amount,omitempty"`

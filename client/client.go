@@ -100,6 +100,11 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
+// Example:
+//
+//	client.GetCreditLedger(
+//	    context.TODO(),
+//	)
 func (c *Client) GetCreditLedger(
 	ctx context.Context,
 	opts ...option.RequestOption,

@@ -292,7 +292,7 @@ var (
 )
 
 type CountCompanyGrantsRequest struct {
-	CompanyID *string               `json:"-" url:"company_id,omitempty"`
+	CompanyID string                `json:"-" url:"company_id"`
 	Order     *CreditGrantSortOrder `json:"-" url:"order,omitempty"`
 	Dir       *SortDirection        `json:"-" url:"dir,omitempty"`
 	// Page limit (default 100)
@@ -313,7 +313,7 @@ func (c *CountCompanyGrantsRequest) require(field *big.Int) {
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyGrantsRequest) SetCompanyID(companyID *string) {
+func (c *CountCompanyGrantsRequest) SetCompanyID(companyID string) {
 	c.CompanyID = companyID
 	c.require(countCompanyGrantsRequestFieldCompanyID)
 }
@@ -1224,7 +1224,7 @@ var (
 )
 
 type ListCompanyGrantsRequest struct {
-	CompanyID *string               `json:"-" url:"company_id,omitempty"`
+	CompanyID string                `json:"-" url:"company_id"`
 	Order     *CreditGrantSortOrder `json:"-" url:"order,omitempty"`
 	Dir       *SortDirection        `json:"-" url:"dir,omitempty"`
 	// Page limit (default 100)
@@ -1245,7 +1245,7 @@ func (l *ListCompanyGrantsRequest) require(field *big.Int) {
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyGrantsRequest) SetCompanyID(companyID *string) {
+func (l *ListCompanyGrantsRequest) SetCompanyID(companyID string) {
 	l.CompanyID = companyID
 	l.require(listCompanyGrantsRequestFieldCompanyID)
 }

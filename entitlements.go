@@ -1459,6 +1459,92 @@ func (l *ListFeatureUsageRequest) SetOffset(offset *int64) {
 }
 
 var (
+	listFeatureUsageHistoryRequestFieldCompanyIDs  = big.NewInt(1 << 0)
+	listFeatureUsageHistoryRequestFieldEndTime     = big.NewInt(1 << 1)
+	listFeatureUsageHistoryRequestFieldFeatureIDs  = big.NewInt(1 << 2)
+	listFeatureUsageHistoryRequestFieldGranularity = big.NewInt(1 << 3)
+	listFeatureUsageHistoryRequestFieldStartTime   = big.NewInt(1 << 4)
+	listFeatureUsageHistoryRequestFieldLimit       = big.NewInt(1 << 5)
+	listFeatureUsageHistoryRequestFieldOffset      = big.NewInt(1 << 6)
+)
+
+type ListFeatureUsageHistoryRequest struct {
+	// Restrict to these company IDs; omit for every company in the environment
+	CompanyIDs []*string `json:"-" url:"company_ids,omitempty"`
+	// Exclusive end of the window; must fall on an hour boundary
+	EndTime time.Time `json:"-" url:"end_time"`
+	// Restrict to these event features; omit for every event feature in the environment. Where several features measure the same event, each is reported separately and a page may carry more rows than the requested limit
+	FeatureIDs []*string `json:"-" url:"feature_ids,omitempty"`
+	// Bucket the window; omit for a single total per company and feature
+	Granularity *TimeSeriesGranularity `json:"-" url:"granularity,omitempty"`
+	// Inclusive start of the window; must fall on an hour boundary
+	StartTime time.Time `json:"-" url:"start_time"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListFeatureUsageHistoryRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetCompanyIDs(companyIDs []*string) {
+	l.CompanyIDs = companyIDs
+	l.require(listFeatureUsageHistoryRequestFieldCompanyIDs)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetEndTime(endTime time.Time) {
+	l.EndTime = endTime
+	l.require(listFeatureUsageHistoryRequestFieldEndTime)
+}
+
+// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetFeatureIDs(featureIDs []*string) {
+	l.FeatureIDs = featureIDs
+	l.require(listFeatureUsageHistoryRequestFieldFeatureIDs)
+}
+
+// SetGranularity sets the Granularity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetGranularity(granularity *TimeSeriesGranularity) {
+	l.Granularity = granularity
+	l.require(listFeatureUsageHistoryRequestFieldGranularity)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetStartTime(startTime time.Time) {
+	l.StartTime = startTime
+	l.require(listFeatureUsageHistoryRequestFieldStartTime)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listFeatureUsageHistoryRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listFeatureUsageHistoryRequestFieldOffset)
+}
+
+var (
 	listFeatureUsersRequestFieldFeatureID = big.NewInt(1 << 0)
 	listFeatureUsersRequestFieldQ         = big.NewInt(1 << 1)
 	listFeatureUsersRequestFieldLimit     = big.NewInt(1 << 2)
@@ -2935,6 +3021,186 @@ func (f *FeatureCompanyUserResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (f *FeatureCompanyUserResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+var (
+	featureUsageHistoryResponseDataFieldCompanyID    = big.NewInt(1 << 0)
+	featureUsageHistoryResponseDataFieldEventSubtype = big.NewInt(1 << 1)
+	featureUsageHistoryResponseDataFieldFeatureID    = big.NewInt(1 << 2)
+	featureUsageHistoryResponseDataFieldPeriodEnd    = big.NewInt(1 << 3)
+	featureUsageHistoryResponseDataFieldPeriodStart  = big.NewInt(1 << 4)
+	featureUsageHistoryResponseDataFieldUsage        = big.NewInt(1 << 5)
+)
+
+type FeatureUsageHistoryResponseData struct {
+	// Companies are identified by ID only. To report against your own identifiers, resolve them once via the companies API and cache the mapping; keys are not repeated on every row.
+	CompanyID    string `json:"company_id" url:"company_id"`
+	EventSubtype string `json:"event_subtype" url:"event_subtype"`
+	FeatureID    string `json:"feature_id" url:"feature_id"`
+	// Exclusive end of the period this usage covers
+	PeriodEnd time.Time `json:"period_end" url:"period_end"`
+	// Inclusive start of the period this usage covers
+	PeriodStart time.Time `json:"period_start" url:"period_start"`
+	// Usage recorded within this period; an incremental total, not a running one
+	Usage int64 `json:"usage" url:"usage"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FeatureUsageHistoryResponseData) GetCompanyID() string {
+	if f == nil {
+		return ""
+	}
+	return f.CompanyID
+}
+
+func (f *FeatureUsageHistoryResponseData) GetEventSubtype() string {
+	if f == nil {
+		return ""
+	}
+	return f.EventSubtype
+}
+
+func (f *FeatureUsageHistoryResponseData) GetFeatureID() string {
+	if f == nil {
+		return ""
+	}
+	return f.FeatureID
+}
+
+func (f *FeatureUsageHistoryResponseData) GetPeriodEnd() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.PeriodEnd
+}
+
+func (f *FeatureUsageHistoryResponseData) GetPeriodStart() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.PeriodStart
+}
+
+func (f *FeatureUsageHistoryResponseData) GetUsage() int64 {
+	if f == nil {
+		return 0
+	}
+	return f.Usage
+}
+
+func (f *FeatureUsageHistoryResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
+	return f.extraProperties
+}
+
+func (f *FeatureUsageHistoryResponseData) require(field *big.Int) {
+	if f.explicitFields == nil {
+		f.explicitFields = big.NewInt(0)
+	}
+	f.explicitFields.Or(f.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageHistoryResponseData) SetCompanyID(companyID string) {
+	f.CompanyID = companyID
+	f.require(featureUsageHistoryResponseDataFieldCompanyID)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageHistoryResponseData) SetEventSubtype(eventSubtype string) {
+	f.EventSubtype = eventSubtype
+	f.require(featureUsageHistoryResponseDataFieldEventSubtype)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageHistoryResponseData) SetFeatureID(featureID string) {
+	f.FeatureID = featureID
+	f.require(featureUsageHistoryResponseDataFieldFeatureID)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageHistoryResponseData) SetPeriodEnd(periodEnd time.Time) {
+	f.PeriodEnd = periodEnd
+	f.require(featureUsageHistoryResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageHistoryResponseData) SetPeriodStart(periodStart time.Time) {
+	f.PeriodStart = periodStart
+	f.require(featureUsageHistoryResponseDataFieldPeriodStart)
+}
+
+// SetUsage sets the Usage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureUsageHistoryResponseData) SetUsage(usage int64) {
+	f.Usage = usage
+	f.require(featureUsageHistoryResponseDataFieldUsage)
+}
+
+func (f *FeatureUsageHistoryResponseData) UnmarshalJSON(data []byte) error {
+	type embed FeatureUsageHistoryResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FeatureUsageHistoryResponseData(unmarshaler.embed)
+	f.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	f.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FeatureUsageHistoryResponseData) MarshalJSON() ([]byte, error) {
+	type embed FeatureUsageHistoryResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*f),
+		PeriodEnd:   internal.NewDateTime(f.PeriodEnd),
+		PeriodStart: internal.NewDateTime(f.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FeatureUsageHistoryResponseData) String() string {
 	if f == nil {
 		return "<nil>"
 	}
@@ -8231,6 +8497,307 @@ func (l *ListFeatureCompaniesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListFeatureCompaniesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+var (
+	listFeatureUsageHistoryParamsFieldCompanyIDs  = big.NewInt(1 << 0)
+	listFeatureUsageHistoryParamsFieldEndTime     = big.NewInt(1 << 1)
+	listFeatureUsageHistoryParamsFieldFeatureIDs  = big.NewInt(1 << 2)
+	listFeatureUsageHistoryParamsFieldGranularity = big.NewInt(1 << 3)
+	listFeatureUsageHistoryParamsFieldLimit       = big.NewInt(1 << 4)
+	listFeatureUsageHistoryParamsFieldOffset      = big.NewInt(1 << 5)
+	listFeatureUsageHistoryParamsFieldStartTime   = big.NewInt(1 << 6)
+)
+
+type ListFeatureUsageHistoryParams struct {
+	// Restrict to these company IDs; omit for every company in the environment
+	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
+	// Exclusive end of the window; must fall on an hour boundary
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Restrict to these event features; omit for every event feature in the environment. Where several features measure the same event, each is reported separately and a page may carry more rows than the requested limit
+	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
+	// Bucket the window; omit for a single total per company and feature
+	Granularity *TimeSeriesGranularity `json:"granularity,omitempty" url:"granularity,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Inclusive start of the window; must fall on an hour boundary
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureUsageHistoryParams) GetCompanyIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyIDs
+}
+
+func (l *ListFeatureUsageHistoryParams) GetEndTime() *time.Time {
+	if l == nil {
+		return nil
+	}
+	return l.EndTime
+}
+
+func (l *ListFeatureUsageHistoryParams) GetFeatureIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureIDs
+}
+
+func (l *ListFeatureUsageHistoryParams) GetGranularity() *TimeSeriesGranularity {
+	if l == nil {
+		return nil
+	}
+	return l.Granularity
+}
+
+func (l *ListFeatureUsageHistoryParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListFeatureUsageHistoryParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListFeatureUsageHistoryParams) GetStartTime() *time.Time {
+	if l == nil {
+		return nil
+	}
+	return l.StartTime
+}
+
+func (l *ListFeatureUsageHistoryParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListFeatureUsageHistoryParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetCompanyIDs(companyIDs []string) {
+	l.CompanyIDs = companyIDs
+	l.require(listFeatureUsageHistoryParamsFieldCompanyIDs)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetEndTime(endTime *time.Time) {
+	l.EndTime = endTime
+	l.require(listFeatureUsageHistoryParamsFieldEndTime)
+}
+
+// SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetFeatureIDs(featureIDs []string) {
+	l.FeatureIDs = featureIDs
+	l.require(listFeatureUsageHistoryParamsFieldFeatureIDs)
+}
+
+// SetGranularity sets the Granularity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetGranularity(granularity *TimeSeriesGranularity) {
+	l.Granularity = granularity
+	l.require(listFeatureUsageHistoryParamsFieldGranularity)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listFeatureUsageHistoryParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listFeatureUsageHistoryParamsFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryParams) SetStartTime(startTime *time.Time) {
+	l.StartTime = startTime
+	l.require(listFeatureUsageHistoryParamsFieldStartTime)
+}
+
+func (l *ListFeatureUsageHistoryParams) UnmarshalJSON(data []byte) error {
+	type embed ListFeatureUsageHistoryParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*l),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*l = ListFeatureUsageHistoryParams(unmarshaler.embed)
+	l.EndTime = unmarshaler.EndTime.TimePtr()
+	l.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListFeatureUsageHistoryParams) MarshalJSON() ([]byte, error) {
+	type embed ListFeatureUsageHistoryParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*l),
+		EndTime:   internal.NewOptionalDateTime(l.EndTime),
+		StartTime: internal.NewOptionalDateTime(l.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListFeatureUsageHistoryParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listFeatureUsageHistoryResponseFieldData   = big.NewInt(1 << 0)
+	listFeatureUsageHistoryResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListFeatureUsageHistoryResponse struct {
+	Data []*FeatureUsageHistoryResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListFeatureUsageHistoryParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListFeatureUsageHistoryResponse) GetData() []*FeatureUsageHistoryResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListFeatureUsageHistoryResponse) GetParams() *ListFeatureUsageHistoryParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListFeatureUsageHistoryResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListFeatureUsageHistoryResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryResponse) SetData(data []*FeatureUsageHistoryResponseData) {
+	l.Data = data
+	l.require(listFeatureUsageHistoryResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListFeatureUsageHistoryResponse) SetParams(params *ListFeatureUsageHistoryParams) {
+	l.Params = params
+	l.require(listFeatureUsageHistoryResponseFieldParams)
+}
+
+func (l *ListFeatureUsageHistoryResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListFeatureUsageHistoryResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListFeatureUsageHistoryResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListFeatureUsageHistoryResponse) MarshalJSON() ([]byte, error) {
+	type embed ListFeatureUsageHistoryResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListFeatureUsageHistoryResponse) String() string {
 	if l == nil {
 		return "<nil>"
 	}

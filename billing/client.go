@@ -34,6 +34,26 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListCouponsRequest{
+//	    IsActive: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListCoupons(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCoupons(
 	ctx context.Context,
 	request *schematichq.ListCouponsRequest,
@@ -50,6 +70,22 @@ func (c *Client) ListCoupons(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCouponRequestBody{
+//	    AmountOff: int64(1000000),
+//	    Duration: "duration",
+//	    DurationInMonths: int64(1000000),
+//	    ExternalID: "external_id",
+//	    MaxRedemptions: int64(1000000),
+//	    Name: "name",
+//	    PercentOff: 1.1,
+//	    TimesRedeemed: int64(1000000),
+//	}
+//	client.Billing.UpsertBillingCoupon(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertBillingCoupon(
 	ctx context.Context,
 	request *schematichq.CreateCouponRequestBody,
@@ -66,6 +102,12 @@ func (c *Client) UpsertBillingCoupon(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Billing.DeleteBillingCoupon(
+//	    context.TODO(),
+//	    "billing_id",
+//	)
 func (c *Client) DeleteBillingCoupon(
 	ctx context.Context,
 	// billing_id
@@ -83,6 +125,12 @@ func (c *Client) DeleteBillingCoupon(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Billing.DeleteBillingCustomer(
+//	    context.TODO(),
+//	    "billing_id",
+//	)
 func (c *Client) DeleteBillingCustomer(
 	ctx context.Context,
 	// billing_id
@@ -100,6 +148,20 @@ func (c *Client) DeleteBillingCustomer(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingCustomerRequestBody{
+//	    Email: "email",
+//	    ExternalID: "external_id",
+//	    Meta: map[string]string{
+//	        "key": "value",
+//	    },
+//	    Name: "name",
+//	}
+//	client.Billing.UpsertBillingCustomer(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertBillingCustomer(
 	ctx context.Context,
 	request *schematichq.CreateBillingCustomerRequestBody,
@@ -116,6 +178,32 @@ func (c *Client) UpsertBillingCustomer(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCustomersWithSubscriptionsRequest{
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListCustomersWithSubscriptions(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCustomersWithSubscriptions(
 	ctx context.Context,
 	request *schematichq.ListCustomersWithSubscriptionsRequest,
@@ -132,6 +220,32 @@ func (c *Client) ListCustomersWithSubscriptions(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCustomersRequest{
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.CountCustomers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCustomers(
 	ctx context.Context,
 	request *schematichq.CountCustomersRequest,
@@ -148,6 +262,25 @@ func (c *Client) CountCustomers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListInvoicesRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CustomerExternalID: "customer_external_id",
+//	    SubscriptionExternalID: "subscription_external_id",
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListInvoices(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListInvoices(
 	ctx context.Context,
 	request *schematichq.ListInvoicesRequest,
@@ -164,6 +297,21 @@ func (c *Client) ListInvoices(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateInvoiceRequestBody{
+//	    AmountDue: int64(1000000),
+//	    AmountPaid: int64(1000000),
+//	    AmountRemaining: int64(1000000),
+//	    CollectionMethod: "collection_method",
+//	    Currency: "currency",
+//	    CustomerExternalID: "customer_external_id",
+//	    Subtotal: int64(1000000),
+//	}
+//	client.Billing.UpsertInvoice(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertInvoice(
 	ctx context.Context,
 	request *schematichq.CreateInvoiceRequestBody,
@@ -180,6 +328,12 @@ func (c *Client) UpsertInvoice(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Billing.DeleteBillingInvoice(
+//	    context.TODO(),
+//	    "billing_id",
+//	)
 func (c *Client) DeleteBillingInvoice(
 	ctx context.Context,
 	// billing_id
@@ -197,6 +351,23 @@ func (c *Client) DeleteBillingInvoice(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListMetersRequest{
+//	    DisplayName: schematichq.String(
+//	        "display_name",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListMeters(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListMeters(
 	ctx context.Context,
 	request *schematichq.ListMetersRequest,
@@ -213,6 +384,18 @@ func (c *Client) ListMeters(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateMeterRequestBody{
+//	    DisplayName: "display_name",
+//	    EventName: "event_name",
+//	    EventPayloadKey: "event_payload_key",
+//	    ExternalID: "external_id",
+//	}
+//	client.Billing.UpsertBillingMeter(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertBillingMeter(
 	ctx context.Context,
 	request *schematichq.CreateMeterRequestBody,
@@ -229,6 +412,24 @@ func (c *Client) UpsertBillingMeter(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListPaymentMethodsRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CustomerExternalID: "customer_external_id",
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListPaymentMethods(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListPaymentMethods(
 	ctx context.Context,
 	request *schematichq.ListPaymentMethodsRequest,
@@ -245,6 +446,17 @@ func (c *Client) ListPaymentMethods(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreatePaymentMethodRequestBody{
+//	    CustomerExternalID: "customer_external_id",
+//	    ExternalID: "external_id",
+//	    PaymentMethodType: "payment_method_type",
+//	}
+//	client.Billing.UpsertPaymentMethod(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertPaymentMethod(
 	ctx context.Context,
 	request *schematichq.CreatePaymentMethodRequestBody,
@@ -261,6 +473,12 @@ func (c *Client) UpsertPaymentMethod(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Billing.DeletePaymentMethodByExternalID(
+//	    context.TODO(),
+//	    "billing_id",
+//	)
 func (c *Client) DeletePaymentMethodByExternalID(
 	ctx context.Context,
 	// billing_id
@@ -278,6 +496,66 @@ func (c *Client) DeletePaymentMethodByExternalID(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListBillingPricesRequest{
+//	    Currency: schematichq.String(
+//	        "currency",
+//	    ),
+//	    ForInitialPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForTrialExpiryPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Interval: schematichq.String(
+//	        "interval",
+//	    ),
+//	    IntervalCount: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    IsActive: schematichq.Bool(
+//	        true,
+//	    ),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    Price: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    ProductID: schematichq.String(
+//	        "product_id",
+//	    ),
+//	    ProductIDs: []*string{
+//	        schematichq.String(
+//	            "product_ids",
+//	        ),
+//	    },
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    TiersMode: schematichq.BillingTiersModeGraduated.Ptr(),
+//	    UsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+//	    WithMeter: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListBillingPrices(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListBillingPrices(
 	ctx context.Context,
 	request *schematichq.ListBillingPricesRequest,
@@ -294,6 +572,28 @@ func (c *Client) ListBillingPrices(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingPriceRequestBody{
+//	    BillingScheme: schematichq.BillingPriceSchemePerUnit,
+//	    Currency: "currency",
+//	    ExternalAccountID: "external_account_id",
+//	    Interval: "interval",
+//	    IsActive: true,
+//	    Price: int64(1000000),
+//	    PriceExternalID: "price_external_id",
+//	    PriceTiers: []*schematichq.CreateBillingPriceTierRequestBody{
+//	        &schematichq.CreateBillingPriceTierRequestBody{
+//	            PriceExternalID: "price_external_id",
+//	        },
+//	    },
+//	    ProductExternalID: "product_external_id",
+//	    UsageType: schematichq.BillingPriceUsageTypeLicensed,
+//	}
+//	client.Billing.UpsertBillingPrice(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertBillingPrice(
 	ctx context.Context,
 	request *schematichq.CreateBillingPriceRequestBody,
@@ -310,6 +610,12 @@ func (c *Client) UpsertBillingPrice(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Billing.DeleteBillingProduct(
+//	    context.TODO(),
+//	    "billing_id",
+//	)
 func (c *Client) DeleteBillingProduct(
 	ctx context.Context,
 	// billing_id
@@ -327,6 +633,66 @@ func (c *Client) DeleteBillingProduct(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListBillingProductPricesRequest{
+//	    Currency: schematichq.String(
+//	        "currency",
+//	    ),
+//	    ForInitialPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForTrialExpiryPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Interval: schematichq.String(
+//	        "interval",
+//	    ),
+//	    IntervalCount: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    IsActive: schematichq.Bool(
+//	        true,
+//	    ),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    Price: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    ProductID: schematichq.String(
+//	        "product_id",
+//	    ),
+//	    ProductIDs: []*string{
+//	        schematichq.String(
+//	            "product_ids",
+//	        ),
+//	    },
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    TiersMode: schematichq.BillingTiersModeGraduated.Ptr(),
+//	    UsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+//	    WithMeter: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListBillingProductPrices(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListBillingProductPrices(
 	ctx context.Context,
 	request *schematichq.ListBillingProductPricesRequest,
@@ -343,6 +709,12 @@ func (c *Client) ListBillingProductPrices(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Billing.DeleteProductPrice(
+//	    context.TODO(),
+//	    "billing_id",
+//	)
 func (c *Client) DeleteProductPrice(
 	ctx context.Context,
 	// billing_id
@@ -360,6 +732,16 @@ func (c *Client) DeleteProductPrice(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingProductRequestBody{
+//	    ExternalID: "external_id",
+//	    Price: 1.1,
+//	}
+//	client.Billing.UpsertBillingProduct(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertBillingProduct(
 	ctx context.Context,
 	request *schematichq.CreateBillingProductRequestBody,
@@ -376,6 +758,51 @@ func (c *Client) UpsertBillingProduct(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListBillingProductsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    IsActive: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    RecurringChargesOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithOneTimeCharges: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithPricesOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithZeroPrice: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutLinkedToPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListBillingProducts(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListBillingProducts(
 	ctx context.Context,
 	request *schematichq.ListBillingProductsRequest,
@@ -392,6 +819,51 @@ func (c *Client) ListBillingProducts(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountBillingProductsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    IsActive: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    PriceUsageType: schematichq.BillingPriceUsageTypeLicensed.Ptr(),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    RecurringChargesOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithOneTimeCharges: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithPricesOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithZeroPrice: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutLinkedToPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.CountBillingProducts(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountBillingProducts(
 	ctx context.Context,
 	request *schematichq.CountBillingProductsRequest,
@@ -408,6 +880,43 @@ func (c *Client) CountBillingProducts(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingSubscriptionRequestBody{
+//	    CancelAtPeriodEnd: true,
+//	    Currency: "currency",
+//	    CustomerExternalID: "customer_external_id",
+//	    Discounts: []*schematichq.BillingSubscriptionDiscount{
+//	        &schematichq.BillingSubscriptionDiscount{
+//	            CouponExternalID: "coupon_external_id",
+//	            ExternalID: "external_id",
+//	            IsActive: true,
+//	            StartedAt: schematichq.MustParseDateTime(
+//	                "2024-01-15T09:30:00Z",
+//	            ),
+//	        },
+//	    },
+//	    ExpiredAt: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    ProductExternalIDs: []*schematichq.BillingProductPricing{
+//	        &schematichq.BillingProductPricing{
+//	            Currency: "currency",
+//	            Interval: "interval",
+//	            Price: int64(1000000),
+//	            PriceExternalID: "price_external_id",
+//	            ProductExternalID: "product_external_id",
+//	            Quantity: int64(1000000),
+//	            UsageType: schematichq.BillingPriceUsageTypeLicensed,
+//	        },
+//	    },
+//	    SubscriptionExternalID: "subscription_external_id",
+//	    TotalPrice: int64(1000000),
+//	}
+//	client.Billing.UpsertBillingSubscription(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertBillingSubscription(
 	ctx context.Context,
 	request *schematichq.CreateBillingSubscriptionRequestBody,

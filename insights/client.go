@@ -34,6 +34,17 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.GetActivityRequest{
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Insights.GetActivity(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetActivity(
 	ctx context.Context,
 	request *schematichq.GetActivityRequest,
@@ -50,6 +61,22 @@ func (c *Client) GetActivity(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetEnvironmentFeatureUsageTimeSeriesRequest{
+//	    EndTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    FeatureID: "feature_id",
+//	    Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+//	    StartTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	}
+//	client.Insights.GetEnvironmentFeatureUsageTimeSeries(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetEnvironmentFeatureUsageTimeSeries(
 	ctx context.Context,
 	request *schematichq.GetEnvironmentFeatureUsageTimeSeriesRequest,
@@ -66,6 +93,17 @@ func (c *Client) GetEnvironmentFeatureUsageTimeSeries(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetPlanGrowthRequest{
+//	    Months: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Insights.GetPlanGrowth(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetPlanGrowth(
 	ctx context.Context,
 	request *schematichq.GetPlanGrowthRequest,
@@ -82,6 +120,11 @@ func (c *Client) GetPlanGrowth(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Insights.GetSummary(
+//	    context.TODO(),
+//	)
 func (c *Client) GetSummary(
 	ctx context.Context,
 	opts ...option.RequestOption,
@@ -96,6 +139,23 @@ func (c *Client) GetSummary(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetTopFeaturesByUsageRequest{
+//	    EndTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    StartTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	}
+//	client.Insights.GetTopFeaturesByUsage(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetTopFeaturesByUsage(
 	ctx context.Context,
 	request *schematichq.GetTopFeaturesByUsageRequest,
@@ -112,6 +172,22 @@ func (c *Client) GetTopFeaturesByUsage(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetEnvironmentTraitUsageTimeSeriesRequest{
+//	    EndTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    FeatureID: "feature_id",
+//	    Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+//	    StartTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	}
+//	client.Insights.GetEnvironmentTraitUsageTimeSeries(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetEnvironmentTraitUsageTimeSeries(
 	ctx context.Context,
 	request *schematichq.GetEnvironmentTraitUsageTimeSeriesRequest,

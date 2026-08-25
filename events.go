@@ -486,12 +486,13 @@ var (
 	eventBodyFlagCheckFieldError      = big.NewInt(1 << 1)
 	eventBodyFlagCheckFieldFlagID     = big.NewInt(1 << 2)
 	eventBodyFlagCheckFieldFlagKey    = big.NewInt(1 << 3)
-	eventBodyFlagCheckFieldReason     = big.NewInt(1 << 4)
-	eventBodyFlagCheckFieldReqCompany = big.NewInt(1 << 5)
-	eventBodyFlagCheckFieldReqUser    = big.NewInt(1 << 6)
-	eventBodyFlagCheckFieldRuleID     = big.NewInt(1 << 7)
-	eventBodyFlagCheckFieldUserID     = big.NewInt(1 << 8)
-	eventBodyFlagCheckFieldValue      = big.NewInt(1 << 9)
+	eventBodyFlagCheckFieldPreflight  = big.NewInt(1 << 4)
+	eventBodyFlagCheckFieldReason     = big.NewInt(1 << 5)
+	eventBodyFlagCheckFieldReqCompany = big.NewInt(1 << 6)
+	eventBodyFlagCheckFieldReqUser    = big.NewInt(1 << 7)
+	eventBodyFlagCheckFieldRuleID     = big.NewInt(1 << 8)
+	eventBodyFlagCheckFieldUserID     = big.NewInt(1 << 9)
+	eventBodyFlagCheckFieldValue      = big.NewInt(1 << 10)
 )
 
 type EventBodyFlagCheck struct {
@@ -503,6 +504,8 @@ type EventBodyFlagCheck struct {
 	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	// The key of the flag being checked
 	FlagKey string `json:"flag_key" url:"flag_key"`
+	// Whether the check was a preflight, asking whether an action would be allowed rather than reporting one that happened. Absent on ordinary checks
+	Preflight *bool `json:"preflight,omitempty" url:"preflight,omitempty"`
 	// The reason why the value was returned
 	Reason string `json:"reason" url:"reason"`
 	// Key-value pairs used to to identify company for which the flag was checked
@@ -549,6 +552,13 @@ func (e *EventBodyFlagCheck) GetFlagKey() string {
 		return ""
 	}
 	return e.FlagKey
+}
+
+func (e *EventBodyFlagCheck) GetPreflight() *bool {
+	if e == nil {
+		return nil
+	}
+	return e.Preflight
 }
 
 func (e *EventBodyFlagCheck) GetReason() string {
@@ -633,6 +643,13 @@ func (e *EventBodyFlagCheck) SetFlagID(flagID *string) {
 func (e *EventBodyFlagCheck) SetFlagKey(flagKey string) {
 	e.FlagKey = flagKey
 	e.require(eventBodyFlagCheckFieldFlagKey)
+}
+
+// SetPreflight sets the Preflight field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyFlagCheck) SetPreflight(preflight *bool) {
+	e.Preflight = preflight
+	e.require(eventBodyFlagCheckFieldPreflight)
 }
 
 // SetReason sets the Reason field and marks it as non-optional;

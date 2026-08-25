@@ -34,6 +34,18 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateCompanyPlansRequestBody{
+//	    AddOnIDs: []string{
+//	        "add_on_ids",
+//	    },
+//	}
+//	client.Plans.UpdateCompanyPlans(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
 func (c *Client) UpdateCompanyPlans(
 	ctx context.Context,
 	// company_id
@@ -53,6 +65,31 @@ func (c *Client) UpdateCompanyPlans(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCustomPlanBillingsRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanBillingSource: schematichq.PlanBillingSourceCustomPlan.Ptr(),
+//	    Status: schematichq.CustomPlanBillingStatusActive.Ptr(),
+//	    Statuses: []*schematichq.CustomPlanBillingStatus{
+//	        schematichq.CustomPlanBillingStatusActive.Ptr(),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Plans.ListCustomPlanBillings(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCustomPlanBillings(
 	ctx context.Context,
 	request *schematichq.ListCustomPlanBillingsRequest,
@@ -69,6 +106,16 @@ func (c *Client) ListCustomPlanBillings(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := map[string]any{
+//	    "key": "value",
+//	}
+//	client.Plans.MarkCustomPlanBillingPaid(
+//	    context.TODO(),
+//	    "custom_plan_billing_id",
+//	    request,
+//	)
 func (c *Client) MarkCustomPlanBillingPaid(
 	ctx context.Context,
 	// custom_plan_billing_id
@@ -88,6 +135,16 @@ func (c *Client) MarkCustomPlanBillingPaid(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.RetryCustomPlanBillingRequestBody{
+//	    CustomerEmail: "customer_email",
+//	}
+//	client.Plans.RetryCustomPlanBilling(
+//	    context.TODO(),
+//	    "custom_plan_billing_id",
+//	    request,
+//	)
 func (c *Client) RetryCustomPlanBilling(
 	ctx context.Context,
 	// custom_plan_billing_id
@@ -107,6 +164,16 @@ func (c *Client) RetryCustomPlanBilling(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCustomPlanRequestBody{
+//	    CompanyID: "company_id",
+//	    Name: "name",
+//	}
+//	client.Plans.CreateCustomPlan(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateCustomPlan(
 	ctx context.Context,
 	request *schematichq.CreateCustomPlanRequestBody,
@@ -123,6 +190,65 @@ func (c *Client) CreateCustomPlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListPlansRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CompanyScopedOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ExcludeCompanyScoped: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForFallbackPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForInitialPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForTrialExpiryPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    HasProductID: schematichq.Bool(
+//	        true,
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    IncludeDraftVersions: schematichq.Bool(
+//	        true,
+//	    ),
+//	    PlanType: schematichq.PlanTypePlan.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    ScopedToCompanyID: schematichq.String(
+//	        "scoped_to_company_id",
+//	    ),
+//	    WithEntitlements: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutEntitlementFor: schematichq.String(
+//	        "without_entitlement_for",
+//	    ),
+//	    WithoutPaidProductID: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Plans.ListPlans(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListPlans(
 	ctx context.Context,
 	request *schematichq.ListPlansRequest,
@@ -139,6 +265,16 @@ func (c *Client) ListPlans(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreatePlanRequestBody{
+//	    Name: "name",
+//	    PlanType: schematichq.PlanTypePlan,
+//	}
+//	client.Plans.CreatePlan(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreatePlan(
 	ctx context.Context,
 	request *schematichq.CreatePlanRequestBody,
@@ -155,6 +291,18 @@ func (c *Client) CreatePlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetPlanRequest{
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	}
+//	client.Plans.GetPlan(
+//	    context.TODO(),
+//	    "plan_id",
+//	    request,
+//	)
 func (c *Client) GetPlan(
 	ctx context.Context,
 	// plan_id
@@ -174,6 +322,16 @@ func (c *Client) GetPlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdatePlanRequestBody{
+//	    Name: "name",
+//	}
+//	client.Plans.UpdatePlan(
+//	    context.TODO(),
+//	    "plan_id",
+//	    request,
+//	)
 func (c *Client) UpdatePlan(
 	ctx context.Context,
 	// plan_id
@@ -193,6 +351,12 @@ func (c *Client) UpdatePlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Plans.DeletePlan(
+//	    context.TODO(),
+//	    "plan_id",
+//	)
 func (c *Client) DeletePlan(
 	ctx context.Context,
 	// plan_id
@@ -210,6 +374,17 @@ func (c *Client) DeletePlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertBillingProductRequestBody{
+//	    ChargeType: schematichq.ChargeTypeFree,
+//	    IsTrialable: true,
+//	}
+//	client.Plans.UpsertBillingProductPlan(
+//	    context.TODO(),
+//	    "plan_id",
+//	    request,
+//	)
 func (c *Client) UpsertBillingProductPlan(
 	ctx context.Context,
 	// plan_id
@@ -229,6 +404,18 @@ func (c *Client) UpsertBillingProductPlan(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingLinkedPlanRequestBody{
+//	    BillingProvider: schematichq.BillingProviderTypeMetronome,
+//	    ExternalResourceID: "external_resource_id",
+//	    Name: "name",
+//	    PlanType: schematichq.PlanTypePlan,
+//	}
+//	client.Plans.UpsertPlanForBillingProduct(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertPlanForBillingProduct(
 	ctx context.Context,
 	request *schematichq.CreateBillingLinkedPlanRequestBody,
@@ -245,6 +432,24 @@ func (c *Client) UpsertPlanForBillingProduct(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListBillingProductMatchCompaniesRequest{
+//	    PlanID: "plan_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Plans.ListBillingProductMatchCompanies(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListBillingProductMatchCompanies(
 	ctx context.Context,
 	request *schematichq.ListBillingProductMatchCompaniesRequest,
@@ -261,6 +466,24 @@ func (c *Client) ListBillingProductMatchCompanies(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountBillingProductMatchCompaniesRequest{
+//	    PlanID: "plan_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Plans.CountBillingProductMatchCompanies(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountBillingProductMatchCompanies(
 	ctx context.Context,
 	request *schematichq.CountBillingProductMatchCompaniesRequest,
@@ -277,6 +500,65 @@ func (c *Client) CountBillingProductMatchCompanies(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountPlansRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CompanyScopedOnly: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ExcludeCompanyScoped: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForFallbackPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForInitialPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ForTrialExpiryPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    HasProductID: schematichq.Bool(
+//	        true,
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    IncludeDraftVersions: schematichq.Bool(
+//	        true,
+//	    ),
+//	    PlanType: schematichq.PlanTypePlan.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    ScopedToCompanyID: schematichq.String(
+//	        "scoped_to_company_id",
+//	    ),
+//	    WithEntitlements: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutEntitlementFor: schematichq.String(
+//	        "without_entitlement_for",
+//	    ),
+//	    WithoutPaidProductID: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Plans.CountPlans(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountPlans(
 	ctx context.Context,
 	request *schematichq.CountPlansRequest,
@@ -293,6 +575,18 @@ func (c *Client) CountPlans(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListPlanIssuesRequest{
+//	    PlanID: "plan_id",
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	}
+//	client.Plans.ListPlanIssues(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListPlanIssues(
 	ctx context.Context,
 	request *schematichq.ListPlanIssuesRequest,
@@ -309,6 +603,18 @@ func (c *Client) ListPlanIssues(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.DeletePlanVersionRequest{
+//	    PromoteArchivedVersion: schematichq.Bool(
+//	        true,
+//	    ),
+//	}
+//	client.Plans.DeletePlanVersion(
+//	    context.TODO(),
+//	    "plan_version_id",
+//	    request,
+//	)
 func (c *Client) DeletePlanVersion(
 	ctx context.Context,
 	// plan_version_id
@@ -328,6 +634,19 @@ func (c *Client) DeletePlanVersion(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.PublishPlanVersionRequestBody{
+//	    ExcludedCompanyIDs: []string{
+//	        "excluded_company_ids",
+//	    },
+//	    MigrationStrategy: schematichq.PlanVersionMigrationStrategyImmediate,
+//	}
+//	client.Plans.PublishPlanVersion(
+//	    context.TODO(),
+//	    "plan_version_id",
+//	    request,
+//	)
 func (c *Client) PublishPlanVersion(
 	ctx context.Context,
 	// plan_version_id

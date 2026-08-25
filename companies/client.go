@@ -34,6 +34,83 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListCompaniesRequest{
+//	    CreditTypeIDs: []*string{
+//	        schematichq.String(
+//	            "credit_type_ids",
+//	        ),
+//	    },
+//	    HasScheduledDowngrade: schematichq.Bool(
+//	        true,
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    MonetizedSubscriptions: schematichq.Bool(
+//	        true,
+//	    ),
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanIDs: []*string{
+//	        schematichq.String(
+//	            "plan_ids",
+//	        ),
+//	    },
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    PlanVersionIDs: []*string{
+//	        schematichq.String(
+//	            "plan_version_ids",
+//	        ),
+//	    },
+//	    PlanVersionUnpublished: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    SortOrderColumn: schematichq.String(
+//	        "sort_order_column",
+//	    ),
+//	    SortOrderDirection: schematichq.SortDirectionAsc.Ptr(),
+//	    SubscriptionStatuses: []*schematichq.SubscriptionStatus{
+//	        schematichq.SubscriptionStatusActive.Ptr(),
+//	    },
+//	    SubscriptionTypes: []*schematichq.SubscriptionType{
+//	        schematichq.SubscriptionTypeFree.Ptr(),
+//	    },
+//	    WithEntitlementFor: schematichq.String(
+//	        "with_entitlement_for",
+//	    ),
+//	    WithoutFeatureOverrideFor: schematichq.String(
+//	        "without_feature_override_for",
+//	    ),
+//	    WithoutPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutSubscription: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithSubscription: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListCompanies(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCompanies(
 	ctx context.Context,
 	request *schematichq.ListCompaniesRequest,
@@ -50,6 +127,17 @@ func (c *Client) ListCompanies(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertCompanyRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	}
+//	client.Companies.UpsertCompany(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertCompany(
 	ctx context.Context,
 	request *schematichq.UpsertCompanyRequestBody,
@@ -66,6 +154,12 @@ func (c *Client) UpsertCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.GetCompany(
+//	    context.TODO(),
+//	    "company_id",
+//	)
 func (c *Client) GetCompany(
 	ctx context.Context,
 	// company_id
@@ -83,6 +177,21 @@ func (c *Client) GetCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.DeleteCompanyRequest{
+//	    CancelSubscription: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Prorate: schematichq.Bool(
+//	        true,
+//	    ),
+//	}
+//	client.Companies.DeleteCompany(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
 func (c *Client) DeleteCompany(
 	ctx context.Context,
 	// company_id
@@ -102,6 +211,83 @@ func (c *Client) DeleteCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCompaniesRequest{
+//	    CreditTypeIDs: []*string{
+//	        schematichq.String(
+//	            "credit_type_ids",
+//	        ),
+//	    },
+//	    HasScheduledDowngrade: schematichq.Bool(
+//	        true,
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    MonetizedSubscriptions: schematichq.Bool(
+//	        true,
+//	    ),
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanIDs: []*string{
+//	        schematichq.String(
+//	            "plan_ids",
+//	        ),
+//	    },
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    PlanVersionIDs: []*string{
+//	        schematichq.String(
+//	            "plan_version_ids",
+//	        ),
+//	    },
+//	    PlanVersionUnpublished: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    SortOrderColumn: schematichq.String(
+//	        "sort_order_column",
+//	    ),
+//	    SortOrderDirection: schematichq.SortDirectionAsc.Ptr(),
+//	    SubscriptionStatuses: []*schematichq.SubscriptionStatus{
+//	        schematichq.SubscriptionStatusActive.Ptr(),
+//	    },
+//	    SubscriptionTypes: []*schematichq.SubscriptionType{
+//	        schematichq.SubscriptionTypeFree.Ptr(),
+//	    },
+//	    WithEntitlementFor: schematichq.String(
+//	        "with_entitlement_for",
+//	    ),
+//	    WithoutFeatureOverrideFor: schematichq.String(
+//	        "without_feature_override_for",
+//	    ),
+//	    WithoutPlan: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutSubscription: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithSubscription: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountCompanies(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCompanies(
 	ctx context.Context,
 	request *schematichq.CountCompaniesRequest,
@@ -118,6 +304,17 @@ func (c *Client) CountCompanies(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertCompanyRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	}
+//	client.Companies.CreateCompany(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateCompany(
 	ctx context.Context,
 	request *schematichq.UpsertCompanyRequestBody,
@@ -134,6 +331,17 @@ func (c *Client) CreateCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.KeysRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	}
+//	client.Companies.DeleteCompanyByKeys(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) DeleteCompanyByKeys(
 	ctx context.Context,
 	request *schematichq.KeysRequestBody,
@@ -155,6 +363,18 @@ func (c *Client) DeleteCompanyByKeys(
 // 1. `/companies/lookup?keys={"foo": "bar", "fizz": "buzz"}`
 // 2. `/companies/lookup?keys[foo]=bar&keys[fizz]=buzz`
 // 2. `/companies/lookup?foo=bar&fizz=buzz`
+//
+// Example:
+//
+//	request := &schematichq.LookupCompanyRequest{
+//	    Keys: map[string]string{
+//	        "keys": "keys",
+//	    },
+//	}
+//	client.Companies.LookupCompany(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) LookupCompany(
 	ctx context.Context,
 	request *schematichq.LookupCompanyRequest,
@@ -171,6 +391,15 @@ func (c *Client) LookupCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetCompanyBillingEntityRequest{
+//	    CompanyID: "company_id",
+//	}
+//	client.Companies.GetCompanyBillingEntity(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetCompanyBillingEntity(
 	ctx context.Context,
 	request *schematichq.GetCompanyBillingEntityRequest,
@@ -187,6 +416,15 @@ func (c *Client) GetCompanyBillingEntity(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetBillingEntityChildSubscriptionsRequest{
+//	    CompanyID: "company_id",
+//	}
+//	client.Companies.GetBillingEntityChildSubscriptions(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetBillingEntityChildSubscriptions(
 	ctx context.Context,
 	request *schematichq.GetBillingEntityChildSubscriptionsRequest,
@@ -203,6 +441,26 @@ func (c *Client) GetBillingEntityChildSubscriptions(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListCompanyMembershipsRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    UserID: schematichq.String(
+//	        "user_id",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListCompanyMemberships(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCompanyMemberships(
 	ctx context.Context,
 	request *schematichq.ListCompanyMembershipsRequest,
@@ -219,6 +477,16 @@ func (c *Client) ListCompanyMemberships(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetOrCreateCompanyMembershipRequestBody{
+//	    CompanyID: "company_id",
+//	    UserID: "user_id",
+//	}
+//	client.Companies.GetOrCreateCompanyMembership(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetOrCreateCompanyMembership(
 	ctx context.Context,
 	request *schematichq.GetOrCreateCompanyMembershipRequestBody,
@@ -235,6 +503,12 @@ func (c *Client) GetOrCreateCompanyMembership(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.DeleteCompanyMembership(
+//	    context.TODO(),
+//	    "company_membership_id",
+//	)
 func (c *Client) DeleteCompanyMembership(
 	ctx context.Context,
 	// company_membership_id
@@ -252,6 +526,28 @@ func (c *Client) DeleteCompanyMembership(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetActiveCompanySubscriptionRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.GetActiveCompanySubscription(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetActiveCompanySubscription(
 	ctx context.Context,
 	request *schematichq.GetActiveCompanySubscriptionRequest,
@@ -268,6 +564,18 @@ func (c *Client) GetActiveCompanySubscription(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertTraitRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	    Trait: "trait",
+//	}
+//	client.Companies.UpsertCompanyTrait(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertCompanyTrait(
 	ctx context.Context,
 	request *schematichq.UpsertTraitRequestBody,
@@ -284,6 +592,29 @@ func (c *Client) UpsertCompanyTrait(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListEntityKeyDefinitionsRequest{
+//	    EntityType: schematichq.EntityTypeCompany.Ptr(),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListEntityKeyDefinitions(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListEntityKeyDefinitions(
 	ctx context.Context,
 	request *schematichq.ListEntityKeyDefinitionsRequest,
@@ -300,6 +631,12 @@ func (c *Client) ListEntityKeyDefinitions(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.DeleteEntityKeyDefinition(
+//	    context.TODO(),
+//	    "entity_key_definition_id",
+//	)
 func (c *Client) DeleteEntityKeyDefinition(
 	ctx context.Context,
 	// entity_key_definition_id
@@ -317,6 +654,29 @@ func (c *Client) DeleteEntityKeyDefinition(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountEntityKeyDefinitionsRequest{
+//	    EntityType: schematichq.EntityTypeCompany.Ptr(),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountEntityKeyDefinitions(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountEntityKeyDefinitions(
 	ctx context.Context,
 	request *schematichq.CountEntityKeyDefinitionsRequest,
@@ -333,6 +693,24 @@ func (c *Client) CountEntityKeyDefinitions(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountEntityKeysRequest{
+//	    DefinitionID: schematichq.String(
+//	        "definition_id",
+//	    ),
+//	    EntityType: schematichq.EntityTypeCompany.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountEntityKeys(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountEntityKeys(
 	ctx context.Context,
 	request *schematichq.CountEntityKeysRequest,
@@ -349,6 +727,33 @@ func (c *Client) CountEntityKeys(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListEntityTraitDefinitionsRequest{
+//	    EntityType: schematichq.EntityTypeCompany.Ptr(),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    TraitType: schematichq.TraitTypeBoolean.Ptr(),
+//	    TraitTypes: []*schematichq.TraitType{
+//	        schematichq.TraitTypeBoolean.Ptr(),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListEntityTraitDefinitions(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListEntityTraitDefinitions(
 	ctx context.Context,
 	request *schematichq.ListEntityTraitDefinitionsRequest,
@@ -365,6 +770,19 @@ func (c *Client) ListEntityTraitDefinitions(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateEntityTraitDefinitionRequestBody{
+//	    EntityType: schematichq.EntityTypeCompany,
+//	    Hierarchy: []string{
+//	        "hierarchy",
+//	    },
+//	    TraitType: schematichq.TraitTypeBoolean,
+//	}
+//	client.Companies.GetOrCreateEntityTraitDefinition(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetOrCreateEntityTraitDefinition(
 	ctx context.Context,
 	request *schematichq.CreateEntityTraitDefinitionRequestBody,
@@ -381,6 +799,12 @@ func (c *Client) GetOrCreateEntityTraitDefinition(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.GetEntityTraitDefinition(
+//	    context.TODO(),
+//	    "entity_trait_definition_id",
+//	)
 func (c *Client) GetEntityTraitDefinition(
 	ctx context.Context,
 	// entity_trait_definition_id
@@ -398,6 +822,16 @@ func (c *Client) GetEntityTraitDefinition(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateEntityTraitDefinitionRequestBody{
+//	    TraitType: schematichq.TraitTypeBoolean,
+//	}
+//	client.Companies.UpdateEntityTraitDefinition(
+//	    context.TODO(),
+//	    "entity_trait_definition_id",
+//	    request,
+//	)
 func (c *Client) UpdateEntityTraitDefinition(
 	ctx context.Context,
 	// entity_trait_definition_id
@@ -417,6 +851,12 @@ func (c *Client) UpdateEntityTraitDefinition(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.DeleteEntityTraitDefinition(
+//	    context.TODO(),
+//	    "entity_trait_definition_id",
+//	)
 func (c *Client) DeleteEntityTraitDefinition(
 	ctx context.Context,
 	// entity_trait_definition_id
@@ -434,6 +874,12 @@ func (c *Client) DeleteEntityTraitDefinition(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.GetEntityTraitDefinitionUsage(
+//	    context.TODO(),
+//	    "entity_trait_definition_id",
+//	)
 func (c *Client) GetEntityTraitDefinitionUsage(
 	ctx context.Context,
 	// entity_trait_definition_id
@@ -451,6 +897,33 @@ func (c *Client) GetEntityTraitDefinitionUsage(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountEntityTraitDefinitionsRequest{
+//	    EntityType: schematichq.EntityTypeCompany.Ptr(),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    TraitType: schematichq.TraitTypeBoolean.Ptr(),
+//	    TraitTypes: []*schematichq.TraitType{
+//	        schematichq.TraitTypeBoolean.Ptr(),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountEntityTraitDefinitions(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountEntityTraitDefinitions(
 	ctx context.Context,
 	request *schematichq.CountEntityTraitDefinitionsRequest,
@@ -467,6 +940,24 @@ func (c *Client) CountEntityTraitDefinitions(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetEntityTraitValuesRequest{
+//	    DefinitionID: "definition_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.GetEntityTraitValues(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetEntityTraitValues(
 	ctx context.Context,
 	request *schematichq.GetEntityTraitValuesRequest,
@@ -483,6 +974,24 @@ func (c *Client) GetEntityTraitValues(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountEntityTraitsRequest{
+//	    DefinitionID: schematichq.String(
+//	        "definition_id",
+//	    ),
+//	    EntityType: schematichq.EntityTypeCompany.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountEntityTraits(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountEntityTraits(
 	ctx context.Context,
 	request *schematichq.CountEntityTraitsRequest,
@@ -499,6 +1008,30 @@ func (c *Client) CountEntityTraits(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListPlanChangesRequest{
+//	    Action: schematichq.PlanChangeActionCheckout.Ptr(),
+//	    BasePlanAction: schematichq.PlanChangeBasePlanActionFallback.Ptr(),
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListPlanChanges(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListPlanChanges(
 	ctx context.Context,
 	request *schematichq.ListPlanChangesRequest,
@@ -515,6 +1048,12 @@ func (c *Client) ListPlanChanges(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.GetPlanChange(
+//	    context.TODO(),
+//	    "plan_change_id",
+//	)
 func (c *Client) GetPlanChange(
 	ctx context.Context,
 	// plan_change_id
@@ -532,6 +1071,36 @@ func (c *Client) GetPlanChange(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListPlanTraitsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    TraitID: schematichq.String(
+//	        "trait_id",
+//	    ),
+//	    TraitIDs: []*string{
+//	        schematichq.String(
+//	            "trait_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListPlanTraits(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListPlanTraits(
 	ctx context.Context,
 	request *schematichq.ListPlanTraitsRequest,
@@ -548,6 +1117,12 @@ func (c *Client) ListPlanTraits(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.GetPlanTrait(
+//	    context.TODO(),
+//	    "plan_trait_id",
+//	)
 func (c *Client) GetPlanTrait(
 	ctx context.Context,
 	// plan_trait_id
@@ -565,6 +1140,22 @@ func (c *Client) GetPlanTrait(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdatePlanTraitBulkRequestBody{
+//	    ApplyToExistingCompanies: true,
+//	    PlanID: "plan_id",
+//	    Traits: []*schematichq.UpdatePlanTraitTraitRequestBody{
+//	        &schematichq.UpdatePlanTraitTraitRequestBody{
+//	            TraitID: "trait_id",
+//	            TraitValue: "trait_value",
+//	        },
+//	    },
+//	}
+//	client.Companies.UpdatePlanTraitsBulk(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpdatePlanTraitsBulk(
 	ctx context.Context,
 	request *schematichq.UpdatePlanTraitBulkRequestBody,
@@ -581,6 +1172,36 @@ func (c *Client) UpdatePlanTraitsBulk(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountPlanTraitsRequest{
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    TraitID: schematichq.String(
+//	        "trait_id",
+//	    ),
+//	    TraitIDs: []*string{
+//	        schematichq.String(
+//	            "trait_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountPlanTraits(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountPlanTraits(
 	ctx context.Context,
 	request *schematichq.CountPlanTraitsRequest,
@@ -597,6 +1218,18 @@ func (c *Client) CountPlanTraits(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertTraitRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	    Trait: "trait",
+//	}
+//	client.Companies.UpsertUserTrait(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertUserTrait(
 	ctx context.Context,
 	request *schematichq.UpsertTraitRequestBody,
@@ -613,6 +1246,34 @@ func (c *Client) UpsertUserTrait(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListUsersRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.ListUsers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListUsers(
 	ctx context.Context,
 	request *schematichq.ListUsersRequest,
@@ -629,6 +1290,17 @@ func (c *Client) ListUsers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertUserRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	}
+//	client.Companies.UpsertUser(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertUser(
 	ctx context.Context,
 	request *schematichq.UpsertUserRequestBody,
@@ -645,6 +1317,12 @@ func (c *Client) UpsertUser(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.GetUser(
+//	    context.TODO(),
+//	    "user_id",
+//	)
 func (c *Client) GetUser(
 	ctx context.Context,
 	// user_id
@@ -662,6 +1340,12 @@ func (c *Client) GetUser(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Companies.DeleteUser(
+//	    context.TODO(),
+//	    "user_id",
+//	)
 func (c *Client) DeleteUser(
 	ctx context.Context,
 	// user_id
@@ -679,6 +1363,34 @@ func (c *Client) DeleteUser(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountUsersRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Companies.CountUsers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountUsers(
 	ctx context.Context,
 	request *schematichq.CountUsersRequest,
@@ -695,6 +1407,17 @@ func (c *Client) CountUsers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpsertUserRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	}
+//	client.Companies.CreateUser(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateUser(
 	ctx context.Context,
 	request *schematichq.UpsertUserRequestBody,
@@ -711,6 +1434,17 @@ func (c *Client) CreateUser(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.KeysRequestBody{
+//	    Keys: map[string]string{
+//	        "key": "value",
+//	    },
+//	}
+//	client.Companies.DeleteUserByKeys(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) DeleteUserByKeys(
 	ctx context.Context,
 	request *schematichq.KeysRequestBody,
@@ -727,6 +1461,17 @@ func (c *Client) DeleteUserByKeys(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.LookupUserRequest{
+//	    Keys: map[string]string{
+//	        "keys": "keys",
+//	    },
+//	}
+//	client.Companies.LookupUser(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) LookupUser(
 	ctx context.Context,
 	request *schematichq.LookupUserRequest,

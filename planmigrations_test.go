@@ -13,7 +13,7 @@ import (
 func TestSettersCountCompanyMigrationsRequest(t *testing.T) {
 	t.Run("SetMigrationID", func(t *testing.T) {
 		obj := &CountCompanyMigrationsRequest{}
-		var fernTestValueMigrationID *string
+		var fernTestValueMigrationID string
 		obj.SetMigrationID(fernTestValueMigrationID)
 		assert.Equal(t, fernTestValueMigrationID, obj.MigrationID)
 		assert.NotNil(t, obj.explicitFields)
@@ -58,7 +58,7 @@ func TestSettersMarkExplicitCountCompanyMigrationsRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CountCompanyMigrationsRequest{}
-		var fernTestValueMigrationID *string
+		var fernTestValueMigrationID string
 
 		// Act
 		obj.SetMigrationID(fernTestValueMigrationID)
@@ -214,7 +214,7 @@ func TestSettersMarkExplicitCountCompanyMigrationsRequest(t *testing.T) {
 func TestSettersCountMigrationsRequest(t *testing.T) {
 	t.Run("SetPlanVersionID", func(t *testing.T) {
 		obj := &CountMigrationsRequest{}
-		var fernTestValuePlanVersionID *string
+		var fernTestValuePlanVersionID string
 		obj.SetPlanVersionID(fernTestValuePlanVersionID)
 		assert.Equal(t, fernTestValuePlanVersionID, obj.PlanVersionID)
 		assert.NotNil(t, obj.explicitFields)
@@ -251,7 +251,7 @@ func TestSettersMarkExplicitCountMigrationsRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CountMigrationsRequest{}
-		var fernTestValuePlanVersionID *string
+		var fernTestValuePlanVersionID string
 
 		// Act
 		obj.SetPlanVersionID(fernTestValuePlanVersionID)
@@ -694,7 +694,7 @@ func TestSettersMarkExplicitCreateMigrationInput(t *testing.T) {
 func TestSettersListCompanyMigrationsRequest(t *testing.T) {
 	t.Run("SetMigrationID", func(t *testing.T) {
 		obj := &ListCompanyMigrationsRequest{}
-		var fernTestValueMigrationID *string
+		var fernTestValueMigrationID string
 		obj.SetMigrationID(fernTestValueMigrationID)
 		assert.Equal(t, fernTestValueMigrationID, obj.MigrationID)
 		assert.NotNil(t, obj.explicitFields)
@@ -739,7 +739,7 @@ func TestSettersMarkExplicitListCompanyMigrationsRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListCompanyMigrationsRequest{}
-		var fernTestValueMigrationID *string
+		var fernTestValueMigrationID string
 
 		// Act
 		obj.SetMigrationID(fernTestValueMigrationID)
@@ -895,7 +895,7 @@ func TestSettersMarkExplicitListCompanyMigrationsRequest(t *testing.T) {
 func TestSettersListMigrationsRequest(t *testing.T) {
 	t.Run("SetPlanVersionID", func(t *testing.T) {
 		obj := &ListMigrationsRequest{}
-		var fernTestValuePlanVersionID *string
+		var fernTestValuePlanVersionID string
 		obj.SetPlanVersionID(fernTestValuePlanVersionID)
 		assert.Equal(t, fernTestValuePlanVersionID, obj.PlanVersionID)
 		assert.NotNil(t, obj.explicitFields)
@@ -932,7 +932,7 @@ func TestSettersMarkExplicitListMigrationsRequest(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ListMigrationsRequest{}
-		var fernTestValuePlanVersionID *string
+		var fernTestValuePlanVersionID string
 
 		// Act
 		obj.SetPlanVersionID(fernTestValuePlanVersionID)
@@ -2152,6 +2152,14 @@ func TestSettersPlanVersionMigrationPreviewCompanyResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetWouldFail", func(t *testing.T) {
+		obj := &PlanVersionMigrationPreviewCompanyResponseData{}
+		var fernTestValueWouldFail bool
+		obj.SetWouldFail(fernTestValueWouldFail)
+		assert.Equal(t, fernTestValueWouldFail, obj.WouldFail)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestGettersPlanVersionMigrationPreviewCompanyResponseData(t *testing.T) {
@@ -2311,6 +2319,29 @@ func TestGettersPlanVersionMigrationPreviewCompanyResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetWillUpdateSubscription() // Should return zero value
+	})
+
+	t.Run("GetWouldFail", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanVersionMigrationPreviewCompanyResponseData{}
+		var expected bool
+		obj.WouldFail = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetWouldFail(), "getter should return the property value")
+	})
+
+	t.Run("GetWouldFail_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *PlanVersionMigrationPreviewCompanyResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetWouldFail() // Should return zero value
 	})
 
 }
@@ -2479,6 +2510,37 @@ func TestSettersMarkExplicitPlanVersionMigrationPreviewCompanyResponseData(t *te
 
 		// Act
 		obj.SetWillUpdateSubscription(fernTestValueWillUpdateSubscription)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetWouldFail_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanVersionMigrationPreviewCompanyResponseData{}
+		var fernTestValueWouldFail bool
+
+		// Act
+		obj.SetWouldFail(fernTestValueWouldFail)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

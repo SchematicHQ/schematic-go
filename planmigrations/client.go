@@ -34,6 +34,25 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListCompanyMigrationsRequest{
+//	    MigrationID: "migration_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Planmigrations.ListCompanyMigrations(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCompanyMigrations(
 	ctx context.Context,
 	request *schematichq.ListCompanyMigrationsRequest,
@@ -50,6 +69,12 @@ func (c *Client) ListCompanyMigrations(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Planmigrations.RetryCompanyMigration(
+//	    context.TODO(),
+//	    "plan_version_company_migration_id",
+//	)
 func (c *Client) RetryCompanyMigration(
 	ctx context.Context,
 	// plan_version_company_migration_id
@@ -67,6 +92,25 @@ func (c *Client) RetryCompanyMigration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCompanyMigrationsRequest{
+//	    MigrationID: "migration_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Planmigrations.CountCompanyMigrations(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCompanyMigrations(
 	ctx context.Context,
 	request *schematichq.CountCompanyMigrationsRequest,
@@ -83,6 +127,22 @@ func (c *Client) CountCompanyMigrations(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListMigrationsRequest{
+//	    PlanVersionID: "plan_version_id",
+//	    Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Planmigrations.ListMigrations(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListMigrations(
 	ctx context.Context,
 	request *schematichq.ListMigrationsRequest,
@@ -99,6 +159,18 @@ func (c *Client) ListMigrations(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateMigrationInput{
+//	    PlanID: "plan_id",
+//	    PlanVersionIDTo: "plan_version_id_to",
+//	    Strategy: schematichq.PlanVersionMigrationStrategyImmediate,
+//	    TargetPlanType: schematichq.PlanTypePlan,
+//	}
+//	client.Planmigrations.CreateMigration(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateMigration(
 	ctx context.Context,
 	request *schematichq.CreateMigrationInput,
@@ -115,6 +187,12 @@ func (c *Client) CreateMigration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Planmigrations.GetMigration(
+//	    context.TODO(),
+//	    "plan_version_migration_id",
+//	)
 func (c *Client) GetMigration(
 	ctx context.Context,
 	// plan_version_migration_id
@@ -132,6 +210,18 @@ func (c *Client) GetMigration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.RetryMigrationRequestBody{
+//	    ErrorCodes: []schematichq.MigrationErrorCode{
+//	        schematichq.MigrationErrorCodeAmbiguousSubscriptionItem,
+//	    },
+//	}
+//	client.Planmigrations.RetryMigration(
+//	    context.TODO(),
+//	    "plan_version_migration_id",
+//	    request,
+//	)
 func (c *Client) RetryMigration(
 	ctx context.Context,
 	// plan_version_migration_id
@@ -151,6 +241,22 @@ func (c *Client) RetryMigration(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountMigrationsRequest{
+//	    PlanVersionID: "plan_version_id",
+//	    Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Planmigrations.CountMigrations(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountMigrations(
 	ctx context.Context,
 	request *schematichq.CountMigrationsRequest,
@@ -167,6 +273,17 @@ func (c *Client) CountMigrations(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.PreviewMigrationRequestBody{
+//	    PlanID: "plan_id",
+//	    PlanVersionIDTo: "plan_version_id_to",
+//	    TargetPlanType: schematichq.PlanTypePlan,
+//	}
+//	client.Planmigrations.PreviewMigration(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) PreviewMigration(
 	ctx context.Context,
 	request *schematichq.PreviewMigrationRequestBody,

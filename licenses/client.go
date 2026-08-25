@@ -34,6 +34,33 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListLicensesRequest{
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Licenses.ListLicenses(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListLicenses(
 	ctx context.Context,
 	request *schematichq.ListLicensesRequest,
@@ -50,6 +77,12 @@ func (c *Client) ListLicenses(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Licenses.GetSingleLicense(
+//	    context.TODO(),
+//	    "license_id",
+//	)
 func (c *Client) GetSingleLicense(
 	ctx context.Context,
 	// license_id
@@ -67,6 +100,33 @@ func (c *Client) GetSingleLicense(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountLicensesRequest{
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    Name: schematichq.String(
+//	        "name",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Licenses.CountLicenses(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountLicenses(
 	ctx context.Context,
 	request *schematichq.CountLicensesRequest,

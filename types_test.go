@@ -31246,7 +31246,7 @@ func TestSettersComponentHydrateResponseData(t *testing.T) {
 
 	t.Run("SetUpcomingInvoice", func(t *testing.T) {
 		obj := &ComponentHydrateResponseData{}
-		var fernTestValueUpcomingInvoice *InvoiceResponseData
+		var fernTestValueUpcomingInvoice *UpcomingInvoiceResponseData
 		obj.SetUpcomingInvoice(fernTestValueUpcomingInvoice)
 		assert.Equal(t, fernTestValueUpcomingInvoice, obj.UpcomingInvoice)
 		assert.NotNil(t, obj.explicitFields)
@@ -32067,7 +32067,7 @@ func TestGettersComponentHydrateResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ComponentHydrateResponseData{}
-		var expected *InvoiceResponseData
+		var expected *UpcomingInvoiceResponseData
 		obj.UpcomingInvoice = expected
 
 		// Act & Assert
@@ -32909,7 +32909,7 @@ func TestSettersMarkExplicitComponentHydrateResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &ComponentHydrateResponseData{}
-		var fernTestValueUpcomingInvoice *InvoiceResponseData
+		var fernTestValueUpcomingInvoice *UpcomingInvoiceResponseData
 
 		// Act
 		obj.SetUpcomingInvoice(fernTestValueUpcomingInvoice)
@@ -41779,7 +41779,7 @@ func TestSettersMarkExplicitCreateEntitlementReqCommon(t *testing.T) {
 func TestSettersCreatePlanRequestBody(t *testing.T) {
 	t.Run("SetDescription", func(t *testing.T) {
 		obj := &CreatePlanRequestBody{}
-		var fernTestValueDescription string
+		var fernTestValueDescription *string
 		obj.SetDescription(fernTestValueDescription)
 		assert.Equal(t, fernTestValueDescription, obj.Description)
 		assert.NotNil(t, obj.explicitFields)
@@ -41816,11 +41816,21 @@ func TestGettersCreatePlanRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreatePlanRequestBody{}
-		var expected string
+		var expected *string
 		obj.Description = expected
 
 		// Act & Assert
 		assert.Equal(t, expected, obj.GetDescription(), "getter should return the property value")
+	})
+
+	t.Run("GetDescription_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreatePlanRequestBody{}
+		obj.Description = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetDescription(), "getter should return nil when property is nil")
 	})
 
 	t.Run("GetDescription_NilReceiver", func(t *testing.T) {
@@ -41921,7 +41931,7 @@ func TestSettersMarkExplicitCreatePlanRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreatePlanRequestBody{}
-		var fernTestValueDescription string
+		var fernTestValueDescription *string
 
 		// Act
 		obj.SetDescription(fernTestValueDescription)
@@ -117620,6 +117630,13 @@ func TestEnumMigrationProrationBehavior(t *testing.T) {
 		assert.Equal(t, MigrationProrationBehavior("create_prorations"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_none", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewMigrationProrationBehaviorFromString("none")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, MigrationProrationBehavior("none"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_Invalid", func(t *testing.T) {
 		_, err := NewMigrationProrationBehaviorFromString("invalid_value_that_does_not_exist")
 		assert.Error(t, err)
@@ -118106,11 +118123,11 @@ func TestEnumRuleType(t *testing.T) {
 }
 
 func TestEnumRulesEngineSchemaVersion(t *testing.T) {
-	t.Run("NewFromString_v5b3e7220", func(t *testing.T) {
+	t.Run("NewFromString_vc8eb8df4", func(t *testing.T) {
 		t.Parallel()
-		val, err := NewRulesEngineSchemaVersionFromString("v5b3e7220")
+		val, err := NewRulesEngineSchemaVersionFromString("vc8eb8df4")
 		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, RulesEngineSchemaVersion("v5b3e7220"), val, "enum value should match expected wire value")
+		assert.Equal(t, RulesEngineSchemaVersion("vc8eb8df4"), val, "enum value should match expected wire value")
 	})
 
 	t.Run("NewFromString_placeholder_for_fern_compatibility", func(t *testing.T) {
@@ -118126,7 +118143,7 @@ func TestEnumRulesEngineSchemaVersion(t *testing.T) {
 	})
 
 	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewRulesEngineSchemaVersionFromString("v5b3e7220")
+		val, err := NewRulesEngineSchemaVersionFromString("vc8eb8df4")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)
@@ -118923,6 +118940,42 @@ func TestEnumTraitType(t *testing.T) {
 
 	t.Run("Ptr", func(t *testing.T) {
 		val, err := NewTraitTypeFromString("boolean")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
+func TestEnumTrialStatus(t *testing.T) {
+	t.Run("NewFromString_active", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTrialStatusFromString("active")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TrialStatus("active"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_converted", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTrialStatusFromString("converted")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TrialStatus("converted"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_expired", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTrialStatusFromString("expired")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TrialStatus("expired"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewTrialStatusFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewTrialStatusFromString("active")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

@@ -34,6 +34,17 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.GetPlanGroupRequest{
+//	    IncludeCompanyCounts: schematichq.Bool(
+//	        true,
+//	    ),
+//	}
+//	client.Plangroups.GetPlanGroup(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetPlanGroup(
 	ctx context.Context,
 	request *schematichq.GetPlanGroupRequest,
@@ -50,6 +61,48 @@ func (c *Client) GetPlanGroup(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreatePlanGroupRequestBody{
+//	    AddOnIDs: []string{
+//	        "add_on_ids",
+//	    },
+//	    CheckoutCollectAddress: true,
+//	    CheckoutCollectEmail: true,
+//	    CheckoutCollectPhone: true,
+//	    CheckoutCollectTaxID: true,
+//	    EnableTaxCollection: true,
+//	    OptInEnabled: true,
+//	    OrderedAddOns: []*schematichq.OrderedPlansInGroup{
+//	        &schematichq.OrderedPlansInGroup{
+//	            PlanID: "plan_id",
+//	        },
+//	    },
+//	    OrderedBundleList: []*schematichq.PlanGroupBundleOrder{
+//	        &schematichq.PlanGroupBundleOrder{
+//	            BundleID: "bundleId",
+//	        },
+//	    },
+//	    OrderedPlans: []*schematichq.OrderedPlansInGroup{
+//	        &schematichq.OrderedPlansInGroup{
+//	            PlanID: "plan_id",
+//	        },
+//	    },
+//	    PreventDowngradesWhenOverLimit: true,
+//	    PreventSelfServiceDowngrade: true,
+//	    ProrationBehavior: schematichq.ProrationBehaviorCreateProrations,
+//	    ShowAsMonthlyPrices: true,
+//	    ShowCredits: true,
+//	    ShowFeatureDescription: true,
+//	    ShowHardLimit: true,
+//	    ShowPeriodToggle: true,
+//	    ShowZeroPriceAsFree: true,
+//	    SyncCustomerBillingDetails: true,
+//	}
+//	client.Plangroups.CreatePlanGroup(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreatePlanGroup(
 	ctx context.Context,
 	request *schematichq.CreatePlanGroupRequestBody,
@@ -66,6 +119,49 @@ func (c *Client) CreatePlanGroup(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdatePlanGroupRequestBody{
+//	    AddOnIDs: []string{
+//	        "add_on_ids",
+//	    },
+//	    CheckoutCollectAddress: true,
+//	    CheckoutCollectEmail: true,
+//	    CheckoutCollectPhone: true,
+//	    CheckoutCollectTaxID: true,
+//	    EnableTaxCollection: true,
+//	    OptInEnabled: true,
+//	    OrderedAddOns: []*schematichq.OrderedPlansInGroup{
+//	        &schematichq.OrderedPlansInGroup{
+//	            PlanID: "plan_id",
+//	        },
+//	    },
+//	    OrderedBundleList: []*schematichq.PlanGroupBundleOrder{
+//	        &schematichq.PlanGroupBundleOrder{
+//	            BundleID: "bundleId",
+//	        },
+//	    },
+//	    OrderedPlans: []*schematichq.OrderedPlansInGroup{
+//	        &schematichq.OrderedPlansInGroup{
+//	            PlanID: "plan_id",
+//	        },
+//	    },
+//	    PreventDowngradesWhenOverLimit: true,
+//	    PreventSelfServiceDowngrade: true,
+//	    ProrationBehavior: schematichq.ProrationBehaviorCreateProrations,
+//	    ShowAsMonthlyPrices: true,
+//	    ShowCredits: true,
+//	    ShowFeatureDescription: true,
+//	    ShowHardLimit: true,
+//	    ShowPeriodToggle: true,
+//	    ShowZeroPriceAsFree: true,
+//	    SyncCustomerBillingDetails: true,
+//	}
+//	client.Plangroups.UpdatePlanGroup(
+//	    context.TODO(),
+//	    "plan_group_id",
+//	    request,
+//	)
 func (c *Client) UpdatePlanGroup(
 	ctx context.Context,
 	// plan_group_id

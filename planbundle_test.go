@@ -344,7 +344,7 @@ func TestSettersCreateCustomPlanBundlePlanRequestBody(t *testing.T) {
 
 	t.Run("SetDescription", func(t *testing.T) {
 		obj := &CreateCustomPlanBundlePlanRequestBody{}
-		var fernTestValueDescription string
+		var fernTestValueDescription *string
 		obj.SetDescription(fernTestValueDescription)
 		assert.Equal(t, fernTestValueDescription, obj.Description)
 		assert.NotNil(t, obj.explicitFields)
@@ -396,11 +396,21 @@ func TestGettersCreateCustomPlanBundlePlanRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateCustomPlanBundlePlanRequestBody{}
-		var expected string
+		var expected *string
 		obj.Description = expected
 
 		// Act & Assert
 		assert.Equal(t, expected, obj.GetDescription(), "getter should return the property value")
+	})
+
+	t.Run("GetDescription_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateCustomPlanBundlePlanRequestBody{}
+		obj.Description = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetDescription(), "getter should return nil when property is nil")
 	})
 
 	t.Run("GetDescription_NilReceiver", func(t *testing.T) {
@@ -509,7 +519,7 @@ func TestSettersMarkExplicitCreateCustomPlanBundlePlanRequestBody(t *testing.T) 
 		t.Parallel()
 		// Arrange
 		obj := &CreateCustomPlanBundlePlanRequestBody{}
-		var fernTestValueDescription string
+		var fernTestValueDescription *string
 
 		// Act
 		obj.SetDescription(fernTestValueDescription)

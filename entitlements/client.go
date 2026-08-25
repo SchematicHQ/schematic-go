@@ -34,6 +34,47 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.ListCompanyOverridesRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    WithoutExpired: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.ListCompanyOverrides(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListCompanyOverrides(
 	ctx context.Context,
 	request *schematichq.ListCompanyOverridesRequest,
@@ -50,6 +91,17 @@ func (c *Client) ListCompanyOverrides(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateCompanyOverrideRequestBody{
+//	    CompanyID: "company_id",
+//	    FeatureID: "feature_id",
+//	    ValueType: schematichq.EntitlementValueTypeBoolean,
+//	}
+//	client.Entitlements.CreateCompanyOverride(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreateCompanyOverride(
 	ctx context.Context,
 	request *schematichq.CreateCompanyOverrideRequestBody,
@@ -66,6 +118,12 @@ func (c *Client) CreateCompanyOverride(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Entitlements.GetCompanyOverride(
+//	    context.TODO(),
+//	    "company_override_id",
+//	)
 func (c *Client) GetCompanyOverride(
 	ctx context.Context,
 	// company_override_id
@@ -83,6 +141,16 @@ func (c *Client) GetCompanyOverride(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdateCompanyOverrideRequestBody{
+//	    ValueType: schematichq.EntitlementValueTypeBoolean,
+//	}
+//	client.Entitlements.UpdateCompanyOverride(
+//	    context.TODO(),
+//	    "company_override_id",
+//	    request,
+//	)
 func (c *Client) UpdateCompanyOverride(
 	ctx context.Context,
 	// company_override_id
@@ -102,6 +170,12 @@ func (c *Client) UpdateCompanyOverride(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Entitlements.DeleteCompanyOverride(
+//	    context.TODO(),
+//	    "company_override_id",
+//	)
 func (c *Client) DeleteCompanyOverride(
 	ctx context.Context,
 	// company_override_id
@@ -119,6 +193,47 @@ func (c *Client) DeleteCompanyOverride(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountCompanyOverridesRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    WithoutExpired: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.CountCompanyOverrides(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountCompanyOverrides(
 	ctx context.Context,
 	request *schematichq.CountCompanyOverridesRequest,
@@ -135,6 +250,24 @@ func (c *Client) CountCompanyOverrides(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListFeatureCompaniesRequest{
+//	    FeatureID: "feature_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.ListFeatureCompanies(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListFeatureCompanies(
 	ctx context.Context,
 	request *schematichq.ListFeatureCompaniesRequest,
@@ -151,6 +284,24 @@ func (c *Client) ListFeatureCompanies(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountFeatureCompaniesRequest{
+//	    FeatureID: "feature_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.CountFeatureCompanies(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountFeatureCompanies(
 	ctx context.Context,
 	request *schematichq.CountFeatureCompaniesRequest,
@@ -167,6 +318,38 @@ func (c *Client) CountFeatureCompanies(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListFeatureUsageRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IncludeUsageAggregation: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WithoutNegativeEntitlements: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.ListFeatureUsage(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListFeatureUsage(
 	ctx context.Context,
 	request *schematichq.ListFeatureUsageRequest,
@@ -183,6 +366,70 @@ func (c *Client) ListFeatureUsage(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListFeatureUsageHistoryRequest{
+//	    CompanyIDs: []*string{
+//	        schematichq.String(
+//	            "company_ids",
+//	        ),
+//	    },
+//	    EndTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+//	    StartTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.ListFeatureUsageHistory(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListFeatureUsageHistory(
+	ctx context.Context,
+	request *schematichq.ListFeatureUsageHistoryRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListFeatureUsageHistoryResponse, error) {
+	response, err := c.WithRawResponse.ListFeatureUsageHistory(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.GetFeatureUsageTimeSeriesRequest{
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    FeatureID: "feature_id",
+//	    Granularity: schematichq.TimeSeriesGranularityDaily.Ptr(),
+//	    StartTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	}
+//	client.Entitlements.GetFeatureUsageTimeSeries(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetFeatureUsageTimeSeries(
 	ctx context.Context,
 	request *schematichq.GetFeatureUsageTimeSeriesRequest,
@@ -199,6 +446,38 @@ func (c *Client) GetFeatureUsageTimeSeries(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountFeatureUsageRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IncludeUsageAggregation: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ManagedBy: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WithoutNegativeEntitlements: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.CountFeatureUsage(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountFeatureUsage(
 	ctx context.Context,
 	request *schematichq.CountFeatureUsageRequest,
@@ -215,6 +494,24 @@ func (c *Client) CountFeatureUsage(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListFeatureUsersRequest{
+//	    FeatureID: "feature_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.ListFeatureUsers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListFeatureUsers(
 	ctx context.Context,
 	request *schematichq.ListFeatureUsersRequest,
@@ -231,6 +528,24 @@ func (c *Client) ListFeatureUsers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountFeatureUsersRequest{
+//	    FeatureID: "feature_id",
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.CountFeatureUsers(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountFeatureUsers(
 	ctx context.Context,
 	request *schematichq.CountFeatureUsersRequest,
@@ -247,6 +562,55 @@ func (c *Client) CountFeatureUsers(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.ListPlanEntitlementsRequest{
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanIDs: []*string{
+//	        schematichq.String(
+//	            "plan_ids",
+//	        ),
+//	    },
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    PlanVersionIDs: []*string{
+//	        schematichq.String(
+//	            "plan_version_ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WithMeteredProducts: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.ListPlanEntitlements(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) ListPlanEntitlements(
 	ctx context.Context,
 	request *schematichq.ListPlanEntitlementsRequest,
@@ -263,6 +627,17 @@ func (c *Client) ListPlanEntitlements(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreatePlanEntitlementRequestBody{
+//	    FeatureID: "feature_id",
+//	    PlanID: "plan_id",
+//	    ValueType: schematichq.EntitlementValueTypeBoolean,
+//	}
+//	client.Entitlements.CreatePlanEntitlement(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CreatePlanEntitlement(
 	ctx context.Context,
 	request *schematichq.CreatePlanEntitlementRequestBody,
@@ -279,6 +654,12 @@ func (c *Client) CreatePlanEntitlement(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Entitlements.GetPlanEntitlement(
+//	    context.TODO(),
+//	    "plan_entitlement_id",
+//	)
 func (c *Client) GetPlanEntitlement(
 	ctx context.Context,
 	// plan_entitlement_id
@@ -296,6 +677,16 @@ func (c *Client) GetPlanEntitlement(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.UpdatePlanEntitlementRequestBody{
+//	    ValueType: schematichq.EntitlementValueTypeBoolean,
+//	}
+//	client.Entitlements.UpdatePlanEntitlement(
+//	    context.TODO(),
+//	    "plan_entitlement_id",
+//	    request,
+//	)
 func (c *Client) UpdatePlanEntitlement(
 	ctx context.Context,
 	// plan_entitlement_id
@@ -315,6 +706,12 @@ func (c *Client) UpdatePlanEntitlement(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	client.Entitlements.DeletePlanEntitlement(
+//	    context.TODO(),
+//	    "plan_entitlement_id",
+//	)
 func (c *Client) DeletePlanEntitlement(
 	ctx context.Context,
 	// plan_entitlement_id
@@ -332,6 +729,19 @@ func (c *Client) DeletePlanEntitlement(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CreateBillingLinkedPlanEntitlementRequestBody{
+//	    BillingProvider: schematichq.BillingProviderTypeMetronome,
+//	    ExternalResourceID: "external_resource_id",
+//	    FeatureID: "feature_id",
+//	    PlanID: "plan_id",
+//	    ValueType: schematichq.EntitlementValueTypeBoolean,
+//	}
+//	client.Entitlements.UpsertPlanEntitlementForBillingProduct(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) UpsertPlanEntitlementForBillingProduct(
 	ctx context.Context,
 	request *schematichq.CreateBillingLinkedPlanEntitlementRequestBody,
@@ -348,6 +758,55 @@ func (c *Client) UpsertPlanEntitlementForBillingProduct(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.CountPlanEntitlementsRequest{
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    FeatureIDs: []*string{
+//	        schematichq.String(
+//	            "feature_ids",
+//	        ),
+//	    },
+//	    IDs: []*string{
+//	        schematichq.String(
+//	            "ids",
+//	        ),
+//	    },
+//	    PlanID: schematichq.String(
+//	        "plan_id",
+//	    ),
+//	    PlanIDs: []*string{
+//	        schematichq.String(
+//	            "plan_ids",
+//	        ),
+//	    },
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
+//	    PlanVersionIDs: []*string{
+//	        schematichq.String(
+//	            "plan_version_ids",
+//	        ),
+//	    },
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    WithMeteredProducts: schematichq.Bool(
+//	        true,
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Entitlements.CountPlanEntitlements(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) CountPlanEntitlements(
 	ctx context.Context,
 	request *schematichq.CountPlanEntitlementsRequest,
@@ -364,6 +823,16 @@ func (c *Client) CountPlanEntitlements(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.DuplicatePlanEntitlementsRequestBody{
+//	    SourcePlanID: "source_plan_id",
+//	    TargetPlanID: "target_plan_id",
+//	}
+//	client.Entitlements.DuplicatePlanEntitlements(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) DuplicatePlanEntitlements(
 	ctx context.Context,
 	request *schematichq.DuplicatePlanEntitlementsRequestBody,
@@ -380,6 +849,17 @@ func (c *Client) DuplicatePlanEntitlements(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetFeatureUsageByCompanyRequest{
+//	    Keys: map[string]string{
+//	        "keys": "keys",
+//	    },
+//	}
+//	client.Entitlements.GetFeatureUsageByCompany(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetFeatureUsageByCompany(
 	ctx context.Context,
 	request *schematichq.GetFeatureUsageByCompanyRequest,
@@ -396,6 +876,28 @@ func (c *Client) GetFeatureUsageByCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetUserUsageByCompanyRequest{
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	}
+//	client.Entitlements.GetUserUsageByCompany(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetUserUsageByCompany(
 	ctx context.Context,
 	request *schematichq.GetUserUsageByCompanyRequest,
@@ -412,6 +914,26 @@ func (c *Client) GetUserUsageByCompany(
 	return response.Body, nil
 }
 
+// Example:
+//
+//	request := &schematichq.GetUserUsageDetailRequest{
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    UserID: "user_id",
+//	}
+//	client.Entitlements.GetUserUsageDetail(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) GetUserUsageDetail(
 	ctx context.Context,
 	request *schematichq.GetUserUsageDetailRequest,

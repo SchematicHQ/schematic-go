@@ -885,29 +885,31 @@ func (a *APIKeyCreateResponseData) String() string {
 }
 
 var (
-	auditLogResponseDataFieldActorType         = big.NewInt(1 << 0)
-	auditLogResponseDataFieldAPIKey            = big.NewInt(1 << 1)
-	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 2)
-	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 3)
-	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 4)
-	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 5)
-	auditLogResponseDataFieldID                = big.NewInt(1 << 6)
-	auditLogResponseDataFieldMethod            = big.NewInt(1 << 7)
-	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 8)
-	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 9)
-	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 10)
-	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 11)
-	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 12)
-	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 13)
-	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 14)
-	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 15)
-	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 16)
-	auditLogResponseDataFieldURL               = big.NewInt(1 << 17)
-	auditLogResponseDataFieldUserID            = big.NewInt(1 << 18)
-	auditLogResponseDataFieldUserName          = big.NewInt(1 << 19)
+	auditLogResponseDataFieldAccountMemberID   = big.NewInt(1 << 0)
+	auditLogResponseDataFieldActorType         = big.NewInt(1 << 1)
+	auditLogResponseDataFieldAPIKey            = big.NewInt(1 << 2)
+	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 3)
+	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 4)
+	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 5)
+	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 6)
+	auditLogResponseDataFieldID                = big.NewInt(1 << 7)
+	auditLogResponseDataFieldMethod            = big.NewInt(1 << 8)
+	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 9)
+	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 10)
+	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 11)
+	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 12)
+	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 13)
+	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 14)
+	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 15)
+	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 16)
+	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 17)
+	auditLogResponseDataFieldURL               = big.NewInt(1 << 18)
+	auditLogResponseDataFieldUserID            = big.NewInt(1 << 19)
+	auditLogResponseDataFieldUserName          = big.NewInt(1 << 20)
 )
 
 type AuditLogResponseData struct {
+	AccountMemberID   *string                  `json:"account_member_id,omitempty" url:"account_member_id,omitempty"`
 	ActorType         ActorType                `json:"actor_type" url:"actor_type"`
 	APIKey            *APIKeyResponseData      `json:"api_key,omitempty" url:"api_key,omitempty"`
 	APIKeyID          *string                  `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
@@ -934,6 +936,13 @@ type AuditLogResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogResponseData) GetAccountMemberID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.AccountMemberID
 }
 
 func (a *AuditLogResponseData) GetActorType() ActorType {
@@ -1088,6 +1097,13 @@ func (a *AuditLogResponseData) require(field *big.Int) {
 		a.explicitFields = big.NewInt(0)
 	}
 	a.explicitFields.Or(a.explicitFields, field)
+}
+
+// SetAccountMemberID sets the AccountMemberID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogResponseData) SetAccountMemberID(accountMemberID *string) {
+	a.AccountMemberID = accountMemberID
+	a.require(auditLogResponseDataFieldAccountMemberID)
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
@@ -1870,13 +1886,15 @@ func (o OnboardingRequirementStatus) Ptr() *OnboardingRequirementStatus {
 var (
 	onboardingRequirementViewFieldBlockedBy   = big.NewInt(1 << 0)
 	onboardingRequirementViewFieldID          = big.NewInt(1 << 1)
-	onboardingRequirementViewFieldSatisfiedBy = big.NewInt(1 << 2)
-	onboardingRequirementViewFieldStatus      = big.NewInt(1 << 3)
+	onboardingRequirementViewFieldReachedAt   = big.NewInt(1 << 2)
+	onboardingRequirementViewFieldSatisfiedBy = big.NewInt(1 << 3)
+	onboardingRequirementViewFieldStatus      = big.NewInt(1 << 4)
 )
 
 type OnboardingRequirementView struct {
 	BlockedBy   []OnboardingRequirement     `json:"blocked_by,omitempty" url:"blocked_by,omitempty"`
 	ID          OnboardingRequirement       `json:"id" url:"id"`
+	ReachedAt   *time.Time                  `json:"reached_at,omitempty" url:"reached_at,omitempty"`
 	SatisfiedBy *string                     `json:"satisfied_by,omitempty" url:"satisfied_by,omitempty"`
 	Status      OnboardingRequirementStatus `json:"status" url:"status"`
 
@@ -1899,6 +1917,13 @@ func (o *OnboardingRequirementView) GetID() OnboardingRequirement {
 		return ""
 	}
 	return o.ID
+}
+
+func (o *OnboardingRequirementView) GetReachedAt() *time.Time {
+	if o == nil {
+		return nil
+	}
+	return o.ReachedAt
 }
 
 func (o *OnboardingRequirementView) GetSatisfiedBy() *string {
@@ -1943,6 +1968,13 @@ func (o *OnboardingRequirementView) SetID(id OnboardingRequirement) {
 	o.require(onboardingRequirementViewFieldID)
 }
 
+// SetReachedAt sets the ReachedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRequirementView) SetReachedAt(reachedAt *time.Time) {
+	o.ReachedAt = reachedAt
+	o.require(onboardingRequirementViewFieldReachedAt)
+}
+
 // SetSatisfiedBy sets the SatisfiedBy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (o *OnboardingRequirementView) SetSatisfiedBy(satisfiedBy *string) {
@@ -1958,12 +1990,18 @@ func (o *OnboardingRequirementView) SetStatus(status OnboardingRequirementStatus
 }
 
 func (o *OnboardingRequirementView) UnmarshalJSON(data []byte) error {
-	type unmarshaler OnboardingRequirementView
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed OnboardingRequirementView
+	var unmarshaler = struct {
+		embed
+		ReachedAt *internal.DateTime `json:"reached_at,omitempty"`
+	}{
+		embed: embed(*o),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*o = OnboardingRequirementView(value)
+	*o = OnboardingRequirementView(unmarshaler.embed)
+	o.ReachedAt = unmarshaler.ReachedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *o)
 	if err != nil {
 		return err
@@ -1977,8 +2015,10 @@ func (o *OnboardingRequirementView) MarshalJSON() ([]byte, error) {
 	type embed OnboardingRequirementView
 	var marshaler = struct {
 		embed
+		ReachedAt *internal.DateTime `json:"reached_at,omitempty"`
 	}{
-		embed: embed(*o),
+		embed:     embed(*o),
+		ReachedAt: internal.NewOptionalDateTime(o.ReachedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, o.explicitFields)
 	return json.Marshal(explicitMarshaler)

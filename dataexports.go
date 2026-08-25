@@ -305,17 +305,18 @@ var (
 	companyFeatureUsageExportMetadataFieldPlanID                                   = big.NewInt(1 << 8)
 	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 9)
 	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 10)
-	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 11)
-	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 12)
-	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 13)
-	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 14)
-	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 15)
-	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 16)
-	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 17)
-	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 18)
-	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 19)
-	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 20)
-	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 21)
+	companyFeatureUsageExportMetadataFieldPlanVersionUnpublished                   = big.NewInt(1 << 11)
+	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 12)
+	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 13)
+	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 14)
+	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 15)
+	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 16)
+	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 17)
+	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 18)
+	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 19)
+	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 20)
+	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 21)
+	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 22)
 )
 
 type CompanyFeatureUsageExportMetadata struct {
@@ -341,6 +342,8 @@ type CompanyFeatureUsageExportMetadata struct {
 	PlanIDs []string `json:"plan_ids,omitempty" url:"plan_ids,omitempty"`
 	// Restrict the export to companies on this plan version ID
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Restrict the export to companies on a plan version that is no longer published
+	PlanVersionUnpublished *bool `json:"plan_version_unpublished,omitempty" url:"plan_version_unpublished,omitempty"`
 	// Free-text search over company name and keys
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
 	// Column to sort the exported rows by (e.g. name, created_at, plan); defaults to name
@@ -446,6 +449,13 @@ func (c *CompanyFeatureUsageExportMetadata) GetPlanVersionID() *string {
 		return nil
 	}
 	return c.PlanVersionID
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetPlanVersionUnpublished() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionUnpublished
 }
 
 func (c *CompanyFeatureUsageExportMetadata) GetQ() *string {
@@ -614,6 +624,13 @@ func (c *CompanyFeatureUsageExportMetadata) SetPlanIDs(planIDs []string) {
 func (c *CompanyFeatureUsageExportMetadata) SetPlanVersionID(planVersionID *string) {
 	c.PlanVersionID = planVersionID
 	c.require(companyFeatureUsageExportMetadataFieldPlanVersionID)
+}
+
+// SetPlanVersionUnpublished sets the PlanVersionUnpublished field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetPlanVersionUnpublished(planVersionUnpublished *bool) {
+	c.PlanVersionUnpublished = planVersionUnpublished
+	c.require(companyFeatureUsageExportMetadataFieldPlanVersionUnpublished)
 }
 
 // SetQ sets the Q field and marks it as non-optional;

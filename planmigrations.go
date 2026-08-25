@@ -19,7 +19,7 @@ var (
 )
 
 type CountCompanyMigrationsRequest struct {
-	MigrationID *string                            `json:"-" url:"migration_id,omitempty"`
+	MigrationID string                             `json:"-" url:"migration_id"`
 	Q           *string                            `json:"-" url:"q,omitempty"`
 	Status      *PlanVersionCompanyMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
@@ -40,7 +40,7 @@ func (c *CountCompanyMigrationsRequest) require(field *big.Int) {
 
 // SetMigrationID sets the MigrationID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountCompanyMigrationsRequest) SetMigrationID(migrationID *string) {
+func (c *CountCompanyMigrationsRequest) SetMigrationID(migrationID string) {
 	c.MigrationID = migrationID
 	c.require(countCompanyMigrationsRequestFieldMigrationID)
 }
@@ -81,7 +81,7 @@ var (
 )
 
 type CountMigrationsRequest struct {
-	PlanVersionID *string                     `json:"-" url:"plan_version_id,omitempty"`
+	PlanVersionID string                      `json:"-" url:"plan_version_id"`
 	Status        *PlanVersionMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
@@ -101,7 +101,7 @@ func (c *CountMigrationsRequest) require(field *big.Int) {
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountMigrationsRequest) SetPlanVersionID(planVersionID *string) {
+func (c *CountMigrationsRequest) SetPlanVersionID(planVersionID string) {
 	c.PlanVersionID = planVersionID
 	c.require(countMigrationsRequestFieldPlanVersionID)
 }
@@ -245,7 +245,7 @@ var (
 )
 
 type ListCompanyMigrationsRequest struct {
-	MigrationID *string                            `json:"-" url:"migration_id,omitempty"`
+	MigrationID string                             `json:"-" url:"migration_id"`
 	Q           *string                            `json:"-" url:"q,omitempty"`
 	Status      *PlanVersionCompanyMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
@@ -266,7 +266,7 @@ func (l *ListCompanyMigrationsRequest) require(field *big.Int) {
 
 // SetMigrationID sets the MigrationID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListCompanyMigrationsRequest) SetMigrationID(migrationID *string) {
+func (l *ListCompanyMigrationsRequest) SetMigrationID(migrationID string) {
 	l.MigrationID = migrationID
 	l.require(listCompanyMigrationsRequestFieldMigrationID)
 }
@@ -307,7 +307,7 @@ var (
 )
 
 type ListMigrationsRequest struct {
-	PlanVersionID *string                     `json:"-" url:"plan_version_id,omitempty"`
+	PlanVersionID string                      `json:"-" url:"plan_version_id"`
 	Status        *PlanVersionMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
@@ -327,7 +327,7 @@ func (l *ListMigrationsRequest) require(field *big.Int) {
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMigrationsRequest) SetPlanVersionID(planVersionID *string) {
+func (l *ListMigrationsRequest) SetPlanVersionID(planVersionID string) {
 	l.PlanVersionID = planVersionID
 	l.require(listMigrationsRequestFieldPlanVersionID)
 }
@@ -851,6 +851,7 @@ var (
 	planVersionMigrationPreviewCompanyResponseDataFieldNote                   = big.NewInt(1 << 3)
 	planVersionMigrationPreviewCompanyResponseDataFieldPlanVersionIDFrom      = big.NewInt(1 << 4)
 	planVersionMigrationPreviewCompanyResponseDataFieldWillUpdateSubscription = big.NewInt(1 << 5)
+	planVersionMigrationPreviewCompanyResponseDataFieldWouldFail              = big.NewInt(1 << 6)
 )
 
 type PlanVersionMigrationPreviewCompanyResponseData struct {
@@ -860,6 +861,7 @@ type PlanVersionMigrationPreviewCompanyResponseData struct {
 	Note                   *string `json:"note,omitempty" url:"note,omitempty"`
 	PlanVersionIDFrom      *string `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
 	WillUpdateSubscription bool    `json:"will_update_subscription" url:"will_update_subscription"`
+	WouldFail              bool    `json:"would_fail" url:"would_fail"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -908,6 +910,13 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) GetWillUpdateSubscripti
 		return false
 	}
 	return p.WillUpdateSubscription
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetWouldFail() bool {
+	if p == nil {
+		return false
+	}
+	return p.WouldFail
 }
 
 func (p *PlanVersionMigrationPreviewCompanyResponseData) GetExtraProperties() map[string]interface{} {
@@ -964,6 +973,13 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) SetPlanVersionIDFrom(pl
 func (p *PlanVersionMigrationPreviewCompanyResponseData) SetWillUpdateSubscription(willUpdateSubscription bool) {
 	p.WillUpdateSubscription = willUpdateSubscription
 	p.require(planVersionMigrationPreviewCompanyResponseDataFieldWillUpdateSubscription)
+}
+
+// SetWouldFail sets the WouldFail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetWouldFail(wouldFail bool) {
+	p.WouldFail = wouldFail
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldWouldFail)
 }
 
 func (p *PlanVersionMigrationPreviewCompanyResponseData) UnmarshalJSON(data []byte) error {

@@ -34,6 +34,20 @@ func NewClient(options *core.RequestOptions) *Client {
 	}
 }
 
+// Example:
+//
+//	request := &schematichq.IssueTemporaryAccessTokenRequestBody{
+//	    Lookup: map[string]string{
+//	        "key": "value",
+//	    },
+//	    ResourceType: schematichq.TemporaryAccessTokenResourceType(
+//	        "company",
+//	    ),
+//	}
+//	client.Accesstokens.IssueTemporaryAccessToken(
+//	    context.TODO(),
+//	    request,
+//	)
 func (c *Client) IssueTemporaryAccessToken(
 	ctx context.Context,
 	request *schematichq.IssueTemporaryAccessTokenRequestBody,

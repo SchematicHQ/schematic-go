@@ -2105,7 +2105,7 @@ type ComponentPreviewResponseData struct {
 	StripeEmbed                           *StripeEmbedInfo                     `json:"stripe_embed,omitempty" url:"stripe_embed,omitempty"`
 	Subscription                          *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
 	TrialPaymentMethodRequired            *bool                                `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
-	UpcomingInvoice                       *InvoiceResponseData                 `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
+	UpcomingInvoice                       *UpcomingInvoiceResponseData         `json:"upcoming_invoice,omitempty" url:"upcoming_invoice,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2303,7 +2303,7 @@ func (c *ComponentPreviewResponseData) GetTrialPaymentMethodRequired() *bool {
 	return c.TrialPaymentMethodRequired
 }
 
-func (c *ComponentPreviewResponseData) GetUpcomingInvoice() *InvoiceResponseData {
+func (c *ComponentPreviewResponseData) GetUpcomingInvoice() *UpcomingInvoiceResponseData {
 	if c == nil {
 		return nil
 	}
@@ -2515,7 +2515,7 @@ func (c *ComponentPreviewResponseData) SetTrialPaymentMethodRequired(trialPaymen
 
 // SetUpcomingInvoice sets the UpcomingInvoice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ComponentPreviewResponseData) SetUpcomingInvoice(upcomingInvoice *InvoiceResponseData) {
+func (c *ComponentPreviewResponseData) SetUpcomingInvoice(upcomingInvoice *UpcomingInvoiceResponseData) {
 	c.UpcomingInvoice = upcomingInvoice
 	c.require(componentPreviewResponseDataFieldUpcomingInvoice)
 }
@@ -3882,6 +3882,410 @@ func (s *StripeEmbedInfo) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	upcomingInvoiceResponseDataFieldAmountDue               = big.NewInt(1 << 0)
+	upcomingInvoiceResponseDataFieldAmountPaid              = big.NewInt(1 << 1)
+	upcomingInvoiceResponseDataFieldAmountRemaining         = big.NewInt(1 << 2)
+	upcomingInvoiceResponseDataFieldCollectionMethod        = big.NewInt(1 << 3)
+	upcomingInvoiceResponseDataFieldCompanyID               = big.NewInt(1 << 4)
+	upcomingInvoiceResponseDataFieldCreatedAt               = big.NewInt(1 << 5)
+	upcomingInvoiceResponseDataFieldCurrency                = big.NewInt(1 << 6)
+	upcomingInvoiceResponseDataFieldCustomerExternalID      = big.NewInt(1 << 7)
+	upcomingInvoiceResponseDataFieldDueDate                 = big.NewInt(1 << 8)
+	upcomingInvoiceResponseDataFieldEndingBalance           = big.NewInt(1 << 9)
+	upcomingInvoiceResponseDataFieldEnvironmentID           = big.NewInt(1 << 10)
+	upcomingInvoiceResponseDataFieldExternalID              = big.NewInt(1 << 11)
+	upcomingInvoiceResponseDataFieldPaymentMethodExternalID = big.NewInt(1 << 12)
+	upcomingInvoiceResponseDataFieldProviderType            = big.NewInt(1 << 13)
+	upcomingInvoiceResponseDataFieldStartingBalance         = big.NewInt(1 << 14)
+	upcomingInvoiceResponseDataFieldStatus                  = big.NewInt(1 << 15)
+	upcomingInvoiceResponseDataFieldSubscriptionExternalID  = big.NewInt(1 << 16)
+	upcomingInvoiceResponseDataFieldSubtotal                = big.NewInt(1 << 17)
+	upcomingInvoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 18)
+	upcomingInvoiceResponseDataFieldURL                     = big.NewInt(1 << 19)
+)
+
+type UpcomingInvoiceResponseData struct {
+	AmountDue               int64               `json:"amount_due" url:"amount_due"`
+	AmountPaid              int64               `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining         int64               `json:"amount_remaining" url:"amount_remaining"`
+	CollectionMethod        string              `json:"collection_method" url:"collection_method"`
+	CompanyID               *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CreatedAt               time.Time           `json:"created_at" url:"created_at"`
+	Currency                string              `json:"currency" url:"currency"`
+	CustomerExternalID      string              `json:"customer_external_id" url:"customer_external_id"`
+	DueDate                 *time.Time          `json:"due_date,omitempty" url:"due_date,omitempty"`
+	EndingBalance           int64               `json:"ending_balance" url:"ending_balance"`
+	EnvironmentID           string              `json:"environment_id" url:"environment_id"`
+	ExternalID              *string             `json:"external_id,omitempty" url:"external_id,omitempty"`
+	PaymentMethodExternalID *string             `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
+	ProviderType            BillingProviderType `json:"provider_type" url:"provider_type"`
+	StartingBalance         int64               `json:"starting_balance" url:"starting_balance"`
+	Status                  *InvoiceStatus      `json:"status,omitempty" url:"status,omitempty"`
+	SubscriptionExternalID  *string             `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
+	Subtotal                int64               `json:"subtotal" url:"subtotal"`
+	UpdatedAt               time.Time           `json:"updated_at" url:"updated_at"`
+	URL                     *string             `json:"url,omitempty" url:"url,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpcomingInvoiceResponseData) GetAmountDue() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.AmountDue
+}
+
+func (u *UpcomingInvoiceResponseData) GetAmountPaid() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.AmountPaid
+}
+
+func (u *UpcomingInvoiceResponseData) GetAmountRemaining() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.AmountRemaining
+}
+
+func (u *UpcomingInvoiceResponseData) GetCollectionMethod() string {
+	if u == nil {
+		return ""
+	}
+	return u.CollectionMethod
+}
+
+func (u *UpcomingInvoiceResponseData) GetCompanyID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.CompanyID
+}
+
+func (u *UpcomingInvoiceResponseData) GetCreatedAt() time.Time {
+	if u == nil {
+		return time.Time{}
+	}
+	return u.CreatedAt
+}
+
+func (u *UpcomingInvoiceResponseData) GetCurrency() string {
+	if u == nil {
+		return ""
+	}
+	return u.Currency
+}
+
+func (u *UpcomingInvoiceResponseData) GetCustomerExternalID() string {
+	if u == nil {
+		return ""
+	}
+	return u.CustomerExternalID
+}
+
+func (u *UpcomingInvoiceResponseData) GetDueDate() *time.Time {
+	if u == nil {
+		return nil
+	}
+	return u.DueDate
+}
+
+func (u *UpcomingInvoiceResponseData) GetEndingBalance() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.EndingBalance
+}
+
+func (u *UpcomingInvoiceResponseData) GetEnvironmentID() string {
+	if u == nil {
+		return ""
+	}
+	return u.EnvironmentID
+}
+
+func (u *UpcomingInvoiceResponseData) GetExternalID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.ExternalID
+}
+
+func (u *UpcomingInvoiceResponseData) GetPaymentMethodExternalID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.PaymentMethodExternalID
+}
+
+func (u *UpcomingInvoiceResponseData) GetProviderType() BillingProviderType {
+	if u == nil {
+		return ""
+	}
+	return u.ProviderType
+}
+
+func (u *UpcomingInvoiceResponseData) GetStartingBalance() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.StartingBalance
+}
+
+func (u *UpcomingInvoiceResponseData) GetStatus() *InvoiceStatus {
+	if u == nil {
+		return nil
+	}
+	return u.Status
+}
+
+func (u *UpcomingInvoiceResponseData) GetSubscriptionExternalID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.SubscriptionExternalID
+}
+
+func (u *UpcomingInvoiceResponseData) GetSubtotal() int64 {
+	if u == nil {
+		return 0
+	}
+	return u.Subtotal
+}
+
+func (u *UpcomingInvoiceResponseData) GetUpdatedAt() time.Time {
+	if u == nil {
+		return time.Time{}
+	}
+	return u.UpdatedAt
+}
+
+func (u *UpcomingInvoiceResponseData) GetURL() *string {
+	if u == nil {
+		return nil
+	}
+	return u.URL
+}
+
+func (u *UpcomingInvoiceResponseData) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpcomingInvoiceResponseData) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetAmountDue sets the AmountDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetAmountDue(amountDue int64) {
+	u.AmountDue = amountDue
+	u.require(upcomingInvoiceResponseDataFieldAmountDue)
+}
+
+// SetAmountPaid sets the AmountPaid field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetAmountPaid(amountPaid int64) {
+	u.AmountPaid = amountPaid
+	u.require(upcomingInvoiceResponseDataFieldAmountPaid)
+}
+
+// SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetAmountRemaining(amountRemaining int64) {
+	u.AmountRemaining = amountRemaining
+	u.require(upcomingInvoiceResponseDataFieldAmountRemaining)
+}
+
+// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetCollectionMethod(collectionMethod string) {
+	u.CollectionMethod = collectionMethod
+	u.require(upcomingInvoiceResponseDataFieldCollectionMethod)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetCompanyID(companyID *string) {
+	u.CompanyID = companyID
+	u.require(upcomingInvoiceResponseDataFieldCompanyID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetCreatedAt(createdAt time.Time) {
+	u.CreatedAt = createdAt
+	u.require(upcomingInvoiceResponseDataFieldCreatedAt)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetCurrency(currency string) {
+	u.Currency = currency
+	u.require(upcomingInvoiceResponseDataFieldCurrency)
+}
+
+// SetCustomerExternalID sets the CustomerExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetCustomerExternalID(customerExternalID string) {
+	u.CustomerExternalID = customerExternalID
+	u.require(upcomingInvoiceResponseDataFieldCustomerExternalID)
+}
+
+// SetDueDate sets the DueDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetDueDate(dueDate *time.Time) {
+	u.DueDate = dueDate
+	u.require(upcomingInvoiceResponseDataFieldDueDate)
+}
+
+// SetEndingBalance sets the EndingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetEndingBalance(endingBalance int64) {
+	u.EndingBalance = endingBalance
+	u.require(upcomingInvoiceResponseDataFieldEndingBalance)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetEnvironmentID(environmentID string) {
+	u.EnvironmentID = environmentID
+	u.require(upcomingInvoiceResponseDataFieldEnvironmentID)
+}
+
+// SetExternalID sets the ExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetExternalID(externalID *string) {
+	u.ExternalID = externalID
+	u.require(upcomingInvoiceResponseDataFieldExternalID)
+}
+
+// SetPaymentMethodExternalID sets the PaymentMethodExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetPaymentMethodExternalID(paymentMethodExternalID *string) {
+	u.PaymentMethodExternalID = paymentMethodExternalID
+	u.require(upcomingInvoiceResponseDataFieldPaymentMethodExternalID)
+}
+
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetProviderType(providerType BillingProviderType) {
+	u.ProviderType = providerType
+	u.require(upcomingInvoiceResponseDataFieldProviderType)
+}
+
+// SetStartingBalance sets the StartingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetStartingBalance(startingBalance int64) {
+	u.StartingBalance = startingBalance
+	u.require(upcomingInvoiceResponseDataFieldStartingBalance)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetStatus(status *InvoiceStatus) {
+	u.Status = status
+	u.require(upcomingInvoiceResponseDataFieldStatus)
+}
+
+// SetSubscriptionExternalID sets the SubscriptionExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetSubscriptionExternalID(subscriptionExternalID *string) {
+	u.SubscriptionExternalID = subscriptionExternalID
+	u.require(upcomingInvoiceResponseDataFieldSubscriptionExternalID)
+}
+
+// SetSubtotal sets the Subtotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetSubtotal(subtotal int64) {
+	u.Subtotal = subtotal
+	u.require(upcomingInvoiceResponseDataFieldSubtotal)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetUpdatedAt(updatedAt time.Time) {
+	u.UpdatedAt = updatedAt
+	u.require(upcomingInvoiceResponseDataFieldUpdatedAt)
+}
+
+// SetURL sets the URL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetURL(url *string) {
+	u.URL = url
+	u.require(upcomingInvoiceResponseDataFieldURL)
+}
+
+func (u *UpcomingInvoiceResponseData) UnmarshalJSON(data []byte) error {
+	type embed UpcomingInvoiceResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		DueDate   *internal.DateTime `json:"due_date,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*u = UpcomingInvoiceResponseData(unmarshaler.embed)
+	u.CreatedAt = unmarshaler.CreatedAt.Time()
+	u.DueDate = unmarshaler.DueDate.TimePtr()
+	u.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpcomingInvoiceResponseData) MarshalJSON() ([]byte, error) {
+	type embed UpcomingInvoiceResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		DueDate   *internal.DateTime `json:"due_date,omitempty"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*u),
+		CreatedAt: internal.NewDateTime(u.CreatedAt),
+		DueDate:   internal.NewOptionalDateTime(u.DueDate),
+		UpdatedAt: internal.NewDateTime(u.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpcomingInvoiceResponseData) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 var (

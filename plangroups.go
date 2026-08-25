@@ -55,7 +55,7 @@ type CreatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
 	AddOnIDs                               []string                          `json:"add_on_ids" url:"-"`
-	CheckoutBundlePurchaseBehavior         CheckoutBundlePurchaseBehavior    `json:"checkout_bundle_purchase_behavior" url:"-"`
+	CheckoutBundlePurchaseBehavior         *CheckoutBundlePurchaseBehavior   `json:"checkout_bundle_purchase_behavior,omitempty" url:"-"`
 	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
 	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
 	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
@@ -119,7 +119,7 @@ func (c *CreatePlanGroupRequestBody) SetAddOnIDs(addOnIDs []string) {
 
 // SetCheckoutBundlePurchaseBehavior sets the CheckoutBundlePurchaseBehavior field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanGroupRequestBody) SetCheckoutBundlePurchaseBehavior(checkoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior) {
+func (c *CreatePlanGroupRequestBody) SetCheckoutBundlePurchaseBehavior(checkoutBundlePurchaseBehavior *CheckoutBundlePurchaseBehavior) {
 	c.CheckoutBundlePurchaseBehavior = checkoutBundlePurchaseBehavior
 	c.require(createPlanGroupRequestBodyFieldCheckoutBundlePurchaseBehavior)
 }
@@ -3410,7 +3410,7 @@ type UpdatePlanGroupRequestBody struct {
 	AddOnCompatibilities []*CompatiblePlans `json:"add_on_compatibilities,omitempty" url:"-"`
 	// Use OrderedAddOns instead
 	AddOnIDs                               []string                          `json:"add_on_ids" url:"-"`
-	CheckoutBundlePurchaseBehavior         CheckoutBundlePurchaseBehavior    `json:"checkout_bundle_purchase_behavior" url:"-"`
+	CheckoutBundlePurchaseBehavior         *CheckoutBundlePurchaseBehavior   `json:"checkout_bundle_purchase_behavior,omitempty" url:"-"`
 	CheckoutCollectAddress                 bool                              `json:"checkout_collect_address" url:"-"`
 	CheckoutCollectEmail                   bool                              `json:"checkout_collect_email" url:"-"`
 	CheckoutCollectPhone                   bool                              `json:"checkout_collect_phone" url:"-"`
@@ -3474,7 +3474,7 @@ func (u *UpdatePlanGroupRequestBody) SetAddOnIDs(addOnIDs []string) {
 
 // SetCheckoutBundlePurchaseBehavior sets the CheckoutBundlePurchaseBehavior field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanGroupRequestBody) SetCheckoutBundlePurchaseBehavior(checkoutBundlePurchaseBehavior CheckoutBundlePurchaseBehavior) {
+func (u *UpdatePlanGroupRequestBody) SetCheckoutBundlePurchaseBehavior(checkoutBundlePurchaseBehavior *CheckoutBundlePurchaseBehavior) {
 	u.CheckoutBundlePurchaseBehavior = checkoutBundlePurchaseBehavior
 	u.require(updatePlanGroupRequestBodyFieldCheckoutBundlePurchaseBehavior)
 }

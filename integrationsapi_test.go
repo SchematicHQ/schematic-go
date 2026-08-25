@@ -3545,6 +3545,14 @@ func TestSettersStripeIntegrationConfig(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetReturnTo", func(t *testing.T) {
+		obj := &StripeIntegrationConfig{}
+		var fernTestValueReturnTo *string
+		obj.SetReturnTo(fernTestValueReturnTo)
+		assert.Equal(t, fernTestValueReturnTo, obj.ReturnTo)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestGettersStripeIntegrationConfig(t *testing.T) {
@@ -3726,6 +3734,39 @@ func TestGettersStripeIntegrationConfig(t *testing.T) {
 		_ = obj.GetOnboardURL() // Should return zero value
 	})
 
+	t.Run("GetReturnTo", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &StripeIntegrationConfig{}
+		var expected *string
+		obj.ReturnTo = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetReturnTo(), "getter should return the property value")
+	})
+
+	t.Run("GetReturnTo_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &StripeIntegrationConfig{}
+		obj.ReturnTo = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetReturnTo(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetReturnTo_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *StripeIntegrationConfig
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetReturnTo() // Should return zero value
+	})
+
 }
 
 func TestSettersMarkExplicitStripeIntegrationConfig(t *testing.T) {
@@ -3892,6 +3933,37 @@ func TestSettersMarkExplicitStripeIntegrationConfig(t *testing.T) {
 
 		// Act
 		obj.SetOnboardURL(fernTestValueOnboardURL)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetReturnTo_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &StripeIntegrationConfig{}
+		var fernTestValueReturnTo *string
+
+		// Act
+		obj.SetReturnTo(fernTestValueReturnTo)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

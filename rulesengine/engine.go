@@ -71,6 +71,13 @@ type instance struct {
 	getRes  api.Function
 	getLen  api.Function
 	setTime api.Function // optional; absent on modules predating the export
+
+	// Metric-period boundary exports. Optional for the same reason as setTime:
+	// a module predating them still serves checks, callers just get nil.
+	curPeriodCalendar   api.Function
+	curPeriodSubscript  api.Function
+	nextPeriodCalendar  api.Function
+	nextPeriodSubscript api.Function
 }
 
 // NewEngine compiles the rules engine and prepares it for evaluation.
@@ -146,6 +153,11 @@ func newInstance(ctx context.Context, rt wazero.Runtime, compiled wazero.Compile
 		getRes:  mod.ExportedFunction("getResultJson"),
 		getLen:  mod.ExportedFunction("getResultJsonLength"),
 		setTime: mod.ExportedFunction("setCurrentTimeMillis"),
+
+		curPeriodCalendar:   mod.ExportedFunction("getCurrentMetricPeriodStartForCalendarMetricPeriod"),
+		curPeriodSubscript:  mod.ExportedFunction("getCurrentMetricPeriodStartForCompanyBillingSubscription"),
+		nextPeriodCalendar:  mod.ExportedFunction("getNextMetricPeriodStartForCalendarMetricPeriod"),
+		nextPeriodSubscript: mod.ExportedFunction("getNextMetricPeriodStartForCompanyBillingSubscription"),
 	}
 
 	if inst.mem == nil {
@@ -242,6 +254,21 @@ func (e *Engine) CheckFlag(
 		return nil, err
 	}
 
+	return e.CheckFlagJSON(ctx, input)
+}
+
+// CheckFlagJSON evaluates a pre-marshaled envelope.
+//
+// It exists for callers that already hold the wire types in their own packages
+// -- the Schematic API owns these models and publishes them as the OpenAPI
+// Rulesengine* schemas -- and so cannot pass this package's structs to
+// CheckFlag. Marshaling their own envelope and calling this avoids a
+// per-check conversion between two field-identical mirrors.
+//
+// The envelope is the object CheckFlag builds: {"flag":..., "company":...,
+// "user":..., "options":...}, where absent members are omitted. Collection
+// fields must serialize as [] / {} rather than null; see marshalEnvelope.
+func (e *Engine) CheckFlagJSON(ctx context.Context, envelope []byte) (*CheckFlagResult, error) {
 	// Wait for a free instance, but honor cancellation: if every instance is
 	// busy and ctx is already done, return rather than block indefinitely.
 	var inst *instance
@@ -252,7 +279,7 @@ func (e *Engine) CheckFlag(
 	}
 	defer func() { e.pool <- inst }()
 
-	out, err := inst.checkFlag(ctx, input)
+	out, err := inst.checkFlag(ctx, envelope)
 	if err != nil {
 		return nil, err
 	}

@@ -41,7 +41,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	    Q: schematichq.String(
 //	        "q",
 //	    ),
-//	    Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
+//	    Status: schematichq.PlanVersionCompanyMigrationStatusCancelled.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),
@@ -99,7 +99,7 @@ func (c *Client) RetryCompanyMigration(
 //	    Q: schematichq.String(
 //	        "q",
 //	    ),
-//	    Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
+//	    Status: schematichq.PlanVersionCompanyMigrationStatusCancelled.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),
@@ -131,7 +131,7 @@ func (c *Client) CountCompanyMigrations(
 //
 //	request := &schematichq.ListMigrationsRequest{
 //	    PlanVersionID: "plan_version_id",
-//	    Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
+//	    Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),
@@ -164,7 +164,7 @@ func (c *Client) ListMigrations(
 //	request := &schematichq.CreateMigrationInput{
 //	    PlanID: "plan_id",
 //	    PlanVersionIDTo: "plan_version_id_to",
-//	    Strategy: schematichq.PlanVersionMigrationStrategyImmediate,
+//	    Strategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
 //	    TargetPlanType: schematichq.PlanTypePlan,
 //	}
 //	client.Planmigrations.CreateMigration(
@@ -212,6 +212,56 @@ func (c *Client) GetMigration(
 
 // Example:
 //
+//	client.Planmigrations.CancelMigration(
+//	    context.TODO(),
+//	    "plan_version_migration_id",
+//	)
+func (c *Client) CancelMigration(
+	ctx context.Context,
+	// plan_version_migration_id
+	planVersionMigrationID string,
+	opts ...option.RequestOption,
+) (*schematichq.CancelMigrationResponse, error) {
+	response, err := c.WithRawResponse.CancelMigration(
+		ctx,
+		planVersionMigrationID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.CompleteMigrationNowRequestBody{}
+//	client.Planmigrations.CompleteMigrationNow(
+//	    context.TODO(),
+//	    "plan_version_migration_id",
+//	    request,
+//	)
+func (c *Client) CompleteMigrationNow(
+	ctx context.Context,
+	// plan_version_migration_id
+	planVersionMigrationID string,
+	request *schematichq.CompleteMigrationNowRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CompleteMigrationNowResponse, error) {
+	response, err := c.WithRawResponse.CompleteMigrationNow(
+		ctx,
+		planVersionMigrationID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.RetryMigrationRequestBody{
 //	    ErrorCodes: []schematichq.MigrationErrorCode{
 //	        schematichq.MigrationErrorCodeAmbiguousSubscriptionItem,
@@ -245,7 +295,7 @@ func (c *Client) RetryMigration(
 //
 //	request := &schematichq.CountMigrationsRequest{
 //	    PlanVersionID: "plan_version_id",
-//	    Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
+//	    Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),

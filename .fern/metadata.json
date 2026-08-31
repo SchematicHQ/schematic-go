@@ -1,7 +1,7 @@
 {
   "cliVersion": "5.50.0",
   "generatorName": "fernapi/fern-go-sdk",
-  "generatorVersion": "1.57.8",
+  "generatorVersion": "1.57.9",
   "generatorConfig": {
     "enableWireTests": false,
     "module": {
@@ -10,10 +10,10 @@
     },
     "packageName": "schematichq"
   },
-  "originGitCommit": "008b7147a27272499bf4b17fa96d4357ca3b62e9",
+  "originGitCommit": "686551a0297d2f37075b3586b030ff32be5c94f7",
   "originGitCommitIsDirty": false,
   "invokedBy": "ci",
-  "requestedVersion": "1.5.6",
+  "requestedVersion": "1.5.7",
   "ciProvider": "github",
-  "sdkVersion": "v1.5.6"
+  "sdkVersion": "v1.5.7"
 }

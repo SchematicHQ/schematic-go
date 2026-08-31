@@ -1477,27 +1477,51 @@ func (e *EnvironmentDetailResponseData) String() string {
 }
 
 var (
-	getOnboardingStateRespFieldEnvironmentID = big.NewInt(1 << 0)
-	getOnboardingStateRespFieldMilestones    = big.NewInt(1 << 1)
-	getOnboardingStateRespFieldPath          = big.NewInt(1 << 2)
-	getOnboardingStateRespFieldRequirements  = big.NewInt(1 << 3)
-	getOnboardingStateRespFieldSuggestedNext = big.NewInt(1 << 4)
-	getOnboardingStateRespFieldTrack         = big.NewInt(1 << 5)
+	getOnboardingStateRespFieldAgentConnectedAt = big.NewInt(1 << 0)
+	getOnboardingStateRespFieldDismissedAt      = big.NewInt(1 << 1)
+	getOnboardingStateRespFieldEnvironmentID    = big.NewInt(1 << 2)
+	getOnboardingStateRespFieldMilestones       = big.NewInt(1 << 3)
+	getOnboardingStateRespFieldPath             = big.NewInt(1 << 4)
+	getOnboardingStateRespFieldPricingPageURL   = big.NewInt(1 << 5)
+	getOnboardingStateRespFieldRequirements     = big.NewInt(1 << 6)
+	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 7)
+	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 8)
+	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 9)
+	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 10)
 )
 
 type GetOnboardingStateResp struct {
-	EnvironmentID *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	Milestones    []*OnboardingMilestoneView   `json:"milestones" url:"milestones"`
-	Path          *OnboardingPath              `json:"path,omitempty" url:"path,omitempty"`
-	Requirements  []*OnboardingRequirementView `json:"requirements" url:"requirements"`
-	SuggestedNext []OnboardingRequirement      `json:"suggested_next" url:"suggested_next"`
-	Track         *OnboardingTrack             `json:"track,omitempty" url:"track,omitempty"`
+	AgentConnectedAt *time.Time                   `json:"agent_connected_at,omitempty" url:"agent_connected_at,omitempty"`
+	DismissedAt      *time.Time                   `json:"dismissed_at,omitempty" url:"dismissed_at,omitempty"`
+	EnvironmentID    *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	Milestones       []*OnboardingMilestoneView   `json:"milestones" url:"milestones"`
+	Path             *OnboardingPath              `json:"path,omitempty" url:"path,omitempty"`
+	PricingPageURL   *string                      `json:"pricing_page_url,omitempty" url:"pricing_page_url,omitempty"`
+	Requirements     []*OnboardingRequirementView `json:"requirements" url:"requirements"`
+	StripeImport     *OnboardingStripeImport      `json:"stripe_import,omitempty" url:"stripe_import,omitempty"`
+	SuggestedNext    []OnboardingRequirement      `json:"suggested_next" url:"suggested_next"`
+	Track            *OnboardingTrack             `json:"track,omitempty" url:"track,omitempty"`
+	WebsiteURL       *string                      `json:"website_url,omitempty" url:"website_url,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (g *GetOnboardingStateResp) GetAgentConnectedAt() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.AgentConnectedAt
+}
+
+func (g *GetOnboardingStateResp) GetDismissedAt() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.DismissedAt
 }
 
 func (g *GetOnboardingStateResp) GetEnvironmentID() *string {
@@ -1521,11 +1545,25 @@ func (g *GetOnboardingStateResp) GetPath() *OnboardingPath {
 	return g.Path
 }
 
+func (g *GetOnboardingStateResp) GetPricingPageURL() *string {
+	if g == nil {
+		return nil
+	}
+	return g.PricingPageURL
+}
+
 func (g *GetOnboardingStateResp) GetRequirements() []*OnboardingRequirementView {
 	if g == nil {
 		return nil
 	}
 	return g.Requirements
+}
+
+func (g *GetOnboardingStateResp) GetStripeImport() *OnboardingStripeImport {
+	if g == nil {
+		return nil
+	}
+	return g.StripeImport
 }
 
 func (g *GetOnboardingStateResp) GetSuggestedNext() []OnboardingRequirement {
@@ -1542,6 +1580,13 @@ func (g *GetOnboardingStateResp) GetTrack() *OnboardingTrack {
 	return g.Track
 }
 
+func (g *GetOnboardingStateResp) GetWebsiteURL() *string {
+	if g == nil {
+		return nil
+	}
+	return g.WebsiteURL
+}
+
 func (g *GetOnboardingStateResp) GetExtraProperties() map[string]interface{} {
 	if g == nil {
 		return nil
@@ -1554,6 +1599,20 @@ func (g *GetOnboardingStateResp) require(field *big.Int) {
 		g.explicitFields = big.NewInt(0)
 	}
 	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetAgentConnectedAt sets the AgentConnectedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetAgentConnectedAt(agentConnectedAt *time.Time) {
+	g.AgentConnectedAt = agentConnectedAt
+	g.require(getOnboardingStateRespFieldAgentConnectedAt)
+}
+
+// SetDismissedAt sets the DismissedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetDismissedAt(dismissedAt *time.Time) {
+	g.DismissedAt = dismissedAt
+	g.require(getOnboardingStateRespFieldDismissedAt)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -1577,11 +1636,25 @@ func (g *GetOnboardingStateResp) SetPath(path *OnboardingPath) {
 	g.require(getOnboardingStateRespFieldPath)
 }
 
+// SetPricingPageURL sets the PricingPageURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetPricingPageURL(pricingPageURL *string) {
+	g.PricingPageURL = pricingPageURL
+	g.require(getOnboardingStateRespFieldPricingPageURL)
+}
+
 // SetRequirements sets the Requirements field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (g *GetOnboardingStateResp) SetRequirements(requirements []*OnboardingRequirementView) {
 	g.Requirements = requirements
 	g.require(getOnboardingStateRespFieldRequirements)
+}
+
+// SetStripeImport sets the StripeImport field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetStripeImport(stripeImport *OnboardingStripeImport) {
+	g.StripeImport = stripeImport
+	g.require(getOnboardingStateRespFieldStripeImport)
 }
 
 // SetSuggestedNext sets the SuggestedNext field and marks it as non-optional;
@@ -1598,13 +1671,28 @@ func (g *GetOnboardingStateResp) SetTrack(track *OnboardingTrack) {
 	g.require(getOnboardingStateRespFieldTrack)
 }
 
+// SetWebsiteURL sets the WebsiteURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetWebsiteURL(websiteURL *string) {
+	g.WebsiteURL = websiteURL
+	g.require(getOnboardingStateRespFieldWebsiteURL)
+}
+
 func (g *GetOnboardingStateResp) UnmarshalJSON(data []byte) error {
-	type unmarshaler GetOnboardingStateResp
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed GetOnboardingStateResp
+	var unmarshaler = struct {
+		embed
+		AgentConnectedAt *internal.DateTime `json:"agent_connected_at,omitempty"`
+		DismissedAt      *internal.DateTime `json:"dismissed_at,omitempty"`
+	}{
+		embed: embed(*g),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*g = GetOnboardingStateResp(value)
+	*g = GetOnboardingStateResp(unmarshaler.embed)
+	g.AgentConnectedAt = unmarshaler.AgentConnectedAt.TimePtr()
+	g.DismissedAt = unmarshaler.DismissedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *g)
 	if err != nil {
 		return err
@@ -1618,8 +1706,12 @@ func (g *GetOnboardingStateResp) MarshalJSON() ([]byte, error) {
 	type embed GetOnboardingStateResp
 	var marshaler = struct {
 		embed
+		AgentConnectedAt *internal.DateTime `json:"agent_connected_at,omitempty"`
+		DismissedAt      *internal.DateTime `json:"dismissed_at,omitempty"`
 	}{
-		embed: embed(*g),
+		embed:            embed(*g),
+		AgentConnectedAt: internal.NewOptionalDateTime(g.AgentConnectedAt),
+		DismissedAt:      internal.NewOptionalDateTime(g.DismissedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -1827,6 +1919,7 @@ func (o OnboardingPath) Ptr() *OnboardingPath {
 type OnboardingRequirement string
 
 const (
+	OnboardingRequirementConnectAgent    OnboardingRequirement = "connect_agent"
 	OnboardingRequirementConnectBilling  OnboardingRequirement = "connect_billing"
 	OnboardingRequirementCreateAPIKey    OnboardingRequirement = "create_api_key"
 	OnboardingRequirementFirstFlagCheck  OnboardingRequirement = "first_flag_check"
@@ -1837,6 +1930,8 @@ const (
 
 func NewOnboardingRequirementFromString(s string) (OnboardingRequirement, error) {
 	switch s {
+	case "connect_agent":
+		return OnboardingRequirementConnectAgent, nil
 	case "connect_billing":
 		return OnboardingRequirementConnectBilling, nil
 	case "create_api_key":
@@ -2037,6 +2132,31 @@ func (o *OnboardingRequirementView) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", o)
+}
+
+type OnboardingStripeImport string
+
+const (
+	OnboardingStripeImportComplete   OnboardingStripeImport = "complete"
+	OnboardingStripeImportNotStarted OnboardingStripeImport = "not_started"
+	OnboardingStripeImportRunning    OnboardingStripeImport = "running"
+)
+
+func NewOnboardingStripeImportFromString(s string) (OnboardingStripeImport, error) {
+	switch s {
+	case "complete":
+		return OnboardingStripeImportComplete, nil
+	case "not_started":
+		return OnboardingStripeImportNotStarted, nil
+	case "running":
+		return OnboardingStripeImportRunning, nil
+	}
+	var t OnboardingStripeImport
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnboardingStripeImport) Ptr() *OnboardingStripeImport {
+	return &o
 }
 
 type OnboardingTrack string
@@ -5699,13 +5819,15 @@ func (u *UpdateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	updateOnboardingStateRequestBodyFieldPath           = big.NewInt(1 << 0)
-	updateOnboardingStateRequestBodyFieldPricingPageURL = big.NewInt(1 << 1)
-	updateOnboardingStateRequestBodyFieldTrack          = big.NewInt(1 << 2)
-	updateOnboardingStateRequestBodyFieldWebsiteURL     = big.NewInt(1 << 3)
+	updateOnboardingStateRequestBodyFieldDismissed      = big.NewInt(1 << 0)
+	updateOnboardingStateRequestBodyFieldPath           = big.NewInt(1 << 1)
+	updateOnboardingStateRequestBodyFieldPricingPageURL = big.NewInt(1 << 2)
+	updateOnboardingStateRequestBodyFieldTrack          = big.NewInt(1 << 3)
+	updateOnboardingStateRequestBodyFieldWebsiteURL     = big.NewInt(1 << 4)
 )
 
 type UpdateOnboardingStateRequestBody struct {
+	Dismissed      *bool            `json:"dismissed,omitempty" url:"-"`
 	Path           *OnboardingPath  `json:"path,omitempty" url:"-"`
 	PricingPageURL *string          `json:"pricing_page_url,omitempty" url:"-"`
 	Track          *OnboardingTrack `json:"track,omitempty" url:"-"`
@@ -5720,6 +5842,13 @@ func (u *UpdateOnboardingStateRequestBody) require(field *big.Int) {
 		u.explicitFields = big.NewInt(0)
 	}
 	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetDismissed sets the Dismissed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateRequestBody) SetDismissed(dismissed *bool) {
+	u.Dismissed = dismissed
+	u.require(updateOnboardingStateRequestBodyFieldDismissed)
 }
 
 // SetPath sets the Path field and marks it as non-optional;

@@ -3389,7 +3389,8 @@ var (
 	creditLeaseResponseDataFieldGrantedAmount = big.NewInt(1 << 4)
 	creditLeaseResponseDataFieldID            = big.NewInt(1 << 5)
 	creditLeaseResponseDataFieldReleasedAt    = big.NewInt(1 << 6)
-	creditLeaseResponseDataFieldUpdatedAt     = big.NewInt(1 << 7)
+	creditLeaseResponseDataFieldTrackedAmount = big.NewInt(1 << 7)
+	creditLeaseResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
 )
 
 type CreditLeaseResponseData struct {
@@ -3400,6 +3401,7 @@ type CreditLeaseResponseData struct {
 	GrantedAmount float64    `json:"granted_amount" url:"granted_amount"`
 	ID            string     `json:"id" url:"id"`
 	ReleasedAt    *time.Time `json:"released_at,omitempty" url:"released_at,omitempty"`
+	TrackedAmount float64    `json:"tracked_amount" url:"tracked_amount"`
 	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3456,6 +3458,13 @@ func (c *CreditLeaseResponseData) GetReleasedAt() *time.Time {
 		return nil
 	}
 	return c.ReleasedAt
+}
+
+func (c *CreditLeaseResponseData) GetTrackedAmount() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.TrackedAmount
 }
 
 func (c *CreditLeaseResponseData) GetUpdatedAt() time.Time {
@@ -3526,6 +3535,13 @@ func (c *CreditLeaseResponseData) SetID(id string) {
 func (c *CreditLeaseResponseData) SetReleasedAt(releasedAt *time.Time) {
 	c.ReleasedAt = releasedAt
 	c.require(creditLeaseResponseDataFieldReleasedAt)
+}
+
+// SetTrackedAmount sets the TrackedAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLeaseResponseData) SetTrackedAmount(trackedAmount float64) {
+	c.TrackedAmount = trackedAmount
+	c.require(creditLeaseResponseDataFieldTrackedAmount)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;

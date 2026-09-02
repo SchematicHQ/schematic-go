@@ -11,6 +11,52 @@ import (
 )
 
 var (
+	completeMigrationNowRequestBodyFieldProrationBehavior = big.NewInt(1 << 0)
+)
+
+type CompleteMigrationNowRequestBody struct {
+	ProrationBehavior *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CompleteMigrationNowRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompleteMigrationNowRequestBody) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
+	c.ProrationBehavior = prorationBehavior
+	c.require(completeMigrationNowRequestBodyFieldProrationBehavior)
+}
+
+func (c *CompleteMigrationNowRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompleteMigrationNowRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CompleteMigrationNowRequestBody(body)
+	return nil
+}
+
+func (c *CompleteMigrationNowRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CompleteMigrationNowRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	countCompanyMigrationsRequestFieldMigrationID = big.NewInt(1 << 0)
 	countCompanyMigrationsRequestFieldQ           = big.NewInt(1 << 1)
 	countCompanyMigrationsRequestFieldStatus      = big.NewInt(1 << 2)
@@ -543,24 +589,27 @@ var (
 	planVersionCompanyMigrationResponseDataFieldID                = big.NewInt(1 << 6)
 	planVersionCompanyMigrationResponseDataFieldMigrationID       = big.NewInt(1 << 7)
 	planVersionCompanyMigrationResponseDataFieldPlanVersionIDFrom = big.NewInt(1 << 8)
-	planVersionCompanyMigrationResponseDataFieldStartedAt         = big.NewInt(1 << 9)
-	planVersionCompanyMigrationResponseDataFieldStatus            = big.NewInt(1 << 10)
-	planVersionCompanyMigrationResponseDataFieldUpdatedAt         = big.NewInt(1 << 11)
+	planVersionCompanyMigrationResponseDataFieldScheduledFor      = big.NewInt(1 << 9)
+	planVersionCompanyMigrationResponseDataFieldStartedAt         = big.NewInt(1 << 10)
+	planVersionCompanyMigrationResponseDataFieldStatus            = big.NewInt(1 << 11)
+	planVersionCompanyMigrationResponseDataFieldUpdatedAt         = big.NewInt(1 << 12)
 )
 
 type PlanVersionCompanyMigrationResponseData struct {
-	CompanyID         string                            `json:"company_id" url:"company_id"`
-	CompanyName       string                            `json:"company_name" url:"company_name"`
-	CompletedAt       *time.Time                        `json:"completed_at,omitempty" url:"completed_at,omitempty"`
-	CreatedAt         time.Time                         `json:"created_at" url:"created_at"`
-	Error             *string                           `json:"error,omitempty" url:"error,omitempty"`
-	ErrorCode         *MigrationErrorCode               `json:"error_code,omitempty" url:"error_code,omitempty"`
-	ID                string                            `json:"id" url:"id"`
-	MigrationID       string                            `json:"migration_id" url:"migration_id"`
-	PlanVersionIDFrom *string                           `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
-	StartedAt         *time.Time                        `json:"started_at,omitempty" url:"started_at,omitempty"`
-	Status            PlanVersionCompanyMigrationStatus `json:"status" url:"status"`
-	UpdatedAt         time.Time                         `json:"updated_at" url:"updated_at"`
+	CompanyID         string              `json:"company_id" url:"company_id"`
+	CompanyName       string              `json:"company_name" url:"company_name"`
+	CompletedAt       *time.Time          `json:"completed_at,omitempty" url:"completed_at,omitempty"`
+	CreatedAt         time.Time           `json:"created_at" url:"created_at"`
+	Error             *string             `json:"error,omitempty" url:"error,omitempty"`
+	ErrorCode         *MigrationErrorCode `json:"error_code,omitempty" url:"error_code,omitempty"`
+	ID                string              `json:"id" url:"id"`
+	MigrationID       string              `json:"migration_id" url:"migration_id"`
+	PlanVersionIDFrom *string             `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
+	// When this company is expected to migrate, for a migration scheduled at the end of the billing period: the end of the company's current billing period. Only set while both the company and the migration are still pending. A value at or before the time of the request means the company has no active subscription and migrates as soon as processing runs. Null means no upcoming renewal could be determined from the company's current billing status (for example, a past-due subscription or one set to cancel); it does not mean the company will never migrate.
+	ScheduledFor *time.Time                        `json:"scheduled_for,omitempty" url:"scheduled_for,omitempty"`
+	StartedAt    *time.Time                        `json:"started_at,omitempty" url:"started_at,omitempty"`
+	Status       PlanVersionCompanyMigrationStatus `json:"status" url:"status"`
+	UpdatedAt    time.Time                         `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -630,6 +679,13 @@ func (p *PlanVersionCompanyMigrationResponseData) GetPlanVersionIDFrom() *string
 		return nil
 	}
 	return p.PlanVersionIDFrom
+}
+
+func (p *PlanVersionCompanyMigrationResponseData) GetScheduledFor() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledFor
 }
 
 func (p *PlanVersionCompanyMigrationResponseData) GetStartedAt() *time.Time {
@@ -730,6 +786,13 @@ func (p *PlanVersionCompanyMigrationResponseData) SetPlanVersionIDFrom(planVersi
 	p.require(planVersionCompanyMigrationResponseDataFieldPlanVersionIDFrom)
 }
 
+// SetScheduledFor sets the ScheduledFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionCompanyMigrationResponseData) SetScheduledFor(scheduledFor *time.Time) {
+	p.ScheduledFor = scheduledFor
+	p.require(planVersionCompanyMigrationResponseDataFieldScheduledFor)
+}
+
 // SetStartedAt sets the StartedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanVersionCompanyMigrationResponseData) SetStartedAt(startedAt *time.Time) {
@@ -755,10 +818,11 @@ func (p *PlanVersionCompanyMigrationResponseData) UnmarshalJSON(data []byte) err
 	type embed PlanVersionCompanyMigrationResponseData
 	var unmarshaler = struct {
 		embed
-		CompletedAt *internal.DateTime `json:"completed_at,omitempty"`
-		CreatedAt   *internal.DateTime `json:"created_at"`
-		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
-		UpdatedAt   *internal.DateTime `json:"updated_at"`
+		CompletedAt  *internal.DateTime `json:"completed_at,omitempty"`
+		CreatedAt    *internal.DateTime `json:"created_at"`
+		ScheduledFor *internal.DateTime `json:"scheduled_for,omitempty"`
+		StartedAt    *internal.DateTime `json:"started_at,omitempty"`
+		UpdatedAt    *internal.DateTime `json:"updated_at"`
 	}{
 		embed: embed(*p),
 	}
@@ -768,6 +832,7 @@ func (p *PlanVersionCompanyMigrationResponseData) UnmarshalJSON(data []byte) err
 	*p = PlanVersionCompanyMigrationResponseData(unmarshaler.embed)
 	p.CompletedAt = unmarshaler.CompletedAt.TimePtr()
 	p.CreatedAt = unmarshaler.CreatedAt.Time()
+	p.ScheduledFor = unmarshaler.ScheduledFor.TimePtr()
 	p.StartedAt = unmarshaler.StartedAt.TimePtr()
 	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
@@ -783,16 +848,18 @@ func (p *PlanVersionCompanyMigrationResponseData) MarshalJSON() ([]byte, error) 
 	type embed PlanVersionCompanyMigrationResponseData
 	var marshaler = struct {
 		embed
-		CompletedAt *internal.DateTime `json:"completed_at,omitempty"`
-		CreatedAt   *internal.DateTime `json:"created_at"`
-		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
-		UpdatedAt   *internal.DateTime `json:"updated_at"`
+		CompletedAt  *internal.DateTime `json:"completed_at,omitempty"`
+		CreatedAt    *internal.DateTime `json:"created_at"`
+		ScheduledFor *internal.DateTime `json:"scheduled_for,omitempty"`
+		StartedAt    *internal.DateTime `json:"started_at,omitempty"`
+		UpdatedAt    *internal.DateTime `json:"updated_at"`
 	}{
-		embed:       embed(*p),
-		CompletedAt: internal.NewOptionalDateTime(p.CompletedAt),
-		CreatedAt:   internal.NewDateTime(p.CreatedAt),
-		StartedAt:   internal.NewOptionalDateTime(p.StartedAt),
-		UpdatedAt:   internal.NewDateTime(p.UpdatedAt),
+		embed:        embed(*p),
+		CompletedAt:  internal.NewOptionalDateTime(p.CompletedAt),
+		CreatedAt:    internal.NewDateTime(p.CreatedAt),
+		ScheduledFor: internal.NewOptionalDateTime(p.ScheduledFor),
+		StartedAt:    internal.NewOptionalDateTime(p.StartedAt),
+		UpdatedAt:    internal.NewDateTime(p.UpdatedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -816,6 +883,7 @@ func (p *PlanVersionCompanyMigrationResponseData) String() string {
 type PlanVersionCompanyMigrationStatus string
 
 const (
+	PlanVersionCompanyMigrationStatusCancelled  PlanVersionCompanyMigrationStatus = "cancelled"
 	PlanVersionCompanyMigrationStatusCompleted  PlanVersionCompanyMigrationStatus = "completed"
 	PlanVersionCompanyMigrationStatusFailed     PlanVersionCompanyMigrationStatus = "failed"
 	PlanVersionCompanyMigrationStatusInProgress PlanVersionCompanyMigrationStatus = "in_progress"
@@ -825,6 +893,8 @@ const (
 
 func NewPlanVersionCompanyMigrationStatusFromString(s string) (PlanVersionCompanyMigrationStatus, error) {
 	switch s {
+	case "cancelled":
+		return PlanVersionCompanyMigrationStatusCancelled, nil
 	case "completed":
 		return PlanVersionCompanyMigrationStatusCompleted, nil
 	case "failed":
@@ -1131,17 +1201,18 @@ var (
 	planVersionMigrationResponseDataFieldError              = big.NewInt(1 << 3)
 	planVersionMigrationResponseDataFieldFailedCompanies    = big.NewInt(1 << 4)
 	planVersionMigrationResponseDataFieldID                 = big.NewInt(1 << 5)
-	planVersionMigrationResponseDataFieldPlanID             = big.NewInt(1 << 6)
-	planVersionMigrationResponseDataFieldPlanVersionIDFrom  = big.NewInt(1 << 7)
-	planVersionMigrationResponseDataFieldPlanVersionIDTo    = big.NewInt(1 << 8)
-	planVersionMigrationResponseDataFieldPlanVersionIDsFrom = big.NewInt(1 << 9)
-	planVersionMigrationResponseDataFieldProrationBehavior  = big.NewInt(1 << 10)
-	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 11)
-	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 12)
-	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 13)
-	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 14)
-	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 15)
-	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 16)
+	planVersionMigrationResponseDataFieldNextDueAt          = big.NewInt(1 << 6)
+	planVersionMigrationResponseDataFieldPlanID             = big.NewInt(1 << 7)
+	planVersionMigrationResponseDataFieldPlanVersionIDFrom  = big.NewInt(1 << 8)
+	planVersionMigrationResponseDataFieldPlanVersionIDTo    = big.NewInt(1 << 9)
+	planVersionMigrationResponseDataFieldPlanVersionIDsFrom = big.NewInt(1 << 10)
+	planVersionMigrationResponseDataFieldProrationBehavior  = big.NewInt(1 << 11)
+	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 12)
+	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 13)
+	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 14)
+	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 15)
+	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 16)
+	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 17)
 )
 
 type PlanVersionMigrationResponseData struct {
@@ -1151,6 +1222,7 @@ type PlanVersionMigrationResponseData struct {
 	Error              *string                      `json:"error,omitempty" url:"error,omitempty"`
 	FailedCompanies    int64                        `json:"failed_companies" url:"failed_companies"`
 	ID                 string                       `json:"id" url:"id"`
+	NextDueAt          *time.Time                   `json:"next_due_at,omitempty" url:"next_due_at,omitempty"`
 	PlanID             string                       `json:"plan_id" url:"plan_id"`
 	PlanVersionIDFrom  *string                      `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
 	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"plan_version_id_to"`
@@ -1210,6 +1282,13 @@ func (p *PlanVersionMigrationResponseData) GetID() string {
 		return ""
 	}
 	return p.ID
+}
+
+func (p *PlanVersionMigrationResponseData) GetNextDueAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.NextDueAt
 }
 
 func (p *PlanVersionMigrationResponseData) GetPlanID() string {
@@ -1345,6 +1424,13 @@ func (p *PlanVersionMigrationResponseData) SetID(id string) {
 	p.require(planVersionMigrationResponseDataFieldID)
 }
 
+// SetNextDueAt sets the NextDueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationResponseData) SetNextDueAt(nextDueAt *time.Time) {
+	p.NextDueAt = nextDueAt
+	p.require(planVersionMigrationResponseDataFieldNextDueAt)
+}
+
 // SetPlanID sets the PlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanVersionMigrationResponseData) SetPlanID(planID string) {
@@ -1428,6 +1514,7 @@ func (p *PlanVersionMigrationResponseData) UnmarshalJSON(data []byte) error {
 		embed
 		CompletedAt *internal.DateTime `json:"completed_at,omitempty"`
 		CreatedAt   *internal.DateTime `json:"created_at"`
+		NextDueAt   *internal.DateTime `json:"next_due_at,omitempty"`
 		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
 		UpdatedAt   *internal.DateTime `json:"updated_at"`
 	}{
@@ -1439,6 +1526,7 @@ func (p *PlanVersionMigrationResponseData) UnmarshalJSON(data []byte) error {
 	*p = PlanVersionMigrationResponseData(unmarshaler.embed)
 	p.CompletedAt = unmarshaler.CompletedAt.TimePtr()
 	p.CreatedAt = unmarshaler.CreatedAt.Time()
+	p.NextDueAt = unmarshaler.NextDueAt.TimePtr()
 	p.StartedAt = unmarshaler.StartedAt.TimePtr()
 	p.UpdatedAt = unmarshaler.UpdatedAt.Time()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
@@ -1456,12 +1544,14 @@ func (p *PlanVersionMigrationResponseData) MarshalJSON() ([]byte, error) {
 		embed
 		CompletedAt *internal.DateTime `json:"completed_at,omitempty"`
 		CreatedAt   *internal.DateTime `json:"created_at"`
+		NextDueAt   *internal.DateTime `json:"next_due_at,omitempty"`
 		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
 		UpdatedAt   *internal.DateTime `json:"updated_at"`
 	}{
 		embed:       embed(*p),
 		CompletedAt: internal.NewOptionalDateTime(p.CompletedAt),
 		CreatedAt:   internal.NewDateTime(p.CreatedAt),
+		NextDueAt:   internal.NewOptionalDateTime(p.NextDueAt),
 		StartedAt:   internal.NewOptionalDateTime(p.StartedAt),
 		UpdatedAt:   internal.NewDateTime(p.UpdatedAt),
 	}
@@ -1487,6 +1577,7 @@ func (p *PlanVersionMigrationResponseData) String() string {
 type PlanVersionMigrationStatus string
 
 const (
+	PlanVersionMigrationStatusCancelled  PlanVersionMigrationStatus = "cancelled"
 	PlanVersionMigrationStatusCompleted  PlanVersionMigrationStatus = "completed"
 	PlanVersionMigrationStatusFailed     PlanVersionMigrationStatus = "failed"
 	PlanVersionMigrationStatusInProgress PlanVersionMigrationStatus = "in_progress"
@@ -1495,6 +1586,8 @@ const (
 
 func NewPlanVersionMigrationStatusFromString(s string) (PlanVersionMigrationStatus, error) {
 	switch s {
+	case "cancelled":
+		return PlanVersionMigrationStatusCancelled, nil
 	case "completed":
 		return PlanVersionMigrationStatusCompleted, nil
 	case "failed":
@@ -1510,6 +1603,208 @@ func NewPlanVersionMigrationStatusFromString(s string) (PlanVersionMigrationStat
 
 func (p PlanVersionMigrationStatus) Ptr() *PlanVersionMigrationStatus {
 	return &p
+}
+
+var (
+	cancelMigrationResponseFieldData   = big.NewInt(1 << 0)
+	cancelMigrationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CancelMigrationResponse struct {
+	Data *PlanVersionMigrationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CancelMigrationResponse) GetData() *PlanVersionMigrationResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CancelMigrationResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CancelMigrationResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CancelMigrationResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelMigrationResponse) SetData(data *PlanVersionMigrationResponseData) {
+	c.Data = data
+	c.require(cancelMigrationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CancelMigrationResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(cancelMigrationResponseFieldParams)
+}
+
+func (c *CancelMigrationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CancelMigrationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CancelMigrationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CancelMigrationResponse) MarshalJSON() ([]byte, error) {
+	type embed CancelMigrationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CancelMigrationResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	completeMigrationNowResponseFieldData   = big.NewInt(1 << 0)
+	completeMigrationNowResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CompleteMigrationNowResponse struct {
+	Data *PlanVersionMigrationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompleteMigrationNowResponse) GetData() *PlanVersionMigrationResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CompleteMigrationNowResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CompleteMigrationNowResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompleteMigrationNowResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompleteMigrationNowResponse) SetData(data *PlanVersionMigrationResponseData) {
+	c.Data = data
+	c.require(completeMigrationNowResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompleteMigrationNowResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(completeMigrationNowResponseFieldParams)
+}
+
+func (c *CompleteMigrationNowResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CompleteMigrationNowResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CompleteMigrationNowResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompleteMigrationNowResponse) MarshalJSON() ([]byte, error) {
+	type embed CompleteMigrationNowResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompleteMigrationNowResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 // Input parameters

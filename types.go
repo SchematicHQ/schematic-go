@@ -7813,13 +7813,14 @@ var (
 	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 14)
 	companyDetailResponseDataFieldName                  = big.NewInt(1 << 15)
 	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 16)
-	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 17)
-	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 18)
-	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 19)
-	companyDetailResponseDataFieldScheduledDowngrade    = big.NewInt(1 << 20)
-	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 21)
-	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 22)
-	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 23)
+	companyDetailResponseDataFieldPendingMigration      = big.NewInt(1 << 17)
+	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 18)
+	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 19)
+	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 20)
+	companyDetailResponseDataFieldScheduledDowngrade    = big.NewInt(1 << 21)
+	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 22)
+	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 23)
+	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 24)
 )
 
 type CompanyDetailResponseData struct {
@@ -7840,6 +7841,7 @@ type CompanyDetailResponseData struct {
 	Metrics               []*CompanyEventPeriodMetricsResponseData `json:"metrics" url:"metrics"`
 	Name                  string                                   `json:"name" url:"name"`
 	PaymentMethods        []*PaymentMethodResponseData             `json:"payment_methods" url:"payment_methods"`
+	PendingMigration      *PendingMigrationResponseData            `json:"pending_migration,omitempty" url:"pending_migration,omitempty"`
 	Plan                  *CompanyPlanWithBillingSubView           `json:"plan,omitempty" url:"plan,omitempty"`
 	Plans                 []*GenericPreviewObject                  `json:"plans" url:"plans"`
 	Rules                 []*Rule                                  `json:"rules" url:"rules"`
@@ -7973,6 +7975,13 @@ func (c *CompanyDetailResponseData) GetPaymentMethods() []*PaymentMethodResponse
 		return nil
 	}
 	return c.PaymentMethods
+}
+
+func (c *CompanyDetailResponseData) GetPendingMigration() *PendingMigrationResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.PendingMigration
 }
 
 func (c *CompanyDetailResponseData) GetPlan() *CompanyPlanWithBillingSubView {
@@ -8155,6 +8164,13 @@ func (c *CompanyDetailResponseData) SetName(name string) {
 func (c *CompanyDetailResponseData) SetPaymentMethods(paymentMethods []*PaymentMethodResponseData) {
 	c.PaymentMethods = paymentMethods
 	c.require(companyDetailResponseDataFieldPaymentMethods)
+}
+
+// SetPendingMigration sets the PendingMigration field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyDetailResponseData) SetPendingMigration(pendingMigration *PendingMigrationResponseData) {
+	c.PendingMigration = pendingMigration
+	c.require(companyDetailResponseDataFieldPendingMigration)
 }
 
 // SetPlan sets the Plan field and marks it as non-optional;
@@ -16558,11 +16574,12 @@ var (
 	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 7)
 	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 8)
 	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 11)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 12)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 13)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 14)
+	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 13)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 14)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 15)
 )
 
 type CustomPlanBillingResponseData struct {
@@ -16576,13 +16593,15 @@ type CustomPlanBillingResponseData struct {
 	ID                 string     `json:"id" url:"id"`
 	PaidAt             *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
 	// The flow that created this billing record: a custom plan, or a standard plan assigned by invoice through Manage Plan.
-	PlanBillingSource PlanBillingSource       `json:"plan_billing_source" url:"plan_billing_source"`
-	PlanID            string                  `json:"plan_id" url:"plan_id"`
-	PublishedAt       *time.Time              `json:"published_at,omitempty" url:"published_at,omitempty"`
-	SendInvoice       bool                    `json:"send_invoice" url:"send_invoice"`
-	Status            CustomPlanBillingStatus `json:"status" url:"status"`
-	StripeInvoiceURL  *string                 `json:"stripe_invoice_url,omitempty" url:"stripe_invoice_url,omitempty"`
-	UpdatedAt         time.Time               `json:"updated_at" url:"updated_at"`
+	PlanBillingSource PlanBillingSource `json:"plan_billing_source" url:"plan_billing_source"`
+	PlanID            string            `json:"plan_id" url:"plan_id"`
+	// Whether the shortened period the renewal date created was billed pro rata when the subscription started. False means that period is free and the first invoice is the one raised on the renewal date.
+	ProrateFirstPeriod *bool                   `json:"prorate_first_period,omitempty" url:"prorate_first_period,omitempty"`
+	PublishedAt        *time.Time              `json:"published_at,omitempty" url:"published_at,omitempty"`
+	SendInvoice        bool                    `json:"send_invoice" url:"send_invoice"`
+	Status             CustomPlanBillingStatus `json:"status" url:"status"`
+	StripeInvoiceURL   *string                 `json:"stripe_invoice_url,omitempty" url:"stripe_invoice_url,omitempty"`
+	UpdatedAt          time.Time               `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -16659,6 +16678,13 @@ func (c *CustomPlanBillingResponseData) GetPlanID() string {
 		return ""
 	}
 	return c.PlanID
+}
+
+func (c *CustomPlanBillingResponseData) GetProrateFirstPeriod() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ProrateFirstPeriod
 }
 
 func (c *CustomPlanBillingResponseData) GetPublishedAt() *time.Time {
@@ -16778,6 +16804,13 @@ func (c *CustomPlanBillingResponseData) SetPlanBillingSource(planBillingSource P
 func (c *CustomPlanBillingResponseData) SetPlanID(planID string) {
 	c.PlanID = planID
 	c.require(customPlanBillingResponseDataFieldPlanID)
+}
+
+// SetProrateFirstPeriod sets the ProrateFirstPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetProrateFirstPeriod(prorateFirstPeriod *bool) {
+	c.ProrateFirstPeriod = prorateFirstPeriod
+	c.require(customPlanBillingResponseDataFieldProrateFirstPeriod)
 }
 
 // SetPublishedAt sets the PublishedAt field and marks it as non-optional;
@@ -25534,6 +25567,178 @@ func (p *PaymentMethodResponseData) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+var (
+	pendingMigrationResponseDataFieldMigrationID         = big.NewInt(1 << 0)
+	pendingMigrationResponseDataFieldScheduledFor        = big.NewInt(1 << 1)
+	pendingMigrationResponseDataFieldToPlanID            = big.NewInt(1 << 2)
+	pendingMigrationResponseDataFieldToPlanName          = big.NewInt(1 << 3)
+	pendingMigrationResponseDataFieldToPlanVersionID     = big.NewInt(1 << 4)
+	pendingMigrationResponseDataFieldToPlanVersionNumber = big.NewInt(1 << 5)
+)
+
+type PendingMigrationResponseData struct {
+	MigrationID         string     `json:"migration_id" url:"migration_id"`
+	ScheduledFor        *time.Time `json:"scheduled_for,omitempty" url:"scheduled_for,omitempty"`
+	ToPlanID            string     `json:"to_plan_id" url:"to_plan_id"`
+	ToPlanName          string     `json:"to_plan_name" url:"to_plan_name"`
+	ToPlanVersionID     string     `json:"to_plan_version_id" url:"to_plan_version_id"`
+	ToPlanVersionNumber *int64     `json:"to_plan_version_number,omitempty" url:"to_plan_version_number,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PendingMigrationResponseData) GetMigrationID() string {
+	if p == nil {
+		return ""
+	}
+	return p.MigrationID
+}
+
+func (p *PendingMigrationResponseData) GetScheduledFor() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledFor
+}
+
+func (p *PendingMigrationResponseData) GetToPlanID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ToPlanID
+}
+
+func (p *PendingMigrationResponseData) GetToPlanName() string {
+	if p == nil {
+		return ""
+	}
+	return p.ToPlanName
+}
+
+func (p *PendingMigrationResponseData) GetToPlanVersionID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ToPlanVersionID
+}
+
+func (p *PendingMigrationResponseData) GetToPlanVersionNumber() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.ToPlanVersionNumber
+}
+
+func (p *PendingMigrationResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PendingMigrationResponseData) require(field *big.Int) {
+	if p.explicitFields == nil {
+		p.explicitFields = big.NewInt(0)
+	}
+	p.explicitFields.Or(p.explicitFields, field)
+}
+
+// SetMigrationID sets the MigrationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetMigrationID(migrationID string) {
+	p.MigrationID = migrationID
+	p.require(pendingMigrationResponseDataFieldMigrationID)
+}
+
+// SetScheduledFor sets the ScheduledFor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetScheduledFor(scheduledFor *time.Time) {
+	p.ScheduledFor = scheduledFor
+	p.require(pendingMigrationResponseDataFieldScheduledFor)
+}
+
+// SetToPlanID sets the ToPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetToPlanID(toPlanID string) {
+	p.ToPlanID = toPlanID
+	p.require(pendingMigrationResponseDataFieldToPlanID)
+}
+
+// SetToPlanName sets the ToPlanName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetToPlanName(toPlanName string) {
+	p.ToPlanName = toPlanName
+	p.require(pendingMigrationResponseDataFieldToPlanName)
+}
+
+// SetToPlanVersionID sets the ToPlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetToPlanVersionID(toPlanVersionID string) {
+	p.ToPlanVersionID = toPlanVersionID
+	p.require(pendingMigrationResponseDataFieldToPlanVersionID)
+}
+
+// SetToPlanVersionNumber sets the ToPlanVersionNumber field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetToPlanVersionNumber(toPlanVersionNumber *int64) {
+	p.ToPlanVersionNumber = toPlanVersionNumber
+	p.require(pendingMigrationResponseDataFieldToPlanVersionNumber)
+}
+
+func (p *PendingMigrationResponseData) UnmarshalJSON(data []byte) error {
+	type embed PendingMigrationResponseData
+	var unmarshaler = struct {
+		embed
+		ScheduledFor *internal.DateTime `json:"scheduled_for,omitempty"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PendingMigrationResponseData(unmarshaler.embed)
+	p.ScheduledFor = unmarshaler.ScheduledFor.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PendingMigrationResponseData) MarshalJSON() ([]byte, error) {
+	type embed PendingMigrationResponseData
+	var marshaler = struct {
+		embed
+		ScheduledFor *internal.DateTime `json:"scheduled_for,omitempty"`
+	}{
+		embed:        embed(*p),
+		ScheduledFor: internal.NewOptionalDateTime(p.ScheduledFor),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PendingMigrationResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 type PlanBillingSource string
 
 const (
@@ -29039,12 +29244,15 @@ func (p PlanType) Ptr() *PlanType {
 type PlanVersionMigrationStrategy string
 
 const (
-	PlanVersionMigrationStrategyImmediate PlanVersionMigrationStrategy = "immediate"
-	PlanVersionMigrationStrategyLeave     PlanVersionMigrationStrategy = "leave"
+	PlanVersionMigrationStrategyEndOfBillingPeriod PlanVersionMigrationStrategy = "end_of_billing_period"
+	PlanVersionMigrationStrategyImmediate          PlanVersionMigrationStrategy = "immediate"
+	PlanVersionMigrationStrategyLeave              PlanVersionMigrationStrategy = "leave"
 )
 
 func NewPlanVersionMigrationStrategyFromString(s string) (PlanVersionMigrationStrategy, error) {
 	switch s {
+	case "end_of_billing_period":
+		return PlanVersionMigrationStrategyEndOfBillingPeriod, nil
 	case "immediate":
 		return PlanVersionMigrationStrategyImmediate, nil
 	case "leave":

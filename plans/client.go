@@ -640,7 +640,7 @@ func (c *Client) DeletePlanVersion(
 //	    ExcludedCompanyIDs: []string{
 //	        "excluded_company_ids",
 //	    },
-//	    MigrationStrategy: schematichq.PlanVersionMigrationStrategyImmediate,
+//	    MigrationStrategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
 //	}
 //	client.Plans.PublishPlanVersion(
 //	    context.TODO(),

@@ -1253,6 +1253,14 @@ client.Accounts.UpdateOnboardingState(
 <dl>
 <dd>
 
+**dismissed:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **path:** `*schematichq.OnboardingPath` 
     
 </dd>
@@ -14576,6 +14584,14 @@ client.Plans.RetryCustomPlanBilling(
 <dl>
 <dd>
 
+**billingCycleAnchor:** `*time.Time` — The date the subscription's billing period renews on. Only honored when the retry creates a subscription.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **customerEmail:** `string` 
     
 </dd>
@@ -14585,6 +14601,14 @@ client.Plans.RetryCustomPlanBilling(
 <dd>
 
 **daysUntilDue:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorateFirstPeriod:** `*bool` — When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
     
 </dd>
 </dl>
@@ -15783,7 +15807,7 @@ request := &schematichq.PublishPlanVersionRequestBody{
     ExcludedCompanyIDs: []string{
         "excluded_company_ids",
     },
-    MigrationStrategy: schematichq.PlanVersionMigrationStrategyImmediate,
+    MigrationStrategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
 }
 client.Plans.PublishPlanVersion(
     context.TODO(),
@@ -15821,6 +15845,14 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **address:** `*schematichq.CustomerBillingAddress` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**billingCycleAnchor:** `*time.Time` — The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
     
 </dd>
 </dl>
@@ -15877,6 +15909,14 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **phone:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorateFirstPeriod:** `*bool` — When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
     
 </dd>
 </dl>
@@ -20539,7 +20579,7 @@ request := &schematichq.ListCompanyMigrationsRequest{
     Q: schematichq.String(
         "q",
     ),
-    Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
+    Status: schematichq.PlanVersionCompanyMigrationStatusCancelled.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),
@@ -20670,7 +20710,7 @@ request := &schematichq.CountCompanyMigrationsRequest{
     Q: schematichq.String(
         "q",
     ),
-    Status: schematichq.PlanVersionCompanyMigrationStatusCompleted.Ptr(),
+    Status: schematichq.PlanVersionCompanyMigrationStatusCancelled.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),
@@ -20755,7 +20795,7 @@ client.Planmigrations.CountCompanyMigrations(
 ```go
 request := &schematichq.ListMigrationsRequest{
     PlanVersionID: "plan_version_id",
-    Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
+    Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),
@@ -20833,7 +20873,7 @@ client.Planmigrations.ListMigrations(
 request := &schematichq.CreateMigrationInput{
     PlanID: "plan_id",
     PlanVersionIDTo: "plan_version_id_to",
-    Strategy: schematichq.PlanVersionMigrationStrategyImmediate,
+    Strategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
     TargetPlanType: schematichq.PlanTypePlan,
 }
 client.Planmigrations.CreateMigration(
@@ -20965,6 +21005,102 @@ client.Planmigrations.GetMigration(
 </dl>
 </details>
 
+<details><summary><code>client.Planmigrations.CancelMigration(PlanVersionMigrationID) -> *schematichq.CancelMigrationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Planmigrations.CancelMigration(
+    context.TODO(),
+    "plan_version_migration_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planVersionMigrationID:** `string` — plan_version_migration_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Planmigrations.CompleteMigrationNow(PlanVersionMigrationID, request) -> *schematichq.CompleteMigrationNowResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CompleteMigrationNowRequestBody{}
+client.Planmigrations.CompleteMigrationNow(
+    context.TODO(),
+    "plan_version_migration_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planVersionMigrationID:** `string` — plan_version_migration_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorationBehavior:** `*schematichq.MigrationProrationBehavior` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Planmigrations.RetryMigration(PlanVersionMigrationID, request) -> *schematichq.RetryMigrationResponse</code></summary>
 <dl>
 <dd>
@@ -21037,7 +21173,7 @@ client.Planmigrations.RetryMigration(
 ```go
 request := &schematichq.CountMigrationsRequest{
     PlanVersionID: "plan_version_id",
-    Status: schematichq.PlanVersionMigrationStatusCompleted.Ptr(),
+    Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),

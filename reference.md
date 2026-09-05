@@ -1253,6 +1253,14 @@ client.Accounts.UpdateOnboardingState(
 <dl>
 <dd>
 
+**country:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **dismissed:** `*bool` 
     
 </dd>
@@ -3819,6 +3827,191 @@ client.Billing.CountBillingProducts(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.ListCompanyBillingProfiles() -> *schematichq.ListCompanyBillingProfilesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListCompanyBillingProfilesRequest{
+    CompanyID: schematichq.String(
+        "company_id",
+    ),
+    IsDefault: schematichq.Bool(
+        true,
+    ),
+    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+client.Billing.ListCompanyBillingProfiles(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**isDefault:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.UpdateCompanyBillingProfile(BillingProfileID, request) -> *schematichq.UpdateCompanyBillingProfileResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateCompanyBillingProfileRequestBody{
+    CollectionMethod: schematichq.BillingCollectionMethodChargeAutomatically,
+}
+client.Billing.UpdateCompanyBillingProfile(
+    context.TODO(),
+    "billing_profile_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProfileID:** `string` — billing_profile_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**collectionMethod:** `*schematichq.BillingCollectionMethod` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**daysUntilDue:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**isDefault:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**paymentMethodID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**prorationBehavior:** `*schematichq.ProrationBehavior` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Billing.UpsertBillingSubscription(request) -> *schematichq.UpsertBillingSubscriptionResponse</code></summary>
 <dl>
 <dd>
@@ -6364,6 +6557,460 @@ client.Credits.CountBillingPlanCreditGrants(
 <dd>
 
 **planVersionIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.ListCreditSpendPolicies() -> *schematichq.ListCreditSpendPoliciesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListCreditSpendPoliciesRequest{
+    BillingCreditID: schematichq.String(
+        "billing_credit_id",
+    ),
+    CompanyID: schematichq.String(
+        "company_id",
+    ),
+    ScopeType: schematichq.CreditSpendPolicyScopeCompany.Ptr(),
+    UserID: schematichq.String(
+        "user_id",
+    ),
+    UserIDs: []*string{
+        schematichq.String(
+            "user_ids",
+        ),
+    },
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+client.Credits.ListCreditSpendPolicies(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scopeType:** `*schematichq.CreditSpendPolicyScope` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userIDs:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.CreateCreditSpendPolicy(request) -> *schematichq.CreateCreditSpendPolicyResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateCreditSpendPolicyRequestBody{
+    BillingCreditID: "billing_credit_id",
+    MaxPerDraw: 1.1,
+}
+client.Credits.CreateCreditSpendPolicy(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `*string` — The company the cap applies to. Set exactly one of company_id and user_id.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**label:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**maxPerDraw:** `float64` — The largest number of credits a single draw may spend.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userID:** `*string` — The user the cap applies to. Set exactly one of company_id and user_id.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.GetCreditSpendPolicy(SpendPolicyID) -> *schematichq.GetCreditSpendPolicyResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Credits.GetCreditSpendPolicy(
+    context.TODO(),
+    "spend_policy_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**spendPolicyID:** `string` — spend_policy_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.UpdateCreditSpendPolicy(SpendPolicyID, request) -> *schematichq.UpdateCreditSpendPolicyResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateCreditSpendPolicyRequestBody{}
+client.Credits.UpdateCreditSpendPolicy(
+    context.TODO(),
+    "spend_policy_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**spendPolicyID:** `string` — spend_policy_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**label:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**maxPerDraw:** `*float64` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.DeleteCreditSpendPolicy(SpendPolicyID) -> *schematichq.DeleteCreditSpendPolicyResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Credits.DeleteCreditSpendPolicy(
+    context.TODO(),
+    "spend_policy_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**spendPolicyID:** `string` — spend_policy_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.CountCreditSpendPolicies() -> *schematichq.CountCreditSpendPoliciesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountCreditSpendPoliciesRequest{
+    BillingCreditID: schematichq.String(
+        "billing_credit_id",
+    ),
+    CompanyID: schematichq.String(
+        "company_id",
+    ),
+    ScopeType: schematichq.CreditSpendPolicyScopeCompany.Ptr(),
+    UserID: schematichq.String(
+        "user_id",
+    ),
+    UserIDs: []*string{
+        schematichq.String(
+            "user_ids",
+        ),
+    },
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+client.Credits.CountCreditSpendPolicies(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scopeType:** `*schematichq.CreditSpendPolicyScope` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userIDs:** `*string` 
     
 </dd>
 </dl>
@@ -17269,6 +17916,138 @@ client.Events.GetEvent(
 </dl>
 </details>
 
+<details><summary><code>client.Events.GetOtlpEnvironmentSettings() -> *schematichq.GetOtlpEnvironmentSettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Events.GetOtlpEnvironmentSettings(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.UpsertOtlpEnvironmentSettings(request) -> *schematichq.UpsertOtlpEnvironmentSettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpsertOtlpEnvironmentSettingsRequestBody{
+    ToolEventsEnabled: true,
+}
+client.Events.UpsertOtlpEnvironmentSettings(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyAttribute:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyKey:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**toolEventsEnabled:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userAttribute:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userKey:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.DeleteOtlpEnvironmentSettings() -> *schematichq.DeleteOtlpEnvironmentSettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Events.DeleteOtlpEnvironmentSettings(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Events.GetSegmentIntegrationStatus() -> *schematichq.GetSegmentIntegrationStatusResponse</code></summary>
 <dl>
 <dd>
@@ -19381,6 +20160,106 @@ client.Integrationsapi.LoadSampleDataSet(
 </dl>
 </details>
 
+<details><summary><code>client.Integrationsapi.GetStripeSandboxClaimLink() -> *schematichq.GetStripeSandboxClaimLinkResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Integrationsapi.GetStripeSandboxClaimLink(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.GetStripeSandboxKeys() -> *schematichq.GetStripeSandboxKeysResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Integrationsapi.GetStripeSandboxKeys(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.ClaimStripeSandboxKeys(request) -> *schematichq.ClaimStripeSandboxKeysResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ClaimStripeSandboxKeysRequestBody{
+    Token: "token",
+}
+client.Integrationsapi.ClaimStripeSandboxKeys(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**token:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Integrationsapi.AssumeStripeInstalled(request) -> *schematichq.AssumeStripeInstalledResponse</code></summary>
 <dl>
 <dd>
@@ -19463,6 +20342,103 @@ client.Integrationsapi.InstallStripe(
 
 **request:** `*schematichq.InstallIntegrationRequestBody` 
     
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.InstallStripeClaimableSandbox(request) -> *schematichq.InstallStripeClaimableSandboxResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.InstallStripeSandboxRequestBody{
+    Email: "email",
+}
+client.Integrationsapi.InstallStripeClaimableSandbox(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**country:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**email:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**seedSampleData:** `*bool` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Integrationsapi.ListStripeSandboxCountries() -> *schematichq.ListStripeSandboxCountriesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Integrationsapi.ListStripeSandboxCountries(
+    context.TODO(),
+)
+```
 </dd>
 </dl>
 </dd>

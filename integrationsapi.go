@@ -11,6 +11,125 @@ import (
 )
 
 var (
+	claimStripeSandboxKeysRequestBodyFieldToken = big.NewInt(1 << 0)
+)
+
+type ClaimStripeSandboxKeysRequestBody struct {
+	Token string `json:"token" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *ClaimStripeSandboxKeysRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetToken sets the Token field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClaimStripeSandboxKeysRequestBody) SetToken(token string) {
+	c.Token = token
+	c.require(claimStripeSandboxKeysRequestBodyFieldToken)
+}
+
+func (c *ClaimStripeSandboxKeysRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler ClaimStripeSandboxKeysRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = ClaimStripeSandboxKeysRequestBody(body)
+	return nil
+}
+
+func (c *ClaimStripeSandboxKeysRequestBody) MarshalJSON() ([]byte, error) {
+	type embed ClaimStripeSandboxKeysRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	installStripeSandboxRequestBodyFieldCountry        = big.NewInt(1 << 0)
+	installStripeSandboxRequestBodyFieldEmail          = big.NewInt(1 << 1)
+	installStripeSandboxRequestBodyFieldName           = big.NewInt(1 << 2)
+	installStripeSandboxRequestBodyFieldSeedSampleData = big.NewInt(1 << 3)
+)
+
+type InstallStripeSandboxRequestBody struct {
+	Country        *string `json:"country,omitempty" url:"-"`
+	Email          string  `json:"email" url:"-"`
+	Name           *string `json:"name,omitempty" url:"-"`
+	SeedSampleData *bool   `json:"seed_sample_data,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (i *InstallStripeSandboxRequestBody) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetCountry sets the Country field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InstallStripeSandboxRequestBody) SetCountry(country *string) {
+	i.Country = country
+	i.require(installStripeSandboxRequestBodyFieldCountry)
+}
+
+// SetEmail sets the Email field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InstallStripeSandboxRequestBody) SetEmail(email string) {
+	i.Email = email
+	i.require(installStripeSandboxRequestBodyFieldEmail)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InstallStripeSandboxRequestBody) SetName(name *string) {
+	i.Name = name
+	i.require(installStripeSandboxRequestBodyFieldName)
+}
+
+// SetSeedSampleData sets the SeedSampleData field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InstallStripeSandboxRequestBody) SetSeedSampleData(seedSampleData *bool) {
+	i.SeedSampleData = seedSampleData
+	i.require(installStripeSandboxRequestBodyFieldSeedSampleData)
+}
+
+func (i *InstallStripeSandboxRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler InstallStripeSandboxRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*i = InstallStripeSandboxRequestBody(body)
+	return nil
+}
+
+func (i *InstallStripeSandboxRequestBody) MarshalJSON() ([]byte, error) {
+	type embed InstallStripeSandboxRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	listIntegrationsRequestFieldBillingOnly = big.NewInt(1 << 0)
 	listIntegrationsRequestFieldExcludeIDs  = big.NewInt(1 << 1)
 	listIntegrationsRequestFieldID          = big.NewInt(1 << 2)
@@ -153,6 +272,122 @@ func (s *StartDataImportRequestBody) MarshalJSON() ([]byte, error) {
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
 	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	claimedStripeSandboxKeysResponseDataFieldPublishable = big.NewInt(1 << 0)
+	claimedStripeSandboxKeysResponseDataFieldSandboxID   = big.NewInt(1 << 1)
+	claimedStripeSandboxKeysResponseDataFieldSecret      = big.NewInt(1 << 2)
+)
+
+type ClaimedStripeSandboxKeysResponseData struct {
+	Publishable string `json:"publishable" url:"publishable"`
+	SandboxID   string `json:"sandbox_id" url:"sandbox_id"`
+	Secret      string `json:"secret" url:"secret"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) GetPublishable() string {
+	if c == nil {
+		return ""
+	}
+	return c.Publishable
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) GetSandboxID() string {
+	if c == nil {
+		return ""
+	}
+	return c.SandboxID
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) GetSecret() string {
+	if c == nil {
+		return ""
+	}
+	return c.Secret
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetPublishable sets the Publishable field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClaimedStripeSandboxKeysResponseData) SetPublishable(publishable string) {
+	c.Publishable = publishable
+	c.require(claimedStripeSandboxKeysResponseDataFieldPublishable)
+}
+
+// SetSandboxID sets the SandboxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClaimedStripeSandboxKeysResponseData) SetSandboxID(sandboxID string) {
+	c.SandboxID = sandboxID
+	c.require(claimedStripeSandboxKeysResponseDataFieldSandboxID)
+}
+
+// SetSecret sets the Secret field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClaimedStripeSandboxKeysResponseData) SetSecret(secret string) {
+	c.Secret = secret
+	c.require(claimedStripeSandboxKeysResponseDataFieldSecret)
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler ClaimedStripeSandboxKeysResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ClaimedStripeSandboxKeysResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) MarshalJSON() ([]byte, error) {
+	type embed ClaimedStripeSandboxKeysResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ClaimedStripeSandboxKeysResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -1832,13 +2067,16 @@ func (o *OrbIntegrationConfig) String() string {
 }
 
 var (
-	stripeIntegrationConfigFieldAccountID         = big.NewInt(1 << 0)
-	stripeIntegrationConfigFieldAccountName       = big.NewInt(1 << 1)
-	stripeIntegrationConfigFieldCompanyUpdateOnly = big.NewInt(1 << 2)
-	stripeIntegrationConfigFieldIsSandbox         = big.NewInt(1 << 3)
-	stripeIntegrationConfigFieldLiveMode          = big.NewInt(1 << 4)
-	stripeIntegrationConfigFieldOnboardURL        = big.NewInt(1 << 5)
-	stripeIntegrationConfigFieldReturnTo          = big.NewInt(1 << 6)
+	stripeIntegrationConfigFieldAccountID                 = big.NewInt(1 << 0)
+	stripeIntegrationConfigFieldAccountName               = big.NewInt(1 << 1)
+	stripeIntegrationConfigFieldClaimableSandboxExpiresAt = big.NewInt(1 << 2)
+	stripeIntegrationConfigFieldClaimableSandboxID        = big.NewInt(1 << 3)
+	stripeIntegrationConfigFieldClaimableSandboxStatus    = big.NewInt(1 << 4)
+	stripeIntegrationConfigFieldCompanyUpdateOnly         = big.NewInt(1 << 5)
+	stripeIntegrationConfigFieldIsSandbox                 = big.NewInt(1 << 6)
+	stripeIntegrationConfigFieldLiveMode                  = big.NewInt(1 << 7)
+	stripeIntegrationConfigFieldOnboardURL                = big.NewInt(1 << 8)
+	stripeIntegrationConfigFieldReturnTo                  = big.NewInt(1 << 9)
 )
 
 type StripeIntegrationConfig struct {
@@ -1846,6 +2084,12 @@ type StripeIntegrationConfig struct {
 	AccountID *string `json:"account_id,omitempty" url:"account_id,omitempty"`
 	// Display name of the connected Stripe account
 	AccountName *string `json:"account_name,omitempty" url:"account_name,omitempty"`
+	// When Stripe deletes the sandbox if nobody claims it, 60 days from creation; absent on sandboxes created before it was recorded
+	ClaimableSandboxExpiresAt *time.Time `json:"claimable_sandbox_expires_at,omitempty" url:"claimable_sandbox_expires_at,omitempty"`
+	// Stripe claimable sandbox this connection was provisioned from; absent for an OAuth connect
+	ClaimableSandboxID *string `json:"claimable_sandbox_id,omitempty" url:"claimable_sandbox_id,omitempty"`
+	// Stripe's claim status for the sandbox: unclaimed, claimed, or live
+	ClaimableSandboxStatus *string `json:"claimable_sandbox_status,omitempty" url:"claimable_sandbox_status,omitempty"`
 	// When importing Stripe customers, only update existing companies, do not create new companies
 	CompanyUpdateOnly *bool `json:"company_update_only,omitempty" url:"company_update_only,omitempty"`
 	// Whether the integration is connected to a Stripe sandbox account
@@ -1876,6 +2120,27 @@ func (s *StripeIntegrationConfig) GetAccountName() *string {
 		return nil
 	}
 	return s.AccountName
+}
+
+func (s *StripeIntegrationConfig) GetClaimableSandboxExpiresAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.ClaimableSandboxExpiresAt
+}
+
+func (s *StripeIntegrationConfig) GetClaimableSandboxID() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ClaimableSandboxID
+}
+
+func (s *StripeIntegrationConfig) GetClaimableSandboxStatus() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ClaimableSandboxStatus
 }
 
 func (s *StripeIntegrationConfig) GetCompanyUpdateOnly() *bool {
@@ -1941,6 +2206,27 @@ func (s *StripeIntegrationConfig) SetAccountName(accountName *string) {
 	s.require(stripeIntegrationConfigFieldAccountName)
 }
 
+// SetClaimableSandboxExpiresAt sets the ClaimableSandboxExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetClaimableSandboxExpiresAt(claimableSandboxExpiresAt *time.Time) {
+	s.ClaimableSandboxExpiresAt = claimableSandboxExpiresAt
+	s.require(stripeIntegrationConfigFieldClaimableSandboxExpiresAt)
+}
+
+// SetClaimableSandboxID sets the ClaimableSandboxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetClaimableSandboxID(claimableSandboxID *string) {
+	s.ClaimableSandboxID = claimableSandboxID
+	s.require(stripeIntegrationConfigFieldClaimableSandboxID)
+}
+
+// SetClaimableSandboxStatus sets the ClaimableSandboxStatus field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetClaimableSandboxStatus(claimableSandboxStatus *string) {
+	s.ClaimableSandboxStatus = claimableSandboxStatus
+	s.require(stripeIntegrationConfigFieldClaimableSandboxStatus)
+}
+
 // SetCompanyUpdateOnly sets the CompanyUpdateOnly field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (s *StripeIntegrationConfig) SetCompanyUpdateOnly(companyUpdateOnly *bool) {
@@ -1977,12 +2263,18 @@ func (s *StripeIntegrationConfig) SetReturnTo(returnTo *string) {
 }
 
 func (s *StripeIntegrationConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler StripeIntegrationConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed StripeIntegrationConfig
+	var unmarshaler = struct {
+		embed
+		ClaimableSandboxExpiresAt *internal.DateTime `json:"claimable_sandbox_expires_at,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*s = StripeIntegrationConfig(value)
+	*s = StripeIntegrationConfig(unmarshaler.embed)
+	s.ClaimableSandboxExpiresAt = unmarshaler.ClaimableSandboxExpiresAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *s)
 	if err != nil {
 		return err
@@ -1996,6 +2288,232 @@ func (s *StripeIntegrationConfig) MarshalJSON() ([]byte, error) {
 	type embed StripeIntegrationConfig
 	var marshaler = struct {
 		embed
+		ClaimableSandboxExpiresAt *internal.DateTime `json:"claimable_sandbox_expires_at,omitempty"`
+	}{
+		embed:                     embed(*s),
+		ClaimableSandboxExpiresAt: internal.NewOptionalDateTime(s.ClaimableSandboxExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StripeIntegrationConfig) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	stripeSandboxClaimLinkFieldClaimURL  = big.NewInt(1 << 0)
+	stripeSandboxClaimLinkFieldExpiresAt = big.NewInt(1 << 1)
+	stripeSandboxClaimLinkFieldSandboxID = big.NewInt(1 << 2)
+	stripeSandboxClaimLinkFieldStatus    = big.NewInt(1 << 3)
+)
+
+type StripeSandboxClaimLink struct {
+	ClaimURL  string     `json:"claim_url" url:"claim_url"`
+	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	SandboxID string     `json:"sandbox_id" url:"sandbox_id"`
+	Status    string     `json:"status" url:"status"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StripeSandboxClaimLink) GetClaimURL() string {
+	if s == nil {
+		return ""
+	}
+	return s.ClaimURL
+}
+
+func (s *StripeSandboxClaimLink) GetExpiresAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.ExpiresAt
+}
+
+func (s *StripeSandboxClaimLink) GetSandboxID() string {
+	if s == nil {
+		return ""
+	}
+	return s.SandboxID
+}
+
+func (s *StripeSandboxClaimLink) GetStatus() string {
+	if s == nil {
+		return ""
+	}
+	return s.Status
+}
+
+func (s *StripeSandboxClaimLink) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StripeSandboxClaimLink) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetClaimURL sets the ClaimURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxClaimLink) SetClaimURL(claimURL string) {
+	s.ClaimURL = claimURL
+	s.require(stripeSandboxClaimLinkFieldClaimURL)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxClaimLink) SetExpiresAt(expiresAt *time.Time) {
+	s.ExpiresAt = expiresAt
+	s.require(stripeSandboxClaimLinkFieldExpiresAt)
+}
+
+// SetSandboxID sets the SandboxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxClaimLink) SetSandboxID(sandboxID string) {
+	s.SandboxID = sandboxID
+	s.require(stripeSandboxClaimLinkFieldSandboxID)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxClaimLink) SetStatus(status string) {
+	s.Status = status
+	s.require(stripeSandboxClaimLinkFieldStatus)
+}
+
+func (s *StripeSandboxClaimLink) UnmarshalJSON(data []byte) error {
+	type embed StripeSandboxClaimLink
+	var unmarshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*s = StripeSandboxClaimLink(unmarshaler.embed)
+	s.ExpiresAt = unmarshaler.ExpiresAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StripeSandboxClaimLink) MarshalJSON() ([]byte, error) {
+	type embed StripeSandboxClaimLink
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:     embed(*s),
+		ExpiresAt: internal.NewOptionalDateTime(s.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StripeSandboxClaimLink) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	stripeSandboxCountriesResponseDataFieldCountries = big.NewInt(1 << 0)
+)
+
+type StripeSandboxCountriesResponseData struct {
+	Countries []string `json:"countries" url:"countries"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StripeSandboxCountriesResponseData) GetCountries() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Countries
+}
+
+func (s *StripeSandboxCountriesResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StripeSandboxCountriesResponseData) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetCountries sets the Countries field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxCountriesResponseData) SetCountries(countries []string) {
+	s.Countries = countries
+	s.require(stripeSandboxCountriesResponseDataFieldCountries)
+}
+
+func (s *StripeSandboxCountriesResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler StripeSandboxCountriesResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StripeSandboxCountriesResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StripeSandboxCountriesResponseData) MarshalJSON() ([]byte, error) {
+	type embed StripeSandboxCountriesResponseData
+	var marshaler = struct {
+		embed
 	}{
 		embed: embed(*s),
 	}
@@ -2003,7 +2521,315 @@ func (s *StripeIntegrationConfig) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-func (s *StripeIntegrationConfig) String() string {
+func (s *StripeSandboxCountriesResponseData) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	stripeSandboxInstallResponseDataFieldAPIKeys           = big.NewInt(1 << 0)
+	stripeSandboxInstallResponseDataFieldClaimURL          = big.NewInt(1 << 1)
+	stripeSandboxInstallResponseDataFieldClaimURLExpiresAt = big.NewInt(1 << 2)
+	stripeSandboxInstallResponseDataFieldExpiresAt         = big.NewInt(1 << 3)
+	stripeSandboxInstallResponseDataFieldInstall           = big.NewInt(1 << 4)
+	stripeSandboxInstallResponseDataFieldSandboxID         = big.NewInt(1 << 5)
+	stripeSandboxInstallResponseDataFieldStripeAccountID   = big.NewInt(1 << 6)
+)
+
+type StripeSandboxInstallResponseData struct {
+	APIKeys           *StripeSandboxKeysResponseData  `json:"api_keys,omitempty" url:"api_keys,omitempty"`
+	ClaimURL          string                          `json:"claim_url" url:"claim_url"`
+	ClaimURLExpiresAt *time.Time                      `json:"claim_url_expires_at,omitempty" url:"claim_url_expires_at,omitempty"`
+	ExpiresAt         *time.Time                      `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	Install           *IntegrationInstallResponseData `json:"install" url:"install"`
+	SandboxID         string                          `json:"sandbox_id" url:"sandbox_id"`
+	StripeAccountID   string                          `json:"stripe_account_id" url:"stripe_account_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StripeSandboxInstallResponseData) GetAPIKeys() *StripeSandboxKeysResponseData {
+	if s == nil {
+		return nil
+	}
+	return s.APIKeys
+}
+
+func (s *StripeSandboxInstallResponseData) GetClaimURL() string {
+	if s == nil {
+		return ""
+	}
+	return s.ClaimURL
+}
+
+func (s *StripeSandboxInstallResponseData) GetClaimURLExpiresAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.ClaimURLExpiresAt
+}
+
+func (s *StripeSandboxInstallResponseData) GetExpiresAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.ExpiresAt
+}
+
+func (s *StripeSandboxInstallResponseData) GetInstall() *IntegrationInstallResponseData {
+	if s == nil {
+		return nil
+	}
+	return s.Install
+}
+
+func (s *StripeSandboxInstallResponseData) GetSandboxID() string {
+	if s == nil {
+		return ""
+	}
+	return s.SandboxID
+}
+
+func (s *StripeSandboxInstallResponseData) GetStripeAccountID() string {
+	if s == nil {
+		return ""
+	}
+	return s.StripeAccountID
+}
+
+func (s *StripeSandboxInstallResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StripeSandboxInstallResponseData) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetAPIKeys sets the APIKeys field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetAPIKeys(apiKeys *StripeSandboxKeysResponseData) {
+	s.APIKeys = apiKeys
+	s.require(stripeSandboxInstallResponseDataFieldAPIKeys)
+}
+
+// SetClaimURL sets the ClaimURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetClaimURL(claimURL string) {
+	s.ClaimURL = claimURL
+	s.require(stripeSandboxInstallResponseDataFieldClaimURL)
+}
+
+// SetClaimURLExpiresAt sets the ClaimURLExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetClaimURLExpiresAt(claimURLExpiresAt *time.Time) {
+	s.ClaimURLExpiresAt = claimURLExpiresAt
+	s.require(stripeSandboxInstallResponseDataFieldClaimURLExpiresAt)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetExpiresAt(expiresAt *time.Time) {
+	s.ExpiresAt = expiresAt
+	s.require(stripeSandboxInstallResponseDataFieldExpiresAt)
+}
+
+// SetInstall sets the Install field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetInstall(install *IntegrationInstallResponseData) {
+	s.Install = install
+	s.require(stripeSandboxInstallResponseDataFieldInstall)
+}
+
+// SetSandboxID sets the SandboxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetSandboxID(sandboxID string) {
+	s.SandboxID = sandboxID
+	s.require(stripeSandboxInstallResponseDataFieldSandboxID)
+}
+
+// SetStripeAccountID sets the StripeAccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxInstallResponseData) SetStripeAccountID(stripeAccountID string) {
+	s.StripeAccountID = stripeAccountID
+	s.require(stripeSandboxInstallResponseDataFieldStripeAccountID)
+}
+
+func (s *StripeSandboxInstallResponseData) UnmarshalJSON(data []byte) error {
+	type embed StripeSandboxInstallResponseData
+	var unmarshaler = struct {
+		embed
+		ClaimURLExpiresAt *internal.DateTime `json:"claim_url_expires_at,omitempty"`
+		ExpiresAt         *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*s = StripeSandboxInstallResponseData(unmarshaler.embed)
+	s.ClaimURLExpiresAt = unmarshaler.ClaimURLExpiresAt.TimePtr()
+	s.ExpiresAt = unmarshaler.ExpiresAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StripeSandboxInstallResponseData) MarshalJSON() ([]byte, error) {
+	type embed StripeSandboxInstallResponseData
+	var marshaler = struct {
+		embed
+		ClaimURLExpiresAt *internal.DateTime `json:"claim_url_expires_at,omitempty"`
+		ExpiresAt         *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:             embed(*s),
+		ClaimURLExpiresAt: internal.NewOptionalDateTime(s.ClaimURLExpiresAt),
+		ExpiresAt:         internal.NewOptionalDateTime(s.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StripeSandboxInstallResponseData) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
+	stripeSandboxKeysResponseDataFieldMcp         = big.NewInt(1 << 0)
+	stripeSandboxKeysResponseDataFieldPublishable = big.NewInt(1 << 1)
+	stripeSandboxKeysResponseDataFieldSecret      = big.NewInt(1 << 2)
+)
+
+type StripeSandboxKeysResponseData struct {
+	Mcp         string `json:"mcp" url:"mcp"`
+	Publishable string `json:"publishable" url:"publishable"`
+	Secret      string `json:"secret" url:"secret"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StripeSandboxKeysResponseData) GetMcp() string {
+	if s == nil {
+		return ""
+	}
+	return s.Mcp
+}
+
+func (s *StripeSandboxKeysResponseData) GetPublishable() string {
+	if s == nil {
+		return ""
+	}
+	return s.Publishable
+}
+
+func (s *StripeSandboxKeysResponseData) GetSecret() string {
+	if s == nil {
+		return ""
+	}
+	return s.Secret
+}
+
+func (s *StripeSandboxKeysResponseData) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StripeSandboxKeysResponseData) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetMcp sets the Mcp field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxKeysResponseData) SetMcp(mcp string) {
+	s.Mcp = mcp
+	s.require(stripeSandboxKeysResponseDataFieldMcp)
+}
+
+// SetPublishable sets the Publishable field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxKeysResponseData) SetPublishable(publishable string) {
+	s.Publishable = publishable
+	s.require(stripeSandboxKeysResponseDataFieldPublishable)
+}
+
+// SetSecret sets the Secret field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeSandboxKeysResponseData) SetSecret(secret string) {
+	s.Secret = secret
+	s.require(stripeSandboxKeysResponseDataFieldSecret)
+}
+
+func (s *StripeSandboxKeysResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler StripeSandboxKeysResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StripeSandboxKeysResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StripeSandboxKeysResponseData) MarshalJSON() ([]byte, error) {
+	type embed StripeSandboxKeysResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StripeSandboxKeysResponseData) String() string {
 	if s == nil {
 		return "<nil>"
 	}
@@ -2222,6 +3048,107 @@ func (a *AssumeStripeInstalledResponse) String() string {
 }
 
 var (
+	claimStripeSandboxKeysResponseFieldData   = big.NewInt(1 << 0)
+	claimStripeSandboxKeysResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ClaimStripeSandboxKeysResponse struct {
+	Data *ClaimedStripeSandboxKeysResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ClaimStripeSandboxKeysResponse) GetData() *ClaimedStripeSandboxKeysResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *ClaimStripeSandboxKeysResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *ClaimStripeSandboxKeysResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *ClaimStripeSandboxKeysResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClaimStripeSandboxKeysResponse) SetData(data *ClaimedStripeSandboxKeysResponseData) {
+	c.Data = data
+	c.require(claimStripeSandboxKeysResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ClaimStripeSandboxKeysResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(claimStripeSandboxKeysResponseFieldParams)
+}
+
+func (c *ClaimStripeSandboxKeysResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ClaimStripeSandboxKeysResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ClaimStripeSandboxKeysResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ClaimStripeSandboxKeysResponse) MarshalJSON() ([]byte, error) {
+	type embed ClaimStripeSandboxKeysResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ClaimStripeSandboxKeysResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	getIntegrationWebhookURLResponseFieldData   = big.NewInt(1 << 0)
 	getIntegrationWebhookURLResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -2323,6 +3250,208 @@ func (g *GetIntegrationWebhookURLResponse) String() string {
 }
 
 var (
+	getStripeSandboxClaimLinkResponseFieldData   = big.NewInt(1 << 0)
+	getStripeSandboxClaimLinkResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetStripeSandboxClaimLinkResponse struct {
+	Data *StripeSandboxClaimLink `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) GetData() *StripeSandboxClaimLink {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetStripeSandboxClaimLinkResponse) SetData(data *StripeSandboxClaimLink) {
+	g.Data = data
+	g.require(getStripeSandboxClaimLinkResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetStripeSandboxClaimLinkResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getStripeSandboxClaimLinkResponseFieldParams)
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetStripeSandboxClaimLinkResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetStripeSandboxClaimLinkResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) MarshalJSON() ([]byte, error) {
+	type embed GetStripeSandboxClaimLinkResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetStripeSandboxClaimLinkResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getStripeSandboxKeysResponseFieldData   = big.NewInt(1 << 0)
+	getStripeSandboxKeysResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetStripeSandboxKeysResponse struct {
+	Data *ClaimedStripeSandboxKeysResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetStripeSandboxKeysResponse) GetData() *ClaimedStripeSandboxKeysResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetStripeSandboxKeysResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetStripeSandboxKeysResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetStripeSandboxKeysResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetStripeSandboxKeysResponse) SetData(data *ClaimedStripeSandboxKeysResponseData) {
+	g.Data = data
+	g.require(getStripeSandboxKeysResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetStripeSandboxKeysResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getStripeSandboxKeysResponseFieldParams)
+}
+
+func (g *GetStripeSandboxKeysResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetStripeSandboxKeysResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetStripeSandboxKeysResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetStripeSandboxKeysResponse) MarshalJSON() ([]byte, error) {
+	type embed GetStripeSandboxKeysResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetStripeSandboxKeysResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	installIntegrationResponseFieldData   = big.NewInt(1 << 0)
 	installIntegrationResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -2409,6 +3538,107 @@ func (i *InstallIntegrationResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (i *InstallIntegrationResponse) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
+	installStripeClaimableSandboxResponseFieldData   = big.NewInt(1 << 0)
+	installStripeClaimableSandboxResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type InstallStripeClaimableSandboxResponse struct {
+	Data *StripeSandboxInstallResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InstallStripeClaimableSandboxResponse) GetData() *StripeSandboxInstallResponseData {
+	if i == nil {
+		return nil
+	}
+	return i.Data
+}
+
+func (i *InstallStripeClaimableSandboxResponse) GetParams() map[string]any {
+	if i == nil {
+		return nil
+	}
+	return i.Params
+}
+
+func (i *InstallStripeClaimableSandboxResponse) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InstallStripeClaimableSandboxResponse) require(field *big.Int) {
+	if i.explicitFields == nil {
+		i.explicitFields = big.NewInt(0)
+	}
+	i.explicitFields.Or(i.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InstallStripeClaimableSandboxResponse) SetData(data *StripeSandboxInstallResponseData) {
+	i.Data = data
+	i.require(installStripeClaimableSandboxResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InstallStripeClaimableSandboxResponse) SetParams(params map[string]any) {
+	i.Params = params
+	i.require(installStripeClaimableSandboxResponseFieldParams)
+}
+
+func (i *InstallStripeClaimableSandboxResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler InstallStripeClaimableSandboxResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InstallStripeClaimableSandboxResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InstallStripeClaimableSandboxResponse) MarshalJSON() ([]byte, error) {
+	type embed InstallStripeClaimableSandboxResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InstallStripeClaimableSandboxResponse) String() string {
 	if i == nil {
 		return "<nil>"
 	}
@@ -2794,6 +4024,107 @@ func (l *ListIntegrationsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListIntegrationsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listStripeSandboxCountriesResponseFieldData   = big.NewInt(1 << 0)
+	listStripeSandboxCountriesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListStripeSandboxCountriesResponse struct {
+	Data *StripeSandboxCountriesResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListStripeSandboxCountriesResponse) GetData() *StripeSandboxCountriesResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListStripeSandboxCountriesResponse) GetParams() map[string]any {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListStripeSandboxCountriesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListStripeSandboxCountriesResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListStripeSandboxCountriesResponse) SetData(data *StripeSandboxCountriesResponseData) {
+	l.Data = data
+	l.require(listStripeSandboxCountriesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListStripeSandboxCountriesResponse) SetParams(params map[string]any) {
+	l.Params = params
+	l.require(listStripeSandboxCountriesResponseFieldParams)
+}
+
+func (l *ListStripeSandboxCountriesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListStripeSandboxCountriesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListStripeSandboxCountriesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListStripeSandboxCountriesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListStripeSandboxCountriesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListStripeSandboxCountriesResponse) String() string {
 	if l == nil {
 		return "<nil>"
 	}

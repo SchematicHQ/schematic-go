@@ -140,28 +140,6 @@ func (c *CheckoutDataRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
-type BillingCollectionMethod string
-
-const (
-	BillingCollectionMethodChargeAutomatically BillingCollectionMethod = "charge_automatically"
-	BillingCollectionMethodSendInvoice         BillingCollectionMethod = "send_invoice"
-)
-
-func NewBillingCollectionMethodFromString(s string) (BillingCollectionMethod, error) {
-	switch s {
-	case "charge_automatically":
-		return BillingCollectionMethodChargeAutomatically, nil
-	case "send_invoice":
-		return BillingCollectionMethodSendInvoice, nil
-	}
-	var t BillingCollectionMethod
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (b BillingCollectionMethod) Ptr() *BillingCollectionMethod {
-	return &b
-}
-
 var (
 	changeSubscriptionInternalRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
 	changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)

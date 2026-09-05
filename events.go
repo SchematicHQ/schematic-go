@@ -993,24 +993,27 @@ func (e *EventBodyIdentifyCompany) String() string {
 }
 
 var (
-	eventBodyInferenceFieldCachedInputTokens = big.NewInt(1 << 0)
-	eventBodyInferenceFieldCompany           = big.NewInt(1 << 1)
-	eventBodyInferenceFieldCost              = big.NewInt(1 << 2)
-	eventBodyInferenceFieldCurrency          = big.NewInt(1 << 3)
-	eventBodyInferenceFieldEvent             = big.NewInt(1 << 4)
-	eventBodyInferenceFieldInputTokens       = big.NewInt(1 << 5)
-	eventBodyInferenceFieldOperation         = big.NewInt(1 << 6)
-	eventBodyInferenceFieldOutputTokens      = big.NewInt(1 << 7)
-	eventBodyInferenceFieldProvider          = big.NewInt(1 << 8)
-	eventBodyInferenceFieldReasoningTokens   = big.NewInt(1 << 9)
-	eventBodyInferenceFieldRequestModel      = big.NewInt(1 << 10)
-	eventBodyInferenceFieldRequests          = big.NewInt(1 << 11)
-	eventBodyInferenceFieldResponseModel     = big.NewInt(1 << 12)
-	eventBodyInferenceFieldUser              = big.NewInt(1 << 13)
+	eventBodyInferenceFieldCacheCreationInputTokens = big.NewInt(1 << 0)
+	eventBodyInferenceFieldCachedInputTokens        = big.NewInt(1 << 1)
+	eventBodyInferenceFieldCompany                  = big.NewInt(1 << 2)
+	eventBodyInferenceFieldCost                     = big.NewInt(1 << 3)
+	eventBodyInferenceFieldCurrency                 = big.NewInt(1 << 4)
+	eventBodyInferenceFieldEvent                    = big.NewInt(1 << 5)
+	eventBodyInferenceFieldInputTokens              = big.NewInt(1 << 6)
+	eventBodyInferenceFieldOperation                = big.NewInt(1 << 7)
+	eventBodyInferenceFieldOutputTokens             = big.NewInt(1 << 8)
+	eventBodyInferenceFieldProvider                 = big.NewInt(1 << 9)
+	eventBodyInferenceFieldReasoningTokens          = big.NewInt(1 << 10)
+	eventBodyInferenceFieldRequestModel             = big.NewInt(1 << 11)
+	eventBodyInferenceFieldRequests                 = big.NewInt(1 << 12)
+	eventBodyInferenceFieldResponseModel            = big.NewInt(1 << 13)
+	eventBodyInferenceFieldUser                     = big.NewInt(1 << 14)
 )
 
 type EventBodyInference struct {
-	// Number of input tokens served from cache
+	// Number of input tokens written to a prompt cache; a subset of input_tokens
+	CacheCreationInputTokens *int64 `json:"cache_creation_input_tokens,omitempty" url:"cache_creation_input_tokens,omitempty"`
+	// Number of input tokens served from cache; a subset of input_tokens
 	CachedInputTokens *int64 `json:"cached_input_tokens,omitempty" url:"cached_input_tokens,omitempty"`
 	// Key-value pairs to identify the company associated with the inference event
 	Company map[string]string `json:"company" url:"company"`
@@ -1020,7 +1023,7 @@ type EventBodyInference struct {
 	Currency *string `json:"currency,omitempty" url:"currency,omitempty"`
 	// Optional track event name to fan out for usage-based billing
 	Event *string `json:"event,omitempty" url:"event,omitempty"`
-	// Number of input tokens for the inference request
+	// Total number of input tokens for the inference request, including those served from and written to a prompt cache
 	InputTokens int64 `json:"input_tokens" url:"input_tokens"`
 	// The inference operation; defaults to 'chat'
 	Operation *string `json:"operation,omitempty" url:"operation,omitempty"`
@@ -1044,6 +1047,13 @@ type EventBodyInference struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (e *EventBodyInference) GetCacheCreationInputTokens() *int64 {
+	if e == nil {
+		return nil
+	}
+	return e.CacheCreationInputTokens
 }
 
 func (e *EventBodyInference) GetCachedInputTokens() *int64 {
@@ -1156,6 +1166,13 @@ func (e *EventBodyInference) require(field *big.Int) {
 		e.explicitFields = big.NewInt(0)
 	}
 	e.explicitFields.Or(e.explicitFields, field)
+}
+
+// SetCacheCreationInputTokens sets the CacheCreationInputTokens field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetCacheCreationInputTokens(cacheCreationInputTokens *int64) {
+	e.CacheCreationInputTokens = cacheCreationInputTokens
+	e.require(eventBodyInferenceFieldCacheCreationInputTokens)
 }
 
 // SetCachedInputTokens sets the CachedInputTokens field and marks it as non-optional;
@@ -2024,6 +2041,214 @@ func (e EventType) Ptr() *EventType {
 }
 
 var (
+	otlpEnvironmentSettingsResponseDataFieldCompanyAttribute  = big.NewInt(1 << 0)
+	otlpEnvironmentSettingsResponseDataFieldCompanyKey        = big.NewInt(1 << 1)
+	otlpEnvironmentSettingsResponseDataFieldCreatedAt         = big.NewInt(1 << 2)
+	otlpEnvironmentSettingsResponseDataFieldEnvironmentID     = big.NewInt(1 << 3)
+	otlpEnvironmentSettingsResponseDataFieldToolEventsEnabled = big.NewInt(1 << 4)
+	otlpEnvironmentSettingsResponseDataFieldUpdatedAt         = big.NewInt(1 << 5)
+	otlpEnvironmentSettingsResponseDataFieldUserAttribute     = big.NewInt(1 << 6)
+	otlpEnvironmentSettingsResponseDataFieldUserKey           = big.NewInt(1 << 7)
+)
+
+type OtlpEnvironmentSettingsResponseData struct {
+	CompanyAttribute  *string   `json:"company_attribute,omitempty" url:"company_attribute,omitempty"`
+	CompanyKey        *string   `json:"company_key,omitempty" url:"company_key,omitempty"`
+	CreatedAt         time.Time `json:"created_at" url:"created_at"`
+	EnvironmentID     string    `json:"environment_id" url:"environment_id"`
+	ToolEventsEnabled bool      `json:"tool_events_enabled" url:"tool_events_enabled"`
+	UpdatedAt         time.Time `json:"updated_at" url:"updated_at"`
+	UserAttribute     *string   `json:"user_attribute,omitempty" url:"user_attribute,omitempty"`
+	UserKey           *string   `json:"user_key,omitempty" url:"user_key,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetCompanyAttribute() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CompanyAttribute
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetCompanyKey() *string {
+	if o == nil {
+		return nil
+	}
+	return o.CompanyKey
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetCreatedAt() time.Time {
+	if o == nil {
+		return time.Time{}
+	}
+	return o.CreatedAt
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetEnvironmentID() string {
+	if o == nil {
+		return ""
+	}
+	return o.EnvironmentID
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetToolEventsEnabled() bool {
+	if o == nil {
+		return false
+	}
+	return o.ToolEventsEnabled
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetUpdatedAt() time.Time {
+	if o == nil {
+		return time.Time{}
+	}
+	return o.UpdatedAt
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetUserAttribute() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UserAttribute
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetUserKey() *string {
+	if o == nil {
+		return nil
+	}
+	return o.UserKey
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) GetExtraProperties() map[string]interface{} {
+	if o == nil {
+		return nil
+	}
+	return o.extraProperties
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) require(field *big.Int) {
+	if o.explicitFields == nil {
+		o.explicitFields = big.NewInt(0)
+	}
+	o.explicitFields.Or(o.explicitFields, field)
+}
+
+// SetCompanyAttribute sets the CompanyAttribute field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetCompanyAttribute(companyAttribute *string) {
+	o.CompanyAttribute = companyAttribute
+	o.require(otlpEnvironmentSettingsResponseDataFieldCompanyAttribute)
+}
+
+// SetCompanyKey sets the CompanyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetCompanyKey(companyKey *string) {
+	o.CompanyKey = companyKey
+	o.require(otlpEnvironmentSettingsResponseDataFieldCompanyKey)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetCreatedAt(createdAt time.Time) {
+	o.CreatedAt = createdAt
+	o.require(otlpEnvironmentSettingsResponseDataFieldCreatedAt)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetEnvironmentID(environmentID string) {
+	o.EnvironmentID = environmentID
+	o.require(otlpEnvironmentSettingsResponseDataFieldEnvironmentID)
+}
+
+// SetToolEventsEnabled sets the ToolEventsEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetToolEventsEnabled(toolEventsEnabled bool) {
+	o.ToolEventsEnabled = toolEventsEnabled
+	o.require(otlpEnvironmentSettingsResponseDataFieldToolEventsEnabled)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetUpdatedAt(updatedAt time.Time) {
+	o.UpdatedAt = updatedAt
+	o.require(otlpEnvironmentSettingsResponseDataFieldUpdatedAt)
+}
+
+// SetUserAttribute sets the UserAttribute field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetUserAttribute(userAttribute *string) {
+	o.UserAttribute = userAttribute
+	o.require(otlpEnvironmentSettingsResponseDataFieldUserAttribute)
+}
+
+// SetUserKey sets the UserKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OtlpEnvironmentSettingsResponseData) SetUserKey(userKey *string) {
+	o.UserKey = userKey
+	o.require(otlpEnvironmentSettingsResponseDataFieldUserKey)
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) UnmarshalJSON(data []byte) error {
+	type embed OtlpEnvironmentSettingsResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*o),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*o = OtlpEnvironmentSettingsResponseData(unmarshaler.embed)
+	o.CreatedAt = unmarshaler.CreatedAt.Time()
+	o.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) MarshalJSON() ([]byte, error) {
+	type embed OtlpEnvironmentSettingsResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*o),
+		CreatedAt: internal.NewDateTime(o.CreatedAt),
+		UpdatedAt: internal.NewDateTime(o.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, o.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (o *OtlpEnvironmentSettingsResponseData) String() string {
+	if o == nil {
+		return "<nil>"
+	}
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+var (
 	rawEventBatchResponseDataFieldEvents = big.NewInt(1 << 0)
 )
 
@@ -2590,6 +2815,107 @@ func (c *CreateEventResponse) String() string {
 }
 
 var (
+	deleteOtlpEnvironmentSettingsResponseFieldData   = big.NewInt(1 << 0)
+	deleteOtlpEnvironmentSettingsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type DeleteOtlpEnvironmentSettingsResponse struct {
+	Data *DeleteResponse `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) GetParams() map[string]any {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteOtlpEnvironmentSettingsResponse) SetData(data *DeleteResponse) {
+	d.Data = data
+	d.require(deleteOtlpEnvironmentSettingsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteOtlpEnvironmentSettingsResponse) SetParams(params map[string]any) {
+	d.Params = params
+	d.require(deleteOtlpEnvironmentSettingsResponseFieldParams)
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteOtlpEnvironmentSettingsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteOtlpEnvironmentSettingsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteOtlpEnvironmentSettingsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteOtlpEnvironmentSettingsResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+var (
 	getEventResponseFieldData   = big.NewInt(1 << 0)
 	getEventResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -2912,6 +3238,107 @@ func (g *GetEventSummariesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetEventSummariesResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getOtlpEnvironmentSettingsResponseFieldData   = big.NewInt(1 << 0)
+	getOtlpEnvironmentSettingsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetOtlpEnvironmentSettingsResponse struct {
+	Data *OtlpEnvironmentSettingsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) GetData() *OtlpEnvironmentSettingsResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOtlpEnvironmentSettingsResponse) SetData(data *OtlpEnvironmentSettingsResponseData) {
+	g.Data = data
+	g.require(getOtlpEnvironmentSettingsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOtlpEnvironmentSettingsResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getOtlpEnvironmentSettingsResponseFieldParams)
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetOtlpEnvironmentSettingsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetOtlpEnvironmentSettingsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) MarshalJSON() ([]byte, error) {
+	type embed GetOtlpEnvironmentSettingsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetOtlpEnvironmentSettingsResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -3325,4 +3752,187 @@ func (l *ListEventsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	upsertOtlpEnvironmentSettingsResponseFieldData   = big.NewInt(1 << 0)
+	upsertOtlpEnvironmentSettingsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpsertOtlpEnvironmentSettingsResponse struct {
+	Data *OtlpEnvironmentSettingsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) GetData() *OtlpEnvironmentSettingsResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsResponse) SetData(data *OtlpEnvironmentSettingsResponseData) {
+	u.Data = data
+	u.require(upsertOtlpEnvironmentSettingsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(upsertOtlpEnvironmentSettingsResponseFieldParams)
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertOtlpEnvironmentSettingsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpsertOtlpEnvironmentSettingsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) MarshalJSON() ([]byte, error) {
+	type embed UpsertOtlpEnvironmentSettingsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpsertOtlpEnvironmentSettingsResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	upsertOtlpEnvironmentSettingsRequestBodyFieldCompanyAttribute  = big.NewInt(1 << 0)
+	upsertOtlpEnvironmentSettingsRequestBodyFieldCompanyKey        = big.NewInt(1 << 1)
+	upsertOtlpEnvironmentSettingsRequestBodyFieldToolEventsEnabled = big.NewInt(1 << 2)
+	upsertOtlpEnvironmentSettingsRequestBodyFieldUserAttribute     = big.NewInt(1 << 3)
+	upsertOtlpEnvironmentSettingsRequestBodyFieldUserKey           = big.NewInt(1 << 4)
+)
+
+type UpsertOtlpEnvironmentSettingsRequestBody struct {
+	CompanyAttribute  *string `json:"company_attribute,omitempty" url:"-"`
+	CompanyKey        *string `json:"company_key,omitempty" url:"-"`
+	ToolEventsEnabled bool    `json:"tool_events_enabled" url:"-"`
+	UserAttribute     *string `json:"user_attribute,omitempty" url:"-"`
+	UserKey           *string `json:"user_key,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetCompanyAttribute sets the CompanyAttribute field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) SetCompanyAttribute(companyAttribute *string) {
+	u.CompanyAttribute = companyAttribute
+	u.require(upsertOtlpEnvironmentSettingsRequestBodyFieldCompanyAttribute)
+}
+
+// SetCompanyKey sets the CompanyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) SetCompanyKey(companyKey *string) {
+	u.CompanyKey = companyKey
+	u.require(upsertOtlpEnvironmentSettingsRequestBodyFieldCompanyKey)
+}
+
+// SetToolEventsEnabled sets the ToolEventsEnabled field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) SetToolEventsEnabled(toolEventsEnabled bool) {
+	u.ToolEventsEnabled = toolEventsEnabled
+	u.require(upsertOtlpEnvironmentSettingsRequestBodyFieldToolEventsEnabled)
+}
+
+// SetUserAttribute sets the UserAttribute field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) SetUserAttribute(userAttribute *string) {
+	u.UserAttribute = userAttribute
+	u.require(upsertOtlpEnvironmentSettingsRequestBodyFieldUserAttribute)
+}
+
+// SetUserKey sets the UserKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) SetUserKey(userKey *string) {
+	u.UserKey = userKey
+	u.require(upsertOtlpEnvironmentSettingsRequestBodyFieldUserKey)
+}
+
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpsertOtlpEnvironmentSettingsRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpsertOtlpEnvironmentSettingsRequestBody(body)
+	return nil
+}
+
+func (u *UpsertOtlpEnvironmentSettingsRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpsertOtlpEnvironmentSettingsRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }

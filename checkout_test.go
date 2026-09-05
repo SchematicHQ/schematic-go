@@ -14280,35 +14280,6 @@ func TestStringUpdatePayInAdvanceRequestBody(t *testing.T) {
 	})
 }
 
-func TestEnumBillingCollectionMethod(t *testing.T) {
-	t.Run("NewFromString_charge_automatically", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewBillingCollectionMethodFromString("charge_automatically")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, BillingCollectionMethod("charge_automatically"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_send_invoice", func(t *testing.T) {
-		t.Parallel()
-		val, err := NewBillingCollectionMethodFromString("send_invoice")
-		assert.NoError(t, err, "valid enum value should not return error")
-		assert.Equal(t, BillingCollectionMethod("send_invoice"), val, "enum value should match expected wire value")
-	})
-
-	t.Run("NewFromString_Invalid", func(t *testing.T) {
-		_, err := NewBillingCollectionMethodFromString("invalid_value_that_does_not_exist")
-		assert.Error(t, err)
-	})
-
-	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewBillingCollectionMethodFromString("charge_automatically")
-		assert.NoError(t, err)
-		ptr := val.Ptr()
-		assert.NotNil(t, ptr)
-		assert.Equal(t, val, *ptr)
-	})
-}
-
 func TestExtraPropertiesCancelSubscriptionResponse(t *testing.T) {
 	t.Run("GetExtraProperties", func(t *testing.T) {
 		t.Parallel()

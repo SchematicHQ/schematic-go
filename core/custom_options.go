@@ -52,6 +52,25 @@ func WithEventBufferPeriod(period time.Duration) RequestOption {
 	}
 }
 
+// Shutdown timeout
+
+type ClientOptShutdownTimeout struct {
+	timeout time.Duration
+}
+
+func (c ClientOptShutdownTimeout) applyRequestOptions(opts *RequestOptions) {
+	opts.ShutdownTimeout = &c.timeout
+}
+
+// WithShutdownTimeout bounds how long Close spends flushing buffered events
+// before giving up. Lower it when the process has a short termination grace
+// period; the default is 10 seconds.
+func WithShutdownTimeout(timeout time.Duration) RequestOption {
+	return ClientOptShutdownTimeout{
+		timeout: timeout,
+	}
+}
+
 // Event Capture Base URL
 
 type ClientOptEventCaptureBaseURL struct {

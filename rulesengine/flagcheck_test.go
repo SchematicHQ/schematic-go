@@ -896,7 +896,7 @@ func TestCheckFlag(t *testing.T) {
 		creditFlag := func(creditID string, consumptionRate float64, eventSubtype *string) (*rulesengine.Flag, *rulesengine.Rule) {
 			rule := createTestRule()
 			condition := createTestCondition(rulesengine.ConditionTypeCredit)
-			condition.Operator = rulesengine.ComparableOperatorGte
+			condition.Operator = rulesengine.ComparableOperatorLt
 			condition.CreditID = &creditID
 			condition.ConsumptionRate = ptr(consumptionRate)
 			condition.EventSubtype = eventSubtype

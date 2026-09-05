@@ -882,6 +882,72 @@ func (c *Client) CountBillingProducts(
 
 // Example:
 //
+//	request := &schematichq.ListCompanyBillingProfilesRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    IsDefault: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListCompanyBillingProfiles(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListCompanyBillingProfiles(
+	ctx context.Context,
+	request *schematichq.ListCompanyBillingProfilesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListCompanyBillingProfilesResponse, error) {
+	response, err := c.WithRawResponse.ListCompanyBillingProfiles(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpdateCompanyBillingProfileRequestBody{
+//	    CollectionMethod: schematichq.BillingCollectionMethodChargeAutomatically,
+//	}
+//	client.Billing.UpdateCompanyBillingProfile(
+//	    context.TODO(),
+//	    "billing_profile_id",
+//	    request,
+//	)
+func (c *Client) UpdateCompanyBillingProfile(
+	ctx context.Context,
+	// billing_profile_id
+	billingProfileID string,
+	request *schematichq.UpdateCompanyBillingProfileRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateCompanyBillingProfileResponse, error) {
+	response, err := c.WithRawResponse.UpdateCompanyBillingProfile(
+		ctx,
+		billingProfileID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.CreateBillingSubscriptionRequestBody{
 //	    CancelAtPeriodEnd: true,
 //	    Currency: "currency",

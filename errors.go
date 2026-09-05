@@ -103,6 +103,30 @@ func (n *NotFoundError) Unwrap() error {
 	return n.APIError
 }
 
+// Payment required
+type PaymentRequiredError struct {
+	*core.APIError
+	Body *APIError
+}
+
+func (p *PaymentRequiredError) UnmarshalJSON(data []byte) error {
+	var body *APIError
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	p.StatusCode = 402
+	p.Body = body
+	return nil
+}
+
+func (p *PaymentRequiredError) MarshalJSON() ([]byte, error) {
+	return json.Marshal(p.Body)
+}
+
+func (p *PaymentRequiredError) Unwrap() error {
+	return p.APIError
+}
+
 // Unauthorized
 type UnauthorizedError struct {
 	*core.APIError

@@ -739,6 +739,69 @@ func (l *ListBillingProductsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	listCompanyBillingProfilesRequestFieldCompanyID    = big.NewInt(1 << 0)
+	listCompanyBillingProfilesRequestFieldIsDefault    = big.NewInt(1 << 1)
+	listCompanyBillingProfilesRequestFieldProviderType = big.NewInt(1 << 2)
+	listCompanyBillingProfilesRequestFieldLimit        = big.NewInt(1 << 3)
+	listCompanyBillingProfilesRequestFieldOffset       = big.NewInt(1 << 4)
+)
+
+type ListCompanyBillingProfilesRequest struct {
+	CompanyID    *string              `json:"-" url:"company_id,omitempty"`
+	IsDefault    *bool                `json:"-" url:"is_default,omitempty"`
+	ProviderType *BillingProviderType `json:"-" url:"provider_type,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListCompanyBillingProfilesRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesRequest) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCompanyBillingProfilesRequestFieldCompanyID)
+}
+
+// SetIsDefault sets the IsDefault field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesRequest) SetIsDefault(isDefault *bool) {
+	l.IsDefault = isDefault
+	l.require(listCompanyBillingProfilesRequestFieldIsDefault)
+}
+
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesRequest) SetProviderType(providerType *BillingProviderType) {
+	l.ProviderType = providerType
+	l.require(listCompanyBillingProfilesRequestFieldProviderType)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listCompanyBillingProfilesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listCompanyBillingProfilesRequestFieldOffset)
+}
+
+var (
 	listCouponsRequestFieldIsActive = big.NewInt(1 << 0)
 	listCouponsRequestFieldQ        = big.NewInt(1 << 1)
 	listCouponsRequestFieldLimit    = big.NewInt(1 << 2)
@@ -5744,6 +5807,258 @@ func (l *ListBillingProductsResponse) String() string {
 
 // Input parameters
 var (
+	listCompanyBillingProfilesParamsFieldCompanyID    = big.NewInt(1 << 0)
+	listCompanyBillingProfilesParamsFieldIsDefault    = big.NewInt(1 << 1)
+	listCompanyBillingProfilesParamsFieldLimit        = big.NewInt(1 << 2)
+	listCompanyBillingProfilesParamsFieldOffset       = big.NewInt(1 << 3)
+	listCompanyBillingProfilesParamsFieldProviderType = big.NewInt(1 << 4)
+)
+
+type ListCompanyBillingProfilesParams struct {
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	IsDefault *bool   `json:"is_default,omitempty" url:"is_default,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset       *int64               `json:"offset,omitempty" url:"offset,omitempty"`
+	ProviderType *BillingProviderType `json:"provider_type,omitempty" url:"provider_type,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyBillingProfilesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCompanyBillingProfilesParams) GetIsDefault() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.IsDefault
+}
+
+func (l *ListCompanyBillingProfilesParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCompanyBillingProfilesParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCompanyBillingProfilesParams) GetProviderType() *BillingProviderType {
+	if l == nil {
+		return nil
+	}
+	return l.ProviderType
+}
+
+func (l *ListCompanyBillingProfilesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCompanyBillingProfilesParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesParams) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCompanyBillingProfilesParamsFieldCompanyID)
+}
+
+// SetIsDefault sets the IsDefault field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesParams) SetIsDefault(isDefault *bool) {
+	l.IsDefault = isDefault
+	l.require(listCompanyBillingProfilesParamsFieldIsDefault)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listCompanyBillingProfilesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listCompanyBillingProfilesParamsFieldOffset)
+}
+
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesParams) SetProviderType(providerType *BillingProviderType) {
+	l.ProviderType = providerType
+	l.require(listCompanyBillingProfilesParamsFieldProviderType)
+}
+
+func (l *ListCompanyBillingProfilesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyBillingProfilesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyBillingProfilesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyBillingProfilesParams) MarshalJSON() ([]byte, error) {
+	type embed ListCompanyBillingProfilesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCompanyBillingProfilesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listCompanyBillingProfilesResponseFieldData   = big.NewInt(1 << 0)
+	listCompanyBillingProfilesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListCompanyBillingProfilesResponse struct {
+	Data []*CompanyBillingProfileResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListCompanyBillingProfilesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyBillingProfilesResponse) GetData() []*CompanyBillingProfileResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompanyBillingProfilesResponse) GetParams() *ListCompanyBillingProfilesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCompanyBillingProfilesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCompanyBillingProfilesResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesResponse) SetData(data []*CompanyBillingProfileResponseData) {
+	l.Data = data
+	l.require(listCompanyBillingProfilesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyBillingProfilesResponse) SetParams(params *ListCompanyBillingProfilesParams) {
+	l.Params = params
+	l.require(listCompanyBillingProfilesResponseFieldParams)
+}
+
+func (l *ListCompanyBillingProfilesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyBillingProfilesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyBillingProfilesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyBillingProfilesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListCompanyBillingProfilesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCompanyBillingProfilesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+var (
 	listCouponsParamsFieldIsActive = big.NewInt(1 << 0)
 	listCouponsParamsFieldLimit    = big.NewInt(1 << 1)
 	listCouponsParamsFieldOffset   = big.NewInt(1 << 2)
@@ -6955,6 +7270,107 @@ func (l *ListPaymentMethodsResponse) String() string {
 }
 
 var (
+	updateCompanyBillingProfileResponseFieldData   = big.NewInt(1 << 0)
+	updateCompanyBillingProfileResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpdateCompanyBillingProfileResponse struct {
+	Data *CompanyBillingProfileResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateCompanyBillingProfileResponse) GetData() *CompanyBillingProfileResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateCompanyBillingProfileResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdateCompanyBillingProfileResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateCompanyBillingProfileResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileResponse) SetData(data *CompanyBillingProfileResponseData) {
+	u.Data = data
+	u.require(updateCompanyBillingProfileResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(updateCompanyBillingProfileResponseFieldParams)
+}
+
+func (u *UpdateCompanyBillingProfileResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCompanyBillingProfileResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateCompanyBillingProfileResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateCompanyBillingProfileResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateCompanyBillingProfileResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateCompanyBillingProfileResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
 	upsertBillingCouponResponseFieldData   = big.NewInt(1 << 0)
 	upsertBillingCouponResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -7760,6 +8176,97 @@ func (u *UpsertPaymentMethodResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateCompanyBillingProfileRequestBodyFieldCollectionMethod  = big.NewInt(1 << 0)
+	updateCompanyBillingProfileRequestBodyFieldDaysUntilDue      = big.NewInt(1 << 1)
+	updateCompanyBillingProfileRequestBodyFieldIsDefault         = big.NewInt(1 << 2)
+	updateCompanyBillingProfileRequestBodyFieldName              = big.NewInt(1 << 3)
+	updateCompanyBillingProfileRequestBodyFieldPaymentMethodID   = big.NewInt(1 << 4)
+	updateCompanyBillingProfileRequestBodyFieldProrationBehavior = big.NewInt(1 << 5)
+)
+
+type UpdateCompanyBillingProfileRequestBody struct {
+	CollectionMethod  BillingCollectionMethod `json:"collection_method" url:"-"`
+	DaysUntilDue      *int64                  `json:"days_until_due,omitempty" url:"-"`
+	IsDefault         *bool                   `json:"is_default,omitempty" url:"-"`
+	Name              *string                 `json:"name,omitempty" url:"-"`
+	PaymentMethodID   *string                 `json:"payment_method_id,omitempty" url:"-"`
+	ProrationBehavior *ProrationBehavior      `json:"proration_behavior,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpdateCompanyBillingProfileRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetCollectionMethod(collectionMethod BillingCollectionMethod) {
+	u.CollectionMethod = collectionMethod
+	u.require(updateCompanyBillingProfileRequestBodyFieldCollectionMethod)
+}
+
+// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
+	u.DaysUntilDue = daysUntilDue
+	u.require(updateCompanyBillingProfileRequestBodyFieldDaysUntilDue)
+}
+
+// SetIsDefault sets the IsDefault field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetIsDefault(isDefault *bool) {
+	u.IsDefault = isDefault
+	u.require(updateCompanyBillingProfileRequestBodyFieldIsDefault)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetName(name *string) {
+	u.Name = name
+	u.require(updateCompanyBillingProfileRequestBodyFieldName)
+}
+
+// SetPaymentMethodID sets the PaymentMethodID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetPaymentMethodID(paymentMethodID *string) {
+	u.PaymentMethodID = paymentMethodID
+	u.require(updateCompanyBillingProfileRequestBodyFieldPaymentMethodID)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetProrationBehavior(prorationBehavior *ProrationBehavior) {
+	u.ProrationBehavior = prorationBehavior
+	u.require(updateCompanyBillingProfileRequestBodyFieldProrationBehavior)
+}
+
+func (u *UpdateCompanyBillingProfileRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCompanyBillingProfileRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateCompanyBillingProfileRequestBody(body)
+	return nil
+}
+
+func (u *UpdateCompanyBillingProfileRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateCompanyBillingProfileRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (

@@ -509,6 +509,87 @@ func (c *CountCreditEventLedgerRequest) SetOffset(offset *int64) {
 }
 
 var (
+	countCreditSpendPoliciesRequestFieldBillingCreditID = big.NewInt(1 << 0)
+	countCreditSpendPoliciesRequestFieldCompanyID       = big.NewInt(1 << 1)
+	countCreditSpendPoliciesRequestFieldScopeType       = big.NewInt(1 << 2)
+	countCreditSpendPoliciesRequestFieldUserID          = big.NewInt(1 << 3)
+	countCreditSpendPoliciesRequestFieldUserIDs         = big.NewInt(1 << 4)
+	countCreditSpendPoliciesRequestFieldLimit           = big.NewInt(1 << 5)
+	countCreditSpendPoliciesRequestFieldOffset          = big.NewInt(1 << 6)
+)
+
+type CountCreditSpendPoliciesRequest struct {
+	BillingCreditID *string                 `json:"-" url:"billing_credit_id,omitempty"`
+	CompanyID       *string                 `json:"-" url:"company_id,omitempty"`
+	ScopeType       *CreditSpendPolicyScope `json:"-" url:"scope_type,omitempty"`
+	UserID          *string                 `json:"-" url:"user_id,omitempty"`
+	UserIDs         []*string               `json:"-" url:"user_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountCreditSpendPoliciesRequest) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetBillingCreditID(billingCreditID *string) {
+	c.BillingCreditID = billingCreditID
+	c.require(countCreditSpendPoliciesRequestFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countCreditSpendPoliciesRequestFieldCompanyID)
+}
+
+// SetScopeType sets the ScopeType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetScopeType(scopeType *CreditSpendPolicyScope) {
+	c.ScopeType = scopeType
+	c.require(countCreditSpendPoliciesRequestFieldScopeType)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(countCreditSpendPoliciesRequestFieldUserID)
+}
+
+// SetUserIDs sets the UserIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetUserIDs(userIDs []*string) {
+	c.UserIDs = userIDs
+	c.require(countCreditSpendPoliciesRequestFieldUserIDs)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countCreditSpendPoliciesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesRequest) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countCreditSpendPoliciesRequestFieldOffset)
+}
+
+var (
 	createBillingCreditRequestBodyFieldBurnStrategy           = big.NewInt(1 << 0)
 	createBillingCreditRequestBodyFieldCurrency               = big.NewInt(1 << 1)
 	createBillingCreditRequestBodyFieldCurrencyPrices         = big.NewInt(1 << 2)
@@ -808,6 +889,91 @@ func (c *CreateCreditBundleRequestBody) UnmarshalJSON(data []byte) error {
 
 func (c *CreateCreditBundleRequestBody) MarshalJSON() ([]byte, error) {
 	type embed CreateCreditBundleRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	createCreditSpendPolicyRequestBodyFieldBillingCreditID = big.NewInt(1 << 0)
+	createCreditSpendPolicyRequestBodyFieldCompanyID       = big.NewInt(1 << 1)
+	createCreditSpendPolicyRequestBodyFieldLabel           = big.NewInt(1 << 2)
+	createCreditSpendPolicyRequestBodyFieldMaxPerDraw      = big.NewInt(1 << 3)
+	createCreditSpendPolicyRequestBodyFieldUserID          = big.NewInt(1 << 4)
+)
+
+type CreateCreditSpendPolicyRequestBody struct {
+	BillingCreditID string `json:"billing_credit_id" url:"-"`
+	// The company the cap applies to. Set exactly one of company_id and user_id.
+	CompanyID *string `json:"company_id,omitempty" url:"-"`
+	Label     *string `json:"label,omitempty" url:"-"`
+	// The largest number of credits a single draw may spend.
+	MaxPerDraw float64 `json:"max_per_draw" url:"-"`
+	// The user the cap applies to. Set exactly one of company_id and user_id.
+	UserID *string `json:"user_id,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CreateCreditSpendPolicyRequestBody) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyRequestBody) SetBillingCreditID(billingCreditID string) {
+	c.BillingCreditID = billingCreditID
+	c.require(createCreditSpendPolicyRequestBodyFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyRequestBody) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(createCreditSpendPolicyRequestBodyFieldCompanyID)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyRequestBody) SetLabel(label *string) {
+	c.Label = label
+	c.require(createCreditSpendPolicyRequestBodyFieldLabel)
+}
+
+// SetMaxPerDraw sets the MaxPerDraw field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyRequestBody) SetMaxPerDraw(maxPerDraw float64) {
+	c.MaxPerDraw = maxPerDraw
+	c.require(createCreditSpendPolicyRequestBodyFieldMaxPerDraw)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyRequestBody) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(createCreditSpendPolicyRequestBodyFieldUserID)
+}
+
+func (c *CreateCreditSpendPolicyRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCreditSpendPolicyRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CreateCreditSpendPolicyRequestBody(body)
+	return nil
+}
+
+func (c *CreateCreditSpendPolicyRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreateCreditSpendPolicyRequestBody
 	var marshaler = struct {
 		embed
 	}{
@@ -1438,6 +1604,87 @@ func (l *ListCreditEventLedgerRequest) SetLimit(limit *int64) {
 func (l *ListCreditEventLedgerRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCreditEventLedgerRequestFieldOffset)
+}
+
+var (
+	listCreditSpendPoliciesRequestFieldBillingCreditID = big.NewInt(1 << 0)
+	listCreditSpendPoliciesRequestFieldCompanyID       = big.NewInt(1 << 1)
+	listCreditSpendPoliciesRequestFieldScopeType       = big.NewInt(1 << 2)
+	listCreditSpendPoliciesRequestFieldUserID          = big.NewInt(1 << 3)
+	listCreditSpendPoliciesRequestFieldUserIDs         = big.NewInt(1 << 4)
+	listCreditSpendPoliciesRequestFieldLimit           = big.NewInt(1 << 5)
+	listCreditSpendPoliciesRequestFieldOffset          = big.NewInt(1 << 6)
+)
+
+type ListCreditSpendPoliciesRequest struct {
+	BillingCreditID *string                 `json:"-" url:"billing_credit_id,omitempty"`
+	CompanyID       *string                 `json:"-" url:"company_id,omitempty"`
+	ScopeType       *CreditSpendPolicyScope `json:"-" url:"scope_type,omitempty"`
+	UserID          *string                 `json:"-" url:"user_id,omitempty"`
+	UserIDs         []*string               `json:"-" url:"user_ids,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListCreditSpendPoliciesRequest) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetBillingCreditID(billingCreditID *string) {
+	l.BillingCreditID = billingCreditID
+	l.require(listCreditSpendPoliciesRequestFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCreditSpendPoliciesRequestFieldCompanyID)
+}
+
+// SetScopeType sets the ScopeType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetScopeType(scopeType *CreditSpendPolicyScope) {
+	l.ScopeType = scopeType
+	l.require(listCreditSpendPoliciesRequestFieldScopeType)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetUserID(userID *string) {
+	l.UserID = userID
+	l.require(listCreditSpendPoliciesRequestFieldUserID)
+}
+
+// SetUserIDs sets the UserIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetUserIDs(userIDs []*string) {
+	l.UserIDs = userIDs
+	l.require(listCreditSpendPoliciesRequestFieldUserIDs)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listCreditSpendPoliciesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listCreditSpendPoliciesRequestFieldOffset)
 }
 
 var (
@@ -3614,6 +3861,255 @@ func (c *CreditLeaseResponseData) String() string {
 }
 
 var (
+	creditSpendPolicyResponseDataFieldBillingCreditID = big.NewInt(1 << 0)
+	creditSpendPolicyResponseDataFieldCompanyID       = big.NewInt(1 << 1)
+	creditSpendPolicyResponseDataFieldCreatedAt       = big.NewInt(1 << 2)
+	creditSpendPolicyResponseDataFieldID              = big.NewInt(1 << 3)
+	creditSpendPolicyResponseDataFieldLabel           = big.NewInt(1 << 4)
+	creditSpendPolicyResponseDataFieldMaxPerDraw      = big.NewInt(1 << 5)
+	creditSpendPolicyResponseDataFieldScopeType       = big.NewInt(1 << 6)
+	creditSpendPolicyResponseDataFieldUpdatedAt       = big.NewInt(1 << 7)
+	creditSpendPolicyResponseDataFieldUserID          = big.NewInt(1 << 8)
+)
+
+type CreditSpendPolicyResponseData struct {
+	BillingCreditID string                 `json:"billing_credit_id" url:"billing_credit_id"`
+	CompanyID       *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
+	CreatedAt       time.Time              `json:"created_at" url:"created_at"`
+	ID              string                 `json:"id" url:"id"`
+	Label           *string                `json:"label,omitempty" url:"label,omitempty"`
+	MaxPerDraw      *float64               `json:"max_per_draw,omitempty" url:"max_per_draw,omitempty"`
+	ScopeType       CreditSpendPolicyScope `json:"scope_type" url:"scope_type"`
+	UpdatedAt       time.Time              `json:"updated_at" url:"updated_at"`
+	UserID          *string                `json:"user_id,omitempty" url:"user_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditSpendPolicyResponseData) GetBillingCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.BillingCreditID
+}
+
+func (c *CreditSpendPolicyResponseData) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CreditSpendPolicyResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CreditSpendPolicyResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditSpendPolicyResponseData) GetLabel() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Label
+}
+
+func (c *CreditSpendPolicyResponseData) GetMaxPerDraw() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.MaxPerDraw
+}
+
+func (c *CreditSpendPolicyResponseData) GetScopeType() CreditSpendPolicyScope {
+	if c == nil {
+		return ""
+	}
+	return c.ScopeType
+}
+
+func (c *CreditSpendPolicyResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CreditSpendPolicyResponseData) GetUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UserID
+}
+
+func (c *CreditSpendPolicyResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditSpendPolicyResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetBillingCreditID(billingCreditID string) {
+	c.BillingCreditID = billingCreditID
+	c.require(creditSpendPolicyResponseDataFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(creditSpendPolicyResponseDataFieldCompanyID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(creditSpendPolicyResponseDataFieldCreatedAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetID(id string) {
+	c.ID = id
+	c.require(creditSpendPolicyResponseDataFieldID)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetLabel(label *string) {
+	c.Label = label
+	c.require(creditSpendPolicyResponseDataFieldLabel)
+}
+
+// SetMaxPerDraw sets the MaxPerDraw field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetMaxPerDraw(maxPerDraw *float64) {
+	c.MaxPerDraw = maxPerDraw
+	c.require(creditSpendPolicyResponseDataFieldMaxPerDraw)
+}
+
+// SetScopeType sets the ScopeType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetScopeType(scopeType CreditSpendPolicyScope) {
+	c.ScopeType = scopeType
+	c.require(creditSpendPolicyResponseDataFieldScopeType)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(creditSpendPolicyResponseDataFieldUpdatedAt)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicyResponseData) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(creditSpendPolicyResponseDataFieldUserID)
+}
+
+func (c *CreditSpendPolicyResponseData) UnmarshalJSON(data []byte) error {
+	type embed CreditSpendPolicyResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditSpendPolicyResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditSpendPolicyResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditSpendPolicyResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditSpendPolicyResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CreditSpendPolicyScope string
+
+const (
+	CreditSpendPolicyScopeCompany CreditSpendPolicyScope = "company"
+	CreditSpendPolicyScopeUser    CreditSpendPolicyScope = "user"
+	CreditSpendPolicyScopeGroup   CreditSpendPolicyScope = "group"
+)
+
+func NewCreditSpendPolicyScopeFromString(s string) (CreditSpendPolicyScope, error) {
+	switch s {
+	case "company":
+		return CreditSpendPolicyScopeCompany, nil
+	case "user":
+		return CreditSpendPolicyScopeUser, nil
+	case "group":
+		return CreditSpendPolicyScopeGroup, nil
+	}
+	var t CreditSpendPolicyScope
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditSpendPolicyScope) Ptr() *CreditSpendPolicyScope {
+	return &c
+}
+
+var (
 	creditTransferResponseDataFieldAmount         = big.NewInt(1 << 0)
 	creditTransferResponseDataFieldCreatedAt      = big.NewInt(1 << 1)
 	creditTransferResponseDataFieldDirection      = big.NewInt(1 << 2)
@@ -5636,6 +6132,290 @@ func (c *CountCreditEventLedgerResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+// Input parameters
+var (
+	countCreditSpendPoliciesParamsFieldBillingCreditID = big.NewInt(1 << 0)
+	countCreditSpendPoliciesParamsFieldCompanyID       = big.NewInt(1 << 1)
+	countCreditSpendPoliciesParamsFieldLimit           = big.NewInt(1 << 2)
+	countCreditSpendPoliciesParamsFieldOffset          = big.NewInt(1 << 3)
+	countCreditSpendPoliciesParamsFieldScopeType       = big.NewInt(1 << 4)
+	countCreditSpendPoliciesParamsFieldUserID          = big.NewInt(1 << 5)
+	countCreditSpendPoliciesParamsFieldUserIDs         = big.NewInt(1 << 6)
+)
+
+type CountCreditSpendPoliciesParams struct {
+	BillingCreditID *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	CompanyID       *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int64                  `json:"offset,omitempty" url:"offset,omitempty"`
+	ScopeType *CreditSpendPolicyScope `json:"scope_type,omitempty" url:"scope_type,omitempty"`
+	UserID    *string                 `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserIDs   []string                `json:"user_ids,omitempty" url:"user_ids,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCreditSpendPoliciesParams) GetBillingCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditID
+}
+
+func (c *CountCreditSpendPoliciesParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountCreditSpendPoliciesParams) GetLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCreditSpendPoliciesParams) GetOffset() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCreditSpendPoliciesParams) GetScopeType() *CreditSpendPolicyScope {
+	if c == nil {
+		return nil
+	}
+	return c.ScopeType
+}
+
+func (c *CountCreditSpendPoliciesParams) GetUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UserID
+}
+
+func (c *CountCreditSpendPoliciesParams) GetUserIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.UserIDs
+}
+
+func (c *CountCreditSpendPoliciesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountCreditSpendPoliciesParams) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetBillingCreditID(billingCreditID *string) {
+	c.BillingCreditID = billingCreditID
+	c.require(countCreditSpendPoliciesParamsFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countCreditSpendPoliciesParamsFieldCompanyID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countCreditSpendPoliciesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countCreditSpendPoliciesParamsFieldOffset)
+}
+
+// SetScopeType sets the ScopeType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetScopeType(scopeType *CreditSpendPolicyScope) {
+	c.ScopeType = scopeType
+	c.require(countCreditSpendPoliciesParamsFieldScopeType)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(countCreditSpendPoliciesParamsFieldUserID)
+}
+
+// SetUserIDs sets the UserIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesParams) SetUserIDs(userIDs []string) {
+	c.UserIDs = userIDs
+	c.require(countCreditSpendPoliciesParamsFieldUserIDs)
+}
+
+func (c *CountCreditSpendPoliciesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCreditSpendPoliciesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCreditSpendPoliciesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCreditSpendPoliciesParams) MarshalJSON() ([]byte, error) {
+	type embed CountCreditSpendPoliciesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCreditSpendPoliciesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countCreditSpendPoliciesResponseFieldData   = big.NewInt(1 << 0)
+	countCreditSpendPoliciesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountCreditSpendPoliciesResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountCreditSpendPoliciesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCreditSpendPoliciesResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCreditSpendPoliciesResponse) GetParams() *CountCreditSpendPoliciesParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountCreditSpendPoliciesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountCreditSpendPoliciesResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countCreditSpendPoliciesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditSpendPoliciesResponse) SetParams(params *CountCreditSpendPoliciesParams) {
+	c.Params = params
+	c.require(countCreditSpendPoliciesResponseFieldParams)
+}
+
+func (c *CountCreditSpendPoliciesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCreditSpendPoliciesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCreditSpendPoliciesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCreditSpendPoliciesResponse) MarshalJSON() ([]byte, error) {
+	type embed CountCreditSpendPoliciesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCreditSpendPoliciesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 var (
 	createBillingCreditResponseFieldData   = big.NewInt(1 << 0)
 	createBillingCreditResponseFieldParams = big.NewInt(1 << 1)
@@ -5939,6 +6719,107 @@ func (c *CreateCreditBundleResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+var (
+	createCreditSpendPolicyResponseFieldData   = big.NewInt(1 << 0)
+	createCreditSpendPolicyResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CreateCreditSpendPolicyResponse struct {
+	Data *CreditSpendPolicyResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreateCreditSpendPolicyResponse) GetData() *CreditSpendPolicyResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CreateCreditSpendPolicyResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CreateCreditSpendPolicyResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreateCreditSpendPolicyResponse) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyResponse) SetData(data *CreditSpendPolicyResponseData) {
+	c.Data = data
+	c.require(createCreditSpendPolicyResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCreditSpendPolicyResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(createCreditSpendPolicyResponseFieldParams)
+}
+
+func (c *CreateCreditSpendPolicyResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreateCreditSpendPolicyResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreateCreditSpendPolicyResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreateCreditSpendPolicyResponse) MarshalJSON() ([]byte, error) {
+	type embed CreateCreditSpendPolicyResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreateCreditSpendPolicyResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
 // Input parameters
 var (
 	deleteBillingPlanCreditGrantParamsFieldApplyToExisting = big.NewInt(1 << 0)
@@ -6227,6 +7108,107 @@ func (d *DeleteCreditBundleResponse) String() string {
 }
 
 var (
+	deleteCreditSpendPolicyResponseFieldData   = big.NewInt(1 << 0)
+	deleteCreditSpendPolicyResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type DeleteCreditSpendPolicyResponse struct {
+	Data *DeleteResponse `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DeleteCreditSpendPolicyResponse) GetData() *DeleteResponse {
+	if d == nil {
+		return nil
+	}
+	return d.Data
+}
+
+func (d *DeleteCreditSpendPolicyResponse) GetParams() map[string]any {
+	if d == nil {
+		return nil
+	}
+	return d.Params
+}
+
+func (d *DeleteCreditSpendPolicyResponse) GetExtraProperties() map[string]interface{} {
+	if d == nil {
+		return nil
+	}
+	return d.extraProperties
+}
+
+func (d *DeleteCreditSpendPolicyResponse) require(field *big.Int) {
+	if d.explicitFields == nil {
+		d.explicitFields = big.NewInt(0)
+	}
+	d.explicitFields.Or(d.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteCreditSpendPolicyResponse) SetData(data *DeleteResponse) {
+	d.Data = data
+	d.require(deleteCreditSpendPolicyResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (d *DeleteCreditSpendPolicyResponse) SetParams(params map[string]any) {
+	d.Params = params
+	d.require(deleteCreditSpendPolicyResponseFieldParams)
+}
+
+func (d *DeleteCreditSpendPolicyResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeleteCreditSpendPolicyResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeleteCreditSpendPolicyResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeleteCreditSpendPolicyResponse) MarshalJSON() ([]byte, error) {
+	type embed DeleteCreditSpendPolicyResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*d),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, d.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (d *DeleteCreditSpendPolicyResponse) String() string {
+	if d == nil {
+		return "<nil>"
+	}
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+var (
 	extendCreditLeaseResponseFieldData   = big.NewInt(1 << 0)
 	extendCreditLeaseResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -6414,6 +7396,107 @@ func (g *GetCreditBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetCreditBundleResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getCreditSpendPolicyResponseFieldData   = big.NewInt(1 << 0)
+	getCreditSpendPolicyResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetCreditSpendPolicyResponse struct {
+	Data *CreditSpendPolicyResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCreditSpendPolicyResponse) GetData() *CreditSpendPolicyResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCreditSpendPolicyResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetCreditSpendPolicyResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCreditSpendPolicyResponse) require(field *big.Int) {
+	if g.explicitFields == nil {
+		g.explicitFields = big.NewInt(0)
+	}
+	g.explicitFields.Or(g.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCreditSpendPolicyResponse) SetData(data *CreditSpendPolicyResponseData) {
+	g.Data = data
+	g.require(getCreditSpendPolicyResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCreditSpendPolicyResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getCreditSpendPolicyResponseFieldParams)
+}
+
+func (g *GetCreditSpendPolicyResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetCreditSpendPolicyResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetCreditSpendPolicyResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCreditSpendPolicyResponse) MarshalJSON() ([]byte, error) {
+	type embed GetCreditSpendPolicyResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCreditSpendPolicyResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -8268,6 +9351,290 @@ func (l *ListCreditEventLedgerResponse) String() string {
 
 // Input parameters
 var (
+	listCreditSpendPoliciesParamsFieldBillingCreditID = big.NewInt(1 << 0)
+	listCreditSpendPoliciesParamsFieldCompanyID       = big.NewInt(1 << 1)
+	listCreditSpendPoliciesParamsFieldLimit           = big.NewInt(1 << 2)
+	listCreditSpendPoliciesParamsFieldOffset          = big.NewInt(1 << 3)
+	listCreditSpendPoliciesParamsFieldScopeType       = big.NewInt(1 << 4)
+	listCreditSpendPoliciesParamsFieldUserID          = big.NewInt(1 << 5)
+	listCreditSpendPoliciesParamsFieldUserIDs         = big.NewInt(1 << 6)
+)
+
+type ListCreditSpendPoliciesParams struct {
+	BillingCreditID *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	CompanyID       *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset    *int64                  `json:"offset,omitempty" url:"offset,omitempty"`
+	ScopeType *CreditSpendPolicyScope `json:"scope_type,omitempty" url:"scope_type,omitempty"`
+	UserID    *string                 `json:"user_id,omitempty" url:"user_id,omitempty"`
+	UserIDs   []string                `json:"user_ids,omitempty" url:"user_ids,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCreditSpendPoliciesParams) GetBillingCreditID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.BillingCreditID
+}
+
+func (l *ListCreditSpendPoliciesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCreditSpendPoliciesParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCreditSpendPoliciesParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCreditSpendPoliciesParams) GetScopeType() *CreditSpendPolicyScope {
+	if l == nil {
+		return nil
+	}
+	return l.ScopeType
+}
+
+func (l *ListCreditSpendPoliciesParams) GetUserID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.UserID
+}
+
+func (l *ListCreditSpendPoliciesParams) GetUserIDs() []string {
+	if l == nil {
+		return nil
+	}
+	return l.UserIDs
+}
+
+func (l *ListCreditSpendPoliciesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCreditSpendPoliciesParams) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetBillingCreditID(billingCreditID *string) {
+	l.BillingCreditID = billingCreditID
+	l.require(listCreditSpendPoliciesParamsFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCreditSpendPoliciesParamsFieldCompanyID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listCreditSpendPoliciesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listCreditSpendPoliciesParamsFieldOffset)
+}
+
+// SetScopeType sets the ScopeType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetScopeType(scopeType *CreditSpendPolicyScope) {
+	l.ScopeType = scopeType
+	l.require(listCreditSpendPoliciesParamsFieldScopeType)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetUserID(userID *string) {
+	l.UserID = userID
+	l.require(listCreditSpendPoliciesParamsFieldUserID)
+}
+
+// SetUserIDs sets the UserIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesParams) SetUserIDs(userIDs []string) {
+	l.UserIDs = userIDs
+	l.require(listCreditSpendPoliciesParamsFieldUserIDs)
+}
+
+func (l *ListCreditSpendPoliciesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCreditSpendPoliciesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCreditSpendPoliciesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCreditSpendPoliciesParams) MarshalJSON() ([]byte, error) {
+	type embed ListCreditSpendPoliciesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCreditSpendPoliciesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listCreditSpendPoliciesResponseFieldData   = big.NewInt(1 << 0)
+	listCreditSpendPoliciesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListCreditSpendPoliciesResponse struct {
+	Data []*CreditSpendPolicyResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListCreditSpendPoliciesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCreditSpendPoliciesResponse) GetData() []*CreditSpendPolicyResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCreditSpendPoliciesResponse) GetParams() *ListCreditSpendPoliciesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCreditSpendPoliciesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCreditSpendPoliciesResponse) require(field *big.Int) {
+	if l.explicitFields == nil {
+		l.explicitFields = big.NewInt(0)
+	}
+	l.explicitFields.Or(l.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesResponse) SetData(data []*CreditSpendPolicyResponseData) {
+	l.Data = data
+	l.require(listCreditSpendPoliciesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditSpendPoliciesResponse) SetParams(params *ListCreditSpendPoliciesParams) {
+	l.Params = params
+	l.require(listCreditSpendPoliciesResponseFieldParams)
+}
+
+func (l *ListCreditSpendPoliciesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCreditSpendPoliciesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCreditSpendPoliciesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCreditSpendPoliciesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListCreditSpendPoliciesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCreditSpendPoliciesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+var (
 	listGrantsForCreditParamsFieldCreditID = big.NewInt(1 << 0)
 	listGrantsForCreditParamsFieldIDs      = big.NewInt(1 << 1)
 	listGrantsForCreditParamsFieldLimit    = big.NewInt(1 << 2)
@@ -9008,6 +10375,107 @@ func (u *UpdateCreditBundleDetailsResponse) String() string {
 }
 
 var (
+	updateCreditSpendPolicyResponseFieldData   = big.NewInt(1 << 0)
+	updateCreditSpendPolicyResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpdateCreditSpendPolicyResponse struct {
+	Data *CreditSpendPolicyResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateCreditSpendPolicyResponse) GetData() *CreditSpendPolicyResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateCreditSpendPolicyResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdateCreditSpendPolicyResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateCreditSpendPolicyResponse) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCreditSpendPolicyResponse) SetData(data *CreditSpendPolicyResponseData) {
+	u.Data = data
+	u.require(updateCreditSpendPolicyResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCreditSpendPolicyResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(updateCreditSpendPolicyResponseFieldParams)
+}
+
+func (u *UpdateCreditSpendPolicyResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCreditSpendPolicyResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateCreditSpendPolicyResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateCreditSpendPolicyResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateCreditSpendPolicyResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateCreditSpendPolicyResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
 	zeroOutGrantResponseFieldData   = big.NewInt(1 << 0)
 	zeroOutGrantResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -9372,6 +10840,61 @@ func (u *UpdateCreditBundleDetailsRequestBody) UnmarshalJSON(data []byte) error 
 
 func (u *UpdateCreditBundleDetailsRequestBody) MarshalJSON() ([]byte, error) {
 	type embed UpdateCreditBundleDetailsRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	updateCreditSpendPolicyRequestBodyFieldLabel      = big.NewInt(1 << 0)
+	updateCreditSpendPolicyRequestBodyFieldMaxPerDraw = big.NewInt(1 << 1)
+)
+
+type UpdateCreditSpendPolicyRequestBody struct {
+	Label      *string  `json:"label,omitempty" url:"-"`
+	MaxPerDraw *float64 `json:"max_per_draw,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpdateCreditSpendPolicyRequestBody) require(field *big.Int) {
+	if u.explicitFields == nil {
+		u.explicitFields = big.NewInt(0)
+	}
+	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCreditSpendPolicyRequestBody) SetLabel(label *string) {
+	u.Label = label
+	u.require(updateCreditSpendPolicyRequestBodyFieldLabel)
+}
+
+// SetMaxPerDraw sets the MaxPerDraw field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCreditSpendPolicyRequestBody) SetMaxPerDraw(maxPerDraw *float64) {
+	u.MaxPerDraw = maxPerDraw
+	u.require(updateCreditSpendPolicyRequestBodyFieldMaxPerDraw)
+}
+
+func (u *UpdateCreditSpendPolicyRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCreditSpendPolicyRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateCreditSpendPolicyRequestBody(body)
+	return nil
+}
+
+func (u *UpdateCreditSpendPolicyRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateCreditSpendPolicyRequestBody
 	var marshaler = struct {
 		embed
 	}{

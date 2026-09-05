@@ -199,6 +199,69 @@ func (c *Client) GetEvent(
 
 // Example:
 //
+//	client.Events.GetOtlpEnvironmentSettings(
+//	    context.TODO(),
+//	)
+func (c *Client) GetOtlpEnvironmentSettings(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetOtlpEnvironmentSettingsResponse, error) {
+	response, err := c.WithRawResponse.GetOtlpEnvironmentSettings(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpsertOtlpEnvironmentSettingsRequestBody{
+//	    ToolEventsEnabled: true,
+//	}
+//	client.Events.UpsertOtlpEnvironmentSettings(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) UpsertOtlpEnvironmentSettings(
+	ctx context.Context,
+	request *schematichq.UpsertOtlpEnvironmentSettingsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpsertOtlpEnvironmentSettingsResponse, error) {
+	response, err := c.WithRawResponse.UpsertOtlpEnvironmentSettings(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Events.DeleteOtlpEnvironmentSettings(
+//	    context.TODO(),
+//	)
+func (c *Client) DeleteOtlpEnvironmentSettings(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteOtlpEnvironmentSettingsResponse, error) {
+	response, err := c.WithRawResponse.DeleteOtlpEnvironmentSettings(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	client.Events.GetSegmentIntegrationStatus(
 //	    context.TODO(),
 //	)

@@ -1478,20 +1478,22 @@ func (e *EnvironmentDetailResponseData) String() string {
 
 var (
 	getOnboardingStateRespFieldAgentConnectedAt = big.NewInt(1 << 0)
-	getOnboardingStateRespFieldDismissedAt      = big.NewInt(1 << 1)
-	getOnboardingStateRespFieldEnvironmentID    = big.NewInt(1 << 2)
-	getOnboardingStateRespFieldMilestones       = big.NewInt(1 << 3)
-	getOnboardingStateRespFieldPath             = big.NewInt(1 << 4)
-	getOnboardingStateRespFieldPricingPageURL   = big.NewInt(1 << 5)
-	getOnboardingStateRespFieldRequirements     = big.NewInt(1 << 6)
-	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 7)
-	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 8)
-	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 9)
-	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 10)
+	getOnboardingStateRespFieldCountry          = big.NewInt(1 << 1)
+	getOnboardingStateRespFieldDismissedAt      = big.NewInt(1 << 2)
+	getOnboardingStateRespFieldEnvironmentID    = big.NewInt(1 << 3)
+	getOnboardingStateRespFieldMilestones       = big.NewInt(1 << 4)
+	getOnboardingStateRespFieldPath             = big.NewInt(1 << 5)
+	getOnboardingStateRespFieldPricingPageURL   = big.NewInt(1 << 6)
+	getOnboardingStateRespFieldRequirements     = big.NewInt(1 << 7)
+	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 8)
+	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 9)
+	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 10)
+	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 11)
 )
 
 type GetOnboardingStateResp struct {
 	AgentConnectedAt *time.Time                   `json:"agent_connected_at,omitempty" url:"agent_connected_at,omitempty"`
+	Country          *string                      `json:"country,omitempty" url:"country,omitempty"`
 	DismissedAt      *time.Time                   `json:"dismissed_at,omitempty" url:"dismissed_at,omitempty"`
 	EnvironmentID    *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	Milestones       []*OnboardingMilestoneView   `json:"milestones" url:"milestones"`
@@ -1515,6 +1517,13 @@ func (g *GetOnboardingStateResp) GetAgentConnectedAt() *time.Time {
 		return nil
 	}
 	return g.AgentConnectedAt
+}
+
+func (g *GetOnboardingStateResp) GetCountry() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Country
 }
 
 func (g *GetOnboardingStateResp) GetDismissedAt() *time.Time {
@@ -1606,6 +1615,13 @@ func (g *GetOnboardingStateResp) require(field *big.Int) {
 func (g *GetOnboardingStateResp) SetAgentConnectedAt(agentConnectedAt *time.Time) {
 	g.AgentConnectedAt = agentConnectedAt
 	g.require(getOnboardingStateRespFieldAgentConnectedAt)
+}
+
+// SetCountry sets the Country field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetCountry(country *string) {
+	g.Country = country
+	g.require(getOnboardingStateRespFieldCountry)
 }
 
 // SetDismissedAt sets the DismissedAt field and marks it as non-optional;
@@ -5819,14 +5835,16 @@ func (u *UpdateEnvironmentRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	updateOnboardingStateRequestBodyFieldDismissed      = big.NewInt(1 << 0)
-	updateOnboardingStateRequestBodyFieldPath           = big.NewInt(1 << 1)
-	updateOnboardingStateRequestBodyFieldPricingPageURL = big.NewInt(1 << 2)
-	updateOnboardingStateRequestBodyFieldTrack          = big.NewInt(1 << 3)
-	updateOnboardingStateRequestBodyFieldWebsiteURL     = big.NewInt(1 << 4)
+	updateOnboardingStateRequestBodyFieldCountry        = big.NewInt(1 << 0)
+	updateOnboardingStateRequestBodyFieldDismissed      = big.NewInt(1 << 1)
+	updateOnboardingStateRequestBodyFieldPath           = big.NewInt(1 << 2)
+	updateOnboardingStateRequestBodyFieldPricingPageURL = big.NewInt(1 << 3)
+	updateOnboardingStateRequestBodyFieldTrack          = big.NewInt(1 << 4)
+	updateOnboardingStateRequestBodyFieldWebsiteURL     = big.NewInt(1 << 5)
 )
 
 type UpdateOnboardingStateRequestBody struct {
+	Country        *string          `json:"country,omitempty" url:"-"`
 	Dismissed      *bool            `json:"dismissed,omitempty" url:"-"`
 	Path           *OnboardingPath  `json:"path,omitempty" url:"-"`
 	PricingPageURL *string          `json:"pricing_page_url,omitempty" url:"-"`
@@ -5842,6 +5860,13 @@ func (u *UpdateOnboardingStateRequestBody) require(field *big.Int) {
 		u.explicitFields = big.NewInt(0)
 	}
 	u.explicitFields.Or(u.explicitFields, field)
+}
+
+// SetCountry sets the Country field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateOnboardingStateRequestBody) SetCountry(country *string) {
+	u.Country = country
+	u.require(updateOnboardingStateRequestBodyFieldCountry)
 }
 
 // SetDismissed sets the Dismissed field and marks it as non-optional;

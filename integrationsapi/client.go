@@ -194,6 +194,69 @@ func (c *Client) LoadSampleDataSet(
 
 // Example:
 //
+//	client.Integrationsapi.GetStripeSandboxClaimLink(
+//	    context.TODO(),
+//	)
+func (c *Client) GetStripeSandboxClaimLink(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetStripeSandboxClaimLinkResponse, error) {
+	response, err := c.WithRawResponse.GetStripeSandboxClaimLink(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Integrationsapi.GetStripeSandboxKeys(
+//	    context.TODO(),
+//	)
+func (c *Client) GetStripeSandboxKeys(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetStripeSandboxKeysResponse, error) {
+	response, err := c.WithRawResponse.GetStripeSandboxKeys(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.ClaimStripeSandboxKeysRequestBody{
+//	    Token: "token",
+//	}
+//	client.Integrationsapi.ClaimStripeSandboxKeys(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ClaimStripeSandboxKeys(
+	ctx context.Context,
+	request *schematichq.ClaimStripeSandboxKeysRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.ClaimStripeSandboxKeysResponse, error) {
+	response, err := c.WithRawResponse.ClaimStripeSandboxKeys(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.InstallIntegrationRequestBody{
 //	    Type: schematichq.IntegrationTypeClerk,
 //	}
@@ -234,6 +297,50 @@ func (c *Client) InstallStripe(
 	response, err := c.WithRawResponse.InstallStripe(
 		ctx,
 		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.InstallStripeSandboxRequestBody{
+//	    Email: "email",
+//	}
+//	client.Integrationsapi.InstallStripeClaimableSandbox(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) InstallStripeClaimableSandbox(
+	ctx context.Context,
+	request *schematichq.InstallStripeSandboxRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.InstallStripeClaimableSandboxResponse, error) {
+	response, err := c.WithRawResponse.InstallStripeClaimableSandbox(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Integrationsapi.ListStripeSandboxCountries(
+//	    context.TODO(),
+//	)
+func (c *Client) ListStripeSandboxCountries(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.ListStripeSandboxCountriesResponse, error) {
+	response, err := c.WithRawResponse.ListStripeSandboxCountries(
+		ctx,
 		opts...,
 	)
 	if err != nil {

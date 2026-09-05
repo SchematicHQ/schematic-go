@@ -931,6 +931,195 @@ func (c *Client) CountBillingPlanCreditGrants(
 
 // Example:
 //
+//	request := &schematichq.ListCreditSpendPoliciesRequest{
+//	    BillingCreditID: schematichq.String(
+//	        "billing_credit_id",
+//	    ),
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    ScopeType: schematichq.CreditSpendPolicyScopeCompany.Ptr(),
+//	    UserID: schematichq.String(
+//	        "user_id",
+//	    ),
+//	    UserIDs: []*string{
+//	        schematichq.String(
+//	            "user_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.ListCreditSpendPolicies(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListCreditSpendPolicies(
+	ctx context.Context,
+	request *schematichq.ListCreditSpendPoliciesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListCreditSpendPoliciesResponse, error) {
+	response, err := c.WithRawResponse.ListCreditSpendPolicies(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.CreateCreditSpendPolicyRequestBody{
+//	    BillingCreditID: "billing_credit_id",
+//	    MaxPerDraw: 1.1,
+//	}
+//	client.Credits.CreateCreditSpendPolicy(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) CreateCreditSpendPolicy(
+	ctx context.Context,
+	request *schematichq.CreateCreditSpendPolicyRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CreateCreditSpendPolicyResponse, error) {
+	response, err := c.WithRawResponse.CreateCreditSpendPolicy(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Credits.GetCreditSpendPolicy(
+//	    context.TODO(),
+//	    "spend_policy_id",
+//	)
+func (c *Client) GetCreditSpendPolicy(
+	ctx context.Context,
+	// spend_policy_id
+	spendPolicyID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCreditSpendPolicyResponse, error) {
+	response, err := c.WithRawResponse.GetCreditSpendPolicy(
+		ctx,
+		spendPolicyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpdateCreditSpendPolicyRequestBody{}
+//	client.Credits.UpdateCreditSpendPolicy(
+//	    context.TODO(),
+//	    "spend_policy_id",
+//	    request,
+//	)
+func (c *Client) UpdateCreditSpendPolicy(
+	ctx context.Context,
+	// spend_policy_id
+	spendPolicyID string,
+	request *schematichq.UpdateCreditSpendPolicyRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateCreditSpendPolicyResponse, error) {
+	response, err := c.WithRawResponse.UpdateCreditSpendPolicy(
+		ctx,
+		spendPolicyID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Credits.DeleteCreditSpendPolicy(
+//	    context.TODO(),
+//	    "spend_policy_id",
+//	)
+func (c *Client) DeleteCreditSpendPolicy(
+	ctx context.Context,
+	// spend_policy_id
+	spendPolicyID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteCreditSpendPolicyResponse, error) {
+	response, err := c.WithRawResponse.DeleteCreditSpendPolicy(
+		ctx,
+		spendPolicyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.CountCreditSpendPoliciesRequest{
+//	    BillingCreditID: schematichq.String(
+//	        "billing_credit_id",
+//	    ),
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    ScopeType: schematichq.CreditSpendPolicyScopeCompany.Ptr(),
+//	    UserID: schematichq.String(
+//	        "user_id",
+//	    ),
+//	    UserIDs: []*string{
+//	        schematichq.String(
+//	            "user_ids",
+//	        ),
+//	    },
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Credits.CountCreditSpendPolicies(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) CountCreditSpendPolicies(
+	ctx context.Context,
+	request *schematichq.CountCreditSpendPoliciesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountCreditSpendPoliciesResponse, error) {
+	response, err := c.WithRawResponse.CountCreditSpendPolicies(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListCreditEventLedgerRequest{
 //	    BillingCreditID: schematichq.String(
 //	        "billing_credit_id",

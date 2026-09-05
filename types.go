@@ -1221,6 +1221,28 @@ func (a *AuditLogListResponseData) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
+type BillingCollectionMethod string
+
+const (
+	BillingCollectionMethodChargeAutomatically BillingCollectionMethod = "charge_automatically"
+	BillingCollectionMethodSendInvoice         BillingCollectionMethod = "send_invoice"
+)
+
+func NewBillingCollectionMethodFromString(s string) (BillingCollectionMethod, error) {
+	switch s {
+	case "charge_automatically":
+		return BillingCollectionMethodChargeAutomatically, nil
+	case "send_invoice":
+		return BillingCollectionMethodSendInvoice, nil
+	}
+	var t BillingCollectionMethod
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BillingCollectionMethod) Ptr() *BillingCollectionMethod {
+	return &b
+}
+
 type BillingCreditAutoTopupAvailability string
 
 const (
@@ -7796,36 +7818,344 @@ func (c *CompanyBillingDetailsView) String() string {
 }
 
 var (
+	companyBillingProfileResponseDataFieldAccountID         = big.NewInt(1 << 0)
+	companyBillingProfileResponseDataFieldBillingCustomerID = big.NewInt(1 << 1)
+	companyBillingProfileResponseDataFieldCollectionMethod  = big.NewInt(1 << 2)
+	companyBillingProfileResponseDataFieldCompanyID         = big.NewInt(1 << 3)
+	companyBillingProfileResponseDataFieldCreatedAt         = big.NewInt(1 << 4)
+	companyBillingProfileResponseDataFieldDaysUntilDue      = big.NewInt(1 << 5)
+	companyBillingProfileResponseDataFieldEnvironmentID     = big.NewInt(1 << 6)
+	companyBillingProfileResponseDataFieldID                = big.NewInt(1 << 7)
+	companyBillingProfileResponseDataFieldIsDefault         = big.NewInt(1 << 8)
+	companyBillingProfileResponseDataFieldName              = big.NewInt(1 << 9)
+	companyBillingProfileResponseDataFieldPaymentMethodID   = big.NewInt(1 << 10)
+	companyBillingProfileResponseDataFieldProrationBehavior = big.NewInt(1 << 11)
+	companyBillingProfileResponseDataFieldProviderType      = big.NewInt(1 << 12)
+	companyBillingProfileResponseDataFieldUpdatedAt         = big.NewInt(1 << 13)
+)
+
+type CompanyBillingProfileResponseData struct {
+	AccountID         string                  `json:"account_id" url:"account_id"`
+	BillingCustomerID *string                 `json:"billing_customer_id,omitempty" url:"billing_customer_id,omitempty"`
+	CollectionMethod  BillingCollectionMethod `json:"collection_method" url:"collection_method"`
+	CompanyID         string                  `json:"company_id" url:"company_id"`
+	CreatedAt         time.Time               `json:"created_at" url:"created_at"`
+	DaysUntilDue      *int64                  `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	EnvironmentID     string                  `json:"environment_id" url:"environment_id"`
+	ID                string                  `json:"id" url:"id"`
+	IsDefault         bool                    `json:"is_default" url:"is_default"`
+	Name              *string                 `json:"name,omitempty" url:"name,omitempty"`
+	PaymentMethodID   *string                 `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	ProrationBehavior *ProrationBehavior      `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
+	ProviderType      BillingProviderType     `json:"provider_type" url:"provider_type"`
+	UpdatedAt         time.Time               `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyBillingProfileResponseData) GetAccountID() string {
+	if c == nil {
+		return ""
+	}
+	return c.AccountID
+}
+
+func (c *CompanyBillingProfileResponseData) GetBillingCustomerID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCustomerID
+}
+
+func (c *CompanyBillingProfileResponseData) GetCollectionMethod() BillingCollectionMethod {
+	if c == nil {
+		return ""
+	}
+	return c.CollectionMethod
+}
+
+func (c *CompanyBillingProfileResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyBillingProfileResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyBillingProfileResponseData) GetDaysUntilDue() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.DaysUntilDue
+}
+
+func (c *CompanyBillingProfileResponseData) GetEnvironmentID() string {
+	if c == nil {
+		return ""
+	}
+	return c.EnvironmentID
+}
+
+func (c *CompanyBillingProfileResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyBillingProfileResponseData) GetIsDefault() bool {
+	if c == nil {
+		return false
+	}
+	return c.IsDefault
+}
+
+func (c *CompanyBillingProfileResponseData) GetName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Name
+}
+
+func (c *CompanyBillingProfileResponseData) GetPaymentMethodID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PaymentMethodID
+}
+
+func (c *CompanyBillingProfileResponseData) GetProrationBehavior() *ProrationBehavior {
+	if c == nil {
+		return nil
+	}
+	return c.ProrationBehavior
+}
+
+func (c *CompanyBillingProfileResponseData) GetProviderType() BillingProviderType {
+	if c == nil {
+		return ""
+	}
+	return c.ProviderType
+}
+
+func (c *CompanyBillingProfileResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyBillingProfileResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyBillingProfileResponseData) require(field *big.Int) {
+	if c.explicitFields == nil {
+		c.explicitFields = big.NewInt(0)
+	}
+	c.explicitFields.Or(c.explicitFields, field)
+}
+
+// SetAccountID sets the AccountID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetAccountID(accountID string) {
+	c.AccountID = accountID
+	c.require(companyBillingProfileResponseDataFieldAccountID)
+}
+
+// SetBillingCustomerID sets the BillingCustomerID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetBillingCustomerID(billingCustomerID *string) {
+	c.BillingCustomerID = billingCustomerID
+	c.require(companyBillingProfileResponseDataFieldBillingCustomerID)
+}
+
+// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetCollectionMethod(collectionMethod BillingCollectionMethod) {
+	c.CollectionMethod = collectionMethod
+	c.require(companyBillingProfileResponseDataFieldCollectionMethod)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(companyBillingProfileResponseDataFieldCompanyID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(companyBillingProfileResponseDataFieldCreatedAt)
+}
+
+// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetDaysUntilDue(daysUntilDue *int64) {
+	c.DaysUntilDue = daysUntilDue
+	c.require(companyBillingProfileResponseDataFieldDaysUntilDue)
+}
+
+// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetEnvironmentID(environmentID string) {
+	c.EnvironmentID = environmentID
+	c.require(companyBillingProfileResponseDataFieldEnvironmentID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetID(id string) {
+	c.ID = id
+	c.require(companyBillingProfileResponseDataFieldID)
+}
+
+// SetIsDefault sets the IsDefault field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetIsDefault(isDefault bool) {
+	c.IsDefault = isDefault
+	c.require(companyBillingProfileResponseDataFieldIsDefault)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetName(name *string) {
+	c.Name = name
+	c.require(companyBillingProfileResponseDataFieldName)
+}
+
+// SetPaymentMethodID sets the PaymentMethodID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetPaymentMethodID(paymentMethodID *string) {
+	c.PaymentMethodID = paymentMethodID
+	c.require(companyBillingProfileResponseDataFieldPaymentMethodID)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetProrationBehavior(prorationBehavior *ProrationBehavior) {
+	c.ProrationBehavior = prorationBehavior
+	c.require(companyBillingProfileResponseDataFieldProrationBehavior)
+}
+
+// SetProviderType sets the ProviderType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetProviderType(providerType BillingProviderType) {
+	c.ProviderType = providerType
+	c.require(companyBillingProfileResponseDataFieldProviderType)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(companyBillingProfileResponseDataFieldUpdatedAt)
+}
+
+func (c *CompanyBillingProfileResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyBillingProfileResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyBillingProfileResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyBillingProfileResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyBillingProfileResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyBillingProfileResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	companyDetailResponseDataFieldAddOns                = big.NewInt(1 << 0)
 	companyDetailResponseDataFieldBillingCreditBalances = big.NewInt(1 << 1)
-	companyDetailResponseDataFieldBillingSubscription   = big.NewInt(1 << 2)
-	companyDetailResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 3)
-	companyDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 4)
-	companyDetailResponseDataFieldCustomPlanBillings    = big.NewInt(1 << 5)
-	companyDetailResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 6)
-	companyDetailResponseDataFieldEntitlements          = big.NewInt(1 << 7)
-	companyDetailResponseDataFieldEntityTraits          = big.NewInt(1 << 8)
-	companyDetailResponseDataFieldEnvironmentID         = big.NewInt(1 << 9)
-	companyDetailResponseDataFieldID                    = big.NewInt(1 << 10)
-	companyDetailResponseDataFieldKeys                  = big.NewInt(1 << 11)
-	companyDetailResponseDataFieldLastSeenAt            = big.NewInt(1 << 12)
-	companyDetailResponseDataFieldLogoURL               = big.NewInt(1 << 13)
-	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 14)
-	companyDetailResponseDataFieldName                  = big.NewInt(1 << 15)
-	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 16)
-	companyDetailResponseDataFieldPendingMigration      = big.NewInt(1 << 17)
-	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 18)
-	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 19)
-	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 20)
-	companyDetailResponseDataFieldScheduledDowngrade    = big.NewInt(1 << 21)
-	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 22)
-	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 23)
-	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 24)
+	companyDetailResponseDataFieldBillingProfile        = big.NewInt(1 << 2)
+	companyDetailResponseDataFieldBillingProfiles       = big.NewInt(1 << 3)
+	companyDetailResponseDataFieldBillingSubscription   = big.NewInt(1 << 4)
+	companyDetailResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 5)
+	companyDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 6)
+	companyDetailResponseDataFieldCustomPlanBillings    = big.NewInt(1 << 7)
+	companyDetailResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 8)
+	companyDetailResponseDataFieldEntitlements          = big.NewInt(1 << 9)
+	companyDetailResponseDataFieldEntityTraits          = big.NewInt(1 << 10)
+	companyDetailResponseDataFieldEnvironmentID         = big.NewInt(1 << 11)
+	companyDetailResponseDataFieldID                    = big.NewInt(1 << 12)
+	companyDetailResponseDataFieldKeys                  = big.NewInt(1 << 13)
+	companyDetailResponseDataFieldLastSeenAt            = big.NewInt(1 << 14)
+	companyDetailResponseDataFieldLogoURL               = big.NewInt(1 << 15)
+	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 16)
+	companyDetailResponseDataFieldName                  = big.NewInt(1 << 17)
+	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 18)
+	companyDetailResponseDataFieldPendingMigration      = big.NewInt(1 << 19)
+	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 20)
+	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 21)
+	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 22)
+	companyDetailResponseDataFieldScheduledDowngrade    = big.NewInt(1 << 23)
+	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 24)
+	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 25)
+	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 26)
 )
 
 type CompanyDetailResponseData struct {
 	AddOns                []*CompanyPlanWithBillingSubView         `json:"add_ons" url:"add_ons"`
 	BillingCreditBalances map[string]float64                       `json:"billing_credit_balances,omitempty" url:"billing_credit_balances,omitempty"`
+	BillingProfile        *CompanyBillingProfileResponseData       `json:"billing_profile,omitempty" url:"billing_profile,omitempty"`
+	BillingProfiles       []*CompanyBillingProfileResponseData     `json:"billing_profiles,omitempty" url:"billing_profiles,omitempty"`
 	BillingSubscription   *BillingSubscriptionView                 `json:"billing_subscription,omitempty" url:"billing_subscription,omitempty"`
 	BillingSubscriptions  []*BillingSubscriptionView               `json:"billing_subscriptions" url:"billing_subscriptions"`
 	CreatedAt             time.Time                                `json:"created_at" url:"created_at"`
@@ -7870,6 +8200,20 @@ func (c *CompanyDetailResponseData) GetBillingCreditBalances() map[string]float6
 		return nil
 	}
 	return c.BillingCreditBalances
+}
+
+func (c *CompanyDetailResponseData) GetBillingProfile() *CompanyBillingProfileResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.BillingProfile
+}
+
+func (c *CompanyDetailResponseData) GetBillingProfiles() []*CompanyBillingProfileResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.BillingProfiles
 }
 
 func (c *CompanyDetailResponseData) GetBillingSubscription() *BillingSubscriptionView {
@@ -8059,6 +8403,20 @@ func (c *CompanyDetailResponseData) SetAddOns(addOns []*CompanyPlanWithBillingSu
 func (c *CompanyDetailResponseData) SetBillingCreditBalances(billingCreditBalances map[string]float64) {
 	c.BillingCreditBalances = billingCreditBalances
 	c.require(companyDetailResponseDataFieldBillingCreditBalances)
+}
+
+// SetBillingProfile sets the BillingProfile field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyDetailResponseData) SetBillingProfile(billingProfile *CompanyBillingProfileResponseData) {
+	c.BillingProfile = billingProfile
+	c.require(companyDetailResponseDataFieldBillingProfile)
+}
+
+// SetBillingProfiles sets the BillingProfiles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyDetailResponseData) SetBillingProfiles(billingProfiles []*CompanyBillingProfileResponseData) {
+	c.BillingProfiles = billingProfiles
+	c.require(companyDetailResponseDataFieldBillingProfiles)
 }
 
 // SetBillingSubscription sets the BillingSubscription field and marks it as non-optional;
@@ -8897,10 +9255,12 @@ var (
 	companyOverrideResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 13)
 	companyOverrideResponseDataFieldUpdatedAt              = big.NewInt(1 << 14)
 	companyOverrideResponseDataFieldValueBool              = big.NewInt(1 << 15)
-	companyOverrideResponseDataFieldValueNumeric           = big.NewInt(1 << 16)
-	companyOverrideResponseDataFieldValueTrait             = big.NewInt(1 << 17)
-	companyOverrideResponseDataFieldValueTraitID           = big.NewInt(1 << 18)
-	companyOverrideResponseDataFieldValueType              = big.NewInt(1 << 19)
+	companyOverrideResponseDataFieldValueCredit            = big.NewInt(1 << 16)
+	companyOverrideResponseDataFieldValueCreditID          = big.NewInt(1 << 17)
+	companyOverrideResponseDataFieldValueNumeric           = big.NewInt(1 << 18)
+	companyOverrideResponseDataFieldValueTrait             = big.NewInt(1 << 19)
+	companyOverrideResponseDataFieldValueTraitID           = big.NewInt(1 << 20)
+	companyOverrideResponseDataFieldValueType              = big.NewInt(1 << 21)
 )
 
 type CompanyOverrideResponseData struct {
@@ -8920,6 +9280,8 @@ type CompanyOverrideResponseData struct {
 	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
 	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
 	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCredit            *BillingCreditResponseData         `json:"value_credit,omitempty" url:"value_credit,omitempty"`
+	ValueCreditID          *string                            `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
 	ValueNumeric           *int64                             `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
 	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
 	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
@@ -9042,6 +9404,20 @@ func (c *CompanyOverrideResponseData) GetValueBool() *bool {
 		return nil
 	}
 	return c.ValueBool
+}
+
+func (c *CompanyOverrideResponseData) GetValueCredit() *BillingCreditResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ValueCredit
+}
+
+func (c *CompanyOverrideResponseData) GetValueCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ValueCreditID
 }
 
 func (c *CompanyOverrideResponseData) GetValueNumeric() *int64 {
@@ -9196,6 +9572,20 @@ func (c *CompanyOverrideResponseData) SetUpdatedAt(updatedAt time.Time) {
 func (c *CompanyOverrideResponseData) SetValueBool(valueBool *bool) {
 	c.ValueBool = valueBool
 	c.require(companyOverrideResponseDataFieldValueBool)
+}
+
+// SetValueCredit sets the ValueCredit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyOverrideResponseData) SetValueCredit(valueCredit *BillingCreditResponseData) {
+	c.ValueCredit = valueCredit
+	c.require(companyOverrideResponseDataFieldValueCredit)
+}
+
+// SetValueCreditID sets the ValueCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyOverrideResponseData) SetValueCreditID(valueCreditID *string) {
+	c.ValueCreditID = valueCreditID
+	c.require(companyOverrideResponseDataFieldValueCreditID)
 }
 
 // SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
@@ -30075,38 +30465,40 @@ var (
 	ruleConditionDetailResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 10)
 	ruleConditionDetailResponseDataFieldMetricValue            = big.NewInt(1 << 11)
 	ruleConditionDetailResponseDataFieldOperator               = big.NewInt(1 << 12)
-	ruleConditionDetailResponseDataFieldResourceIDs            = big.NewInt(1 << 13)
-	ruleConditionDetailResponseDataFieldResources              = big.NewInt(1 << 14)
-	ruleConditionDetailResponseDataFieldRuleID                 = big.NewInt(1 << 15)
-	ruleConditionDetailResponseDataFieldTrait                  = big.NewInt(1 << 16)
-	ruleConditionDetailResponseDataFieldTraitEntityType        = big.NewInt(1 << 17)
-	ruleConditionDetailResponseDataFieldTraitID                = big.NewInt(1 << 18)
-	ruleConditionDetailResponseDataFieldTraitValue             = big.NewInt(1 << 19)
-	ruleConditionDetailResponseDataFieldUpdatedAt              = big.NewInt(1 << 20)
+	ruleConditionDetailResponseDataFieldPlanVersions           = big.NewInt(1 << 13)
+	ruleConditionDetailResponseDataFieldResourceIDs            = big.NewInt(1 << 14)
+	ruleConditionDetailResponseDataFieldResources              = big.NewInt(1 << 15)
+	ruleConditionDetailResponseDataFieldRuleID                 = big.NewInt(1 << 16)
+	ruleConditionDetailResponseDataFieldTrait                  = big.NewInt(1 << 17)
+	ruleConditionDetailResponseDataFieldTraitEntityType        = big.NewInt(1 << 18)
+	ruleConditionDetailResponseDataFieldTraitID                = big.NewInt(1 << 19)
+	ruleConditionDetailResponseDataFieldTraitValue             = big.NewInt(1 << 20)
+	ruleConditionDetailResponseDataFieldUpdatedAt              = big.NewInt(1 << 21)
 )
 
 type RuleConditionDetailResponseData struct {
-	ComparisonTrait        *EntityTraitDefinitionResponseData `json:"comparison_trait,omitempty" url:"comparison_trait,omitempty"`
-	ComparisonTraitID      *string                            `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
-	ConditionGroupID       *string                            `json:"condition_group_id,omitempty" url:"condition_group_id,omitempty"`
-	ConditionType          ConditionType                      `json:"condition_type" url:"condition_type"`
-	CreatedAt              time.Time                          `json:"created_at" url:"created_at"`
-	EnvironmentID          string                             `json:"environment_id" url:"environment_id"`
-	EventSubtype           *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	FlagID                 *string                            `json:"flag_id,omitempty" url:"flag_id,omitempty"`
-	ID                     string                             `json:"id" url:"id"`
-	MetricPeriod           *MetricPeriod                      `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	MetricPeriodMonthReset *MetricPeriodMonthReset            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	MetricValue            *int64                             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
-	Operator               ComparableOperator                 `json:"operator" url:"operator"`
-	ResourceIDs            []string                           `json:"resource_ids" url:"resource_ids"`
-	Resources              []*PreviewObjectResponseData       `json:"resources" url:"resources"`
-	RuleID                 string                             `json:"rule_id" url:"rule_id"`
-	Trait                  *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
-	TraitEntityType        *EntityType                        `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
-	TraitID                *string                            `json:"trait_id,omitempty" url:"trait_id,omitempty"`
-	TraitValue             string                             `json:"trait_value" url:"trait_value"`
-	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
+	ComparisonTrait        *EntityTraitDefinitionResponseData      `json:"comparison_trait,omitempty" url:"comparison_trait,omitempty"`
+	ComparisonTraitID      *string                                 `json:"comparison_trait_id,omitempty" url:"comparison_trait_id,omitempty"`
+	ConditionGroupID       *string                                 `json:"condition_group_id,omitempty" url:"condition_group_id,omitempty"`
+	ConditionType          ConditionType                           `json:"condition_type" url:"condition_type"`
+	CreatedAt              time.Time                               `json:"created_at" url:"created_at"`
+	EnvironmentID          string                                  `json:"environment_id" url:"environment_id"`
+	EventSubtype           *string                                 `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	FlagID                 *string                                 `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	ID                     string                                  `json:"id" url:"id"`
+	MetricPeriod           *MetricPeriod                           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset                 `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	MetricValue            *int64                                  `json:"metric_value,omitempty" url:"metric_value,omitempty"`
+	Operator               ComparableOperator                      `json:"operator" url:"operator"`
+	PlanVersions           []*RuleConditionPlanVersionResponseData `json:"plan_versions,omitempty" url:"plan_versions,omitempty"`
+	ResourceIDs            []string                                `json:"resource_ids" url:"resource_ids"`
+	Resources              []*PreviewObjectResponseData            `json:"resources" url:"resources"`
+	RuleID                 string                                  `json:"rule_id" url:"rule_id"`
+	Trait                  *EntityTraitDefinitionResponseData      `json:"trait,omitempty" url:"trait,omitempty"`
+	TraitEntityType        *EntityType                             `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
+	TraitID                *string                                 `json:"trait_id,omitempty" url:"trait_id,omitempty"`
+	TraitValue             string                                  `json:"trait_value" url:"trait_value"`
+	UpdatedAt              time.Time                               `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -30204,6 +30596,13 @@ func (r *RuleConditionDetailResponseData) GetOperator() ComparableOperator {
 		return ""
 	}
 	return r.Operator
+}
+
+func (r *RuleConditionDetailResponseData) GetPlanVersions() []*RuleConditionPlanVersionResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.PlanVersions
 }
 
 func (r *RuleConditionDetailResponseData) GetResourceIDs() []string {
@@ -30365,6 +30764,13 @@ func (r *RuleConditionDetailResponseData) SetMetricValue(metricValue *int64) {
 func (r *RuleConditionDetailResponseData) SetOperator(operator ComparableOperator) {
 	r.Operator = operator
 	r.require(ruleConditionDetailResponseDataFieldOperator)
+}
+
+// SetPlanVersions sets the PlanVersions field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleConditionDetailResponseData) SetPlanVersions(planVersions []*RuleConditionPlanVersionResponseData) {
+	r.PlanVersions = planVersions
+	r.require(ruleConditionDetailResponseDataFieldPlanVersions)
 }
 
 // SetResourceIDs sets the ResourceIDs field and marks it as non-optional;
@@ -30831,6 +31237,138 @@ func (r *RuleConditionGroupResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RuleConditionGroupResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	ruleConditionPlanVersionResponseDataFieldID      = big.NewInt(1 << 0)
+	ruleConditionPlanVersionResponseDataFieldName    = big.NewInt(1 << 1)
+	ruleConditionPlanVersionResponseDataFieldStatus  = big.NewInt(1 << 2)
+	ruleConditionPlanVersionResponseDataFieldVersion = big.NewInt(1 << 3)
+)
+
+type RuleConditionPlanVersionResponseData struct {
+	ID      string            `json:"id" url:"id"`
+	Name    string            `json:"name" url:"name"`
+	Status  PlanVersionStatus `json:"status" url:"status"`
+	Version int64             `json:"version" url:"version"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RuleConditionPlanVersionResponseData) GetID() string {
+	if r == nil {
+		return ""
+	}
+	return r.ID
+}
+
+func (r *RuleConditionPlanVersionResponseData) GetName() string {
+	if r == nil {
+		return ""
+	}
+	return r.Name
+}
+
+func (r *RuleConditionPlanVersionResponseData) GetStatus() PlanVersionStatus {
+	if r == nil {
+		return ""
+	}
+	return r.Status
+}
+
+func (r *RuleConditionPlanVersionResponseData) GetVersion() int64 {
+	if r == nil {
+		return 0
+	}
+	return r.Version
+}
+
+func (r *RuleConditionPlanVersionResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RuleConditionPlanVersionResponseData) require(field *big.Int) {
+	if r.explicitFields == nil {
+		r.explicitFields = big.NewInt(0)
+	}
+	r.explicitFields.Or(r.explicitFields, field)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleConditionPlanVersionResponseData) SetID(id string) {
+	r.ID = id
+	r.require(ruleConditionPlanVersionResponseDataFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleConditionPlanVersionResponseData) SetName(name string) {
+	r.Name = name
+	r.require(ruleConditionPlanVersionResponseDataFieldName)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleConditionPlanVersionResponseData) SetStatus(status PlanVersionStatus) {
+	r.Status = status
+	r.require(ruleConditionPlanVersionResponseDataFieldStatus)
+}
+
+// SetVersion sets the Version field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RuleConditionPlanVersionResponseData) SetVersion(version int64) {
+	r.Version = version
+	r.require(ruleConditionPlanVersionResponseDataFieldVersion)
+}
+
+func (r *RuleConditionPlanVersionResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler RuleConditionPlanVersionResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RuleConditionPlanVersionResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RuleConditionPlanVersionResponseData) MarshalJSON() ([]byte, error) {
+	type embed RuleConditionPlanVersionResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RuleConditionPlanVersionResponseData) String() string {
 	if r == nil {
 		return "<nil>"
 	}

@@ -20,6 +20,7 @@ cache/local_test.go
 cache/redis.go
 cmd/webhook-test-server/main.go
 .github/workflows/e2e.yml
+.github/workflows/sdk-e2e-status.yml
 testapp/
 core/check_flag_response.go
 core/request_option.go

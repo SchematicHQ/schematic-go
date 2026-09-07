@@ -1485,10 +1485,11 @@ var (
 	getOnboardingStateRespFieldPath             = big.NewInt(1 << 5)
 	getOnboardingStateRespFieldPricingPageURL   = big.NewInt(1 << 6)
 	getOnboardingStateRespFieldRequirements     = big.NewInt(1 << 7)
-	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 8)
-	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 9)
-	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 10)
-	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 11)
+	getOnboardingStateRespFieldSlackConnect     = big.NewInt(1 << 8)
+	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 9)
+	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 10)
+	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 11)
+	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 12)
 )
 
 type GetOnboardingStateResp struct {
@@ -1500,6 +1501,7 @@ type GetOnboardingStateResp struct {
 	Path             *OnboardingPath              `json:"path,omitempty" url:"path,omitempty"`
 	PricingPageURL   *string                      `json:"pricing_page_url,omitempty" url:"pricing_page_url,omitempty"`
 	Requirements     []*OnboardingRequirementView `json:"requirements" url:"requirements"`
+	SlackConnect     *SlackConnectInviteView      `json:"slack_connect,omitempty" url:"slack_connect,omitempty"`
 	StripeImport     *OnboardingStripeImport      `json:"stripe_import,omitempty" url:"stripe_import,omitempty"`
 	SuggestedNext    []OnboardingRequirement      `json:"suggested_next" url:"suggested_next"`
 	Track            *OnboardingTrack             `json:"track,omitempty" url:"track,omitempty"`
@@ -1566,6 +1568,13 @@ func (g *GetOnboardingStateResp) GetRequirements() []*OnboardingRequirementView 
 		return nil
 	}
 	return g.Requirements
+}
+
+func (g *GetOnboardingStateResp) GetSlackConnect() *SlackConnectInviteView {
+	if g == nil {
+		return nil
+	}
+	return g.SlackConnect
 }
 
 func (g *GetOnboardingStateResp) GetStripeImport() *OnboardingStripeImport {
@@ -1664,6 +1673,13 @@ func (g *GetOnboardingStateResp) SetPricingPageURL(pricingPageURL *string) {
 func (g *GetOnboardingStateResp) SetRequirements(requirements []*OnboardingRequirementView) {
 	g.Requirements = requirements
 	g.require(getOnboardingStateRespFieldRequirements)
+}
+
+// SetSlackConnect sets the SlackConnect field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetSlackConnect(slackConnect *SlackConnectInviteView) {
+	g.SlackConnect = slackConnect
+	g.require(getOnboardingStateRespFieldSlackConnect)
 }
 
 // SetStripeImport sets the StripeImport field and marks it as non-optional;
@@ -2279,6 +2295,181 @@ func (q *QuickstartResp) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", q)
+}
+
+type SlackConnectInviteStatus string
+
+const (
+	SlackConnectInviteStatusAccepted  SlackConnectInviteStatus = "accepted"
+	SlackConnectInviteStatusDeclined  SlackConnectInviteStatus = "declined"
+	SlackConnectInviteStatusDismissed SlackConnectInviteStatus = "dismissed"
+	SlackConnectInviteStatusExpired   SlackConnectInviteStatus = "expired"
+	SlackConnectInviteStatusPending   SlackConnectInviteStatus = "pending"
+)
+
+func NewSlackConnectInviteStatusFromString(s string) (SlackConnectInviteStatus, error) {
+	switch s {
+	case "accepted":
+		return SlackConnectInviteStatusAccepted, nil
+	case "declined":
+		return SlackConnectInviteStatusDeclined, nil
+	case "dismissed":
+		return SlackConnectInviteStatusDismissed, nil
+	case "expired":
+		return SlackConnectInviteStatusExpired, nil
+	case "pending":
+		return SlackConnectInviteStatusPending, nil
+	}
+	var t SlackConnectInviteStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SlackConnectInviteStatus) Ptr() *SlackConnectInviteStatus {
+	return &s
+}
+
+var (
+	slackConnectInviteViewFieldCanResendAt = big.NewInt(1 << 0)
+	slackConnectInviteViewFieldEmail       = big.NewInt(1 << 1)
+	slackConnectInviteViewFieldSentAt      = big.NewInt(1 << 2)
+	slackConnectInviteViewFieldStatus      = big.NewInt(1 << 3)
+)
+
+type SlackConnectInviteView struct {
+	CanResendAt *time.Time               `json:"can_resend_at,omitempty" url:"can_resend_at,omitempty"`
+	Email       string                   `json:"email" url:"email"`
+	SentAt      time.Time                `json:"sent_at" url:"sent_at"`
+	Status      SlackConnectInviteStatus `json:"status" url:"status"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SlackConnectInviteView) GetCanResendAt() *time.Time {
+	if s == nil {
+		return nil
+	}
+	return s.CanResendAt
+}
+
+func (s *SlackConnectInviteView) GetEmail() string {
+	if s == nil {
+		return ""
+	}
+	return s.Email
+}
+
+func (s *SlackConnectInviteView) GetSentAt() time.Time {
+	if s == nil {
+		return time.Time{}
+	}
+	return s.SentAt
+}
+
+func (s *SlackConnectInviteView) GetStatus() SlackConnectInviteStatus {
+	if s == nil {
+		return ""
+	}
+	return s.Status
+}
+
+func (s *SlackConnectInviteView) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *SlackConnectInviteView) require(field *big.Int) {
+	if s.explicitFields == nil {
+		s.explicitFields = big.NewInt(0)
+	}
+	s.explicitFields.Or(s.explicitFields, field)
+}
+
+// SetCanResendAt sets the CanResendAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SlackConnectInviteView) SetCanResendAt(canResendAt *time.Time) {
+	s.CanResendAt = canResendAt
+	s.require(slackConnectInviteViewFieldCanResendAt)
+}
+
+// SetEmail sets the Email field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SlackConnectInviteView) SetEmail(email string) {
+	s.Email = email
+	s.require(slackConnectInviteViewFieldEmail)
+}
+
+// SetSentAt sets the SentAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SlackConnectInviteView) SetSentAt(sentAt time.Time) {
+	s.SentAt = sentAt
+	s.require(slackConnectInviteViewFieldSentAt)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *SlackConnectInviteView) SetStatus(status SlackConnectInviteStatus) {
+	s.Status = status
+	s.require(slackConnectInviteViewFieldStatus)
+}
+
+func (s *SlackConnectInviteView) UnmarshalJSON(data []byte) error {
+	type embed SlackConnectInviteView
+	var unmarshaler = struct {
+		embed
+		CanResendAt *internal.DateTime `json:"can_resend_at,omitempty"`
+		SentAt      *internal.DateTime `json:"sent_at"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*s = SlackConnectInviteView(unmarshaler.embed)
+	s.CanResendAt = unmarshaler.CanResendAt.TimePtr()
+	s.SentAt = unmarshaler.SentAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SlackConnectInviteView) MarshalJSON() ([]byte, error) {
+	type embed SlackConnectInviteView
+	var marshaler = struct {
+		embed
+		CanResendAt *internal.DateTime `json:"can_resend_at,omitempty"`
+		SentAt      *internal.DateTime `json:"sent_at"`
+	}{
+		embed:       embed(*s),
+		CanResendAt: internal.NewOptionalDateTime(s.CanResendAt),
+		SentAt:      internal.NewDateTime(s.SentAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *SlackConnectInviteView) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
 }
 
 var (

@@ -4514,6 +4514,14 @@ func TestSettersGetOnboardingStateResp(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetSlackConnect", func(t *testing.T) {
+		obj := &GetOnboardingStateResp{}
+		var fernTestValueSlackConnect *SlackConnectInviteView
+		obj.SetSlackConnect(fernTestValueSlackConnect)
+		assert.Equal(t, fernTestValueSlackConnect, obj.SlackConnect)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetStripeImport", func(t *testing.T) {
 		obj := &GetOnboardingStateResp{}
 		var fernTestValueStripeImport *OnboardingStripeImport
@@ -4811,6 +4819,39 @@ func TestGettersGetOnboardingStateResp(t *testing.T) {
 			}
 		}()
 		_ = obj.GetRequirements() // Should return zero value
+	})
+
+	t.Run("GetSlackConnect", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &GetOnboardingStateResp{}
+		var expected *SlackConnectInviteView
+		obj.SlackConnect = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetSlackConnect(), "getter should return the property value")
+	})
+
+	t.Run("GetSlackConnect_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &GetOnboardingStateResp{}
+		obj.SlackConnect = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetSlackConnect(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetSlackConnect_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *GetOnboardingStateResp
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetSlackConnect() // Should return zero value
 	})
 
 	t.Run("GetStripeImport", func(t *testing.T) {
@@ -5173,6 +5214,37 @@ func TestSettersMarkExplicitGetOnboardingStateResp(t *testing.T) {
 
 		// Act
 		obj.SetRequirements(fernTestValueRequirements)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetSlackConnect_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &GetOnboardingStateResp{}
+		var fernTestValueSlackConnect *SlackConnectInviteView
+
+		// Act
+		obj.SetSlackConnect(fernTestValueSlackConnect)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -5994,6 +6066,273 @@ func TestSettersMarkExplicitQuickstartResp(t *testing.T) {
 
 		// Act
 		obj.SetOk(fernTestValueOk)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+}
+
+func TestSettersSlackConnectInviteView(t *testing.T) {
+	t.Run("SetCanResendAt", func(t *testing.T) {
+		obj := &SlackConnectInviteView{}
+		var fernTestValueCanResendAt *time.Time
+		obj.SetCanResendAt(fernTestValueCanResendAt)
+		assert.Equal(t, fernTestValueCanResendAt, obj.CanResendAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetEmail", func(t *testing.T) {
+		obj := &SlackConnectInviteView{}
+		var fernTestValueEmail string
+		obj.SetEmail(fernTestValueEmail)
+		assert.Equal(t, fernTestValueEmail, obj.Email)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetSentAt", func(t *testing.T) {
+		obj := &SlackConnectInviteView{}
+		var fernTestValueSentAt time.Time
+		obj.SetSentAt(fernTestValueSentAt)
+		assert.Equal(t, fernTestValueSentAt, obj.SentAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetStatus", func(t *testing.T) {
+		obj := &SlackConnectInviteView{}
+		var fernTestValueStatus SlackConnectInviteStatus
+		obj.SetStatus(fernTestValueStatus)
+		assert.Equal(t, fernTestValueStatus, obj.Status)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersSlackConnectInviteView(t *testing.T) {
+	t.Run("GetCanResendAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var expected *time.Time
+		obj.CanResendAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCanResendAt(), "getter should return the property value")
+	})
+
+	t.Run("GetCanResendAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		obj.CanResendAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCanResendAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCanResendAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *SlackConnectInviteView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCanResendAt() // Should return zero value
+	})
+
+	t.Run("GetEmail", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var expected string
+		obj.Email = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEmail(), "getter should return the property value")
+	})
+
+	t.Run("GetEmail_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *SlackConnectInviteView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEmail() // Should return zero value
+	})
+
+	t.Run("GetSentAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var expected time.Time
+		obj.SentAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetSentAt(), "getter should return the property value")
+	})
+
+	t.Run("GetSentAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *SlackConnectInviteView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetSentAt() // Should return zero value
+	})
+
+	t.Run("GetStatus", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var expected SlackConnectInviteStatus
+		obj.Status = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetStatus(), "getter should return the property value")
+	})
+
+	t.Run("GetStatus_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *SlackConnectInviteView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetStatus() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitSlackConnectInviteView(t *testing.T) {
+	t.Run("SetCanResendAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var fernTestValueCanResendAt *time.Time
+
+		// Act
+		obj.SetCanResendAt(fernTestValueCanResendAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEmail_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var fernTestValueEmail string
+
+		// Act
+		obj.SetEmail(fernTestValueEmail)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetSentAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var fernTestValueSentAt time.Time
+
+		// Act
+		obj.SetSentAt(fernTestValueSentAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetStatus_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+		var fernTestValueStatus SlackConnectInviteStatus
+
+		// Act
+		obj.SetStatus(fernTestValueStatus)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -14007,6 +14346,39 @@ func TestJSONMarshalingQuickstartResponse(t *testing.T) {
 	})
 }
 
+func TestJSONMarshalingSlackConnectInviteView(t *testing.T) {
+	t.Run("MarshalUnmarshal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &SlackConnectInviteView{}
+
+		// Act - Marshal to JSON
+		data, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed")
+		assert.NotNil(t, data, "marshaled data should not be nil")
+		assert.NotEmpty(t, data, "marshaled data should not be empty")
+
+		// Unmarshal back and verify round-trip
+		var unmarshaled SlackConnectInviteView
+		err = json.Unmarshal(data, &unmarshaled)
+		assert.NoError(t, err, "round-trip unmarshal should succeed")
+	})
+
+	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
+		t.Parallel()
+		var obj SlackConnectInviteView
+		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
+		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
+	})
+
+	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
+		t.Parallel()
+		var obj SlackConnectInviteView
+		err := json.Unmarshal([]byte(`{}`), &obj)
+		assert.NoError(t, err, "unmarshaling empty object should succeed")
+	})
+}
+
 func TestJSONMarshalingUpdateAPIKeyResponse(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
@@ -14651,6 +15023,22 @@ func TestStringQuickstartResponse(t *testing.T) {
 	})
 }
 
+func TestStringSlackConnectInviteView(t *testing.T) {
+	t.Run("StringMethod", func(t *testing.T) {
+		t.Parallel()
+		obj := &SlackConnectInviteView{}
+		result := obj.String()
+		assert.NotEmpty(t, result, "String() should return a non-empty representation")
+	})
+
+	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *SlackConnectInviteView
+		result := obj.String()
+		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
 func TestStringUpdateAPIKeyResponse(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
@@ -14931,6 +15319,56 @@ func TestEnumOnboardingTrack(t *testing.T) {
 
 	t.Run("Ptr", func(t *testing.T) {
 		val, err := NewOnboardingTrackFromString("catalog")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
+func TestEnumSlackConnectInviteStatus(t *testing.T) {
+	t.Run("NewFromString_accepted", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewSlackConnectInviteStatusFromString("accepted")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, SlackConnectInviteStatus("accepted"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_declined", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewSlackConnectInviteStatusFromString("declined")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, SlackConnectInviteStatus("declined"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_dismissed", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewSlackConnectInviteStatusFromString("dismissed")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, SlackConnectInviteStatus("dismissed"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_expired", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewSlackConnectInviteStatusFromString("expired")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, SlackConnectInviteStatus("expired"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_pending", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewSlackConnectInviteStatusFromString("pending")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, SlackConnectInviteStatus("pending"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewSlackConnectInviteStatusFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewSlackConnectInviteStatusFromString("accepted")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)
@@ -15669,6 +16107,29 @@ func TestExtraPropertiesQuickstartResponse(t *testing.T) {
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *QuickstartResponse
+		extraProps := obj.GetExtraProperties()
+		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
+	})
+}
+
+func TestExtraPropertiesSlackConnectInviteView(t *testing.T) {
+	t.Run("GetExtraProperties", func(t *testing.T) {
+		t.Parallel()
+		obj := &SlackConnectInviteView{}
+		// Should not panic when calling GetExtraProperties()
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("GetExtraProperties() panicked: %v", r)
+			}
+		}()
+		extraProps := obj.GetExtraProperties()
+		// Result can be nil or an empty/non-empty map
+		_ = extraProps
+	})
+
+	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *SlackConnectInviteView
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

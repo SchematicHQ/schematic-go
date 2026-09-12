@@ -2,8 +2,10 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
@@ -16,6 +18,17 @@ import (
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/schematichq/schematic-go/rulesengine"
 )
+
+// ErrClientClosed is returned by Flush and by event tracking once the client
+// has been closed.
+var ErrClientClosed = errors.New("schematic: client is closed")
+
+// closeGrace is the headroom Close allows on top of the buffer's own shutdown
+// budget, covering the time spent draining queued events before the flush. The
+// buffer bounds each of its own sends, so Close's deadline is a backstop
+// against a sender that ignores context cancellation rather than a routine
+// limit.
+const closeGrace = 5 * time.Second
 
 type SchematicClient struct {
 	*Client
@@ -30,8 +43,21 @@ type SchematicClient struct {
 	isOffline               bool
 	logger                  core.Logger
 	options                 *core.RequestOptions
+	shutdownTimeout         time.Duration
 	stopWorker              chan struct{}
+	stopOnce                sync.Once
+	datastreamCloseOnce     sync.Once
+	workerDone              chan struct{}
+	flushRequests           chan flushRequest
 	workerInterval          time.Duration
+}
+
+// flushRequest asks the worker to flush the event buffer. The requester's
+// context bounds the send itself -- not just the wait for it -- and the result
+// comes back on done so the caller learns whether the events actually landed.
+type flushRequest struct {
+	ctx  context.Context
+	done chan error
 }
 
 // CheckFlagResponse is an alias for core.CheckFlagResponse to preserve the public API.
@@ -77,7 +103,10 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		isOffline:               options.OfflineMode,
 		logger:                  options.Logger,
 		options:                 options,
+		shutdownTimeout:         shutdownTimeout(options),
 		stopWorker:              make(chan struct{}),
+		workerDone:              make(chan struct{}),
+		flushRequests:           make(chan flushRequest),
 		workerInterval:          5 * time.Second,
 	}
 
@@ -96,6 +125,15 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 	}
 
 	return client
+}
+
+// shutdownTimeout mirrors the buffer's shutdown budget, so Close and the buffer
+// agree on how long a flush may take.
+func shutdownTimeout(options *core.RequestOptions) time.Duration {
+	if options.ShutdownTimeout != nil && *options.ShutdownTimeout > 0 {
+		return *options.ShutdownTimeout
+	}
+	return buffer.DefaultShutdownTimeout
 }
 
 func (c *SchematicClient) useDataStream() bool {
@@ -241,7 +279,7 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 	if len(keys) == 0 {
 		resp, err := c.Features.CheckFlags(ctx, evalCtx)
 		if err != nil {
-			c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+			c.reportCtxError(ctx, err)
 			return []*CheckFlagResponse{}
 		}
 		if resp == nil || resp.Data == nil {
@@ -284,7 +322,7 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 	// Any cache miss — refresh all keys from the API for a consistent snapshot.
 	resp, err := c.Features.CheckFlags(ctx, evalCtx)
 	if err != nil {
-		c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+		c.reportCtxError(ctx, err)
 		return c.flagDefaultsFor(keys, "error")
 	}
 
@@ -306,7 +344,7 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 		for cacheKey, value := range toCache {
 			for _, provider := range c.flagCheckCacheProviders {
 				if err := provider.Set(ctx, cacheKey, value, nil); err != nil {
-					c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+					c.reportCtxError(ctx, err)
 				}
 			}
 		}
@@ -374,10 +412,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 
 	resp, err := c.Features.CheckFlag(ctx, flagKey, evalCtx)
 	if err != nil {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: err,
-		}
+		c.reportCtxError(ctx, err)
 
 		return &CheckFlagResponse{
 			FlagKey: flagKey,
@@ -411,10 +446,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 	go func() {
 		for _, provider := range c.flagCheckCacheProviders {
 			if err := provider.Set(ctx, cacheKey, &cachedCopy, nil); err != nil {
-				c.ctxErrors <- &core.CtxError{
-					Ctx: ctx,
-					Err: err,
-				}
+				c.reportCtxError(ctx, err)
 			}
 		}
 	}()
@@ -493,6 +525,13 @@ func toRulesEngineRuleType(s *schematicgo.RuleType) *rulesengine.RuleType {
 	return &v
 }
 
+// Close shuts the client down and blocks until any buffered events have been
+// flushed to Schematic. Because it waits for the final flush (including the
+// sender's retries), `defer client.Close()` is enough to guarantee that events
+// recorded just before shutdown are delivered; the wait is bounded so a wedged
+// network can't hang the caller indefinitely.
+//
+// Close is safe to call more than once.
 func (c *SchematicClient) Close() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -500,10 +539,60 @@ func (c *SchematicClient) Close() {
 		}
 	}()
 
-	close(c.stopWorker)
+	c.stopOnce.Do(func() {
+		close(c.stopWorker)
+	})
 
+	// Wait for the worker to drain pending events and flush the buffer. The
+	// wait is bounded: the buffer bounds its own HTTP work, but a sender that
+	// ignores context cancellation must not be able to hang a caller's shutdown
+	// path outright.
+	timer := time.NewTimer(2*c.shutdownTimeout + closeGrace)
+	defer timer.Stop()
+
+	select {
+	case <-c.workerDone:
+	case <-timer.C:
+		c.logger.Error(context.Background(), "Timed out waiting for buffered events to flush on close")
+	}
+
+	// Guarded separately from stopWorker: the datastream client is not
+	// idempotent, and a second Close would otherwise close its health-check
+	// channel and rules engine twice.
 	if c.datastreamClient != nil {
-		c.datastreamClient.Close()
+		c.datastreamCloseOnce.Do(c.datastreamClient.Close)
+	}
+}
+
+// Flush sends any buffered events immediately and blocks until the send has
+// completed, without shutting the client down. Use it when an event must be
+// durable before the calling code proceeds -- for example redeeming a credit
+// lease, where a lost event means the work never gets billed.
+//
+// Flush returns nil only once the events have been accepted by Schematic. It
+// returns the send error if delivery failed, ctx.Err() if the context is
+// cancelled first, or ErrClientClosed if the client has already been closed.
+// The context also bounds the send itself, retries included.
+func (c *SchematicClient) Flush(ctx context.Context) error {
+	if c.isOffline {
+		return nil
+	}
+
+	req := flushRequest{ctx: ctx, done: make(chan error, 1)}
+
+	select {
+	case c.flushRequests <- req:
+	case <-c.workerDone:
+		return ErrClientClosed
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+
+	select {
+	case err := <-req.done:
+		return err
+	case <-ctx.Done():
+		return ctx.Err()
 	}
 }
 
@@ -523,10 +612,7 @@ func (c *SchematicClient) Identify(
 	}
 
 	if err := c.enqueueEvent("identify", eventBody, o); err != nil {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: err,
-		}
+		c.reportCtxError(ctx, err)
 	}
 }
 
@@ -564,19 +650,13 @@ func (c *SchematicClient) Track(
 	}
 
 	if err := c.enqueueEvent("track", eventBody, o); err != nil {
-		c.ctxErrors <- &core.CtxError{
-			Ctx: ctx,
-			Err: err,
-		}
+		c.reportCtxError(ctx, err)
 	}
 
 	if body.Company != nil && c.useDataStream() && c.datastreamClient.IsConnected() {
 		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
 		if err != nil {
-			c.ctxErrors <- &core.CtxError{
-				Ctx: ctx,
-				Err: fmt.Errorf("failed to update company metrics: %w", err),
-			}
+			c.reportCtxError(ctx, fmt.Errorf("failed to update company metrics: %w", err))
 		}
 	}
 }
@@ -602,7 +682,7 @@ func (c *SchematicClient) enqueueEvent(
 		sentAt = &now
 	}
 
-	c.events <- &schematicgo.CreateEventRequestBody{
+	event := &schematicgo.CreateEventRequestBody{
 		EventType:          schematicgo.EventType(eventType),
 		Body:               &body,
 		IdempotencyKey:     opts.idempotencyKey,
@@ -611,7 +691,15 @@ func (c *SchematicClient) enqueueEvent(
 		Backfill:           opts.backfill,
 	}
 
-	return nil
+	// A plain send would block forever once the worker has exited, since nothing
+	// drains the channel after Close. Blocking while the worker is alive is
+	// intentional backpressure and is preserved.
+	select {
+	case c.events <- event:
+		return nil
+	case <-c.workerDone:
+		return ErrClientClosed
+	}
 }
 
 func (c *SchematicClient) getFlagDefault(
@@ -628,7 +716,20 @@ func (c *SchematicClient) getFlagDefault(
 	return false
 }
 
+// reportCtxError hands an error to the worker for logging without ever
+// blocking the caller: the worker is the only reader, so once it has exited (or
+// simply fallen behind) a blocking send would hang application code that is
+// only trying to report a failure.
+func (c *SchematicClient) reportCtxError(ctx context.Context, err error) {
+	select {
+	case c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}:
+	default:
+		c.logger.Error(ctx, fmt.Sprintf("%v", err))
+	}
+}
+
 func (c *SchematicClient) worker() {
+	defer close(c.workerDone)
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred in worker %v", r))
@@ -649,15 +750,38 @@ func (c *SchematicClient) worker() {
 		c.eventBufferPeriod,
 	)
 
+	// drainEvents moves every event currently enqueued on the events channel into
+	// the buffer. Only called from this goroutine.
+	drainEvents := func() {
+		for {
+			select {
+			case event := <-c.events:
+				buffer.Push(event)
+			default:
+				return
+			}
+		}
+	}
+
 	for {
 		select {
 		case event := <-c.events:
 			buffer.Push(event)
+		case req := <-c.flushRequests:
+			// Drain anything already enqueued so a Track immediately followed by a
+			// Flush on the same goroutine is included in this flush.
+			drainEvents()
+			// done is buffered, so this never blocks even if the requester has
+			// already given up on its context.
+			req.done <- buffer.Flush(req.ctx)
 		case err := <-c.errors:
 			c.logger.Error(context.Background(), fmt.Sprintf("%v", err))
 		case err := <-c.ctxErrors:
 			c.logger.Error(err.Ctx, fmt.Sprintf("%v", err.Err))
 		case <-c.stopWorker:
+			// Move any events still sitting in the channel into the buffer before
+			// stopping it, otherwise they are dropped on shutdown.
+			drainEvents()
 			buffer.Stop()
 			return
 		}

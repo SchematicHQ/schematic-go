@@ -13,6 +13,7 @@ var WithEventCaptureBaseURL = core.WithEventCaptureBaseURL
 var WithFlagCheckCacheProvider = core.WithFlagCheckCacheProvider
 var WithLocalFlagCheckCache = core.WithLocalFlagCheckCache
 var WithOfflineMode = core.WithOfflineMode
+var WithShutdownTimeout = core.WithShutdownTimeout
 var WithLogger = core.WithLogger
 var WithLogLevel = core.WithLogLevel
 var WithDatastream = core.WithDatastream

@@ -34,10 +34,12 @@ type CountAccountMembersRequest struct {
 }
 
 func (c *CountAccountMembersRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -95,10 +97,12 @@ type CountAPIKeysRequest struct {
 }
 
 func (c *CountAPIKeysRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -155,10 +159,12 @@ type CountAuditLogsRequest struct {
 }
 
 func (c *CountAuditLogsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
@@ -230,10 +236,12 @@ type CreateAPIKeyRequestBody struct {
 }
 
 func (c *CreateAPIKeyRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -306,10 +314,12 @@ type CreateEnvironmentRequestBody struct {
 }
 
 func (c *CreateEnvironmentRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
@@ -371,10 +381,12 @@ type ListAccountMembersRequest struct {
 }
 
 func (l *ListAccountMembersRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -432,10 +444,12 @@ type ListAPIKeysRequest struct {
 }
 
 func (l *ListAPIKeysRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -492,10 +506,12 @@ type ListAuditLogsRequest struct {
 }
 
 func (l *ListAuditLogsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
@@ -565,10 +581,12 @@ type ListEnvironmentsRequest struct {
 }
 
 func (l *ListEnvironmentsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -729,10 +747,12 @@ func (a *APIKeyCreateResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (a *APIKeyCreateResponseData) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -1093,10 +1113,12 @@ func (a *AuditLogResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (a *AuditLogResponseData) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetAccountMemberID sets the AccountMemberID field and marks it as non-optional;
@@ -1374,10 +1396,12 @@ func (e *EnvironmentDetailResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (e *EnvironmentDetailResponseData) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetAPIKeys sets the APIKeys field and marks it as non-optional;
@@ -1485,11 +1509,12 @@ var (
 	getOnboardingStateRespFieldPath             = big.NewInt(1 << 5)
 	getOnboardingStateRespFieldPricingPageURL   = big.NewInt(1 << 6)
 	getOnboardingStateRespFieldRequirements     = big.NewInt(1 << 7)
-	getOnboardingStateRespFieldSlackConnect     = big.NewInt(1 << 8)
-	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 9)
-	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 10)
-	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 11)
-	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 12)
+	getOnboardingStateRespFieldRoadmap          = big.NewInt(1 << 8)
+	getOnboardingStateRespFieldSlackConnect     = big.NewInt(1 << 9)
+	getOnboardingStateRespFieldStripeImport     = big.NewInt(1 << 10)
+	getOnboardingStateRespFieldSuggestedNext    = big.NewInt(1 << 11)
+	getOnboardingStateRespFieldTrack            = big.NewInt(1 << 12)
+	getOnboardingStateRespFieldWebsiteURL       = big.NewInt(1 << 13)
 )
 
 type GetOnboardingStateResp struct {
@@ -1501,6 +1526,7 @@ type GetOnboardingStateResp struct {
 	Path             *OnboardingPath              `json:"path,omitempty" url:"path,omitempty"`
 	PricingPageURL   *string                      `json:"pricing_page_url,omitempty" url:"pricing_page_url,omitempty"`
 	Requirements     []*OnboardingRequirementView `json:"requirements" url:"requirements"`
+	Roadmap          *OnboardingRoadmapView       `json:"roadmap,omitempty" url:"roadmap,omitempty"`
 	SlackConnect     *SlackConnectInviteView      `json:"slack_connect,omitempty" url:"slack_connect,omitempty"`
 	StripeImport     *OnboardingStripeImport      `json:"stripe_import,omitempty" url:"stripe_import,omitempty"`
 	SuggestedNext    []OnboardingRequirement      `json:"suggested_next" url:"suggested_next"`
@@ -1570,6 +1596,13 @@ func (g *GetOnboardingStateResp) GetRequirements() []*OnboardingRequirementView 
 	return g.Requirements
 }
 
+func (g *GetOnboardingStateResp) GetRoadmap() *OnboardingRoadmapView {
+	if g == nil {
+		return nil
+	}
+	return g.Roadmap
+}
+
 func (g *GetOnboardingStateResp) GetSlackConnect() *SlackConnectInviteView {
 	if g == nil {
 		return nil
@@ -1613,10 +1646,12 @@ func (g *GetOnboardingStateResp) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetOnboardingStateResp) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetAgentConnectedAt sets the AgentConnectedAt field and marks it as non-optional;
@@ -1673,6 +1708,13 @@ func (g *GetOnboardingStateResp) SetPricingPageURL(pricingPageURL *string) {
 func (g *GetOnboardingStateResp) SetRequirements(requirements []*OnboardingRequirementView) {
 	g.Requirements = requirements
 	g.require(getOnboardingStateRespFieldRequirements)
+}
+
+// SetRoadmap sets the Roadmap field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetOnboardingStateResp) SetRoadmap(roadmap *OnboardingRoadmapView) {
+	g.Roadmap = roadmap
+	g.require(getOnboardingStateRespFieldRoadmap)
 }
 
 // SetSlackConnect sets the SlackConnect field and marks it as non-optional;
@@ -1842,10 +1884,12 @@ func (o *OnboardingMilestoneView) GetExtraProperties() map[string]interface{} {
 }
 
 func (o *OnboardingMilestoneView) require(field *big.Int) {
-	if o.explicitFields == nil {
-		o.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if o.explicitFields != nil {
+		next.Set(o.explicitFields)
 	}
-	o.explicitFields.Or(o.explicitFields, field)
+	next.Or(next, field)
+	o.explicitFields = next
 }
 
 // SetID sets the ID field and marks it as non-optional;
@@ -1955,6 +1999,7 @@ const (
 	OnboardingRequirementConnectBilling  OnboardingRequirement = "connect_billing"
 	OnboardingRequirementCreateAPIKey    OnboardingRequirement = "create_api_key"
 	OnboardingRequirementFirstFlagCheck  OnboardingRequirement = "first_flag_check"
+	OnboardingRequirementGenerateRoadmap OnboardingRequirement = "generate_roadmap"
 	OnboardingRequirementImportCompanies OnboardingRequirement = "import_companies"
 	OnboardingRequirementModelPackaging  OnboardingRequirement = "model_packaging"
 	OnboardingRequirementSendEvents      OnboardingRequirement = "send_events"
@@ -1970,6 +2015,8 @@ func NewOnboardingRequirementFromString(s string) (OnboardingRequirement, error)
 		return OnboardingRequirementCreateAPIKey, nil
 	case "first_flag_check":
 		return OnboardingRequirementFirstFlagCheck, nil
+	case "generate_roadmap":
+		return OnboardingRequirementGenerateRoadmap, nil
 	case "import_companies":
 		return OnboardingRequirementImportCompanies, nil
 	case "model_packaging":
@@ -2075,10 +2122,12 @@ func (o *OnboardingRequirementView) GetExtraProperties() map[string]interface{} 
 }
 
 func (o *OnboardingRequirementView) require(field *big.Int) {
-	if o.explicitFields == nil {
-		o.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if o.explicitFields != nil {
+		next.Set(o.explicitFields)
 	}
-	o.explicitFields.Or(o.explicitFields, field)
+	next.Or(next, field)
+	o.explicitFields = next
 }
 
 // SetBlockedBy sets the BlockedBy field and marks it as non-optional;
@@ -2152,6 +2201,116 @@ func (o *OnboardingRequirementView) MarshalJSON() ([]byte, error) {
 }
 
 func (o *OnboardingRequirementView) String() string {
+	if o == nil {
+		return "<nil>"
+	}
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+var (
+	onboardingRoadmapViewFieldPublishedAt = big.NewInt(1 << 0)
+	onboardingRoadmapViewFieldSlug        = big.NewInt(1 << 1)
+)
+
+type OnboardingRoadmapView struct {
+	PublishedAt *time.Time `json:"published_at,omitempty" url:"published_at,omitempty"`
+	Slug        string     `json:"slug" url:"slug"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OnboardingRoadmapView) GetPublishedAt() *time.Time {
+	if o == nil {
+		return nil
+	}
+	return o.PublishedAt
+}
+
+func (o *OnboardingRoadmapView) GetSlug() string {
+	if o == nil {
+		return ""
+	}
+	return o.Slug
+}
+
+func (o *OnboardingRoadmapView) GetExtraProperties() map[string]interface{} {
+	if o == nil {
+		return nil
+	}
+	return o.extraProperties
+}
+
+func (o *OnboardingRoadmapView) require(field *big.Int) {
+	next := new(big.Int)
+	if o.explicitFields != nil {
+		next.Set(o.explicitFields)
+	}
+	next.Or(next, field)
+	o.explicitFields = next
+}
+
+// SetPublishedAt sets the PublishedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRoadmapView) SetPublishedAt(publishedAt *time.Time) {
+	o.PublishedAt = publishedAt
+	o.require(onboardingRoadmapViewFieldPublishedAt)
+}
+
+// SetSlug sets the Slug field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OnboardingRoadmapView) SetSlug(slug string) {
+	o.Slug = slug
+	o.require(onboardingRoadmapViewFieldSlug)
+}
+
+func (o *OnboardingRoadmapView) UnmarshalJSON(data []byte) error {
+	type embed OnboardingRoadmapView
+	var unmarshaler = struct {
+		embed
+		PublishedAt *internal.DateTime `json:"published_at,omitempty"`
+	}{
+		embed: embed(*o),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*o = OnboardingRoadmapView(unmarshaler.embed)
+	o.PublishedAt = unmarshaler.PublishedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OnboardingRoadmapView) MarshalJSON() ([]byte, error) {
+	type embed OnboardingRoadmapView
+	var marshaler = struct {
+		embed
+		PublishedAt *internal.DateTime `json:"published_at,omitempty"`
+	}{
+		embed:       embed(*o),
+		PublishedAt: internal.NewOptionalDateTime(o.PublishedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, o.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (o *OnboardingRoadmapView) String() string {
 	if o == nil {
 		return "<nil>"
 	}
@@ -2242,10 +2401,12 @@ func (q *QuickstartResp) GetExtraProperties() map[string]interface{} {
 }
 
 func (q *QuickstartResp) require(field *big.Int) {
-	if q.explicitFields == nil {
-		q.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if q.explicitFields != nil {
+		next.Set(q.explicitFields)
 	}
-	q.explicitFields.Or(q.explicitFields, field)
+	next.Or(next, field)
+	q.explicitFields = next
 }
 
 // SetOk sets the Ok field and marks it as non-optional;
@@ -2384,10 +2545,12 @@ func (s *SlackConnectInviteView) GetExtraProperties() map[string]interface{} {
 }
 
 func (s *SlackConnectInviteView) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetCanResendAt sets the CanResendAt field and marks it as non-optional;
@@ -2582,10 +2745,12 @@ func (w *WhoAmIResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (w *WhoAmIResponseData) require(field *big.Int) {
-	if w.explicitFields == nil {
-		w.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if w.explicitFields != nil {
+		next.Set(w.explicitFields)
 	}
-	w.explicitFields.Or(w.explicitFields, field)
+	next.Or(next, field)
+	w.explicitFields = next
 }
 
 // SetAccountID sets the AccountID field and marks it as non-optional;
@@ -2770,10 +2935,12 @@ func (c *CountAccountMembersParams) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CountAccountMembersParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -2892,10 +3059,12 @@ func (c *CountAccountMembersResponse) GetExtraProperties() map[string]interface{
 }
 
 func (c *CountAccountMembersResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3013,10 +3182,12 @@ func (c *CountAPIKeysParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountAPIKeysParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -3128,10 +3299,12 @@ func (c *CountAPIKeysResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountAPIKeysResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3276,10 +3449,12 @@ func (c *CountAuditLogsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountAuditLogsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
@@ -3424,10 +3599,12 @@ func (c *CountAuditLogsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountAuditLogsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3525,10 +3702,12 @@ func (c *CreateAPIKeyResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateAPIKeyResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3626,10 +3805,12 @@ func (c *CreateEnvironmentResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CreateEnvironmentResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3727,10 +3908,12 @@ func (d *DeleteAPIKeyResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeleteAPIKeyResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3828,10 +4011,12 @@ func (d *DeleteEnvironmentResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (d *DeleteEnvironmentResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3929,10 +4114,12 @@ func (g *GetAccountMemberResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetAccountMemberResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4030,10 +4217,12 @@ func (g *GetAPIKeyResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetAPIKeyResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4131,10 +4320,12 @@ func (g *GetAuditLogResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetAuditLogResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4232,10 +4423,12 @@ func (g *GetEnvironmentResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetEnvironmentResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4333,10 +4526,12 @@ func (g *GetOnboardingStateResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (g *GetOnboardingStateResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4434,10 +4629,12 @@ func (g *GetWhoAmIResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetWhoAmIResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4566,10 +4763,12 @@ func (l *ListAccountMembersParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListAccountMembersParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -4688,10 +4887,12 @@ func (l *ListAccountMembersResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (l *ListAccountMembersResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4809,10 +5010,12 @@ func (l *ListAPIKeysParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListAPIKeysParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -4924,10 +5127,12 @@ func (l *ListAPIKeysResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListAPIKeysResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5072,10 +5277,12 @@ func (l *ListAuditLogsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListAuditLogsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
@@ -5220,10 +5427,12 @@ func (l *ListAuditLogsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListAuditLogsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5332,10 +5541,12 @@ func (l *ListEnvironmentsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListEnvironmentsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -5440,10 +5651,12 @@ func (l *ListEnvironmentsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListEnvironmentsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5541,10 +5754,12 @@ func (q *QuickstartResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (q *QuickstartResponse) require(field *big.Int) {
-	if q.explicitFields == nil {
-		q.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if q.explicitFields != nil {
+		next.Set(q.explicitFields)
 	}
-	q.explicitFields.Or(q.explicitFields, field)
+	next.Or(next, field)
+	q.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5642,10 +5857,12 @@ func (u *UpdateAPIKeyResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateAPIKeyResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5743,10 +5960,12 @@ func (u *UpdateEnvironmentResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (u *UpdateEnvironmentResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5844,10 +6063,12 @@ func (u *UpdateOnboardingStateResponse) GetExtraProperties() map[string]interfac
 }
 
 func (u *UpdateOnboardingStateResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5922,10 +6143,12 @@ type UpdateAPIKeyRequestBody struct {
 }
 
 func (u *UpdateAPIKeyRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -5984,10 +6207,12 @@ type UpdateEnvironmentRequestBody struct {
 }
 
 func (u *UpdateEnvironmentRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetEnvironmentType sets the EnvironmentType field and marks it as non-optional;
@@ -6047,10 +6272,12 @@ type UpdateOnboardingStateRequestBody struct {
 }
 
 func (u *UpdateOnboardingStateRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCountry sets the Country field and marks it as non-optional;

@@ -4202,6 +4202,14 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
+**startedAt:** `*time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **status:** `*string` 
     
 </dd>
@@ -5504,6 +5512,14 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
+**creditBundleID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **creditID:** `string` 
     
 </dd>
@@ -6061,7 +6077,7 @@ client.Credits.ExtendCreditLease(
 </dl>
 </details>
 
-<details><summary><code>client.Credits.ReleaseCreditLease(LeaseID, request) -> *schematichq.ReleaseCreditLeaseResponse</code></summary>
+<details><summary><code>client.Credits.ReleaseCreditLease(LeaseID) -> *schematichq.ReleaseCreditLeaseResponse</code></summary>
 <dl>
 <dd>
 
@@ -6074,13 +6090,9 @@ client.Credits.ExtendCreditLease(
 <dd>
 
 ```go
-request := map[string]any{
-    "key": "value",
-}
 client.Credits.ReleaseCreditLease(
     context.TODO(),
     "lease_id",
-    request,
 )
 ```
 </dd>
@@ -6097,14 +6109,6 @@ client.Credits.ReleaseCreditLease(
 <dd>
 
 **leaseID:** `string` — lease_id
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**request:** `schematichq.ReleaseCreditLeaseRequestBody` 
     
 </dd>
 </dl>
@@ -6573,6 +6577,129 @@ client.Credits.CountBillingPlanCreditGrants(
 <dd>
 
 **offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.ReserveCredits(request) -> *schematichq.ReserveCreditsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ReserveCreditsRequestBody{
+    Amount: 1.1,
+    CompanyID: "company_id",
+    CreditTypeID: "credit_type_id",
+}
+client.Credits.ReserveCredits(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**amount:** `float64` — Credits to hold for the operation. The full amount must be available; a partial hold is never taken
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditTypeID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**expiresAt:** `*time.Time` — When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotencyKey:** `*string` — A caller-chosen key for safe retries: a second request with the same key returns the original reservation instead of taking another hold
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.ReleaseCreditReservation(ReservationID) -> *schematichq.ReleaseCreditReservationResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Credits.ReleaseCreditReservation(
+    context.TODO(),
+    "reservation_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**reservationID:** `string` — reservation_id
     
 </dd>
 </dl>
@@ -15385,6 +15512,9 @@ request := &schematichq.ListPlansRequest{
     ExcludeCompanyScoped: schematichq.Bool(
         true,
     ),
+    ExcludeUnused: schematichq.Bool(
+        true,
+    ),
     ForFallbackPlan: schematichq.Bool(
         true,
     ),
@@ -15463,6 +15593,14 @@ client.Plans.ListPlans(
 <dd>
 
 **excludeCompanyScoped:** `*bool` — Exclude plans that are scoped to a company (custom plans assigned to a company)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludeUnused:** `*bool` — Exclude plans that nothing is using: no company is on the plan and it has no draft version
     
 </dd>
 </dl>
@@ -16122,6 +16260,9 @@ request := &schematichq.CountPlansRequest{
     ExcludeCompanyScoped: schematichq.Bool(
         true,
     ),
+    ExcludeUnused: schematichq.Bool(
+        true,
+    ),
     ForFallbackPlan: schematichq.Bool(
         true,
     ),
@@ -16200,6 +16341,14 @@ client.Plans.CountPlans(
 <dd>
 
 **excludeCompanyScoped:** `*bool` — Exclude plans that are scoped to a company (custom plans assigned to a company)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludeUnused:** `*bool` — Exclude plans that nothing is using: no company is on the plan and it has no draft version
     
 </dd>
 </dl>
@@ -19292,6 +19441,91 @@ client.Features.CheckFlag(
 </dl>
 </details>
 
+<details><summary><code>client.Features.CheckAndReserveFlag(Key, request) -> *schematichq.CheckAndReserveFlagResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CheckAndReserveFlagRequestBody{}
+client.Features.CheckAndReserveFlag(
+    context.TODO(),
+    "key",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**key:** `string` — key
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**company:** `map[string]string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**expiresAt:** `*time.Time` — When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**preflight:** `*schematichq.PreflightRequestBody` — Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise the hold is quantity times the entitlement's consumption rate
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**quantity:** `*float64` — Units of the feature the operation will consume; defaults to 1. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**user:** `map[string]string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Features.CheckFlags(request) -> *schematichq.CheckFlagsResponse</code></summary>
 <dl>
 <dd>
@@ -21124,6 +21358,14 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
+**trialEligibilityPerPlan:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **trialExpiryPlanID:** `*string` 
     
 </dd>
@@ -21501,6 +21743,14 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **trialDays:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**trialEligibilityPerPlan:** `*bool` 
     
 </dd>
 </dl>

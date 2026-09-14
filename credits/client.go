@@ -681,25 +681,19 @@ func (c *Client) ExtendCreditLease(
 
 // Example:
 //
-//	request := map[string]any{
-//	    "key": "value",
-//	}
 //	client.Credits.ReleaseCreditLease(
 //	    context.TODO(),
 //	    "lease_id",
-//	    request,
 //	)
 func (c *Client) ReleaseCreditLease(
 	ctx context.Context,
 	// lease_id
 	leaseID string,
-	request schematichq.ReleaseCreditLeaseRequestBody,
 	opts ...option.RequestOption,
 ) (*schematichq.ReleaseCreditLeaseResponse, error) {
 	response, err := c.WithRawResponse.ReleaseCreditLease(
 		ctx,
 		leaseID,
-		request,
 		opts...,
 	)
 	if err != nil {
@@ -921,6 +915,56 @@ func (c *Client) CountBillingPlanCreditGrants(
 	response, err := c.WithRawResponse.CountBillingPlanCreditGrants(
 		ctx,
 		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.ReserveCreditsRequestBody{
+//	    Amount: 1.1,
+//	    CompanyID: "company_id",
+//	    CreditTypeID: "credit_type_id",
+//	}
+//	client.Credits.ReserveCredits(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ReserveCredits(
+	ctx context.Context,
+	request *schematichq.ReserveCreditsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.ReserveCreditsResponse, error) {
+	response, err := c.WithRawResponse.ReserveCredits(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Credits.ReleaseCreditReservation(
+//	    context.TODO(),
+//	    "reservation_id",
+//	)
+func (c *Client) ReleaseCreditReservation(
+	ctx context.Context,
+	// reservation_id
+	reservationID string,
+	opts ...option.RequestOption,
+) (*schematichq.ReleaseCreditReservationResponse, error) {
+	response, err := c.WithRawResponse.ReleaseCreditReservation(
+		ctx,
+		reservationID,
 		opts...,
 	)
 	if err != nil {

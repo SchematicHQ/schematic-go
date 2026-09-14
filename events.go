@@ -22,10 +22,12 @@ type CreateEventBatchRequestBody struct {
 }
 
 func (c *CreateEventBatchRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetEvents sets the Events field and marks it as non-optional;
@@ -76,10 +78,12 @@ type GetEventSummariesRequest struct {
 }
 
 func (g *GetEventSummariesRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -138,10 +142,12 @@ type ListEventsRequest struct {
 }
 
 func (l *ListEventsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -279,10 +285,12 @@ func (c *CreateEventRequestBody) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateEventRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBackfill sets the Backfill field and marks it as non-optional;
@@ -611,10 +619,12 @@ func (e *EventBodyFlagCheck) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventBodyFlagCheck) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -796,10 +806,12 @@ func (e *EventBodyIdentify) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventBodyIdentify) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetCompany sets the Company field and marks it as non-optional;
@@ -923,10 +935,12 @@ func (e *EventBodyIdentifyCompany) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventBodyIdentifyCompany) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetKeys sets the Keys field and marks it as non-optional;
@@ -1162,10 +1176,12 @@ func (e *EventBodyInference) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventBodyInference) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetCacheCreationInputTokens sets the CacheCreationInputTokens field and marks it as non-optional;
@@ -1316,12 +1332,13 @@ func (e *EventBodyInference) String() string {
 }
 
 var (
-	eventBodyTrackFieldCompany  = big.NewInt(1 << 0)
-	eventBodyTrackFieldEvent    = big.NewInt(1 << 1)
-	eventBodyTrackFieldLeaseID  = big.NewInt(1 << 2)
-	eventBodyTrackFieldQuantity = big.NewInt(1 << 3)
-	eventBodyTrackFieldTraits   = big.NewInt(1 << 4)
-	eventBodyTrackFieldUser     = big.NewInt(1 << 5)
+	eventBodyTrackFieldCompany       = big.NewInt(1 << 0)
+	eventBodyTrackFieldEvent         = big.NewInt(1 << 1)
+	eventBodyTrackFieldLeaseID       = big.NewInt(1 << 2)
+	eventBodyTrackFieldQuantity      = big.NewInt(1 << 3)
+	eventBodyTrackFieldReservationID = big.NewInt(1 << 4)
+	eventBodyTrackFieldTraits        = big.NewInt(1 << 5)
+	eventBodyTrackFieldUser          = big.NewInt(1 << 6)
 )
 
 type EventBodyTrack struct {
@@ -1333,6 +1350,8 @@ type EventBodyTrack struct {
 	LeaseID *string `json:"lease_id,omitempty" url:"lease_id,omitempty"`
 	// Optionally specify the quantity of the event
 	Quantity *int64 `json:"quantity,omitempty" url:"quantity,omitempty"`
+	// Credit reservation ID this track event settles. lease_id takes precedence when both are set
+	ReservationID *string `json:"reservation_id,omitempty" url:"reservation_id,omitempty"`
 	// A map of trait names to trait values
 	Traits map[string]any `json:"traits,omitempty" url:"traits,omitempty"`
 	// Key-value pairs to identify user associated with track event
@@ -1373,6 +1392,13 @@ func (e *EventBodyTrack) GetQuantity() *int64 {
 	return e.Quantity
 }
 
+func (e *EventBodyTrack) GetReservationID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.ReservationID
+}
+
 func (e *EventBodyTrack) GetTraits() map[string]any {
 	if e == nil {
 		return nil
@@ -1395,10 +1421,12 @@ func (e *EventBodyTrack) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventBodyTrack) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetCompany sets the Company field and marks it as non-optional;
@@ -1427,6 +1455,13 @@ func (e *EventBodyTrack) SetLeaseID(leaseID *string) {
 func (e *EventBodyTrack) SetQuantity(quantity *int64) {
 	e.Quantity = quantity
 	e.require(eventBodyTrackFieldQuantity)
+}
+
+// SetReservationID sets the ReservationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyTrack) SetReservationID(reservationID *string) {
+	e.ReservationID = reservationID
+	e.require(eventBodyTrackFieldReservationID)
 }
 
 // SetTraits sets the Traits field and marks it as non-optional;
@@ -1504,13 +1539,14 @@ var (
 	eventDetailResponseDataFieldLoadedAt       = big.NewInt(1 << 15)
 	eventDetailResponseDataFieldProcessedAt    = big.NewInt(1 << 16)
 	eventDetailResponseDataFieldQuantity       = big.NewInt(1 << 17)
-	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 18)
-	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 19)
-	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 20)
-	eventDetailResponseDataFieldType           = big.NewInt(1 << 21)
-	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 22)
-	eventDetailResponseDataFieldUser           = big.NewInt(1 << 23)
-	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 24)
+	eventDetailResponseDataFieldReservationID  = big.NewInt(1 << 18)
+	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 19)
+	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 20)
+	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 21)
+	eventDetailResponseDataFieldType           = big.NewInt(1 << 22)
+	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 23)
+	eventDetailResponseDataFieldUser           = big.NewInt(1 << 24)
+	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 25)
 )
 
 type EventDetailResponseData struct {
@@ -1532,6 +1568,7 @@ type EventDetailResponseData struct {
 	LoadedAt       *time.Time          `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
 	ProcessedAt    *time.Time          `json:"processed_at,omitempty" url:"processed_at,omitempty"`
 	Quantity       int64               `json:"quantity" url:"quantity"`
+	ReservationID  *string             `json:"reservation_id,omitempty" url:"reservation_id,omitempty"`
 	SentAt         *time.Time          `json:"sent_at,omitempty" url:"sent_at,omitempty"`
 	Status         EventStatus         `json:"status" url:"status"`
 	Subtype        *string             `json:"subtype,omitempty" url:"subtype,omitempty"`
@@ -1673,6 +1710,13 @@ func (e *EventDetailResponseData) GetQuantity() int64 {
 	return e.Quantity
 }
 
+func (e *EventDetailResponseData) GetReservationID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.ReservationID
+}
+
 func (e *EventDetailResponseData) GetSentAt() *time.Time {
 	if e == nil {
 		return nil
@@ -1730,10 +1774,12 @@ func (e *EventDetailResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventDetailResponseData) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetAPIKey sets the APIKey field and marks it as non-optional;
@@ -1860,6 +1906,13 @@ func (e *EventDetailResponseData) SetProcessedAt(processedAt *time.Time) {
 func (e *EventDetailResponseData) SetQuantity(quantity int64) {
 	e.Quantity = quantity
 	e.require(eventDetailResponseDataFieldQuantity)
+}
+
+// SetReservationID sets the ReservationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetReservationID(reservationID *string) {
+	e.ReservationID = reservationID
+	e.require(eventDetailResponseDataFieldReservationID)
 }
 
 // SetSentAt sets the SentAt field and marks it as non-optional;
@@ -2132,10 +2185,12 @@ func (o *OtlpEnvironmentSettingsResponseData) GetExtraProperties() map[string]in
 }
 
 func (o *OtlpEnvironmentSettingsResponseData) require(field *big.Int) {
-	if o.explicitFields == nil {
-		o.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if o.explicitFields != nil {
+		next.Set(o.explicitFields)
 	}
-	o.explicitFields.Or(o.explicitFields, field)
+	next.Or(next, field)
+	o.explicitFields = next
 }
 
 // SetCompanyAttribute sets the CompanyAttribute field and marks it as non-optional;
@@ -2277,10 +2332,12 @@ func (r *RawEventBatchResponseData) GetExtraProperties() map[string]interface{} 
 }
 
 func (r *RawEventBatchResponseData) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetEvents sets the Events field and marks it as non-optional;
@@ -2397,10 +2454,12 @@ func (r *RawEventResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (r *RawEventResponseData) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetCapturedAt sets the CapturedAt field and marks it as non-optional;
@@ -2535,10 +2594,12 @@ func (s *SegmentStatusResp) GetExtraProperties() map[string]interface{} {
 }
 
 func (s *SegmentStatusResp) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetConnected sets the Connected field and marks it as non-optional;
@@ -2651,10 +2712,12 @@ func (c *CreateEventBatchResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateEventBatchResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2752,10 +2815,12 @@ func (c *CreateEventResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateEventResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2853,10 +2918,12 @@ func (d *DeleteOtlpEnvironmentSettingsResponse) GetExtraProperties() map[string]
 }
 
 func (d *DeleteOtlpEnvironmentSettingsResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2954,10 +3021,12 @@ func (g *GetEventResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetEventResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3075,10 +3144,12 @@ func (g *GetEventSummariesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetEventSummariesParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEventSubtypes sets the EventSubtypes field and marks it as non-optional;
@@ -3190,10 +3261,12 @@ func (g *GetEventSummariesResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (g *GetEventSummariesResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3291,10 +3364,12 @@ func (g *GetOtlpEnvironmentSettingsResponse) GetExtraProperties() map[string]int
 }
 
 func (g *GetOtlpEnvironmentSettingsResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3392,10 +3467,12 @@ func (g *GetSegmentIntegrationStatusResponse) GetExtraProperties() map[string]in
 }
 
 func (g *GetSegmentIntegrationStatusResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3549,10 +3626,12 @@ func (l *ListEventsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListEventsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -3692,10 +3771,12 @@ func (l *ListEventsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListEventsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3793,10 +3874,12 @@ func (u *UpsertOtlpEnvironmentSettingsResponse) GetExtraProperties() map[string]
 }
 
 func (u *UpsertOtlpEnvironmentSettingsResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3875,10 +3958,12 @@ type UpsertOtlpEnvironmentSettingsRequestBody struct {
 }
 
 func (u *UpsertOtlpEnvironmentSettingsRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCompanyAttribute sets the CompanyAttribute field and marks it as non-optional;

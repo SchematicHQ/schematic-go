@@ -2,6 +2,7 @@ package rulesengine_test
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/schematichq/schematic-go/rulesengine"
@@ -981,6 +982,72 @@ func TestCheckFlag(t *testing.T) {
 
 			assert.NoError(t, err)
 			assert.Nil(t, result.RuleID)
+		})
+
+		t.Run("Credit postpaid", func(t *testing.T) {
+			// The engine allows a draw when balance + overdraft_limit >= cost,
+			// and any draw when postpaid is on with no limit.
+			creditID := "credit-abc"
+			companyWith := func(balance float64, postpaid rulesengine.CreditPostpaidMap) *rulesengine.Company {
+				company := createTestCompany()
+				company.CreditBalances = map[string]float64{creditID: balance}
+				company.CreditPostpaid = postpaid
+				return company
+			}
+
+			t.Run("Denies a draw past zero without postpaid", func(t *testing.T) {
+				company := companyWith(0, nil)
+				flag, _ := creditFlag(creditID, 1.0, nil)
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 60))
+
+				require.NoError(t, err)
+				assert.Nil(t, result.RuleID)
+			})
+
+			t.Run("Allows a draw past zero up to the overdraft limit", func(t *testing.T) {
+				// 0 + 100 >= 60
+				company := companyWith(0, rulesengine.CreditPostpaidMap{creditID: {OverdraftLimit: ptr(100.0)}})
+				flag, rule := creditFlag(creditID, 1.0, nil)
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 60))
+
+				require.NoError(t, err)
+				assert.Equal(t, &rule.ID, result.RuleID)
+			})
+
+			t.Run("Denies a draw past the overdraft limit", func(t *testing.T) {
+				// -40 + 100 < 70
+				company := companyWith(-40, rulesengine.CreditPostpaidMap{creditID: {OverdraftLimit: ptr(100.0)}})
+				flag, _ := creditFlag(creditID, 1.0, nil)
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 70))
+
+				require.NoError(t, err)
+				assert.Nil(t, result.RuleID)
+			})
+
+			t.Run("Allows any draw with no overdraft limit", func(t *testing.T) {
+				company := companyWith(-10_000, rulesengine.CreditPostpaidMap{creditID: {}})
+				flag, rule := creditFlag(creditID, 1.0, nil)
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 50))
+
+				require.NoError(t, err)
+				assert.Equal(t, &rule.ID, result.RuleID)
+			})
+
+			t.Run("Null entry from the wire is off", func(t *testing.T) {
+				var postpaid rulesengine.CreditPostpaidMap
+				require.NoError(t, json.Unmarshal([]byte(`{"credit-abc":null}`), &postpaid))
+				company := companyWith(0, postpaid)
+				flag, _ := creditFlag(creditID, 1.0, nil)
+
+				result, err := engine.CheckFlag(ctx, company, nil, flag, rulesengine.WithCreditCost(creditID, 60))
+
+				require.NoError(t, err)
+				assert.Nil(t, result.RuleID)
+			})
 		})
 
 		t.Run("WithCreditCost ignores unrelated credit_id keys", func(t *testing.T) {

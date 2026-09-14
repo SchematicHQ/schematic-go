@@ -202,6 +202,9 @@ func (c *Client) CreateCustomPlan(
 //	    ExcludeCompanyScoped: schematichq.Bool(
 //	        true,
 //	    ),
+//	    ExcludeUnused: schematichq.Bool(
+//	        true,
+//	    ),
 //	    ForFallbackPlan: schematichq.Bool(
 //	        true,
 //	    ),
@@ -510,6 +513,9 @@ func (c *Client) CountBillingProductMatchCompanies(
 //	        true,
 //	    ),
 //	    ExcludeCompanyScoped: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ExcludeUnused: schematichq.Bool(
 //	        true,
 //	    ),
 //	    ForFallbackPlan: schematichq.Bool(

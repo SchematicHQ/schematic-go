@@ -24,10 +24,12 @@ type IssueTemporaryAccessTokenRequestBody struct {
 }
 
 func (i *IssueTemporaryAccessTokenRequestBody) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetLookup sets the Lookup field and marks it as non-optional;
@@ -71,17 +73,19 @@ var (
 	issueTemporaryAccessTokenResponseDataFieldEnvironmentID = big.NewInt(1 << 2)
 	issueTemporaryAccessTokenResponseDataFieldExpiredAt     = big.NewInt(1 << 3)
 	issueTemporaryAccessTokenResponseDataFieldID            = big.NewInt(1 << 4)
-	issueTemporaryAccessTokenResponseDataFieldResourceType  = big.NewInt(1 << 5)
-	issueTemporaryAccessTokenResponseDataFieldToken         = big.NewInt(1 << 6)
-	issueTemporaryAccessTokenResponseDataFieldUpdatedAt     = big.NewInt(1 << 7)
+	issueTemporaryAccessTokenResponseDataFieldIssuerType    = big.NewInt(1 << 5)
+	issueTemporaryAccessTokenResponseDataFieldResourceType  = big.NewInt(1 << 6)
+	issueTemporaryAccessTokenResponseDataFieldToken         = big.NewInt(1 << 7)
+	issueTemporaryAccessTokenResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
 )
 
 type IssueTemporaryAccessTokenResponseData struct {
-	APIKeyID      string                           `json:"api_key_id" url:"api_key_id"`
+	APIKeyID      *string                          `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
 	CreatedAt     time.Time                        `json:"created_at" url:"created_at"`
 	EnvironmentID string                           `json:"environment_id" url:"environment_id"`
 	ExpiredAt     time.Time                        `json:"expired_at" url:"expired_at"`
 	ID            string                           `json:"id" url:"id"`
+	IssuerType    TemporaryAccessTokenIssuerType   `json:"issuer_type" url:"issuer_type"`
 	ResourceType  TemporaryAccessTokenResourceType `json:"resource_type" url:"resource_type"`
 	Token         string                           `json:"token" url:"token"`
 	UpdatedAt     time.Time                        `json:"updated_at" url:"updated_at"`
@@ -93,9 +97,9 @@ type IssueTemporaryAccessTokenResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (i *IssueTemporaryAccessTokenResponseData) GetAPIKeyID() string {
+func (i *IssueTemporaryAccessTokenResponseData) GetAPIKeyID() *string {
 	if i == nil {
-		return ""
+		return nil
 	}
 	return i.APIKeyID
 }
@@ -128,6 +132,13 @@ func (i *IssueTemporaryAccessTokenResponseData) GetID() string {
 	return i.ID
 }
 
+func (i *IssueTemporaryAccessTokenResponseData) GetIssuerType() TemporaryAccessTokenIssuerType {
+	if i == nil {
+		return ""
+	}
+	return i.IssuerType
+}
+
 func (i *IssueTemporaryAccessTokenResponseData) GetToken() string {
 	if i == nil {
 		return ""
@@ -150,15 +161,17 @@ func (i *IssueTemporaryAccessTokenResponseData) GetExtraProperties() map[string]
 }
 
 func (i *IssueTemporaryAccessTokenResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetAPIKeyID sets the APIKeyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *IssueTemporaryAccessTokenResponseData) SetAPIKeyID(apiKeyID string) {
+func (i *IssueTemporaryAccessTokenResponseData) SetAPIKeyID(apiKeyID *string) {
 	i.APIKeyID = apiKeyID
 	i.require(issueTemporaryAccessTokenResponseDataFieldAPIKeyID)
 }
@@ -189,6 +202,13 @@ func (i *IssueTemporaryAccessTokenResponseData) SetExpiredAt(expiredAt time.Time
 func (i *IssueTemporaryAccessTokenResponseData) SetID(id string) {
 	i.ID = id
 	i.require(issueTemporaryAccessTokenResponseDataFieldID)
+}
+
+// SetIssuerType sets the IssuerType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IssueTemporaryAccessTokenResponseData) SetIssuerType(issuerType TemporaryAccessTokenIssuerType) {
+	i.IssuerType = issuerType
+	i.require(issueTemporaryAccessTokenResponseDataFieldIssuerType)
 }
 
 // SetResourceType sets the ResourceType field and marks it as non-optional;
@@ -270,6 +290,28 @@ func (i *IssueTemporaryAccessTokenResponseData) String() string {
 	return fmt.Sprintf("%#v", i)
 }
 
+type TemporaryAccessTokenIssuerType string
+
+const (
+	TemporaryAccessTokenIssuerTypeAPIKey         TemporaryAccessTokenIssuerType = "api_key"
+	TemporaryAccessTokenIssuerTypePricingRoadmap TemporaryAccessTokenIssuerType = "pricing_roadmap"
+)
+
+func NewTemporaryAccessTokenIssuerTypeFromString(s string) (TemporaryAccessTokenIssuerType, error) {
+	switch s {
+	case "api_key":
+		return TemporaryAccessTokenIssuerTypeAPIKey, nil
+	case "pricing_roadmap":
+		return TemporaryAccessTokenIssuerTypePricingRoadmap, nil
+	}
+	var t TemporaryAccessTokenIssuerType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TemporaryAccessTokenIssuerType) Ptr() *TemporaryAccessTokenIssuerType {
+	return &t
+}
+
 type TemporaryAccessTokenResourceType = string
 
 var (
@@ -311,10 +353,12 @@ func (i *IssueTemporaryAccessTokenResponse) GetExtraProperties() map[string]inte
 }
 
 func (i *IssueTemporaryAccessTokenResponse) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

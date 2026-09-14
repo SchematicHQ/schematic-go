@@ -9178,6 +9178,14 @@ func TestSettersMarkExplicitCreditBundleCurrencyPrice(t *testing.T) {
 }
 
 func TestSettersCreditCompanyGrantView(t *testing.T) {
+	t.Run("SetArrearsCadence", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValueArrearsCadence *BillingArrearsCadence
+		obj.SetArrearsCadence(fernTestValueArrearsCadence)
+		assert.Equal(t, fernTestValueArrearsCadence, obj.ArrearsCadence)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetBillingCreditBundleID", func(t *testing.T) {
 		obj := &CreditCompanyGrantView{}
 		var fernTestValueBillingCreditBundleID *string
@@ -9346,6 +9354,54 @@ func TestSettersCreditCompanyGrantView(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetPostpaidChargeAmount", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidChargeAmount *int64
+		obj.SetPostpaidChargeAmount(fernTestValuePostpaidChargeAmount)
+		assert.Equal(t, fernTestValuePostpaidChargeAmount, obj.PostpaidChargeAmount)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetPostpaidChargeCurrency", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidChargeCurrency *string
+		obj.SetPostpaidChargeCurrency(fernTestValuePostpaidChargeCurrency)
+		assert.Equal(t, fernTestValuePostpaidChargeCurrency, obj.PostpaidChargeCurrency)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetPostpaidChargedCredits", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidChargedCredits *float64
+		obj.SetPostpaidChargedCredits(fernTestValuePostpaidChargedCredits)
+		assert.Equal(t, fernTestValuePostpaidChargedCredits, obj.PostpaidChargedCredits)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetPostpaidPeriodEnd", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidPeriodEnd *time.Time
+		obj.SetPostpaidPeriodEnd(fernTestValuePostpaidPeriodEnd)
+		assert.Equal(t, fernTestValuePostpaidPeriodEnd, obj.PostpaidPeriodEnd)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetPostpaidRate", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidRate *int64
+		obj.SetPostpaidRate(fernTestValuePostpaidRate)
+		assert.Equal(t, fernTestValuePostpaidRate, obj.PostpaidRate)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetPostpaidRateDecimal", func(t *testing.T) {
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidRateDecimal *string
+		obj.SetPostpaidRateDecimal(fernTestValuePostpaidRateDecimal)
+		assert.Equal(t, fernTestValuePostpaidRateDecimal, obj.PostpaidRateDecimal)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetPrice", func(t *testing.T) {
 		obj := &CreditCompanyGrantView{}
 		var fernTestValuePrice *BillingProductPriceResponseData
@@ -9477,6 +9533,39 @@ func TestSettersCreditCompanyGrantView(t *testing.T) {
 }
 
 func TestGettersCreditCompanyGrantView(t *testing.T) {
+	t.Run("GetArrearsCadence", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *BillingArrearsCadence
+		obj.ArrearsCadence = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetArrearsCadence(), "getter should return the property value")
+	})
+
+	t.Run("GetArrearsCadence_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.ArrearsCadence = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetArrearsCadence(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetArrearsCadence_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetArrearsCadence() // Should return zero value
+	})
+
 	t.Run("GetBillingCreditBundleID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -10090,6 +10179,204 @@ func TestGettersCreditCompanyGrantView(t *testing.T) {
 		_ = obj.GetPluralName() // Should return zero value
 	})
 
+	t.Run("GetPostpaidChargeAmount", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *int64
+		obj.PostpaidChargeAmount = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPostpaidChargeAmount(), "getter should return the property value")
+	})
+
+	t.Run("GetPostpaidChargeAmount_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.PostpaidChargeAmount = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetPostpaidChargeAmount(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetPostpaidChargeAmount_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPostpaidChargeAmount() // Should return zero value
+	})
+
+	t.Run("GetPostpaidChargeCurrency", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *string
+		obj.PostpaidChargeCurrency = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPostpaidChargeCurrency(), "getter should return the property value")
+	})
+
+	t.Run("GetPostpaidChargeCurrency_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.PostpaidChargeCurrency = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetPostpaidChargeCurrency(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetPostpaidChargeCurrency_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPostpaidChargeCurrency() // Should return zero value
+	})
+
+	t.Run("GetPostpaidChargedCredits", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *float64
+		obj.PostpaidChargedCredits = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPostpaidChargedCredits(), "getter should return the property value")
+	})
+
+	t.Run("GetPostpaidChargedCredits_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.PostpaidChargedCredits = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetPostpaidChargedCredits(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetPostpaidChargedCredits_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPostpaidChargedCredits() // Should return zero value
+	})
+
+	t.Run("GetPostpaidPeriodEnd", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *time.Time
+		obj.PostpaidPeriodEnd = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPostpaidPeriodEnd(), "getter should return the property value")
+	})
+
+	t.Run("GetPostpaidPeriodEnd_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.PostpaidPeriodEnd = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetPostpaidPeriodEnd(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetPostpaidPeriodEnd_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPostpaidPeriodEnd() // Should return zero value
+	})
+
+	t.Run("GetPostpaidRate", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *int64
+		obj.PostpaidRate = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPostpaidRate(), "getter should return the property value")
+	})
+
+	t.Run("GetPostpaidRate_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.PostpaidRate = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetPostpaidRate(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetPostpaidRate_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPostpaidRate() // Should return zero value
+	})
+
+	t.Run("GetPostpaidRateDecimal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var expected *string
+		obj.PostpaidRateDecimal = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetPostpaidRateDecimal(), "getter should return the property value")
+	})
+
+	t.Run("GetPostpaidRateDecimal_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		obj.PostpaidRateDecimal = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetPostpaidRateDecimal(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetPostpaidRateDecimal_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditCompanyGrantView
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetPostpaidRateDecimal() // Should return zero value
+	})
+
 	t.Run("GetPrice", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -10561,6 +10848,37 @@ func TestGettersCreditCompanyGrantView(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCreditCompanyGrantView(t *testing.T) {
+	t.Run("SetArrearsCadence_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValueArrearsCadence *BillingArrearsCadence
+
+		// Act
+		obj.SetArrearsCadence(fernTestValueArrearsCadence)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetBillingCreditBundleID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -11189,6 +11507,192 @@ func TestSettersMarkExplicitCreditCompanyGrantView(t *testing.T) {
 
 		// Act
 		obj.SetPluralName(fernTestValuePluralName)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPostpaidChargeAmount_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidChargeAmount *int64
+
+		// Act
+		obj.SetPostpaidChargeAmount(fernTestValuePostpaidChargeAmount)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPostpaidChargeCurrency_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidChargeCurrency *string
+
+		// Act
+		obj.SetPostpaidChargeCurrency(fernTestValuePostpaidChargeCurrency)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPostpaidChargedCredits_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidChargedCredits *float64
+
+		// Act
+		obj.SetPostpaidChargedCredits(fernTestValuePostpaidChargedCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPostpaidPeriodEnd_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidPeriodEnd *time.Time
+
+		// Act
+		obj.SetPostpaidPeriodEnd(fernTestValuePostpaidPeriodEnd)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPostpaidRate_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidRate *int64
+
+		// Act
+		obj.SetPostpaidRate(fernTestValuePostpaidRate)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetPostpaidRateDecimal_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditCompanyGrantView{}
+		var fernTestValuePostpaidRateDecimal *string
+
+		// Act
+		obj.SetPostpaidRateDecimal(fernTestValuePostpaidRateDecimal)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

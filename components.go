@@ -22,10 +22,12 @@ type BindCatalogRequestBody struct {
 }
 
 func (b *BindCatalogRequestBody) require(field *big.Int) {
-	if b.explicitFields == nil {
-		b.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
 	}
-	b.explicitFields.Or(b.explicitFields, field)
+	next.Or(next, field)
+	b.explicitFields = next
 }
 
 // SetCatalogID sets the CatalogID field and marks it as non-optional;
@@ -74,10 +76,12 @@ type CountComponentsRequest struct {
 }
 
 func (c *CountComponentsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -117,10 +121,12 @@ type CreateComponentRequestBody struct {
 }
 
 func (c *CreateComponentRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAst sets the Ast field and marks it as non-optional;
@@ -183,10 +189,12 @@ type ListComponentsRequest struct {
 }
 
 func (l *ListComponentsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -224,10 +232,12 @@ type PreviewComponentDataRequest struct {
 }
 
 func (p *PreviewComponentDataRequest) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -446,10 +456,12 @@ func (b *BillingCreditBundleView) GetExtraProperties() map[string]interface{} {
 }
 
 func (b *BillingCreditBundleView) require(field *big.Int) {
-	if b.explicitFields == nil {
-		b.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
 	}
-	b.explicitFields.Or(b.explicitFields, field)
+	next.Or(next, field)
+	b.explicitFields = next
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
@@ -835,10 +847,12 @@ func (b *BillingProductPriceResponseData) GetExtraProperties() map[string]interf
 }
 
 func (b *BillingProductPriceResponseData) require(field *big.Int) {
-	if b.explicitFields == nil {
-		b.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
 	}
-	b.explicitFields.Or(b.explicitFields, field)
+	next.Or(next, field)
+	b.explicitFields = next
 }
 
 // SetBillingScheme sets the BillingScheme field and marks it as non-optional;
@@ -1447,10 +1461,12 @@ func (c *CompanyPlanDetailResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (c *CompanyPlanDetailResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetActiveVersion sets the ActiveVersion field and marks it as non-optional;
@@ -1927,10 +1943,12 @@ func (c *ComponentCheckoutSettings) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *ComponentCheckoutSettings) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBundlePurchaseBehavior sets the BundlePurchaseBehavior field and marks it as non-optional;
@@ -2318,10 +2336,12 @@ func (c *ComponentPreviewResponseData) GetExtraProperties() map[string]interface
 }
 
 func (c *ComponentPreviewResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetActiveAddOns sets the ActiveAddOns field and marks it as non-optional;
@@ -2654,10 +2674,12 @@ func (c *ComponentResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *ComponentResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAst sets the Ast field and marks it as non-optional;
@@ -2830,10 +2852,12 @@ func (c *CreditBundleCurrencyPrice) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CreditBundleCurrencyPrice) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCurrency sets the Currency field and marks it as non-optional;
@@ -2893,89 +2917,110 @@ func (c *CreditBundleCurrencyPrice) String() string {
 }
 
 var (
-	creditCompanyGrantViewFieldBillingCreditBundleID = big.NewInt(1 << 0)
-	creditCompanyGrantViewFieldBillingCreditID       = big.NewInt(1 << 1)
-	creditCompanyGrantViewFieldCompanyID             = big.NewInt(1 << 2)
-	creditCompanyGrantViewFieldCompanyLicenseID      = big.NewInt(1 << 3)
-	creditCompanyGrantViewFieldCompanyName           = big.NewInt(1 << 4)
-	creditCompanyGrantViewFieldCreatedAt             = big.NewInt(1 << 5)
-	creditCompanyGrantViewFieldCreditDescription     = big.NewInt(1 << 6)
-	creditCompanyGrantViewFieldCreditIcon            = big.NewInt(1 << 7)
-	creditCompanyGrantViewFieldCreditName            = big.NewInt(1 << 8)
-	creditCompanyGrantViewFieldCurrency              = big.NewInt(1 << 9)
-	creditCompanyGrantViewFieldExhaustedAt           = big.NewInt(1 << 10)
-	creditCompanyGrantViewFieldExpiresAt             = big.NewInt(1 << 11)
-	creditCompanyGrantViewFieldExpiryType            = big.NewInt(1 << 12)
-	creditCompanyGrantViewFieldExpiryUnit            = big.NewInt(1 << 13)
-	creditCompanyGrantViewFieldExpiryUnitCount       = big.NewInt(1 << 14)
-	creditCompanyGrantViewFieldGrantReason           = big.NewInt(1 << 15)
-	creditCompanyGrantViewFieldID                    = big.NewInt(1 << 16)
-	creditCompanyGrantViewFieldLicenseName           = big.NewInt(1 << 17)
-	creditCompanyGrantViewFieldPlanID                = big.NewInt(1 << 18)
-	creditCompanyGrantViewFieldPlanName              = big.NewInt(1 << 19)
-	creditCompanyGrantViewFieldPluralName            = big.NewInt(1 << 20)
-	creditCompanyGrantViewFieldPrice                 = big.NewInt(1 << 21)
-	creditCompanyGrantViewFieldQuantity              = big.NewInt(1 << 22)
-	creditCompanyGrantViewFieldQuantityRemaining     = big.NewInt(1 << 23)
-	creditCompanyGrantViewFieldQuantityUsed          = big.NewInt(1 << 24)
-	creditCompanyGrantViewFieldRenewalEnabled        = big.NewInt(1 << 25)
-	creditCompanyGrantViewFieldRenewalPeriod         = big.NewInt(1 << 26)
-	creditCompanyGrantViewFieldReserved              = big.NewInt(1 << 27)
-	creditCompanyGrantViewFieldSettled               = big.NewInt(1 << 28)
-	creditCompanyGrantViewFieldSingularName          = big.NewInt(1 << 29)
-	creditCompanyGrantViewFieldSourceGrantID         = big.NewInt(1 << 30)
-	creditCompanyGrantViewFieldSourceLabel           = big.NewInt(1 << 31)
-	creditCompanyGrantViewFieldTransfers             = big.NewInt(1 << 32)
-	creditCompanyGrantViewFieldUpdatedAt             = big.NewInt(1 << 33)
-	creditCompanyGrantViewFieldValidFrom             = big.NewInt(1 << 34)
-	creditCompanyGrantViewFieldZeroedOutDate         = big.NewInt(1 << 35)
-	creditCompanyGrantViewFieldZeroedOutReason       = big.NewInt(1 << 36)
+	creditCompanyGrantViewFieldArrearsCadence         = big.NewInt(1 << 0)
+	creditCompanyGrantViewFieldBillingCreditBundleID  = big.NewInt(1 << 1)
+	creditCompanyGrantViewFieldBillingCreditID        = big.NewInt(1 << 2)
+	creditCompanyGrantViewFieldCompanyID              = big.NewInt(1 << 3)
+	creditCompanyGrantViewFieldCompanyLicenseID       = big.NewInt(1 << 4)
+	creditCompanyGrantViewFieldCompanyName            = big.NewInt(1 << 5)
+	creditCompanyGrantViewFieldCreatedAt              = big.NewInt(1 << 6)
+	creditCompanyGrantViewFieldCreditDescription      = big.NewInt(1 << 7)
+	creditCompanyGrantViewFieldCreditIcon             = big.NewInt(1 << 8)
+	creditCompanyGrantViewFieldCreditName             = big.NewInt(1 << 9)
+	creditCompanyGrantViewFieldCurrency               = big.NewInt(1 << 10)
+	creditCompanyGrantViewFieldExhaustedAt            = big.NewInt(1 << 11)
+	creditCompanyGrantViewFieldExpiresAt              = big.NewInt(1 << 12)
+	creditCompanyGrantViewFieldExpiryType             = big.NewInt(1 << 13)
+	creditCompanyGrantViewFieldExpiryUnit             = big.NewInt(1 << 14)
+	creditCompanyGrantViewFieldExpiryUnitCount        = big.NewInt(1 << 15)
+	creditCompanyGrantViewFieldGrantReason            = big.NewInt(1 << 16)
+	creditCompanyGrantViewFieldID                     = big.NewInt(1 << 17)
+	creditCompanyGrantViewFieldLicenseName            = big.NewInt(1 << 18)
+	creditCompanyGrantViewFieldPlanID                 = big.NewInt(1 << 19)
+	creditCompanyGrantViewFieldPlanName               = big.NewInt(1 << 20)
+	creditCompanyGrantViewFieldPluralName             = big.NewInt(1 << 21)
+	creditCompanyGrantViewFieldPostpaidChargeAmount   = big.NewInt(1 << 22)
+	creditCompanyGrantViewFieldPostpaidChargeCurrency = big.NewInt(1 << 23)
+	creditCompanyGrantViewFieldPostpaidChargedCredits = big.NewInt(1 << 24)
+	creditCompanyGrantViewFieldPostpaidPeriodEnd      = big.NewInt(1 << 25)
+	creditCompanyGrantViewFieldPostpaidRate           = big.NewInt(1 << 26)
+	creditCompanyGrantViewFieldPostpaidRateDecimal    = big.NewInt(1 << 27)
+	creditCompanyGrantViewFieldPrice                  = big.NewInt(1 << 28)
+	creditCompanyGrantViewFieldQuantity               = big.NewInt(1 << 29)
+	creditCompanyGrantViewFieldQuantityRemaining      = big.NewInt(1 << 30)
+	creditCompanyGrantViewFieldQuantityUsed           = big.NewInt(1 << 31)
+	creditCompanyGrantViewFieldRenewalEnabled         = big.NewInt(1 << 32)
+	creditCompanyGrantViewFieldRenewalPeriod          = big.NewInt(1 << 33)
+	creditCompanyGrantViewFieldReserved               = big.NewInt(1 << 34)
+	creditCompanyGrantViewFieldSettled                = big.NewInt(1 << 35)
+	creditCompanyGrantViewFieldSingularName           = big.NewInt(1 << 36)
+	creditCompanyGrantViewFieldSourceGrantID          = big.NewInt(1 << 37)
+	creditCompanyGrantViewFieldSourceLabel            = big.NewInt(1 << 38)
+	creditCompanyGrantViewFieldTransfers              = big.NewInt(1 << 39)
+	creditCompanyGrantViewFieldUpdatedAt              = big.NewInt(1 << 40)
+	creditCompanyGrantViewFieldValidFrom              = big.NewInt(1 << 41)
+	creditCompanyGrantViewFieldZeroedOutDate          = big.NewInt(1 << 42)
+	creditCompanyGrantViewFieldZeroedOutReason        = big.NewInt(1 << 43)
 )
 
 type CreditCompanyGrantView struct {
-	BillingCreditBundleID *string                             `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
-	BillingCreditID       string                              `json:"billing_credit_id" url:"billing_credit_id"`
-	CompanyID             string                              `json:"company_id" url:"company_id"`
-	CompanyLicenseID      *string                             `json:"company_license_id,omitempty" url:"company_license_id,omitempty"`
-	CompanyName           string                              `json:"company_name" url:"company_name"`
-	CreatedAt             time.Time                           `json:"created_at" url:"created_at"`
-	CreditDescription     string                              `json:"credit_description" url:"credit_description"`
-	CreditIcon            *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditName            string                              `json:"credit_name" url:"credit_name"`
-	Currency              *string                             `json:"currency,omitempty" url:"currency,omitempty"`
-	ExhaustedAt           *time.Time                          `json:"exhausted_at,omitempty" url:"exhausted_at,omitempty"`
-	ExpiresAt             *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
-	ExpiryType            *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit            *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount       *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	GrantReason           BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
-	ID                    string                              `json:"id" url:"id"`
-	LicenseName           *string                             `json:"license_name,omitempty" url:"license_name,omitempty"`
-	PlanID                *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanName              *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
-	PluralName            *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
-	Price                 *BillingProductPriceResponseData    `json:"price,omitempty" url:"price,omitempty"`
-	Quantity              float64                             `json:"quantity" url:"quantity"`
-	QuantityRemaining     float64                             `json:"quantity_remaining" url:"quantity_remaining"`
-	QuantityUsed          float64                             `json:"quantity_used" url:"quantity_used"`
-	RenewalEnabled        bool                                `json:"renewal_enabled" url:"renewal_enabled"`
-	RenewalPeriod         *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
-	Reserved              *float64                            `json:"reserved,omitempty" url:"reserved,omitempty"`
-	Settled               *float64                            `json:"settled,omitempty" url:"settled,omitempty"`
-	SingularName          *string                             `json:"singular_name,omitempty" url:"singular_name,omitempty"`
-	SourceGrantID         *string                             `json:"source_grant_id,omitempty" url:"source_grant_id,omitempty"`
-	SourceLabel           string                              `json:"source_label" url:"source_label"`
-	Transfers             []*CreditTransferView               `json:"transfers,omitempty" url:"transfers,omitempty"`
-	UpdatedAt             time.Time                           `json:"updated_at" url:"updated_at"`
-	ValidFrom             *time.Time                          `json:"valid_from,omitempty" url:"valid_from,omitempty"`
-	ZeroedOutDate         *time.Time                          `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
-	ZeroedOutReason       *BillingCreditGrantZeroedOutReason  `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+	ArrearsCadence         *BillingArrearsCadence              `json:"arrears_cadence,omitempty" url:"arrears_cadence,omitempty"`
+	BillingCreditBundleID  *string                             `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
+	BillingCreditID        string                              `json:"billing_credit_id" url:"billing_credit_id"`
+	CompanyID              string                              `json:"company_id" url:"company_id"`
+	CompanyLicenseID       *string                             `json:"company_license_id,omitempty" url:"company_license_id,omitempty"`
+	CompanyName            string                              `json:"company_name" url:"company_name"`
+	CreatedAt              time.Time                           `json:"created_at" url:"created_at"`
+	CreditDescription      string                              `json:"credit_description" url:"credit_description"`
+	CreditIcon             *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditName             string                              `json:"credit_name" url:"credit_name"`
+	Currency               *string                             `json:"currency,omitempty" url:"currency,omitempty"`
+	ExhaustedAt            *time.Time                          `json:"exhausted_at,omitempty" url:"exhausted_at,omitempty"`
+	ExpiresAt              *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	ExpiryType             *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit             *BillingCreditExpiryUnit            `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount        *int64                              `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	GrantReason            BillingCreditGrantReason            `json:"grant_reason" url:"grant_reason"`
+	ID                     string                              `json:"id" url:"id"`
+	LicenseName            *string                             `json:"license_name,omitempty" url:"license_name,omitempty"`
+	PlanID                 *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanName               *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
+	PluralName             *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	PostpaidChargeAmount   *int64                              `json:"postpaid_charge_amount,omitempty" url:"postpaid_charge_amount,omitempty"`
+	PostpaidChargeCurrency *string                             `json:"postpaid_charge_currency,omitempty" url:"postpaid_charge_currency,omitempty"`
+	PostpaidChargedCredits *float64                            `json:"postpaid_charged_credits,omitempty" url:"postpaid_charged_credits,omitempty"`
+	PostpaidPeriodEnd      *time.Time                          `json:"postpaid_period_end,omitempty" url:"postpaid_period_end,omitempty"`
+	PostpaidRate           *int64                              `json:"postpaid_rate,omitempty" url:"postpaid_rate,omitempty"`
+	PostpaidRateDecimal    *string                             `json:"postpaid_rate_decimal,omitempty" url:"postpaid_rate_decimal,omitempty"`
+	Price                  *BillingProductPriceResponseData    `json:"price,omitempty" url:"price,omitempty"`
+	Quantity               float64                             `json:"quantity" url:"quantity"`
+	QuantityRemaining      float64                             `json:"quantity_remaining" url:"quantity_remaining"`
+	QuantityUsed           float64                             `json:"quantity_used" url:"quantity_used"`
+	RenewalEnabled         bool                                `json:"renewal_enabled" url:"renewal_enabled"`
+	RenewalPeriod          *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
+	Reserved               *float64                            `json:"reserved,omitempty" url:"reserved,omitempty"`
+	Settled                *float64                            `json:"settled,omitempty" url:"settled,omitempty"`
+	SingularName           *string                             `json:"singular_name,omitempty" url:"singular_name,omitempty"`
+	SourceGrantID          *string                             `json:"source_grant_id,omitempty" url:"source_grant_id,omitempty"`
+	SourceLabel            string                              `json:"source_label" url:"source_label"`
+	Transfers              []*CreditTransferView               `json:"transfers,omitempty" url:"transfers,omitempty"`
+	UpdatedAt              time.Time                           `json:"updated_at" url:"updated_at"`
+	ValidFrom              *time.Time                          `json:"valid_from,omitempty" url:"valid_from,omitempty"`
+	ZeroedOutDate          *time.Time                          `json:"zeroed_out_date,omitempty" url:"zeroed_out_date,omitempty"`
+	ZeroedOutReason        *BillingCreditGrantZeroedOutReason  `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CreditCompanyGrantView) GetArrearsCadence() *BillingArrearsCadence {
+	if c == nil {
+		return nil
+	}
+	return c.ArrearsCadence
 }
 
 func (c *CreditCompanyGrantView) GetBillingCreditBundleID() *string {
@@ -3125,6 +3170,48 @@ func (c *CreditCompanyGrantView) GetPluralName() *string {
 	return c.PluralName
 }
 
+func (c *CreditCompanyGrantView) GetPostpaidChargeAmount() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PostpaidChargeAmount
+}
+
+func (c *CreditCompanyGrantView) GetPostpaidChargeCurrency() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PostpaidChargeCurrency
+}
+
+func (c *CreditCompanyGrantView) GetPostpaidChargedCredits() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.PostpaidChargedCredits
+}
+
+func (c *CreditCompanyGrantView) GetPostpaidPeriodEnd() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.PostpaidPeriodEnd
+}
+
+func (c *CreditCompanyGrantView) GetPostpaidRate() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PostpaidRate
+}
+
+func (c *CreditCompanyGrantView) GetPostpaidRateDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PostpaidRateDecimal
+}
+
 func (c *CreditCompanyGrantView) GetPrice() *BillingProductPriceResponseData {
 	if c == nil {
 		return nil
@@ -3245,10 +3332,19 @@ func (c *CreditCompanyGrantView) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreditCompanyGrantView) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetArrearsCadence sets the ArrearsCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetArrearsCadence(arrearsCadence *BillingArrearsCadence) {
+	c.ArrearsCadence = arrearsCadence
+	c.require(creditCompanyGrantViewFieldArrearsCadence)
 }
 
 // SetBillingCreditBundleID sets the BillingCreditBundleID field and marks it as non-optional;
@@ -3398,6 +3494,48 @@ func (c *CreditCompanyGrantView) SetPluralName(pluralName *string) {
 	c.require(creditCompanyGrantViewFieldPluralName)
 }
 
+// SetPostpaidChargeAmount sets the PostpaidChargeAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetPostpaidChargeAmount(postpaidChargeAmount *int64) {
+	c.PostpaidChargeAmount = postpaidChargeAmount
+	c.require(creditCompanyGrantViewFieldPostpaidChargeAmount)
+}
+
+// SetPostpaidChargeCurrency sets the PostpaidChargeCurrency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetPostpaidChargeCurrency(postpaidChargeCurrency *string) {
+	c.PostpaidChargeCurrency = postpaidChargeCurrency
+	c.require(creditCompanyGrantViewFieldPostpaidChargeCurrency)
+}
+
+// SetPostpaidChargedCredits sets the PostpaidChargedCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetPostpaidChargedCredits(postpaidChargedCredits *float64) {
+	c.PostpaidChargedCredits = postpaidChargedCredits
+	c.require(creditCompanyGrantViewFieldPostpaidChargedCredits)
+}
+
+// SetPostpaidPeriodEnd sets the PostpaidPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetPostpaidPeriodEnd(postpaidPeriodEnd *time.Time) {
+	c.PostpaidPeriodEnd = postpaidPeriodEnd
+	c.require(creditCompanyGrantViewFieldPostpaidPeriodEnd)
+}
+
+// SetPostpaidRate sets the PostpaidRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetPostpaidRate(postpaidRate *int64) {
+	c.PostpaidRate = postpaidRate
+	c.require(creditCompanyGrantViewFieldPostpaidRate)
+}
+
+// SetPostpaidRateDecimal sets the PostpaidRateDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditCompanyGrantView) SetPostpaidRateDecimal(postpaidRateDecimal *string) {
+	c.PostpaidRateDecimal = postpaidRateDecimal
+	c.require(creditCompanyGrantViewFieldPostpaidRateDecimal)
+}
+
 // SetPrice sets the Price field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreditCompanyGrantView) SetPrice(price *BillingProductPriceResponseData) {
@@ -3514,12 +3652,13 @@ func (c *CreditCompanyGrantView) UnmarshalJSON(data []byte) error {
 	type embed CreditCompanyGrantView
 	var unmarshaler = struct {
 		embed
-		CreatedAt     *internal.DateTime `json:"created_at"`
-		ExhaustedAt   *internal.DateTime `json:"exhausted_at,omitempty"`
-		ExpiresAt     *internal.DateTime `json:"expires_at,omitempty"`
-		UpdatedAt     *internal.DateTime `json:"updated_at"`
-		ValidFrom     *internal.DateTime `json:"valid_from,omitempty"`
-		ZeroedOutDate *internal.DateTime `json:"zeroed_out_date,omitempty"`
+		CreatedAt         *internal.DateTime `json:"created_at"`
+		ExhaustedAt       *internal.DateTime `json:"exhausted_at,omitempty"`
+		ExpiresAt         *internal.DateTime `json:"expires_at,omitempty"`
+		PostpaidPeriodEnd *internal.DateTime `json:"postpaid_period_end,omitempty"`
+		UpdatedAt         *internal.DateTime `json:"updated_at"`
+		ValidFrom         *internal.DateTime `json:"valid_from,omitempty"`
+		ZeroedOutDate     *internal.DateTime `json:"zeroed_out_date,omitempty"`
 	}{
 		embed: embed(*c),
 	}
@@ -3530,6 +3669,7 @@ func (c *CreditCompanyGrantView) UnmarshalJSON(data []byte) error {
 	c.CreatedAt = unmarshaler.CreatedAt.Time()
 	c.ExhaustedAt = unmarshaler.ExhaustedAt.TimePtr()
 	c.ExpiresAt = unmarshaler.ExpiresAt.TimePtr()
+	c.PostpaidPeriodEnd = unmarshaler.PostpaidPeriodEnd.TimePtr()
 	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
 	c.ValidFrom = unmarshaler.ValidFrom.TimePtr()
 	c.ZeroedOutDate = unmarshaler.ZeroedOutDate.TimePtr()
@@ -3546,20 +3686,22 @@ func (c *CreditCompanyGrantView) MarshalJSON() ([]byte, error) {
 	type embed CreditCompanyGrantView
 	var marshaler = struct {
 		embed
-		CreatedAt     *internal.DateTime `json:"created_at"`
-		ExhaustedAt   *internal.DateTime `json:"exhausted_at,omitempty"`
-		ExpiresAt     *internal.DateTime `json:"expires_at,omitempty"`
-		UpdatedAt     *internal.DateTime `json:"updated_at"`
-		ValidFrom     *internal.DateTime `json:"valid_from,omitempty"`
-		ZeroedOutDate *internal.DateTime `json:"zeroed_out_date,omitempty"`
+		CreatedAt         *internal.DateTime `json:"created_at"`
+		ExhaustedAt       *internal.DateTime `json:"exhausted_at,omitempty"`
+		ExpiresAt         *internal.DateTime `json:"expires_at,omitempty"`
+		PostpaidPeriodEnd *internal.DateTime `json:"postpaid_period_end,omitempty"`
+		UpdatedAt         *internal.DateTime `json:"updated_at"`
+		ValidFrom         *internal.DateTime `json:"valid_from,omitempty"`
+		ZeroedOutDate     *internal.DateTime `json:"zeroed_out_date,omitempty"`
 	}{
-		embed:         embed(*c),
-		CreatedAt:     internal.NewDateTime(c.CreatedAt),
-		ExhaustedAt:   internal.NewOptionalDateTime(c.ExhaustedAt),
-		ExpiresAt:     internal.NewOptionalDateTime(c.ExpiresAt),
-		UpdatedAt:     internal.NewDateTime(c.UpdatedAt),
-		ValidFrom:     internal.NewOptionalDateTime(c.ValidFrom),
-		ZeroedOutDate: internal.NewOptionalDateTime(c.ZeroedOutDate),
+		embed:             embed(*c),
+		CreatedAt:         internal.NewDateTime(c.CreatedAt),
+		ExhaustedAt:       internal.NewOptionalDateTime(c.ExhaustedAt),
+		ExpiresAt:         internal.NewOptionalDateTime(c.ExpiresAt),
+		PostpaidPeriodEnd: internal.NewOptionalDateTime(c.PostpaidPeriodEnd),
+		UpdatedAt:         internal.NewDateTime(c.UpdatedAt),
+		ValidFrom:         internal.NewOptionalDateTime(c.ValidFrom),
+		ZeroedOutDate:     internal.NewOptionalDateTime(c.ZeroedOutDate),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -3654,10 +3796,12 @@ func (c *CreditTransferView) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreditTransferView) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAmount sets the Amount field and marks it as non-optional;
@@ -3808,10 +3952,12 @@ func (s *StripeEmbedInfo) GetExtraProperties() map[string]interface{} {
 }
 
 func (s *StripeEmbedInfo) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetAccountID sets the AccountID field and marks it as non-optional;
@@ -4084,10 +4230,12 @@ func (u *UpcomingInvoiceResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (u *UpcomingInvoiceResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAmountDue sets the AmountDue field and marks it as non-optional;
@@ -4327,10 +4475,12 @@ func (b *BindCatalogResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (b *BindCatalogResponse) require(field *big.Int) {
-	if b.explicitFields == nil {
-		b.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
 	}
-	b.explicitFields.Or(b.explicitFields, field)
+	next.Or(next, field)
+	b.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4439,10 +4589,12 @@ func (c *CountComponentsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountComponentsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -4547,10 +4699,12 @@ func (c *CountComponentsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountComponentsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4648,10 +4802,12 @@ func (c *CreateComponentResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateComponentResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4749,10 +4905,12 @@ func (d *DeleteComponentResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeleteComponentResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4850,10 +5008,12 @@ func (g *GetComponentResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetComponentResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4962,10 +5122,12 @@ func (l *ListComponentsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListComponentsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -5070,10 +5232,12 @@ func (l *ListComponentsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListComponentsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5171,10 +5335,12 @@ func (p *PreviewComponentDataParams) GetExtraProperties() map[string]interface{}
 }
 
 func (p *PreviewComponentDataParams) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -5272,10 +5438,12 @@ func (p *PreviewComponentDataResponse) GetExtraProperties() map[string]interface
 }
 
 func (p *PreviewComponentDataResponse) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5373,10 +5541,12 @@ func (u *UpdateComponentResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateComponentResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5453,10 +5623,12 @@ type UpdateComponentRequestBody struct {
 }
 
 func (u *UpdateComponentRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAst sets the Ast field and marks it as non-optional;

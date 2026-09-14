@@ -97,7 +97,7 @@ func TestSettersMarkExplicitIssueTemporaryAccessTokenRequestBody(t *testing.T) {
 func TestSettersIssueTemporaryAccessTokenResponseData(t *testing.T) {
 	t.Run("SetAPIKeyID", func(t *testing.T) {
 		obj := &IssueTemporaryAccessTokenResponseData{}
-		var fernTestValueAPIKeyID string
+		var fernTestValueAPIKeyID *string
 		obj.SetAPIKeyID(fernTestValueAPIKeyID)
 		assert.Equal(t, fernTestValueAPIKeyID, obj.APIKeyID)
 		assert.NotNil(t, obj.explicitFields)
@@ -135,6 +135,14 @@ func TestSettersIssueTemporaryAccessTokenResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetIssuerType", func(t *testing.T) {
+		obj := &IssueTemporaryAccessTokenResponseData{}
+		var fernTestValueIssuerType TemporaryAccessTokenIssuerType
+		obj.SetIssuerType(fernTestValueIssuerType)
+		assert.Equal(t, fernTestValueIssuerType, obj.IssuerType)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetToken", func(t *testing.T) {
 		obj := &IssueTemporaryAccessTokenResponseData{}
 		var fernTestValueToken string
@@ -158,11 +166,21 @@ func TestGettersIssueTemporaryAccessTokenResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &IssueTemporaryAccessTokenResponseData{}
-		var expected string
+		var expected *string
 		obj.APIKeyID = expected
 
 		// Act & Assert
 		assert.Equal(t, expected, obj.GetAPIKeyID(), "getter should return the property value")
+	})
+
+	t.Run("GetAPIKeyID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IssueTemporaryAccessTokenResponseData{}
+		obj.APIKeyID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAPIKeyID(), "getter should return nil when property is nil")
 	})
 
 	t.Run("GetAPIKeyID_NilReceiver", func(t *testing.T) {
@@ -269,6 +287,29 @@ func TestGettersIssueTemporaryAccessTokenResponseData(t *testing.T) {
 		_ = obj.GetID() // Should return zero value
 	})
 
+	t.Run("GetIssuerType", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IssueTemporaryAccessTokenResponseData{}
+		var expected TemporaryAccessTokenIssuerType
+		obj.IssuerType = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetIssuerType(), "getter should return the property value")
+	})
+
+	t.Run("GetIssuerType_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *IssueTemporaryAccessTokenResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetIssuerType() // Should return zero value
+	})
+
 	t.Run("GetToken", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -322,7 +363,7 @@ func TestSettersMarkExplicitIssueTemporaryAccessTokenResponseData(t *testing.T) 
 		t.Parallel()
 		// Arrange
 		obj := &IssueTemporaryAccessTokenResponseData{}
-		var fernTestValueAPIKeyID string
+		var fernTestValueAPIKeyID *string
 
 		// Act
 		obj.SetAPIKeyID(fernTestValueAPIKeyID)
@@ -450,6 +491,37 @@ func TestSettersMarkExplicitIssueTemporaryAccessTokenResponseData(t *testing.T) 
 
 		// Act
 		obj.SetID(fernTestValueID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetIssuerType_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &IssueTemporaryAccessTokenResponseData{}
+		var fernTestValueIssuerType TemporaryAccessTokenIssuerType
+
+		// Act
+		obj.SetIssuerType(fernTestValueIssuerType)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -785,6 +857,35 @@ func TestStringIssueTemporaryAccessTokenResponseData(t *testing.T) {
 		var obj *IssueTemporaryAccessTokenResponseData
 		result := obj.String()
 		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
+func TestEnumTemporaryAccessTokenIssuerType(t *testing.T) {
+	t.Run("NewFromString_api_key", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTemporaryAccessTokenIssuerTypeFromString("api_key")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TemporaryAccessTokenIssuerType("api_key"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_pricing_roadmap", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewTemporaryAccessTokenIssuerTypeFromString("pricing_roadmap")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, TemporaryAccessTokenIssuerType("pricing_roadmap"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewTemporaryAccessTokenIssuerTypeFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewTemporaryAccessTokenIssuerTypeFromString("api_key")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
 	})
 }
 

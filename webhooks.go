@@ -32,10 +32,12 @@ type CountWebhookEventsRequest struct {
 }
 
 func (c *CountWebhookEventsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -91,10 +93,12 @@ type CountWebhooksRequest struct {
 }
 
 func (c *CountWebhooksRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -138,10 +142,12 @@ type CreateWebhookRequestBody struct {
 }
 
 func (c *CreateWebhookRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditTriggerConfigs sets the CreditTriggerConfigs field and marks it as non-optional;
@@ -222,10 +228,12 @@ type ListWebhookEventsRequest struct {
 }
 
 func (l *ListWebhookEventsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -281,10 +289,12 @@ type ListWebhooksRequest struct {
 }
 
 func (l *ListWebhooksRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetQ sets the Q field and marks it as non-optional;
@@ -320,10 +330,12 @@ type TestWebhookRequestBody struct {
 }
 
 func (t *TestWebhookRequestBody) require(field *big.Int) {
-	if t.explicitFields == nil {
-		t.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if t.explicitFields != nil {
+		next.Set(t.explicitFields)
 	}
-	t.explicitFields.Or(t.explicitFields, field)
+	next.Or(next, field)
+	t.explicitFields = next
 }
 
 // SetRequestType sets the RequestType field and marks it as non-optional;
@@ -383,10 +395,12 @@ func (c *CreditTriggerConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreditTriggerConfig) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -467,10 +481,12 @@ func (e *EntitlementTriggerConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EntitlementTriggerConfig) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -569,10 +585,12 @@ func (t *TestWebhookResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (t *TestWebhookResponseData) require(field *big.Int) {
-	if t.explicitFields == nil {
-		t.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if t.explicitFields != nil {
+		next.Set(t.explicitFields)
 	}
-	t.explicitFields.Or(t.explicitFields, field)
+	next.Or(next, field)
+	t.explicitFields = next
 }
 
 // SetFailureReason sets the FailureReason field and marks it as non-optional;
@@ -639,19 +657,21 @@ func (t *TestWebhookResponseData) String() string {
 }
 
 var (
-	webhookEventDetailResponseDataFieldCreatedAt    = big.NewInt(1 << 0)
-	webhookEventDetailResponseDataFieldID           = big.NewInt(1 << 1)
-	webhookEventDetailResponseDataFieldPayload      = big.NewInt(1 << 2)
-	webhookEventDetailResponseDataFieldRequestType  = big.NewInt(1 << 3)
-	webhookEventDetailResponseDataFieldResponseCode = big.NewInt(1 << 4)
-	webhookEventDetailResponseDataFieldSentAt       = big.NewInt(1 << 5)
-	webhookEventDetailResponseDataFieldStatus       = big.NewInt(1 << 6)
-	webhookEventDetailResponseDataFieldUpdatedAt    = big.NewInt(1 << 7)
-	webhookEventDetailResponseDataFieldWebhook      = big.NewInt(1 << 8)
-	webhookEventDetailResponseDataFieldWebhookID    = big.NewInt(1 << 9)
+	webhookEventDetailResponseDataFieldAttemptCount = big.NewInt(1 << 0)
+	webhookEventDetailResponseDataFieldCreatedAt    = big.NewInt(1 << 1)
+	webhookEventDetailResponseDataFieldID           = big.NewInt(1 << 2)
+	webhookEventDetailResponseDataFieldPayload      = big.NewInt(1 << 3)
+	webhookEventDetailResponseDataFieldRequestType  = big.NewInt(1 << 4)
+	webhookEventDetailResponseDataFieldResponseCode = big.NewInt(1 << 5)
+	webhookEventDetailResponseDataFieldSentAt       = big.NewInt(1 << 6)
+	webhookEventDetailResponseDataFieldStatus       = big.NewInt(1 << 7)
+	webhookEventDetailResponseDataFieldUpdatedAt    = big.NewInt(1 << 8)
+	webhookEventDetailResponseDataFieldWebhook      = big.NewInt(1 << 9)
+	webhookEventDetailResponseDataFieldWebhookID    = big.NewInt(1 << 10)
 )
 
 type WebhookEventDetailResponseData struct {
+	AttemptCount int64                `json:"attempt_count" url:"attempt_count"`
 	CreatedAt    time.Time            `json:"created_at" url:"created_at"`
 	ID           string               `json:"id" url:"id"`
 	Payload      *string              `json:"payload,omitempty" url:"payload,omitempty"`
@@ -668,6 +688,13 @@ type WebhookEventDetailResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (w *WebhookEventDetailResponseData) GetAttemptCount() int64 {
+	if w == nil {
+		return 0
+	}
+	return w.AttemptCount
 }
 
 func (w *WebhookEventDetailResponseData) GetCreatedAt() time.Time {
@@ -748,10 +775,19 @@ func (w *WebhookEventDetailResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (w *WebhookEventDetailResponseData) require(field *big.Int) {
-	if w.explicitFields == nil {
-		w.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if w.explicitFields != nil {
+		next.Set(w.explicitFields)
 	}
-	w.explicitFields.Or(w.explicitFields, field)
+	next.Or(next, field)
+	w.explicitFields = next
+}
+
+// SetAttemptCount sets the AttemptCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebhookEventDetailResponseData) SetAttemptCount(attemptCount int64) {
+	w.AttemptCount = attemptCount
+	w.require(webhookEventDetailResponseDataFieldAttemptCount)
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -1156,10 +1192,12 @@ func (w *WebhookResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (w *WebhookResponseData) require(field *big.Int) {
-	if w.explicitFields == nil {
-		w.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if w.explicitFields != nil {
+		next.Set(w.explicitFields)
 	}
-	w.explicitFields.Or(w.explicitFields, field)
+	next.Or(next, field)
+	w.explicitFields = next
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -1376,10 +1414,12 @@ func (c *CountWebhookEventsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountWebhookEventsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -1498,10 +1538,12 @@ func (c *CountWebhookEventsResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CountWebhookEventsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1610,10 +1652,12 @@ func (c *CountWebhooksParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountWebhooksParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1718,10 +1762,12 @@ func (c *CountWebhooksResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountWebhooksResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1819,10 +1865,12 @@ func (c *CreateWebhookResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateWebhookResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1920,10 +1968,12 @@ func (d *DeleteWebhookResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeleteWebhookResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2021,10 +2071,12 @@ func (g *GetWebhookEventResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetWebhookEventResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2122,10 +2174,12 @@ func (g *GetWebhookResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetWebhookResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2252,10 +2306,12 @@ func (l *ListWebhookEventsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListWebhookEventsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -2374,10 +2430,12 @@ func (l *ListWebhookEventsResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (l *ListWebhookEventsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2486,10 +2544,12 @@ func (l *ListWebhooksParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListWebhooksParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2594,10 +2654,12 @@ func (l *ListWebhooksResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListWebhooksResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2695,10 +2757,12 @@ func (s *SendTestWebhookActionResponse) GetExtraProperties() map[string]interfac
 }
 
 func (s *SendTestWebhookActionResponse) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2796,10 +2860,12 @@ func (u *UpdateWebhookResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateWebhookResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2880,10 +2946,12 @@ type UpdateWebhookRequestBody struct {
 }
 
 func (u *UpdateWebhookRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCreditTriggerConfigs sets the CreditTriggerConfigs field and marks it as non-optional;

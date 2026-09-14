@@ -931,6 +931,62 @@ func (c *Client) CountBillingPlanCreditGrants(
 
 // Example:
 //
+//	request := &schematichq.ReserveCreditsRequestBody{
+//	    Amount: 1.1,
+//	    CompanyID: "company_id",
+//	    CreditTypeID: "credit_type_id",
+//	}
+//	client.Credits.ReserveCredits(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ReserveCredits(
+	ctx context.Context,
+	request *schematichq.ReserveCreditsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.ReserveCreditsResponse, error) {
+	response, err := c.WithRawResponse.ReserveCredits(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := map[string]any{
+//	    "key": "value",
+//	}
+//	client.Credits.ReleaseCreditReservation(
+//	    context.TODO(),
+//	    "reservation_id",
+//	    request,
+//	)
+func (c *Client) ReleaseCreditReservation(
+	ctx context.Context,
+	// reservation_id
+	reservationID string,
+	request schematichq.ReleaseCreditReservationRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.ReleaseCreditReservationResponse, error) {
+	response, err := c.WithRawResponse.ReleaseCreditReservation(
+		ctx,
+		reservationID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListCreditSpendPoliciesRequest{
 //	    BillingCreditID: schematichq.String(
 //	        "billing_credit_id",

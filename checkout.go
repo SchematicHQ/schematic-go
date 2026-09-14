@@ -28,10 +28,12 @@ type CancelSubscriptionRequest struct {
 }
 
 func (c *CancelSubscriptionRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCancelImmediately sets the CancelImmediately field and marks it as non-optional;
@@ -92,10 +94,12 @@ type CheckoutDataRequestBody struct {
 }
 
 func (c *CheckoutDataRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -286,10 +290,12 @@ func (c *ChangeSubscriptionInternalRequestBody) GetExtraProperties() map[string]
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAddOnIDs sets the AddOnIDs field and marks it as non-optional;
@@ -438,12 +444,14 @@ var (
 	checkoutDataResponseDataFieldActiveUsageBasedEntitlements   = big.NewInt(1 << 2)
 	checkoutDataResponseDataFieldAvailableCreditBundles         = big.NewInt(1 << 3)
 	checkoutDataResponseDataFieldCompany                        = big.NewInt(1 << 4)
-	checkoutDataResponseDataFieldCustomCheckoutFields           = big.NewInt(1 << 5)
-	checkoutDataResponseDataFieldFeatureUsage                   = big.NewInt(1 << 6)
-	checkoutDataResponseDataFieldSelectedCreditBundles          = big.NewInt(1 << 7)
-	checkoutDataResponseDataFieldSelectedPlan                   = big.NewInt(1 << 8)
-	checkoutDataResponseDataFieldSelectedUsageBasedEntitlements = big.NewInt(1 << 9)
-	checkoutDataResponseDataFieldSubscription                   = big.NewInt(1 << 10)
+	checkoutDataResponseDataFieldCompanyCanTrialSelectedPlan    = big.NewInt(1 << 5)
+	checkoutDataResponseDataFieldCustomCheckoutFields           = big.NewInt(1 << 6)
+	checkoutDataResponseDataFieldFeatureUsage                   = big.NewInt(1 << 7)
+	checkoutDataResponseDataFieldSelectedCreditBundles          = big.NewInt(1 << 8)
+	checkoutDataResponseDataFieldSelectedPlan                   = big.NewInt(1 << 9)
+	checkoutDataResponseDataFieldSelectedPlanAlreadyTrialed     = big.NewInt(1 << 10)
+	checkoutDataResponseDataFieldSelectedUsageBasedEntitlements = big.NewInt(1 << 11)
+	checkoutDataResponseDataFieldSubscription                   = big.NewInt(1 << 12)
 )
 
 type CheckoutDataResponseData struct {
@@ -452,10 +460,12 @@ type CheckoutDataResponseData struct {
 	ActiveUsageBasedEntitlements   []*UsageBasedEntitlementResponseData `json:"active_usage_based_entitlements" url:"active_usage_based_entitlements"`
 	AvailableCreditBundles         []*BillingCreditBundleResponseData   `json:"available_credit_bundles" url:"available_credit_bundles"`
 	Company                        *CompanyDetailResponseData           `json:"company,omitempty" url:"company,omitempty"`
+	CompanyCanTrialSelectedPlan    bool                                 `json:"company_can_trial_selected_plan" url:"company_can_trial_selected_plan"`
 	CustomCheckoutFields           []*CheckoutFieldWithValue            `json:"custom_checkout_fields" url:"custom_checkout_fields"`
 	FeatureUsage                   *FeatureUsageDetailResponseData      `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
 	SelectedCreditBundles          []*CreditBundlePurchaseResponseData  `json:"selected_credit_bundles" url:"selected_credit_bundles"`
 	SelectedPlan                   *PlanDetailResponseData              `json:"selected_plan,omitempty" url:"selected_plan,omitempty"`
+	SelectedPlanAlreadyTrialed     bool                                 `json:"selected_plan_already_trialed" url:"selected_plan_already_trialed"`
 	SelectedUsageBasedEntitlements []*UsageBasedEntitlementResponseData `json:"selected_usage_based_entitlements" url:"selected_usage_based_entitlements"`
 	Subscription                   *CompanySubscriptionResponseData     `json:"subscription,omitempty" url:"subscription,omitempty"`
 
@@ -501,6 +511,13 @@ func (c *CheckoutDataResponseData) GetCompany() *CompanyDetailResponseData {
 	return c.Company
 }
 
+func (c *CheckoutDataResponseData) GetCompanyCanTrialSelectedPlan() bool {
+	if c == nil {
+		return false
+	}
+	return c.CompanyCanTrialSelectedPlan
+}
+
 func (c *CheckoutDataResponseData) GetCustomCheckoutFields() []*CheckoutFieldWithValue {
 	if c == nil {
 		return nil
@@ -529,6 +546,13 @@ func (c *CheckoutDataResponseData) GetSelectedPlan() *PlanDetailResponseData {
 	return c.SelectedPlan
 }
 
+func (c *CheckoutDataResponseData) GetSelectedPlanAlreadyTrialed() bool {
+	if c == nil {
+		return false
+	}
+	return c.SelectedPlanAlreadyTrialed
+}
+
 func (c *CheckoutDataResponseData) GetSelectedUsageBasedEntitlements() []*UsageBasedEntitlementResponseData {
 	if c == nil {
 		return nil
@@ -551,10 +575,12 @@ func (c *CheckoutDataResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckoutDataResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetActiveAddOns sets the ActiveAddOns field and marks it as non-optional;
@@ -592,6 +618,13 @@ func (c *CheckoutDataResponseData) SetCompany(company *CompanyDetailResponseData
 	c.require(checkoutDataResponseDataFieldCompany)
 }
 
+// SetCompanyCanTrialSelectedPlan sets the CompanyCanTrialSelectedPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutDataResponseData) SetCompanyCanTrialSelectedPlan(companyCanTrialSelectedPlan bool) {
+	c.CompanyCanTrialSelectedPlan = companyCanTrialSelectedPlan
+	c.require(checkoutDataResponseDataFieldCompanyCanTrialSelectedPlan)
+}
+
 // SetCustomCheckoutFields sets the CustomCheckoutFields field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CheckoutDataResponseData) SetCustomCheckoutFields(customCheckoutFields []*CheckoutFieldWithValue) {
@@ -618,6 +651,13 @@ func (c *CheckoutDataResponseData) SetSelectedCreditBundles(selectedCreditBundle
 func (c *CheckoutDataResponseData) SetSelectedPlan(selectedPlan *PlanDetailResponseData) {
 	c.SelectedPlan = selectedPlan
 	c.require(checkoutDataResponseDataFieldSelectedPlan)
+}
+
+// SetSelectedPlanAlreadyTrialed sets the SelectedPlanAlreadyTrialed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutDataResponseData) SetSelectedPlanAlreadyTrialed(selectedPlanAlreadyTrialed bool) {
+	c.SelectedPlanAlreadyTrialed = selectedPlanAlreadyTrialed
+	c.require(checkoutDataResponseDataFieldSelectedPlanAlreadyTrialed)
 }
 
 // SetSelectedUsageBasedEntitlements sets the SelectedUsageBasedEntitlements field and marks it as non-optional;
@@ -912,10 +952,12 @@ func (c *CheckoutSubscription) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckoutSubscription) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetApplicationID sets the ApplicationID field and marks it as non-optional;
@@ -1214,10 +1256,12 @@ func (c *CompanyBillingAddressView) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CompanyBillingAddressView) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCity sets the City field and marks it as non-optional;
@@ -1360,10 +1404,12 @@ func (c *CompanyBillingCheckoutSettings) GetExtraProperties() map[string]interfa
 }
 
 func (c *CompanyBillingCheckoutSettings) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCollectAddress sets the CollectAddress field and marks it as non-optional;
@@ -1510,10 +1556,12 @@ func (c *CompanyBillingDetailsResponseData) GetExtraProperties() map[string]inte
 }
 
 func (c *CompanyBillingDetailsResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAddress sets the Address field and marks it as non-optional;
@@ -1665,10 +1713,12 @@ func (c *CompanyTaxIDView) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CompanyTaxIDView) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCountry sets the Country field and marks it as non-optional;
@@ -1795,10 +1845,12 @@ func (c *CreditBundlePurchaseResponseData) GetExtraProperties() map[string]inter
 }
 
 func (c *CreditBundlePurchaseResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBundle sets the Bundle field and marks it as non-optional;
@@ -1893,10 +1945,12 @@ func (m *ManagePlanPreviewResponseResponseData) GetExtraProperties() map[string]
 }
 
 func (m *ManagePlanPreviewResponseResponseData) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetSubscriptionChangePreview sets the SubscriptionChangePreview field and marks it as non-optional;
@@ -2176,10 +2230,12 @@ func (m *ManagePlanRequest) GetExtraProperties() map[string]interface{} {
 }
 
 func (m *ManagePlanRequest) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetActivateOnPayment sets the ActivateOnPayment field and marks it as non-optional;
@@ -2428,10 +2484,12 @@ func (m *ManagePlanResponseResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (m *ManagePlanResponseResponseData) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetCompany sets the Company field and marks it as non-optional;
@@ -2537,10 +2595,12 @@ func (p *PlanSelection) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PlanSelection) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -2770,10 +2830,12 @@ func (p *PreviewSubscriptionChangeResponseData) GetExtraProperties() map[string]
 }
 
 func (p *PreviewSubscriptionChangeResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
@@ -3065,10 +3127,12 @@ func (p *PreviewSubscriptionDiscountResponseData) GetExtraProperties() map[strin
 }
 
 func (p *PreviewSubscriptionDiscountResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
@@ -3375,10 +3439,12 @@ func (p *PreviewSubscriptionFinanceResponseData) GetExtraProperties() map[string
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAmountOff sets the AmountOff field and marks it as non-optional;
@@ -3627,10 +3693,12 @@ func (p *PreviewSubscriptionUpcomingInvoiceLineItems) GetExtraProperties() map[s
 }
 
 func (p *PreviewSubscriptionUpcomingInvoiceLineItems) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAmount sets the Amount field and marks it as non-optional;
@@ -3748,10 +3816,12 @@ func (u *UpdateAddOnRequestBody) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateAddOnRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAddOnID sets the AddOnID field and marks it as non-optional;
@@ -3866,10 +3936,12 @@ func (u *UpdateAutoTopupOverrideRequestBody) GetExtraProperties() map[string]int
 }
 
 func (u *UpdateAutoTopupOverrideRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAutoTopupAmount sets the AutoTopupAmount field and marks it as non-optional;
@@ -3980,10 +4052,12 @@ func (u *UpdateCreditBundleRequestBody) GetExtraProperties() map[string]interfac
 }
 
 func (u *UpdateCreditBundleRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetBundleID sets the BundleID field and marks it as non-optional;
@@ -4080,10 +4154,12 @@ func (u *UpdatePayInAdvanceRequestBody) GetExtraProperties() map[string]interfac
 }
 
 func (u *UpdatePayInAdvanceRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetPriceID sets the PriceID field and marks it as non-optional;
@@ -4181,10 +4257,12 @@ func (c *CancelSubscriptionResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CancelSubscriptionResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4282,10 +4360,12 @@ func (c *CheckoutInternalResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckoutInternalResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4383,10 +4463,12 @@ func (g *GetCheckoutDataResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetCheckoutDataResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4484,10 +4566,12 @@ func (g *GetCompanyBillingDetailsResponse) GetExtraProperties() map[string]inter
 }
 
 func (g *GetCompanyBillingDetailsResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4585,10 +4669,12 @@ func (m *ManagePlanResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (m *ManagePlanResponse) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4686,10 +4772,12 @@ func (p *PreviewCheckoutInternalResponse) GetExtraProperties() map[string]interf
 }
 
 func (p *PreviewCheckoutInternalResponse) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4787,10 +4875,12 @@ func (p *PreviewManagePlanResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (p *PreviewManagePlanResponse) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4888,10 +4978,12 @@ func (u *UpdateCompanyBillingDetailsResponse) GetExtraProperties() map[string]in
 }
 
 func (u *UpdateCompanyBillingDetailsResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4989,10 +5081,12 @@ func (u *UpdateCustomerSubscriptionTrialEndResponse) GetExtraProperties() map[st
 }
 
 func (u *UpdateCustomerSubscriptionTrialEndResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5071,10 +5165,12 @@ type UpdateCompanyBillingDetailsRequestBody struct {
 }
 
 func (u *UpdateCompanyBillingDetailsRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAddress sets the Address field and marks it as non-optional;
@@ -5145,10 +5241,12 @@ type UpdateTrialEndRequestBody struct {
 }
 
 func (u *UpdateTrialEndRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetTrialEnd sets the TrialEnd field and marks it as non-optional;

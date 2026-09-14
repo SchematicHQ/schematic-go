@@ -1252,6 +1252,14 @@ func TestSettersMarkExplicitTestWebhookResponseData(t *testing.T) {
 }
 
 func TestSettersWebhookEventDetailResponseData(t *testing.T) {
+	t.Run("SetAttemptCount", func(t *testing.T) {
+		obj := &WebhookEventDetailResponseData{}
+		var fernTestValueAttemptCount int64
+		obj.SetAttemptCount(fernTestValueAttemptCount)
+		assert.Equal(t, fernTestValueAttemptCount, obj.AttemptCount)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCreatedAt", func(t *testing.T) {
 		obj := &WebhookEventDetailResponseData{}
 		var fernTestValueCreatedAt time.Time
@@ -1335,6 +1343,29 @@ func TestSettersWebhookEventDetailResponseData(t *testing.T) {
 }
 
 func TestGettersWebhookEventDetailResponseData(t *testing.T) {
+	t.Run("GetAttemptCount", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WebhookEventDetailResponseData{}
+		var expected int64
+		obj.AttemptCount = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAttemptCount(), "getter should return the property value")
+	})
+
+	t.Run("GetAttemptCount_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *WebhookEventDetailResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAttemptCount() // Should return zero value
+	})
+
 	t.Run("GetCreatedAt", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -1608,6 +1639,37 @@ func TestGettersWebhookEventDetailResponseData(t *testing.T) {
 }
 
 func TestSettersMarkExplicitWebhookEventDetailResponseData(t *testing.T) {
+	t.Run("SetAttemptCount_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WebhookEventDetailResponseData{}
+		var fernTestValueAttemptCount int64
+
+		// Act
+		obj.SetAttemptCount(fernTestValueAttemptCount)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCreatedAt_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange

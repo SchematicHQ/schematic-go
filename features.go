@@ -11,6 +11,95 @@ import (
 )
 
 var (
+	checkAndReserveFlagRequestBodyFieldCompany   = big.NewInt(1 << 0)
+	checkAndReserveFlagRequestBodyFieldExpiresAt = big.NewInt(1 << 1)
+	checkAndReserveFlagRequestBodyFieldPreflight = big.NewInt(1 << 2)
+	checkAndReserveFlagRequestBodyFieldQuantity  = big.NewInt(1 << 3)
+	checkAndReserveFlagRequestBodyFieldUser      = big.NewInt(1 << 4)
+)
+
+type CheckAndReserveFlagRequestBody struct {
+	Company map[string]string `json:"company,omitempty" url:"-"`
+	// When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
+	// Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise the hold is quantity times the entitlement's consumption rate
+	Preflight *PreflightRequestBody `json:"preflight,omitempty" url:"-"`
+	// Units of the feature the operation will consume; defaults to 1. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event
+	Quantity *float64          `json:"quantity,omitempty" url:"-"`
+	User     map[string]string `json:"user,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CheckAndReserveFlagRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagRequestBody) SetCompany(company map[string]string) {
+	c.Company = company
+	c.require(checkAndReserveFlagRequestBodyFieldCompany)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagRequestBody) SetExpiresAt(expiresAt *time.Time) {
+	c.ExpiresAt = expiresAt
+	c.require(checkAndReserveFlagRequestBodyFieldExpiresAt)
+}
+
+// SetPreflight sets the Preflight field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagRequestBody) SetPreflight(preflight *PreflightRequestBody) {
+	c.Preflight = preflight
+	c.require(checkAndReserveFlagRequestBodyFieldPreflight)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagRequestBody) SetQuantity(quantity *float64) {
+	c.Quantity = quantity
+	c.require(checkAndReserveFlagRequestBodyFieldQuantity)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagRequestBody) SetUser(user map[string]string) {
+	c.User = user
+	c.require(checkAndReserveFlagRequestBodyFieldUser)
+}
+
+func (c *CheckAndReserveFlagRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckAndReserveFlagRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*c = CheckAndReserveFlagRequestBody(body)
+	return nil
+}
+
+func (c *CheckAndReserveFlagRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CheckAndReserveFlagRequestBody
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:     embed(*c),
+		ExpiresAt: internal.NewOptionalDateTime(c.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	checkFlagsBulkRequestBodyFieldContexts = big.NewInt(1 << 0)
 )
 
@@ -22,10 +111,12 @@ type CheckFlagsBulkRequestBody struct {
 }
 
 func (c *CheckFlagsBulkRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetContexts sets the Contexts field and marks it as non-optional;
@@ -95,10 +186,12 @@ type CountFeaturesRequest struct {
 }
 
 func (c *CountFeaturesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
@@ -194,10 +287,12 @@ type CountFlagsRequest struct {
 }
 
 func (c *CountFlagsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -267,10 +362,12 @@ type CreateFeatureRequestBody struct {
 }
 
 func (c *CreateFeatureRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -410,10 +507,12 @@ type ListFeaturesRequest struct {
 }
 
 func (l *ListFeaturesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
@@ -509,10 +608,12 @@ type ListFlagsRequest struct {
 }
 
 func (l *ListFlagsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -548,6 +649,356 @@ func (l *ListFlagsRequest) SetLimit(limit *int64) {
 func (l *ListFlagsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listFlagsRequestFieldOffset)
+}
+
+var (
+	checkAndReserveFlagResponseDataFieldCompanyID           = big.NewInt(1 << 0)
+	checkAndReserveFlagResponseDataFieldEntitlement         = big.NewInt(1 << 1)
+	checkAndReserveFlagResponseDataFieldError               = big.NewInt(1 << 2)
+	checkAndReserveFlagResponseDataFieldFeatureAllocation   = big.NewInt(1 << 3)
+	checkAndReserveFlagResponseDataFieldFeatureUsage        = big.NewInt(1 << 4)
+	checkAndReserveFlagResponseDataFieldFeatureUsageEvent   = big.NewInt(1 << 5)
+	checkAndReserveFlagResponseDataFieldFeatureUsagePeriod  = big.NewInt(1 << 6)
+	checkAndReserveFlagResponseDataFieldFeatureUsageResetAt = big.NewInt(1 << 7)
+	checkAndReserveFlagResponseDataFieldFlag                = big.NewInt(1 << 8)
+	checkAndReserveFlagResponseDataFieldFlagID              = big.NewInt(1 << 9)
+	checkAndReserveFlagResponseDataFieldReason              = big.NewInt(1 << 10)
+	checkAndReserveFlagResponseDataFieldReservation         = big.NewInt(1 << 11)
+	checkAndReserveFlagResponseDataFieldRuleID              = big.NewInt(1 << 12)
+	checkAndReserveFlagResponseDataFieldRuleType            = big.NewInt(1 << 13)
+	checkAndReserveFlagResponseDataFieldUserID              = big.NewInt(1 << 14)
+	checkAndReserveFlagResponseDataFieldValue               = big.NewInt(1 << 15)
+)
+
+type CheckAndReserveFlagResponseData struct {
+	// If company keys were provided and matched a company, its ID
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// If a feature entitlement rule was matched, its entitlement details
+	Entitlement *FeatureEntitlement `json:"entitlement,omitempty" url:"entitlement,omitempty"`
+	// If an error occurred while checking the flag, the error message
+	Error *string `json:"error,omitempty" url:"error,omitempty"`
+	// Deprecated: Use Entitlement.Allocation instead.
+	FeatureAllocation *int64 `json:"feature_allocation,omitempty" url:"feature_allocation,omitempty"`
+	// Deprecated: Use Entitlement.Usage instead.
+	FeatureUsage *int64 `json:"feature_usage,omitempty" url:"feature_usage,omitempty"`
+	// Deprecated: Use Entitlement.EventName instead.
+	FeatureUsageEvent *string `json:"feature_usage_event,omitempty" url:"feature_usage_event,omitempty"`
+	// Deprecated: Use Entitlement.MetricPeriod instead.
+	FeatureUsagePeriod *MetricPeriod `json:"feature_usage_period,omitempty" url:"feature_usage_period,omitempty"`
+	// Deprecated: Use Entitlement.MetricResetAt instead.
+	FeatureUsageResetAt *time.Time `json:"feature_usage_reset_at,omitempty" url:"feature_usage_reset_at,omitempty"`
+	// The key used to check the flag
+	Flag string `json:"flag" url:"flag"`
+	// If a flag was found, its ID
+	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
+	// A human-readable explanation of the result
+	Reason string `json:"reason" url:"reason"`
+	// The hold taken on the company's credit balance for this operation, when the flag allowed it and the feature is credit-metered. Settle it by sending a track event carrying its ID as reservation_id; the unspent hold is refunded at expires_at otherwise
+	Reservation *FlagCheckReservationResponseData `json:"reservation,omitempty" url:"reservation,omitempty"`
+	// If a rule was found, its ID
+	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	// If a rule was found, its type
+	RuleType *RuleType `json:"rule_type,omitempty" url:"rule_type,omitempty"`
+	// If user keys were provided and matched a user, its ID
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+	// A boolean flag check result; for feature entitlements, this represents whether further consumption of the feature is permitted
+	Value bool `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckAndReserveFlagResponseData) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CheckAndReserveFlagResponseData) GetEntitlement() *FeatureEntitlement {
+	if c == nil {
+		return nil
+	}
+	return c.Entitlement
+}
+
+func (c *CheckAndReserveFlagResponseData) GetError() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Error
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFeatureAllocation() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureAllocation
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFeatureUsage() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsage
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFeatureUsageEvent() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsageEvent
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFeatureUsagePeriod() *MetricPeriod {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsagePeriod
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFeatureUsageResetAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureUsageResetAt
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFlag() string {
+	if c == nil {
+		return ""
+	}
+	return c.Flag
+}
+
+func (c *CheckAndReserveFlagResponseData) GetFlagID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FlagID
+}
+
+func (c *CheckAndReserveFlagResponseData) GetReason() string {
+	if c == nil {
+		return ""
+	}
+	return c.Reason
+}
+
+func (c *CheckAndReserveFlagResponseData) GetReservation() *FlagCheckReservationResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Reservation
+}
+
+func (c *CheckAndReserveFlagResponseData) GetRuleID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.RuleID
+}
+
+func (c *CheckAndReserveFlagResponseData) GetRuleType() *RuleType {
+	if c == nil {
+		return nil
+	}
+	return c.RuleType
+}
+
+func (c *CheckAndReserveFlagResponseData) GetUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UserID
+}
+
+func (c *CheckAndReserveFlagResponseData) GetValue() bool {
+	if c == nil {
+		return false
+	}
+	return c.Value
+}
+
+func (c *CheckAndReserveFlagResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CheckAndReserveFlagResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(checkAndReserveFlagResponseDataFieldCompanyID)
+}
+
+// SetEntitlement sets the Entitlement field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetEntitlement(entitlement *FeatureEntitlement) {
+	c.Entitlement = entitlement
+	c.require(checkAndReserveFlagResponseDataFieldEntitlement)
+}
+
+// SetError sets the Error field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetError(error_ *string) {
+	c.Error = error_
+	c.require(checkAndReserveFlagResponseDataFieldError)
+}
+
+// SetFeatureAllocation sets the FeatureAllocation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFeatureAllocation(featureAllocation *int64) {
+	c.FeatureAllocation = featureAllocation
+	c.require(checkAndReserveFlagResponseDataFieldFeatureAllocation)
+}
+
+// SetFeatureUsage sets the FeatureUsage field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFeatureUsage(featureUsage *int64) {
+	c.FeatureUsage = featureUsage
+	c.require(checkAndReserveFlagResponseDataFieldFeatureUsage)
+}
+
+// SetFeatureUsageEvent sets the FeatureUsageEvent field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFeatureUsageEvent(featureUsageEvent *string) {
+	c.FeatureUsageEvent = featureUsageEvent
+	c.require(checkAndReserveFlagResponseDataFieldFeatureUsageEvent)
+}
+
+// SetFeatureUsagePeriod sets the FeatureUsagePeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFeatureUsagePeriod(featureUsagePeriod *MetricPeriod) {
+	c.FeatureUsagePeriod = featureUsagePeriod
+	c.require(checkAndReserveFlagResponseDataFieldFeatureUsagePeriod)
+}
+
+// SetFeatureUsageResetAt sets the FeatureUsageResetAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFeatureUsageResetAt(featureUsageResetAt *time.Time) {
+	c.FeatureUsageResetAt = featureUsageResetAt
+	c.require(checkAndReserveFlagResponseDataFieldFeatureUsageResetAt)
+}
+
+// SetFlag sets the Flag field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFlag(flag string) {
+	c.Flag = flag
+	c.require(checkAndReserveFlagResponseDataFieldFlag)
+}
+
+// SetFlagID sets the FlagID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetFlagID(flagID *string) {
+	c.FlagID = flagID
+	c.require(checkAndReserveFlagResponseDataFieldFlagID)
+}
+
+// SetReason sets the Reason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetReason(reason string) {
+	c.Reason = reason
+	c.require(checkAndReserveFlagResponseDataFieldReason)
+}
+
+// SetReservation sets the Reservation field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetReservation(reservation *FlagCheckReservationResponseData) {
+	c.Reservation = reservation
+	c.require(checkAndReserveFlagResponseDataFieldReservation)
+}
+
+// SetRuleID sets the RuleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetRuleID(ruleID *string) {
+	c.RuleID = ruleID
+	c.require(checkAndReserveFlagResponseDataFieldRuleID)
+}
+
+// SetRuleType sets the RuleType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetRuleType(ruleType *RuleType) {
+	c.RuleType = ruleType
+	c.require(checkAndReserveFlagResponseDataFieldRuleType)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(checkAndReserveFlagResponseDataFieldUserID)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponseData) SetValue(value bool) {
+	c.Value = value
+	c.require(checkAndReserveFlagResponseDataFieldValue)
+}
+
+func (c *CheckAndReserveFlagResponseData) UnmarshalJSON(data []byte) error {
+	type embed CheckAndReserveFlagResponseData
+	var unmarshaler = struct {
+		embed
+		FeatureUsageResetAt *internal.DateTime `json:"feature_usage_reset_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CheckAndReserveFlagResponseData(unmarshaler.embed)
+	c.FeatureUsageResetAt = unmarshaler.FeatureUsageResetAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckAndReserveFlagResponseData) MarshalJSON() ([]byte, error) {
+	type embed CheckAndReserveFlagResponseData
+	var marshaler = struct {
+		embed
+		FeatureUsageResetAt *internal.DateTime `json:"feature_usage_reset_at,omitempty"`
+	}{
+		embed:               embed(*c),
+		FeatureUsageResetAt: internal.NewOptionalDateTime(c.FeatureUsageResetAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CheckAndReserveFlagResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -598,10 +1049,12 @@ func (c *CheckFlagRequestBody) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompany sets the Company field and marks it as non-optional;
@@ -837,10 +1290,12 @@ func (c *CheckFlagResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1027,10 +1482,12 @@ func (c *CheckFlagsBulkResponseData) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CheckFlagsBulkResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1130,10 +1587,12 @@ func (c *CheckFlagsResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagsResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditBalances sets the CreditBalances field and marks it as non-optional;
@@ -1249,10 +1708,12 @@ func (c *CompanyCreditBalance) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CompanyCreditBalance) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetRemaining sets the Remaining field and marks it as non-optional;
@@ -1394,10 +1855,12 @@ func (c *CreateFlagRequestBody) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateFlagRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
@@ -1538,10 +2001,12 @@ func (c *CreateOrUpdateConditionGroupRequestBody) GetExtraProperties() map[strin
 }
 
 func (c *CreateOrUpdateConditionGroupRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetConditions sets the Conditions field and marks it as non-optional;
@@ -1754,10 +2219,12 @@ func (c *CreateOrUpdateConditionRequestBody) GetExtraProperties() map[string]int
 }
 
 func (c *CreateOrUpdateConditionRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetComparisonTraitID sets the ComparisonTraitID field and marks it as non-optional;
@@ -1978,10 +2445,12 @@ func (c *CreateOrUpdateFlagRequestBody) GetExtraProperties() map[string]interfac
 }
 
 func (c *CreateOrUpdateFlagRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
@@ -2165,10 +2634,12 @@ func (c *CreateOrUpdateRuleRequestBody) GetExtraProperties() map[string]interfac
 }
 
 func (c *CreateOrUpdateRuleRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetConditionGroups sets the ConditionGroups field and marks it as non-optional;
@@ -2318,10 +2789,12 @@ func (d *DatastreamCompanyPlan) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DatastreamCompanyPlan) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetID sets the ID field and marks it as non-optional;
@@ -2400,6 +2873,217 @@ func (d *DatastreamCompanyPlan) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", d)
+}
+
+var (
+	flagCheckReservationResponseDataFieldCompanyID        = big.NewInt(1 << 0)
+	flagCheckReservationResponseDataFieldConsumptionRate  = big.NewInt(1 << 1)
+	flagCheckReservationResponseDataFieldCreditTypeID     = big.NewInt(1 << 2)
+	flagCheckReservationResponseDataFieldCreditsReserved  = big.NewInt(1 << 3)
+	flagCheckReservationResponseDataFieldEventSubtype     = big.NewInt(1 << 4)
+	flagCheckReservationResponseDataFieldExpiresAt        = big.NewInt(1 << 5)
+	flagCheckReservationResponseDataFieldID               = big.NewInt(1 << 6)
+	flagCheckReservationResponseDataFieldQuantityReserved = big.NewInt(1 << 7)
+)
+
+type FlagCheckReservationResponseData struct {
+	CompanyID string `json:"company_id" url:"company_id"`
+	// Credits per unit of usage the hold was priced at
+	ConsumptionRate float64 `json:"consumption_rate" url:"consumption_rate"`
+	CreditTypeID    string  `json:"credit_type_id" url:"credit_type_id"`
+	// Credits held from the company's balance
+	CreditsReserved float64 `json:"credits_reserved" url:"credits_reserved"`
+	// The event subtype the settling track event should carry
+	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	// When the unspent hold is refunded if no track event settles it
+	ExpiresAt time.Time `json:"expires_at" url:"expires_at"`
+	ID        string    `json:"id" url:"id"`
+	// Units of usage the hold covers, as requested
+	QuantityReserved float64 `json:"quantity_reserved" url:"quantity_reserved"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FlagCheckReservationResponseData) GetCompanyID() string {
+	if f == nil {
+		return ""
+	}
+	return f.CompanyID
+}
+
+func (f *FlagCheckReservationResponseData) GetConsumptionRate() float64 {
+	if f == nil {
+		return 0
+	}
+	return f.ConsumptionRate
+}
+
+func (f *FlagCheckReservationResponseData) GetCreditTypeID() string {
+	if f == nil {
+		return ""
+	}
+	return f.CreditTypeID
+}
+
+func (f *FlagCheckReservationResponseData) GetCreditsReserved() float64 {
+	if f == nil {
+		return 0
+	}
+	return f.CreditsReserved
+}
+
+func (f *FlagCheckReservationResponseData) GetEventSubtype() *string {
+	if f == nil {
+		return nil
+	}
+	return f.EventSubtype
+}
+
+func (f *FlagCheckReservationResponseData) GetExpiresAt() time.Time {
+	if f == nil {
+		return time.Time{}
+	}
+	return f.ExpiresAt
+}
+
+func (f *FlagCheckReservationResponseData) GetID() string {
+	if f == nil {
+		return ""
+	}
+	return f.ID
+}
+
+func (f *FlagCheckReservationResponseData) GetQuantityReserved() float64 {
+	if f == nil {
+		return 0
+	}
+	return f.QuantityReserved
+}
+
+func (f *FlagCheckReservationResponseData) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
+	return f.extraProperties
+}
+
+func (f *FlagCheckReservationResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
+	}
+	next.Or(next, field)
+	f.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetCompanyID(companyID string) {
+	f.CompanyID = companyID
+	f.require(flagCheckReservationResponseDataFieldCompanyID)
+}
+
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetConsumptionRate(consumptionRate float64) {
+	f.ConsumptionRate = consumptionRate
+	f.require(flagCheckReservationResponseDataFieldConsumptionRate)
+}
+
+// SetCreditTypeID sets the CreditTypeID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetCreditTypeID(creditTypeID string) {
+	f.CreditTypeID = creditTypeID
+	f.require(flagCheckReservationResponseDataFieldCreditTypeID)
+}
+
+// SetCreditsReserved sets the CreditsReserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetCreditsReserved(creditsReserved float64) {
+	f.CreditsReserved = creditsReserved
+	f.require(flagCheckReservationResponseDataFieldCreditsReserved)
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetEventSubtype(eventSubtype *string) {
+	f.EventSubtype = eventSubtype
+	f.require(flagCheckReservationResponseDataFieldEventSubtype)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetExpiresAt(expiresAt time.Time) {
+	f.ExpiresAt = expiresAt
+	f.require(flagCheckReservationResponseDataFieldExpiresAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetID(id string) {
+	f.ID = id
+	f.require(flagCheckReservationResponseDataFieldID)
+}
+
+// SetQuantityReserved sets the QuantityReserved field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FlagCheckReservationResponseData) SetQuantityReserved(quantityReserved float64) {
+	f.QuantityReserved = quantityReserved
+	f.require(flagCheckReservationResponseDataFieldQuantityReserved)
+}
+
+func (f *FlagCheckReservationResponseData) UnmarshalJSON(data []byte) error {
+	type embed FlagCheckReservationResponseData
+	var unmarshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at"`
+	}{
+		embed: embed(*f),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*f = FlagCheckReservationResponseData(unmarshaler.embed)
+	f.ExpiresAt = unmarshaler.ExpiresAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FlagCheckReservationResponseData) MarshalJSON() ([]byte, error) {
+	type embed FlagCheckReservationResponseData
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at"`
+	}{
+		embed:     embed(*f),
+		ExpiresAt: internal.NewDateTime(f.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FlagCheckReservationResponseData) String() string {
+	if f == nil {
+		return "<nil>"
+	}
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
 }
 
 var (
@@ -2505,10 +3189,12 @@ func (f *FlagResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (f *FlagResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
 	}
-	f.explicitFields.Or(f.explicitFields, field)
+	next.Or(next, field)
+	f.explicitFields = next
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -2675,10 +3361,12 @@ func (p *PreflightEventUsageRequestBody) GetExtraProperties() map[string]interfa
 }
 
 func (p *PreflightEventUsageRequestBody) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -2787,10 +3475,12 @@ func (p *PreflightRequestBody) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PreflightRequestBody) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCreditCost sets the CreditCost field and marks it as non-optional;
@@ -2894,10 +3584,12 @@ func (r *RulesDetailResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (r *RulesDetailResponseData) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetFlag sets the Flag field and marks it as non-optional;
@@ -2957,6 +3649,109 @@ func (r *RulesDetailResponseData) String() string {
 }
 
 var (
+	checkAndReserveFlagResponseFieldData   = big.NewInt(1 << 0)
+	checkAndReserveFlagResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CheckAndReserveFlagResponse struct {
+	Data *CheckAndReserveFlagResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckAndReserveFlagResponse) GetData() *CheckAndReserveFlagResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CheckAndReserveFlagResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CheckAndReserveFlagResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CheckAndReserveFlagResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponse) SetData(data *CheckAndReserveFlagResponseData) {
+	c.Data = data
+	c.require(checkAndReserveFlagResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(checkAndReserveFlagResponseFieldParams)
+}
+
+func (c *CheckAndReserveFlagResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckAndReserveFlagResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CheckAndReserveFlagResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckAndReserveFlagResponse) MarshalJSON() ([]byte, error) {
+	type embed CheckAndReserveFlagResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CheckAndReserveFlagResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	checkFlagResponseFieldData   = big.NewInt(1 << 0)
 	checkFlagResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -2995,10 +3790,12 @@ func (c *CheckFlagResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3096,10 +3893,12 @@ func (c *CheckFlagsBulkResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagsBulkResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3197,10 +3996,12 @@ func (c *CheckFlagsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckFlagsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3379,10 +4180,12 @@ func (c *CountFeaturesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountFeaturesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
@@ -3536,10 +4339,12 @@ func (c *CountFeaturesResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountFeaturesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3667,10 +4472,12 @@ func (c *CountFlagsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountFlagsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -3789,10 +4596,12 @@ func (c *CountFlagsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountFlagsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3890,10 +4699,12 @@ func (c *CreateFeatureResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateFeatureResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3991,10 +4802,12 @@ func (c *CreateFlagResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateFlagResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4092,10 +4905,12 @@ func (d *DeleteFeatureResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeleteFeatureResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4193,10 +5008,12 @@ func (d *DeleteFlagResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeleteFlagResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4294,10 +5111,12 @@ func (g *GetFeatureResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetFeatureResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4395,10 +5214,12 @@ func (g *GetFlagResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetFlagResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4577,10 +5398,12 @@ func (l *ListFeaturesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFeaturesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBooleanRequireEvent sets the BooleanRequireEvent field and marks it as non-optional;
@@ -4734,10 +5557,12 @@ func (l *ListFeaturesResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFeaturesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4865,10 +5690,12 @@ func (l *ListFlagsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFlagsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -4987,10 +5814,12 @@ func (l *ListFlagsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFlagsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5088,10 +5917,12 @@ func (u *UpdateFeatureResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateFeatureResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5189,10 +6020,12 @@ func (u *UpdateFlagResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateFlagResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5290,10 +6123,12 @@ func (u *UpdateFlagRulesResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdateFlagRulesResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5391,10 +6226,12 @@ func (u *UpsertFeatureForBillingProductResponse) GetExtraProperties() map[string
 }
 
 func (u *UpsertFeatureForBillingProductResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5485,10 +6322,12 @@ type UpdateFeatureRequestBody struct {
 }
 
 func (u *UpdateFeatureRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -5601,10 +6440,12 @@ type UpdateFlagRulesRequestBody struct {
 }
 
 func (u *UpdateFlagRulesRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetRules sets the Rules field and marks it as non-optional;
@@ -5671,10 +6512,12 @@ type CreateBillingLinkedFeatureRequestBody struct {
 }
 
 func (c *CreateBillingLinkedFeatureRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProvider sets the BillingProvider field and marks it as non-optional;

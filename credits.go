@@ -28,10 +28,12 @@ type AcquireCreditLeaseRequestBody struct {
 }
 
 func (a *AcquireCreditLeaseRequestBody) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -105,10 +107,12 @@ type CountBillingCreditsRequest struct {
 }
 
 func (c *CountBillingCreditsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -159,10 +163,12 @@ type CountBillingCreditsGrantsRequest struct {
 }
 
 func (c *CountBillingCreditsGrantsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -221,10 +227,12 @@ type CountBillingPlanCreditGrantsRequest struct {
 }
 
 func (c *CountBillingPlanCreditGrantsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -305,10 +313,12 @@ type CountCompanyGrantsRequest struct {
 }
 
 func (c *CountCompanyGrantsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -370,10 +380,12 @@ type CountCreditBundlesRequest struct {
 }
 
 func (c *CountCreditBundlesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -446,10 +458,12 @@ type CountCreditEventLedgerRequest struct {
 }
 
 func (c *CountCreditEventLedgerRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -534,10 +548,12 @@ type CountCreditSpendPoliciesRequest struct {
 }
 
 func (c *CountCreditSpendPoliciesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -625,10 +641,12 @@ type CreateBillingCreditRequestBody struct {
 }
 
 func (c *CreateBillingCreditRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBurnStrategy sets the BurnStrategy field and marks it as non-optional;
@@ -780,10 +798,12 @@ type CreateCreditBundleRequestBody struct {
 }
 
 func (c *CreateCreditBundleRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBundleName sets the BundleName field and marks it as non-optional;
@@ -921,10 +941,12 @@ type CreateCreditSpendPolicyRequestBody struct {
 }
 
 func (c *CreateCreditSpendPolicyRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -995,10 +1017,12 @@ type DeleteBillingPlanCreditGrantRequest struct {
 }
 
 func (d *DeleteBillingPlanCreditGrantRequest) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetApplyToExisting sets the ApplyToExisting field and marks it as non-optional;
@@ -1022,10 +1046,12 @@ type ExtendCreditLeaseRequestBody struct {
 }
 
 func (e *ExtendCreditLeaseRequestBody) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetAdditionalAmount sets the AdditionalAmount field and marks it as non-optional;
@@ -1068,21 +1094,23 @@ func (e *ExtendCreditLeaseRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	createCompanyCreditGrantFieldBillingPeriodsCount = big.NewInt(1 << 0)
 	createCompanyCreditGrantFieldCompanyID           = big.NewInt(1 << 1)
-	createCompanyCreditGrantFieldCreditID            = big.NewInt(1 << 2)
-	createCompanyCreditGrantFieldCurrency            = big.NewInt(1 << 3)
-	createCompanyCreditGrantFieldExpiresAt           = big.NewInt(1 << 4)
-	createCompanyCreditGrantFieldExpiryType          = big.NewInt(1 << 5)
-	createCompanyCreditGrantFieldExpiryUnit          = big.NewInt(1 << 6)
-	createCompanyCreditGrantFieldExpiryUnitCount     = big.NewInt(1 << 7)
-	createCompanyCreditGrantFieldQuantity            = big.NewInt(1 << 8)
-	createCompanyCreditGrantFieldReason              = big.NewInt(1 << 9)
-	createCompanyCreditGrantFieldRenewalEnabled      = big.NewInt(1 << 10)
-	createCompanyCreditGrantFieldRenewalPeriod       = big.NewInt(1 << 11)
+	createCompanyCreditGrantFieldCreditBundleID      = big.NewInt(1 << 2)
+	createCompanyCreditGrantFieldCreditID            = big.NewInt(1 << 3)
+	createCompanyCreditGrantFieldCurrency            = big.NewInt(1 << 4)
+	createCompanyCreditGrantFieldExpiresAt           = big.NewInt(1 << 5)
+	createCompanyCreditGrantFieldExpiryType          = big.NewInt(1 << 6)
+	createCompanyCreditGrantFieldExpiryUnit          = big.NewInt(1 << 7)
+	createCompanyCreditGrantFieldExpiryUnitCount     = big.NewInt(1 << 8)
+	createCompanyCreditGrantFieldQuantity            = big.NewInt(1 << 9)
+	createCompanyCreditGrantFieldReason              = big.NewInt(1 << 10)
+	createCompanyCreditGrantFieldRenewalEnabled      = big.NewInt(1 << 11)
+	createCompanyCreditGrantFieldRenewalPeriod       = big.NewInt(1 << 12)
 )
 
 type CreateCompanyCreditGrant struct {
 	BillingPeriodsCount *int64                            `json:"billing_periods_count,omitempty" url:"-"`
 	CompanyID           string                            `json:"company_id" url:"-"`
+	CreditBundleID      *string                           `json:"credit_bundle_id,omitempty" url:"-"`
 	CreditID            string                            `json:"credit_id" url:"-"`
 	Currency            *string                           `json:"currency,omitempty" url:"-"`
 	ExpiresAt           *time.Time                        `json:"expires_at,omitempty" url:"-"`
@@ -1099,10 +1127,12 @@ type CreateCompanyCreditGrant struct {
 }
 
 func (c *CreateCompanyCreditGrant) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingPeriodsCount sets the BillingPeriodsCount field and marks it as non-optional;
@@ -1117,6 +1147,13 @@ func (c *CreateCompanyCreditGrant) SetBillingPeriodsCount(billingPeriodsCount *i
 func (c *CreateCompanyCreditGrant) SetCompanyID(companyID string) {
 	c.CompanyID = companyID
 	c.require(createCompanyCreditGrantFieldCompanyID)
+}
+
+// SetCreditBundleID sets the CreditBundleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCompanyCreditGrant) SetCreditBundleID(creditBundleID *string) {
+	c.CreditBundleID = creditBundleID
+	c.require(createCompanyCreditGrantFieldCreditBundleID)
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -1232,10 +1269,12 @@ type ListBillingCreditsRequest struct {
 }
 
 func (l *ListBillingCreditsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -1294,10 +1333,12 @@ type ListBillingPlanCreditGrantsRequest struct {
 }
 
 func (l *ListBillingPlanCreditGrantsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -1368,10 +1409,12 @@ type ListCompanyCreditBalancesRequest struct {
 }
 
 func (l *ListCompanyCreditBalancesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1403,10 +1446,12 @@ type ListCompanyGrantsRequest struct {
 }
 
 func (l *ListCompanyGrantsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1468,10 +1513,12 @@ type ListCreditBundlesRequest struct {
 }
 
 func (l *ListCreditBundlesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -1544,10 +1591,12 @@ type ListCreditEventLedgerRequest struct {
 }
 
 func (l *ListCreditEventLedgerRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -1632,10 +1681,12 @@ type ListCreditSpendPoliciesRequest struct {
 }
 
 func (l *ListCreditSpendPoliciesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -1707,10 +1758,12 @@ type ListGrantsForCreditRequest struct {
 }
 
 func (l *ListGrantsForCreditRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -1742,62 +1795,162 @@ func (l *ListGrantsForCreditRequest) SetOffset(offset *int64) {
 }
 
 var (
-	billingCreditGrantResponseDataFieldCompanyID         = big.NewInt(1 << 0)
-	billingCreditGrantResponseDataFieldCompanyLicenseID  = big.NewInt(1 << 1)
-	billingCreditGrantResponseDataFieldCompanyName       = big.NewInt(1 << 2)
-	billingCreditGrantResponseDataFieldCreatedAt         = big.NewInt(1 << 3)
-	billingCreditGrantResponseDataFieldCreditIcon        = big.NewInt(1 << 4)
-	billingCreditGrantResponseDataFieldCreditID          = big.NewInt(1 << 5)
-	billingCreditGrantResponseDataFieldCreditName        = big.NewInt(1 << 6)
-	billingCreditGrantResponseDataFieldCurrency          = big.NewInt(1 << 7)
-	billingCreditGrantResponseDataFieldExpiresAt         = big.NewInt(1 << 8)
-	billingCreditGrantResponseDataFieldGrantReason       = big.NewInt(1 << 9)
-	billingCreditGrantResponseDataFieldID                = big.NewInt(1 << 10)
-	billingCreditGrantResponseDataFieldLicenseName       = big.NewInt(1 << 11)
-	billingCreditGrantResponseDataFieldPlanID            = big.NewInt(1 << 12)
-	billingCreditGrantResponseDataFieldPlanName          = big.NewInt(1 << 13)
-	billingCreditGrantResponseDataFieldPrice             = big.NewInt(1 << 14)
-	billingCreditGrantResponseDataFieldQuantity          = big.NewInt(1 << 15)
-	billingCreditGrantResponseDataFieldQuantityRemaining = big.NewInt(1 << 16)
-	billingCreditGrantResponseDataFieldQuantityUsed      = big.NewInt(1 << 17)
-	billingCreditGrantResponseDataFieldRenewalEnabled    = big.NewInt(1 << 18)
-	billingCreditGrantResponseDataFieldRenewalPeriod     = big.NewInt(1 << 19)
-	billingCreditGrantResponseDataFieldReserved          = big.NewInt(1 << 20)
-	billingCreditGrantResponseDataFieldSettled           = big.NewInt(1 << 21)
-	billingCreditGrantResponseDataFieldSourceGrantID     = big.NewInt(1 << 22)
-	billingCreditGrantResponseDataFieldSourceLabel       = big.NewInt(1 << 23)
-	billingCreditGrantResponseDataFieldTransfers         = big.NewInt(1 << 24)
-	billingCreditGrantResponseDataFieldUpdatedAt         = big.NewInt(1 << 25)
-	billingCreditGrantResponseDataFieldValidFrom         = big.NewInt(1 << 26)
-	billingCreditGrantResponseDataFieldZeroedOutDate     = big.NewInt(1 << 27)
-	billingCreditGrantResponseDataFieldZeroedOutReason   = big.NewInt(1 << 28)
+	reserveCreditsRequestBodyFieldAmount         = big.NewInt(1 << 0)
+	reserveCreditsRequestBodyFieldCompanyID      = big.NewInt(1 << 1)
+	reserveCreditsRequestBodyFieldCreditTypeID   = big.NewInt(1 << 2)
+	reserveCreditsRequestBodyFieldExpiresAt      = big.NewInt(1 << 3)
+	reserveCreditsRequestBodyFieldIdempotencyKey = big.NewInt(1 << 4)
+)
+
+type ReserveCreditsRequestBody struct {
+	// Credits to hold for the operation. The full amount must be available; a partial hold is never taken
+	Amount       float64 `json:"amount" url:"-"`
+	CompanyID    string  `json:"company_id" url:"-"`
+	CreditTypeID string  `json:"credit_type_id" url:"-"`
+	// When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
+	// A caller-chosen key for safe retries: a second request with the same key returns the original reservation instead of taking another hold
+	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (r *ReserveCreditsRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsRequestBody) SetAmount(amount float64) {
+	r.Amount = amount
+	r.require(reserveCreditsRequestBodyFieldAmount)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsRequestBody) SetCompanyID(companyID string) {
+	r.CompanyID = companyID
+	r.require(reserveCreditsRequestBodyFieldCompanyID)
+}
+
+// SetCreditTypeID sets the CreditTypeID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsRequestBody) SetCreditTypeID(creditTypeID string) {
+	r.CreditTypeID = creditTypeID
+	r.require(reserveCreditsRequestBodyFieldCreditTypeID)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsRequestBody) SetExpiresAt(expiresAt *time.Time) {
+	r.ExpiresAt = expiresAt
+	r.require(reserveCreditsRequestBodyFieldExpiresAt)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsRequestBody) SetIdempotencyKey(idempotencyKey *string) {
+	r.IdempotencyKey = idempotencyKey
+	r.require(reserveCreditsRequestBodyFieldIdempotencyKey)
+}
+
+func (r *ReserveCreditsRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler ReserveCreditsRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*r = ReserveCreditsRequestBody(body)
+	return nil
+}
+
+func (r *ReserveCreditsRequestBody) MarshalJSON() ([]byte, error) {
+	type embed ReserveCreditsRequestBody
+	var marshaler = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed:     embed(*r),
+		ExpiresAt: internal.NewOptionalDateTime(r.ExpiresAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	billingCreditGrantResponseDataFieldCompanyID              = big.NewInt(1 << 0)
+	billingCreditGrantResponseDataFieldCompanyLicenseID       = big.NewInt(1 << 1)
+	billingCreditGrantResponseDataFieldCompanyName            = big.NewInt(1 << 2)
+	billingCreditGrantResponseDataFieldCreatedAt              = big.NewInt(1 << 3)
+	billingCreditGrantResponseDataFieldCreditBundleID         = big.NewInt(1 << 4)
+	billingCreditGrantResponseDataFieldCreditIcon             = big.NewInt(1 << 5)
+	billingCreditGrantResponseDataFieldCreditID               = big.NewInt(1 << 6)
+	billingCreditGrantResponseDataFieldCreditName             = big.NewInt(1 << 7)
+	billingCreditGrantResponseDataFieldCurrency               = big.NewInt(1 << 8)
+	billingCreditGrantResponseDataFieldExpiresAt              = big.NewInt(1 << 9)
+	billingCreditGrantResponseDataFieldGrantReason            = big.NewInt(1 << 10)
+	billingCreditGrantResponseDataFieldID                     = big.NewInt(1 << 11)
+	billingCreditGrantResponseDataFieldLicenseName            = big.NewInt(1 << 12)
+	billingCreditGrantResponseDataFieldPlanID                 = big.NewInt(1 << 13)
+	billingCreditGrantResponseDataFieldPlanName               = big.NewInt(1 << 14)
+	billingCreditGrantResponseDataFieldPostpaidChargeAmount   = big.NewInt(1 << 15)
+	billingCreditGrantResponseDataFieldPostpaidChargeCurrency = big.NewInt(1 << 16)
+	billingCreditGrantResponseDataFieldPostpaidChargedCredits = big.NewInt(1 << 17)
+	billingCreditGrantResponseDataFieldPrice                  = big.NewInt(1 << 18)
+	billingCreditGrantResponseDataFieldQuantity               = big.NewInt(1 << 19)
+	billingCreditGrantResponseDataFieldQuantityRemaining      = big.NewInt(1 << 20)
+	billingCreditGrantResponseDataFieldQuantityUsed           = big.NewInt(1 << 21)
+	billingCreditGrantResponseDataFieldRenewalEnabled         = big.NewInt(1 << 22)
+	billingCreditGrantResponseDataFieldRenewalPeriod          = big.NewInt(1 << 23)
+	billingCreditGrantResponseDataFieldReserved               = big.NewInt(1 << 24)
+	billingCreditGrantResponseDataFieldSettled                = big.NewInt(1 << 25)
+	billingCreditGrantResponseDataFieldSourceGrantID          = big.NewInt(1 << 26)
+	billingCreditGrantResponseDataFieldSourceLabel            = big.NewInt(1 << 27)
+	billingCreditGrantResponseDataFieldTransfers              = big.NewInt(1 << 28)
+	billingCreditGrantResponseDataFieldUpdatedAt              = big.NewInt(1 << 29)
+	billingCreditGrantResponseDataFieldValidFrom              = big.NewInt(1 << 30)
+	billingCreditGrantResponseDataFieldZeroedOutDate          = big.NewInt(1 << 31)
+	billingCreditGrantResponseDataFieldZeroedOutReason        = big.NewInt(1 << 32)
 )
 
 type BillingCreditGrantResponseData struct {
 	CompanyID string `json:"company_id" url:"company_id"`
 	// The license instance this grant was issued for. Set only when a per-license plan grant issued it; null on a plan's own grant.
-	CompanyLicenseID *string                  `json:"company_license_id,omitempty" url:"company_license_id,omitempty"`
-	CompanyName      string                   `json:"company_name" url:"company_name"`
-	CreatedAt        time.Time                `json:"created_at" url:"created_at"`
-	CreditIcon       *string                  `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
-	CreditID         string                   `json:"credit_id" url:"credit_id"`
-	CreditName       string                   `json:"credit_name" url:"credit_name"`
-	Currency         *string                  `json:"currency,omitempty" url:"currency,omitempty"`
-	ExpiresAt        *time.Time               `json:"expires_at,omitempty" url:"expires_at,omitempty"`
-	GrantReason      BillingCreditGrantReason `json:"grant_reason" url:"grant_reason"`
-	ID               string                   `json:"id" url:"id"`
+	CompanyLicenseID *string   `json:"company_license_id,omitempty" url:"company_license_id,omitempty"`
+	CompanyName      string    `json:"company_name" url:"company_name"`
+	CreatedAt        time.Time `json:"created_at" url:"created_at"`
+	// The catalog bundle this grant was issued from, when the company bought one.
+	CreditBundleID *string                  `json:"credit_bundle_id,omitempty" url:"credit_bundle_id,omitempty"`
+	CreditIcon     *string                  `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID       string                   `json:"credit_id" url:"credit_id"`
+	CreditName     string                   `json:"credit_name" url:"credit_name"`
+	Currency       *string                  `json:"currency,omitempty" url:"currency,omitempty"`
+	ExpiresAt      *time.Time               `json:"expires_at,omitempty" url:"expires_at,omitempty"`
+	GrantReason    BillingCreditGrantReason `json:"grant_reason" url:"grant_reason"`
+	ID             string                   `json:"id" url:"id"`
 	// Name of the license this grant was issued for, when it came from a per-license plan grant.
-	LicenseName       *string                             `json:"license_name,omitempty" url:"license_name,omitempty"`
-	PlanID            *string                             `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	PlanName          *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
-	Price             *BillingPriceResponseData           `json:"price,omitempty" url:"price,omitempty"`
-	Quantity          float64                             `json:"quantity" url:"quantity"`
-	QuantityRemaining float64                             `json:"quantity_remaining" url:"quantity_remaining"`
-	QuantityUsed      float64                             `json:"quantity_used" url:"quantity_used"`
-	RenewalEnabled    bool                                `json:"renewal_enabled" url:"renewal_enabled"`
-	RenewalPeriod     *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
-	Reserved          *float64                            `json:"reserved,omitempty" url:"reserved,omitempty"`
-	Settled           *float64                            `json:"settled,omitempty" url:"settled,omitempty"`
+	LicenseName *string `json:"license_name,omitempty" url:"license_name,omitempty"`
+	PlanID      *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PlanName    *string `json:"plan_name,omitempty" url:"plan_name,omitempty"`
+	// What the postpaid charges costs, in the currency's minor unit.
+	PostpaidChargeAmount   *int64  `json:"postpaid_charge_amount,omitempty" url:"postpaid_charge_amount,omitempty"`
+	PostpaidChargeCurrency *string `json:"postpaid_charge_currency,omitempty" url:"postpaid_charge_currency,omitempty"`
+	// Credits consumed past a zero balance in the window still open.
+	PostpaidChargedCredits *float64                            `json:"postpaid_charged_credits,omitempty" url:"postpaid_charged_credits,omitempty"`
+	Price                  *BillingPriceResponseData           `json:"price,omitempty" url:"price,omitempty"`
+	Quantity               float64                             `json:"quantity" url:"quantity"`
+	QuantityRemaining      float64                             `json:"quantity_remaining" url:"quantity_remaining"`
+	QuantityUsed           float64                             `json:"quantity_used" url:"quantity_used"`
+	RenewalEnabled         bool                                `json:"renewal_enabled" url:"renewal_enabled"`
+	RenewalPeriod          *BillingPlanCreditGrantResetCadence `json:"renewal_period,omitempty" url:"renewal_period,omitempty"`
+	Reserved               *float64                            `json:"reserved,omitempty" url:"reserved,omitempty"`
+	Settled                *float64                            `json:"settled,omitempty" url:"settled,omitempty"`
 	// For rollover grants, the ID of the source grant that this grant rolled from.
 	SourceGrantID   *string                            `json:"source_grant_id,omitempty" url:"source_grant_id,omitempty"`
 	SourceLabel     string                             `json:"source_label" url:"source_label"`
@@ -1840,6 +1993,13 @@ func (b *BillingCreditGrantResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return b.CreatedAt
+}
+
+func (b *BillingCreditGrantResponseData) GetCreditBundleID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.CreditBundleID
 }
 
 func (b *BillingCreditGrantResponseData) GetCreditIcon() *string {
@@ -1910,6 +2070,27 @@ func (b *BillingCreditGrantResponseData) GetPlanName() *string {
 		return nil
 	}
 	return b.PlanName
+}
+
+func (b *BillingCreditGrantResponseData) GetPostpaidChargeAmount() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.PostpaidChargeAmount
+}
+
+func (b *BillingCreditGrantResponseData) GetPostpaidChargeCurrency() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PostpaidChargeCurrency
+}
+
+func (b *BillingCreditGrantResponseData) GetPostpaidChargedCredits() *float64 {
+	if b == nil {
+		return nil
+	}
+	return b.PostpaidChargedCredits
 }
 
 func (b *BillingCreditGrantResponseData) GetPrice() *BillingPriceResponseData {
@@ -2025,10 +2206,12 @@ func (b *BillingCreditGrantResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (b *BillingCreditGrantResponseData) require(field *big.Int) {
-	if b.explicitFields == nil {
-		b.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
 	}
-	b.explicitFields.Or(b.explicitFields, field)
+	next.Or(next, field)
+	b.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -2057,6 +2240,13 @@ func (b *BillingCreditGrantResponseData) SetCompanyName(companyName string) {
 func (b *BillingCreditGrantResponseData) SetCreatedAt(createdAt time.Time) {
 	b.CreatedAt = createdAt
 	b.require(billingCreditGrantResponseDataFieldCreatedAt)
+}
+
+// SetCreditBundleID sets the CreditBundleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetCreditBundleID(creditBundleID *string) {
+	b.CreditBundleID = creditBundleID
+	b.require(billingCreditGrantResponseDataFieldCreditBundleID)
 }
 
 // SetCreditIcon sets the CreditIcon field and marks it as non-optional;
@@ -2127,6 +2317,27 @@ func (b *BillingCreditGrantResponseData) SetPlanID(planID *string) {
 func (b *BillingCreditGrantResponseData) SetPlanName(planName *string) {
 	b.PlanName = planName
 	b.require(billingCreditGrantResponseDataFieldPlanName)
+}
+
+// SetPostpaidChargeAmount sets the PostpaidChargeAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetPostpaidChargeAmount(postpaidChargeAmount *int64) {
+	b.PostpaidChargeAmount = postpaidChargeAmount
+	b.require(billingCreditGrantResponseDataFieldPostpaidChargeAmount)
+}
+
+// SetPostpaidChargeCurrency sets the PostpaidChargeCurrency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetPostpaidChargeCurrency(postpaidChargeCurrency *string) {
+	b.PostpaidChargeCurrency = postpaidChargeCurrency
+	b.require(billingCreditGrantResponseDataFieldPostpaidChargeCurrency)
+}
+
+// SetPostpaidChargedCredits sets the PostpaidChargedCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditGrantResponseData) SetPostpaidChargedCredits(postpaidChargedCredits *float64) {
+	b.PostpaidChargedCredits = postpaidChargedCredits
+	b.require(billingCreditGrantResponseDataFieldPostpaidChargedCredits)
 }
 
 // SetPrice sets the Price field and marks it as non-optional;
@@ -2374,10 +2585,12 @@ func (b *BillingCreditLedgerResponseData) GetExtraProperties() map[string]interf
 }
 
 func (b *BillingCreditLedgerResponseData) require(field *big.Int) {
-	if b.explicitFields == nil {
-		b.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
 	}
-	b.explicitFields.Or(b.explicitFields, field)
+	next.Or(next, field)
+	b.explicitFields = next
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -2538,10 +2751,12 @@ func (c *CompanyCreditBalanceResponseData) GetExtraProperties() map[string]inter
 }
 
 func (c *CompanyCreditBalanceResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -2675,10 +2890,12 @@ func (c *CompanyLedgerResponseData) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CompanyLedgerResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetID sets the ID field and marks it as non-optional;
@@ -2791,10 +3008,12 @@ func (c *CreditBundleCurrencyPriceRequestBody) GetExtraProperties() map[string]i
 }
 
 func (c *CreditBundleCurrencyPriceRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCurrency sets the Currency field and marks it as non-optional;
@@ -2907,10 +3126,12 @@ func (c *CreditCurrencyPriceRequestBody) GetExtraProperties() map[string]interfa
 }
 
 func (c *CreditCurrencyPriceRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCurrency sets the Currency field and marks it as non-optional;
@@ -3284,10 +3505,12 @@ func (c *CreditEventLedgerResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (c *CreditEventLedgerResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAmount sets the Amount field and marks it as non-optional;
@@ -3729,10 +3952,12 @@ func (c *CreditLeaseResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreditLeaseResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -3861,6 +4086,244 @@ func (c *CreditLeaseResponseData) String() string {
 }
 
 var (
+	creditReservationResponseDataFieldCompanyID      = big.NewInt(1 << 0)
+	creditReservationResponseDataFieldCreatedAt      = big.NewInt(1 << 1)
+	creditReservationResponseDataFieldCreditTypeID   = big.NewInt(1 << 2)
+	creditReservationResponseDataFieldExpiresAt      = big.NewInt(1 << 3)
+	creditReservationResponseDataFieldID             = big.NewInt(1 << 4)
+	creditReservationResponseDataFieldReleasedAt     = big.NewInt(1 << 5)
+	creditReservationResponseDataFieldReservedAmount = big.NewInt(1 << 6)
+	creditReservationResponseDataFieldSettledAmount  = big.NewInt(1 << 7)
+	creditReservationResponseDataFieldUpdatedAt      = big.NewInt(1 << 8)
+)
+
+type CreditReservationResponseData struct {
+	CompanyID    string    `json:"company_id" url:"company_id"`
+	CreatedAt    time.Time `json:"created_at" url:"created_at"`
+	CreditTypeID string    `json:"credit_type_id" url:"credit_type_id"`
+	// When the unspent hold is refunded if no track event settles it
+	ExpiresAt time.Time `json:"expires_at" url:"expires_at"`
+	ID        string    `json:"id" url:"id"`
+	// When the reservation was settled, released, or expired; null while the hold is open
+	ReleasedAt *time.Time `json:"released_at,omitempty" url:"released_at,omitempty"`
+	// Credits held from the company's balance for the operation
+	ReservedAmount float64 `json:"reserved_amount" url:"reserved_amount"`
+	// Credits the settling track event recorded against the hold; zero until settled. May exceed reserved_amount, in which case the overage was debited from the balance, up to the overdraft limit when one is set
+	SettledAmount float64   `json:"settled_amount" url:"settled_amount"`
+	UpdatedAt     time.Time `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditReservationResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CreditReservationResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CreditReservationResponseData) GetCreditTypeID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditTypeID
+}
+
+func (c *CreditReservationResponseData) GetExpiresAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.ExpiresAt
+}
+
+func (c *CreditReservationResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditReservationResponseData) GetReleasedAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ReleasedAt
+}
+
+func (c *CreditReservationResponseData) GetReservedAmount() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.ReservedAmount
+}
+
+func (c *CreditReservationResponseData) GetSettledAmount() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.SettledAmount
+}
+
+func (c *CreditReservationResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CreditReservationResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditReservationResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(creditReservationResponseDataFieldCompanyID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(creditReservationResponseDataFieldCreatedAt)
+}
+
+// SetCreditTypeID sets the CreditTypeID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetCreditTypeID(creditTypeID string) {
+	c.CreditTypeID = creditTypeID
+	c.require(creditReservationResponseDataFieldCreditTypeID)
+}
+
+// SetExpiresAt sets the ExpiresAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetExpiresAt(expiresAt time.Time) {
+	c.ExpiresAt = expiresAt
+	c.require(creditReservationResponseDataFieldExpiresAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetID(id string) {
+	c.ID = id
+	c.require(creditReservationResponseDataFieldID)
+}
+
+// SetReleasedAt sets the ReleasedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetReleasedAt(releasedAt *time.Time) {
+	c.ReleasedAt = releasedAt
+	c.require(creditReservationResponseDataFieldReleasedAt)
+}
+
+// SetReservedAmount sets the ReservedAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetReservedAmount(reservedAmount float64) {
+	c.ReservedAmount = reservedAmount
+	c.require(creditReservationResponseDataFieldReservedAmount)
+}
+
+// SetSettledAmount sets the SettledAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetSettledAmount(settledAmount float64) {
+	c.SettledAmount = settledAmount
+	c.require(creditReservationResponseDataFieldSettledAmount)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditReservationResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(creditReservationResponseDataFieldUpdatedAt)
+}
+
+func (c *CreditReservationResponseData) UnmarshalJSON(data []byte) error {
+	type embed CreditReservationResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		ExpiresAt  *internal.DateTime `json:"expires_at"`
+		ReleasedAt *internal.DateTime `json:"released_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditReservationResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.ExpiresAt = unmarshaler.ExpiresAt.Time()
+	c.ReleasedAt = unmarshaler.ReleasedAt.TimePtr()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditReservationResponseData) MarshalJSON() ([]byte, error) {
+	type embed CreditReservationResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		ExpiresAt  *internal.DateTime `json:"expires_at"`
+		ReleasedAt *internal.DateTime `json:"released_at,omitempty"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*c),
+		CreatedAt:  internal.NewDateTime(c.CreatedAt),
+		ExpiresAt:  internal.NewDateTime(c.ExpiresAt),
+		ReleasedAt: internal.NewOptionalDateTime(c.ReleasedAt),
+		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditReservationResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	creditSpendPolicyResponseDataFieldBillingCreditID = big.NewInt(1 << 0)
 	creditSpendPolicyResponseDataFieldCompanyID       = big.NewInt(1 << 1)
 	creditSpendPolicyResponseDataFieldCreatedAt       = big.NewInt(1 << 2)
@@ -3961,10 +4424,12 @@ func (c *CreditSpendPolicyResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (c *CreditSpendPolicyResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -4183,10 +4648,12 @@ func (c *CreditTransferResponseData) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CreditTransferResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAmount sets the Amount field and marks it as non-optional;
@@ -4284,11 +4751,13 @@ func (c *CreditTransferResponseData) String() string {
 type CreditUsageReason string
 
 const (
-	CreditUsageReasonLeaseHold        CreditUsageReason = "lease_hold"
-	CreditUsageReasonLeaseRelease     CreditUsageReason = "lease_release"
-	CreditUsageReasonManualAdjustment CreditUsageReason = "manual_adjustment"
-	CreditUsageReasonReconciliation   CreditUsageReason = "reconciliation"
-	CreditUsageReasonTrack            CreditUsageReason = "track"
+	CreditUsageReasonLeaseHold          CreditUsageReason = "lease_hold"
+	CreditUsageReasonLeaseRelease       CreditUsageReason = "lease_release"
+	CreditUsageReasonManualAdjustment   CreditUsageReason = "manual_adjustment"
+	CreditUsageReasonReconciliation     CreditUsageReason = "reconciliation"
+	CreditUsageReasonReservationHold    CreditUsageReason = "reservation_hold"
+	CreditUsageReasonReservationRelease CreditUsageReason = "reservation_release"
+	CreditUsageReasonTrack              CreditUsageReason = "track"
 )
 
 func NewCreditUsageReasonFromString(s string) (CreditUsageReason, error) {
@@ -4301,6 +4770,10 @@ func NewCreditUsageReasonFromString(s string) (CreditUsageReason, error) {
 		return CreditUsageReasonManualAdjustment, nil
 	case "reconciliation":
 		return CreditUsageReasonReconciliation, nil
+	case "reservation_hold":
+		return CreditUsageReasonReservationHold, nil
+	case "reservation_release":
+		return CreditUsageReasonReservationRelease, nil
 	case "track":
 		return CreditUsageReasonTrack, nil
 	}
@@ -4368,10 +4841,12 @@ func (f *FeatureLedgerResponseData) GetExtraProperties() map[string]interface{} 
 }
 
 func (f *FeatureLedgerResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
 	}
-	f.explicitFields.Or(f.explicitFields, field)
+	next.Or(next, field)
+	f.explicitFields = next
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -4444,8 +4919,6 @@ func (f *FeatureLedgerResponseData) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
-type ReleaseCreditLeaseRequestBody = map[string]any
-
 var (
 	acquireCreditLeaseResponseFieldData   = big.NewInt(1 << 0)
 	acquireCreditLeaseResponseFieldParams = big.NewInt(1 << 1)
@@ -4485,10 +4958,12 @@ func (a *AcquireCreditLeaseResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (a *AcquireCreditLeaseResponse) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4606,10 +5081,12 @@ func (c *CountBillingCreditsGrantsParams) GetExtraProperties() map[string]interf
 }
 
 func (c *CountBillingCreditsGrantsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -4721,10 +5198,12 @@ func (c *CountBillingCreditsGrantsResponse) GetExtraProperties() map[string]inte
 }
 
 func (c *CountBillingCreditsGrantsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4842,10 +5321,12 @@ func (c *CountBillingCreditsParams) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CountBillingCreditsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -4957,10 +5438,12 @@ func (c *CountBillingCreditsResponse) GetExtraProperties() map[string]interface{
 }
 
 func (c *CountBillingCreditsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5114,10 +5597,12 @@ func (c *CountBillingPlanCreditGrantsParams) GetExtraProperties() map[string]int
 }
 
 func (c *CountBillingPlanCreditGrantsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -5257,10 +5742,12 @@ func (c *CountBillingPlanCreditGrantsResponse) GetExtraProperties() map[string]i
 }
 
 func (c *CountBillingPlanCreditGrantsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5387,10 +5874,12 @@ func (c *CountCompanyGrantsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountCompanyGrantsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -5509,10 +5998,12 @@ func (c *CountCompanyGrantsResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CountCompanyGrantsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5641,10 +6132,12 @@ func (c *CountCreditBundlesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountCreditBundlesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
@@ -5770,10 +6263,12 @@ func (c *CountCreditBundlesResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CountCreditBundlesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5927,10 +6422,12 @@ func (c *CountCreditEventLedgerParams) GetExtraProperties() map[string]interface
 }
 
 func (c *CountCreditEventLedgerParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -6070,10 +6567,12 @@ func (c *CountCreditEventLedgerResponse) GetExtraProperties() map[string]interfa
 }
 
 func (c *CountCreditEventLedgerResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6218,10 +6717,12 @@ func (c *CountCreditSpendPoliciesParams) GetExtraProperties() map[string]interfa
 }
 
 func (c *CountCreditSpendPoliciesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -6354,10 +6855,12 @@ func (c *CountCreditSpendPoliciesResponse) GetExtraProperties() map[string]inter
 }
 
 func (c *CountCreditSpendPoliciesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6455,10 +6958,12 @@ func (c *CreateBillingCreditResponse) GetExtraProperties() map[string]interface{
 }
 
 func (c *CreateBillingCreditResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6556,10 +7061,12 @@ func (c *CreateBillingPlanCreditGrantResponse) GetExtraProperties() map[string]i
 }
 
 func (c *CreateBillingPlanCreditGrantResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6657,10 +7164,12 @@ func (c *CreateCreditBundleResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (c *CreateCreditBundleResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6758,10 +7267,12 @@ func (c *CreateCreditSpendPolicyResponse) GetExtraProperties() map[string]interf
 }
 
 func (c *CreateCreditSpendPolicyResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6850,10 +7361,12 @@ func (d *DeleteBillingPlanCreditGrantParams) GetExtraProperties() map[string]int
 }
 
 func (d *DeleteBillingPlanCreditGrantParams) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetApplyToExisting sets the ApplyToExisting field and marks it as non-optional;
@@ -6944,10 +7457,12 @@ func (d *DeleteBillingPlanCreditGrantResponse) GetExtraProperties() map[string]i
 }
 
 func (d *DeleteBillingPlanCreditGrantResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7045,10 +7560,12 @@ func (d *DeleteCreditBundleResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (d *DeleteCreditBundleResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7146,10 +7663,12 @@ func (d *DeleteCreditSpendPolicyResponse) GetExtraProperties() map[string]interf
 }
 
 func (d *DeleteCreditSpendPolicyResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7247,10 +7766,12 @@ func (e *ExtendCreditLeaseResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (e *ExtendCreditLeaseResponse) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7348,10 +7869,12 @@ func (g *GetCreditBundleResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetCreditBundleResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7449,10 +7972,12 @@ func (g *GetCreditSpendPolicyResponse) GetExtraProperties() map[string]interface
 }
 
 func (g *GetCreditSpendPolicyResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7550,10 +8075,12 @@ func (g *GetSingleBillingCreditResponse) GetExtraProperties() map[string]interfa
 }
 
 func (g *GetSingleBillingCreditResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7651,10 +8178,12 @@ func (g *GetSingleBillingPlanCreditGrantResponse) GetExtraProperties() map[strin
 }
 
 func (g *GetSingleBillingPlanCreditGrantResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7752,10 +8281,12 @@ func (g *GrantBillingCreditsToCompanyResponse) GetExtraProperties() map[string]i
 }
 
 func (g *GrantBillingCreditsToCompanyResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7873,10 +8404,12 @@ func (l *ListBillingCreditsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListBillingCreditsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetIDs sets the IDs field and marks it as non-optional;
@@ -7988,10 +8521,12 @@ func (l *ListBillingCreditsResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (l *ListBillingCreditsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8145,10 +8680,12 @@ func (l *ListBillingPlanCreditGrantsParams) GetExtraProperties() map[string]inte
 }
 
 func (l *ListBillingPlanCreditGrantsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -8288,10 +8825,12 @@ func (l *ListBillingPlanCreditGrantsResponse) GetExtraProperties() map[string]in
 }
 
 func (l *ListBillingPlanCreditGrantsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8380,10 +8919,12 @@ func (l *ListCompanyCreditBalancesParams) GetExtraProperties() map[string]interf
 }
 
 func (l *ListCompanyCreditBalancesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -8474,10 +9015,12 @@ func (l *ListCompanyCreditBalancesResponse) GetExtraProperties() map[string]inte
 }
 
 func (l *ListCompanyCreditBalancesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8604,10 +9147,12 @@ func (l *ListCompanyGrantsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListCompanyGrantsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -8726,10 +9271,12 @@ func (l *ListCompanyGrantsResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (l *ListCompanyGrantsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8858,10 +9405,12 @@ func (l *ListCreditBundlesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListCreditBundlesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBundleType sets the BundleType field and marks it as non-optional;
@@ -8987,10 +9536,12 @@ func (l *ListCreditBundlesResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (l *ListCreditBundlesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9144,10 +9695,12 @@ func (l *ListCreditEventLedgerParams) GetExtraProperties() map[string]interface{
 }
 
 func (l *ListCreditEventLedgerParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -9287,10 +9840,12 @@ func (l *ListCreditEventLedgerResponse) GetExtraProperties() map[string]interfac
 }
 
 func (l *ListCreditEventLedgerResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9435,10 +9990,12 @@ func (l *ListCreditSpendPoliciesParams) GetExtraProperties() map[string]interfac
 }
 
 func (l *ListCreditSpendPoliciesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -9571,10 +10128,12 @@ func (l *ListCreditSpendPoliciesResponse) GetExtraProperties() map[string]interf
 }
 
 func (l *ListCreditSpendPoliciesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9692,10 +10251,12 @@ func (l *ListGrantsForCreditParams) GetExtraProperties() map[string]interface{} 
 }
 
 func (l *ListGrantsForCreditParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCreditID sets the CreditID field and marks it as non-optional;
@@ -9807,10 +10368,12 @@ func (l *ListGrantsForCreditResponse) GetExtraProperties() map[string]interface{
 }
 
 func (l *ListGrantsForCreditResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9908,10 +10471,12 @@ func (r *ReleaseCreditLeaseResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (r *ReleaseCreditLeaseResponse) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9971,6 +10536,212 @@ func (r *ReleaseCreditLeaseResponse) String() string {
 }
 
 var (
+	releaseCreditReservationResponseFieldData   = big.NewInt(1 << 0)
+	releaseCreditReservationResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ReleaseCreditReservationResponse struct {
+	Data *CreditReservationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ReleaseCreditReservationResponse) GetData() *CreditReservationResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *ReleaseCreditReservationResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *ReleaseCreditReservationResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *ReleaseCreditReservationResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReleaseCreditReservationResponse) SetData(data *CreditReservationResponseData) {
+	r.Data = data
+	r.require(releaseCreditReservationResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReleaseCreditReservationResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(releaseCreditReservationResponseFieldParams)
+}
+
+func (r *ReleaseCreditReservationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ReleaseCreditReservationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ReleaseCreditReservationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ReleaseCreditReservationResponse) MarshalJSON() ([]byte, error) {
+	type embed ReleaseCreditReservationResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *ReleaseCreditReservationResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	reserveCreditsResponseFieldData   = big.NewInt(1 << 0)
+	reserveCreditsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ReserveCreditsResponse struct {
+	Data *CreditReservationResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ReserveCreditsResponse) GetData() *CreditReservationResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *ReserveCreditsResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *ReserveCreditsResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *ReserveCreditsResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsResponse) SetData(data *CreditReservationResponseData) {
+	r.Data = data
+	r.require(reserveCreditsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ReserveCreditsResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(reserveCreditsResponseFieldParams)
+}
+
+func (r *ReserveCreditsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ReserveCreditsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ReserveCreditsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ReserveCreditsResponse) MarshalJSON() ([]byte, error) {
+	type embed ReserveCreditsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *ReserveCreditsResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
 	softDeleteBillingCreditResponseFieldData   = big.NewInt(1 << 0)
 	softDeleteBillingCreditResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -10009,10 +10780,12 @@ func (s *SoftDeleteBillingCreditResponse) GetExtraProperties() map[string]interf
 }
 
 func (s *SoftDeleteBillingCreditResponse) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10110,10 +10883,12 @@ func (u *UpdateBillingCreditResponse) GetExtraProperties() map[string]interface{
 }
 
 func (u *UpdateBillingCreditResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10211,10 +10986,12 @@ func (u *UpdateBillingPlanCreditGrantResponse) GetExtraProperties() map[string]i
 }
 
 func (u *UpdateBillingPlanCreditGrantResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10312,10 +11089,12 @@ func (u *UpdateCreditBundleDetailsResponse) GetExtraProperties() map[string]inte
 }
 
 func (u *UpdateCreditBundleDetailsResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10413,10 +11192,12 @@ func (u *UpdateCreditSpendPolicyResponse) GetExtraProperties() map[string]interf
 }
 
 func (u *UpdateCreditSpendPolicyResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10514,10 +11295,12 @@ func (z *ZeroOutGrantResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (z *ZeroOutGrantResponse) require(field *big.Int) {
-	if z.explicitFields == nil {
-		z.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if z.explicitFields != nil {
+		next.Set(z.explicitFields)
 	}
-	z.explicitFields.Or(z.explicitFields, field)
+	next.Or(next, field)
+	z.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10610,10 +11393,12 @@ type UpdateBillingCreditRequestBody struct {
 }
 
 func (u *UpdateBillingCreditRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetBurnStrategy sets the BurnStrategy field and marks it as non-optional;
@@ -10752,10 +11537,12 @@ type UpdateCreditBundleDetailsRequestBody struct {
 }
 
 func (u *UpdateCreditBundleDetailsRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetBundleName sets the BundleName field and marks it as non-optional;
@@ -10863,10 +11650,12 @@ type UpdateCreditSpendPolicyRequestBody struct {
 }
 
 func (u *UpdateCreditSpendPolicyRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetLabel sets the Label field and marks it as non-optional;
@@ -10916,10 +11705,12 @@ type ZeroOutGrantRequestBody struct {
 }
 
 func (z *ZeroOutGrantRequestBody) require(field *big.Int) {
-	if z.explicitFields == nil {
-		z.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if z.explicitFields != nil {
+		next.Set(z.explicitFields)
 	}
-	z.explicitFields.Or(z.explicitFields, field)
+	next.Or(next, field)
+	z.explicitFields = next
 }
 
 // SetReason sets the Reason field and marks it as non-optional;

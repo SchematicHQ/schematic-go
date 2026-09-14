@@ -510,6 +510,33 @@ func (c *Client) CheckFlag(
 
 // Example:
 //
+//	request := &schematichq.CheckAndReserveFlagRequestBody{}
+//	client.Features.CheckAndReserveFlag(
+//	    context.TODO(),
+//	    "key",
+//	    request,
+//	)
+func (c *Client) CheckAndReserveFlag(
+	ctx context.Context,
+	// key
+	key string,
+	request *schematichq.CheckAndReserveFlagRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CheckAndReserveFlagResponse, error) {
+	response, err := c.WithRawResponse.CheckAndReserveFlag(
+		ctx,
+		key,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.CheckFlagRequestBody{}
 //	client.Features.CheckFlags(
 //	    context.TODO(),

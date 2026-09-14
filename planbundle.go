@@ -27,10 +27,12 @@ type CreateCustomPlanBundleRequestBody struct {
 }
 
 func (c *CreateCustomPlanBundleRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProduct sets the BillingProduct field and marks it as non-optional;
@@ -100,10 +102,12 @@ type CreatePlanBundleRequestBody struct {
 }
 
 func (c *CreatePlanBundleRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProduct sets the BillingProduct field and marks it as non-optional;
@@ -211,10 +215,12 @@ func (c *CreateCustomPlanBundlePlanRequestBody) GetExtraProperties() map[string]
 }
 
 func (c *CreateCustomPlanBundlePlanRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -615,10 +621,12 @@ func (c *CreateEntitlementInBundleRequestBody) GetExtraProperties() map[string]i
 }
 
 func (c *CreateEntitlementInBundleRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProductID sets the BillingProductID field and marks it as non-optional;
@@ -930,10 +938,12 @@ func (d *DeleteBillingPlanCreditGrantRequestBody) GetExtraProperties() map[strin
 }
 
 func (d *DeleteBillingPlanCreditGrantRequestBody) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetApplyToExisting sets the ApplyToExisting field and marks it as non-optional;
@@ -1075,10 +1085,12 @@ func (p *PlanBundleCreditGrantRequestBody) GetExtraProperties() map[string]inter
 }
 
 func (p *PlanBundleCreditGrantRequestBody) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAction sets the Action field and marks it as non-optional;
@@ -1205,10 +1217,12 @@ func (p *PlanBundleEntitlementRequestBody) GetExtraProperties() map[string]inter
 }
 
 func (p *PlanBundleEntitlementRequestBody) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAction sets the Action field and marks it as non-optional;
@@ -1339,10 +1353,12 @@ func (p *PlanBundleResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PlanBundleResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetBillingProduct sets the BillingProduct field and marks it as non-optional;
@@ -1461,10 +1477,12 @@ func (c *CreateCustomPlanBundleResponse) GetExtraProperties() map[string]interfa
 }
 
 func (c *CreateCustomPlanBundleResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1562,10 +1580,12 @@ func (c *CreatePlanBundleResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreatePlanBundleResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1663,10 +1683,12 @@ func (u *UpdatePlanBundleResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdatePlanBundleResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1745,10 +1767,12 @@ type UpdatePlanBundleRequestBody struct {
 }
 
 func (u *UpdatePlanBundleRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetBillingProduct sets the BillingProduct field and marks it as non-optional;

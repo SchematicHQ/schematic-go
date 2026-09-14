@@ -14,7 +14,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
 
       - name: Compile
         run: go build ./...
@@ -25,7 +27,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
 
       - name: Lint
         uses: golangci/golangci-lint-action@v9
@@ -38,7 +42,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
 
       - name: Setup wiremock server
         run: |

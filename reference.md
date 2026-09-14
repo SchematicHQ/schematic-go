@@ -4202,6 +4202,14 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
+**startedAt:** `*time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **status:** `*string` 
     
 </dd>
@@ -5497,6 +5505,14 @@ client.Credits.GrantBillingCreditsToCompany(
 <dd>
 
 **companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**creditBundleID:** `*string` 
     
 </dd>
 </dl>
@@ -15385,6 +15401,9 @@ request := &schematichq.ListPlansRequest{
     ExcludeCompanyScoped: schematichq.Bool(
         true,
     ),
+    ExcludeUnused: schematichq.Bool(
+        true,
+    ),
     ForFallbackPlan: schematichq.Bool(
         true,
     ),
@@ -15463,6 +15482,14 @@ client.Plans.ListPlans(
 <dd>
 
 **excludeCompanyScoped:** `*bool` — Exclude plans that are scoped to a company (custom plans assigned to a company)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludeUnused:** `*bool` — Exclude plans that nothing is using: no company is on the plan and it has no draft version
     
 </dd>
 </dl>
@@ -16122,6 +16149,9 @@ request := &schematichq.CountPlansRequest{
     ExcludeCompanyScoped: schematichq.Bool(
         true,
     ),
+    ExcludeUnused: schematichq.Bool(
+        true,
+    ),
     ForFallbackPlan: schematichq.Bool(
         true,
     ),
@@ -16200,6 +16230,14 @@ client.Plans.CountPlans(
 <dd>
 
 **excludeCompanyScoped:** `*bool` — Exclude plans that are scoped to a company (custom plans assigned to a company)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludeUnused:** `*bool` — Exclude plans that nothing is using: no company is on the plan and it has no draft version
     
 </dd>
 </dl>
@@ -21124,6 +21162,14 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
+**trialEligibilityPerPlan:** `*bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **trialExpiryPlanID:** `*string` 
     
 </dd>
@@ -21501,6 +21547,14 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **trialDays:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**trialEligibilityPerPlan:** `*bool` 
     
 </dd>
 </dl>

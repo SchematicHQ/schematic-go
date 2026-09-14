@@ -197,6 +197,14 @@ func TestSettersCountPlansRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetExcludeUnused", func(t *testing.T) {
+		obj := &CountPlansRequest{}
+		var fernTestValueExcludeUnused *bool
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
+		assert.Equal(t, fernTestValueExcludeUnused, obj.ExcludeUnused)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetForFallbackPlan", func(t *testing.T) {
 		obj := &CountPlansRequest{}
 		var fernTestValueForFallbackPlan *bool
@@ -382,6 +390,37 @@ func TestSettersMarkExplicitCountPlansRequest(t *testing.T) {
 
 		// Act
 		obj.SetExcludeCompanyScoped(fernTestValueExcludeCompanyScoped)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetExcludeUnused_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountPlansRequest{}
+		var fernTestValueExcludeUnused *bool
+
+		// Act
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -1721,6 +1760,14 @@ func TestSettersListPlansRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetExcludeUnused", func(t *testing.T) {
+		obj := &ListPlansRequest{}
+		var fernTestValueExcludeUnused *bool
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
+		assert.Equal(t, fernTestValueExcludeUnused, obj.ExcludeUnused)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetForFallbackPlan", func(t *testing.T) {
 		obj := &ListPlansRequest{}
 		var fernTestValueForFallbackPlan *bool
@@ -1906,6 +1953,37 @@ func TestSettersMarkExplicitListPlansRequest(t *testing.T) {
 
 		// Act
 		obj.SetExcludeCompanyScoped(fernTestValueExcludeCompanyScoped)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetExcludeUnused_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListPlansRequest{}
+		var fernTestValueExcludeUnused *bool
+
+		// Act
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -3671,6 +3749,14 @@ func TestSettersCountPlansParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetExcludeUnused", func(t *testing.T) {
+		obj := &CountPlansParams{}
+		var fernTestValueExcludeUnused *bool
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
+		assert.Equal(t, fernTestValueExcludeUnused, obj.ExcludeUnused)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetForFallbackPlan", func(t *testing.T) {
 		obj := &CountPlansParams{}
 		var fernTestValueForFallbackPlan *bool
@@ -3883,6 +3969,39 @@ func TestGettersCountPlansParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetExcludeCompanyScoped() // Should return zero value
+	})
+
+	t.Run("GetExcludeUnused", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountPlansParams{}
+		var expected *bool
+		obj.ExcludeUnused = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetExcludeUnused(), "getter should return the property value")
+	})
+
+	t.Run("GetExcludeUnused_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountPlansParams{}
+		obj.ExcludeUnused = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetExcludeUnused(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetExcludeUnused_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CountPlansParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetExcludeUnused() // Should return zero value
 	})
 
 	t.Run("GetForFallbackPlan", func(t *testing.T) {
@@ -4420,6 +4539,37 @@ func TestSettersMarkExplicitCountPlansParams(t *testing.T) {
 
 		// Act
 		obj.SetExcludeCompanyScoped(fernTestValueExcludeCompanyScoped)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetExcludeUnused_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountPlansParams{}
+		var fernTestValueExcludeUnused *bool
+
+		// Act
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -7406,6 +7556,14 @@ func TestSettersListPlansParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetExcludeUnused", func(t *testing.T) {
+		obj := &ListPlansParams{}
+		var fernTestValueExcludeUnused *bool
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
+		assert.Equal(t, fernTestValueExcludeUnused, obj.ExcludeUnused)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetForFallbackPlan", func(t *testing.T) {
 		obj := &ListPlansParams{}
 		var fernTestValueForFallbackPlan *bool
@@ -7618,6 +7776,39 @@ func TestGettersListPlansParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetExcludeCompanyScoped() // Should return zero value
+	})
+
+	t.Run("GetExcludeUnused", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListPlansParams{}
+		var expected *bool
+		obj.ExcludeUnused = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetExcludeUnused(), "getter should return the property value")
+	})
+
+	t.Run("GetExcludeUnused_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListPlansParams{}
+		obj.ExcludeUnused = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetExcludeUnused(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetExcludeUnused_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ListPlansParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetExcludeUnused() // Should return zero value
 	})
 
 	t.Run("GetForFallbackPlan", func(t *testing.T) {
@@ -8155,6 +8346,37 @@ func TestSettersMarkExplicitListPlansParams(t *testing.T) {
 
 		// Act
 		obj.SetExcludeCompanyScoped(fernTestValueExcludeCompanyScoped)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetExcludeUnused_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListPlansParams{}
+		var fernTestValueExcludeUnused *bool
+
+		// Act
+		obj.SetExcludeUnused(fernTestValueExcludeUnused)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

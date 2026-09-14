@@ -26,10 +26,12 @@ type CreateDataExportRequestBody struct {
 }
 
 func (c *CreateDataExportRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetExportType sets the ExportType field and marks it as non-optional;
@@ -94,10 +96,12 @@ type ListDataExportsRequest struct {
 }
 
 func (l *ListDataExportsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetExportType sets the ExportType field and marks it as non-optional;
@@ -198,10 +202,12 @@ func (a *AuditLogExportMetadata) GetExtraProperties() map[string]interface{} {
 }
 
 func (a *AuditLogExportMetadata) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetActorType sets the ActorType field and marks it as non-optional;
@@ -543,10 +549,12 @@ func (c *CompanyFeatureUsageExportMetadata) GetExtraProperties() map[string]inte
 }
 
 func (c *CompanyFeatureUsageExportMetadata) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
@@ -1076,10 +1084,12 @@ func (d *DataExportResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DataExportResponseData) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetAccountID sets the AccountID field and marks it as non-optional;
@@ -1349,10 +1359,12 @@ func (e *EventExportMetadata) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EventExportMetadata) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1532,10 +1544,12 @@ func (c *CreateDataExportResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateDataExportResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1633,10 +1647,12 @@ func (g *GetDataExportResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetDataExportResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1754,10 +1770,12 @@ func (l *ListDataExportsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListDataExportsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetExportType sets the ExportType field and marks it as non-optional;
@@ -1869,10 +1887,12 @@ func (l *ListDataExportsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListDataExportsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

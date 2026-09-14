@@ -46,9 +46,10 @@ var (
 	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 32)
 	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 33)
 	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 34)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 35)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 36)
-	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 37)
+	createPlanGroupRequestBodyFieldTrialEligibilityPerPlan                = big.NewInt(1 << 35)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 36)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 37)
+	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 38)
 )
 
 type CreatePlanGroupRequestBody struct {
@@ -88,6 +89,7 @@ type CreatePlanGroupRequestBody struct {
 	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
 	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
 	TrialDays                              *int64                            `json:"trial_days,omitempty" url:"-"`
+	TrialEligibilityPerPlan                *bool                             `json:"trial_eligibility_per_plan,omitempty" url:"-"`
 	TrialExpiryPlanID                      *string                           `json:"trial_expiry_plan_id,omitempty" url:"-"`
 	TrialExpiryPlanPriceID                 *string                           `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
 	TrialPaymentMethodRequired             *bool                             `json:"trial_payment_method_required,omitempty" url:"-"`
@@ -97,10 +99,12 @@ type CreatePlanGroupRequestBody struct {
 }
 
 func (c *CreatePlanGroupRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetAddOnCompatibilities sets the AddOnCompatibilities field and marks it as non-optional;
@@ -348,6 +352,13 @@ func (c *CreatePlanGroupRequestBody) SetTrialDays(trialDays *int64) {
 	c.require(createPlanGroupRequestBodyFieldTrialDays)
 }
 
+// SetTrialEligibilityPerPlan sets the TrialEligibilityPerPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetTrialEligibilityPerPlan(trialEligibilityPerPlan *bool) {
+	c.TrialEligibilityPerPlan = trialEligibilityPerPlan
+	c.require(createPlanGroupRequestBodyFieldTrialEligibilityPerPlan)
+}
+
 // SetTrialExpiryPlanID sets the TrialExpiryPlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreatePlanGroupRequestBody) SetTrialExpiryPlanID(trialExpiryPlanID *string) {
@@ -402,10 +413,12 @@ type GetPlanGroupRequest struct {
 }
 
 func (g *GetPlanGroupRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetIncludeCompanyCounts sets the IncludeCompanyCounts field and marks it as non-optional;
@@ -489,10 +502,12 @@ func (c *CheckoutFieldInput) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CheckoutFieldInput) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetDefinitionID sets the DefinitionID field and marks it as non-optional;
@@ -689,10 +704,12 @@ func (c *CheckoutFieldResponseData) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CheckoutFieldResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -911,10 +928,12 @@ func (c *CheckoutSettingsResponseData) GetExtraProperties() map[string]interface
 }
 
 func (c *CheckoutSettingsResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBundlePurchaseBehavior sets the BundlePurchaseBehavior field and marks it as non-optional;
@@ -1053,10 +1072,12 @@ func (c *CompatiblePlansResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (c *CompatiblePlansResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
@@ -1189,10 +1210,12 @@ func (c *ComponentSettingsResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (c *ComponentSettingsResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetShowAsMonthlyPrices sets the ShowAsMonthlyPrices field and marks it as non-optional;
@@ -1317,10 +1340,12 @@ func (e *EntitlementsInPlan) GetExtraProperties() map[string]interface{} {
 }
 
 func (e *EntitlementsInPlan) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetEntitlementID sets the EntitlementID field and marks it as non-optional;
@@ -1417,10 +1442,12 @@ func (o *OrderedPlansInGroup) GetExtraProperties() map[string]interface{} {
 }
 
 func (o *OrderedPlansInGroup) require(field *big.Int) {
-	if o.explicitFields == nil {
-		o.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if o.explicitFields != nil {
+		next.Set(o.explicitFields)
 	}
-	o.explicitFields.Or(o.explicitFields, field)
+	next.Or(next, field)
+	o.explicitFields = next
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -1517,10 +1544,12 @@ func (p *PlanEntitlementsOrder) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PlanEntitlementsOrder) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetPlanEntitlementID sets the PlanEntitlementID field and marks it as non-optional;
@@ -1608,10 +1637,12 @@ func (p *PlanGroupBundleOrder) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PlanGroupBundleOrder) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetBundleID sets the BundleID field and marks it as non-optional;
@@ -1697,11 +1728,12 @@ var (
 	planGroupDetailResponseDataFieldSyncCustomerBillingDetails             = big.NewInt(1 << 30)
 	planGroupDetailResponseDataFieldTaxCollectionEnabled                   = big.NewInt(1 << 31)
 	planGroupDetailResponseDataFieldTrialDays                              = big.NewInt(1 << 32)
-	planGroupDetailResponseDataFieldTrialExpiryPlan                        = big.NewInt(1 << 33)
-	planGroupDetailResponseDataFieldTrialExpiryPlanID                      = big.NewInt(1 << 34)
-	planGroupDetailResponseDataFieldTrialExpiryPlanPrice                   = big.NewInt(1 << 35)
-	planGroupDetailResponseDataFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 36)
-	planGroupDetailResponseDataFieldTrialPaymentMethodRequired             = big.NewInt(1 << 37)
+	planGroupDetailResponseDataFieldTrialEligibilityPerPlan                = big.NewInt(1 << 33)
+	planGroupDetailResponseDataFieldTrialExpiryPlan                        = big.NewInt(1 << 34)
+	planGroupDetailResponseDataFieldTrialExpiryPlanID                      = big.NewInt(1 << 35)
+	planGroupDetailResponseDataFieldTrialExpiryPlanPrice                   = big.NewInt(1 << 36)
+	planGroupDetailResponseDataFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 37)
+	planGroupDetailResponseDataFieldTrialPaymentMethodRequired             = big.NewInt(1 << 38)
 )
 
 type PlanGroupDetailResponseData struct {
@@ -1738,6 +1770,7 @@ type PlanGroupDetailResponseData struct {
 	SyncCustomerBillingDetails             bool                               `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
 	TaxCollectionEnabled                   bool                               `json:"tax_collection_enabled" url:"tax_collection_enabled"`
 	TrialDays                              *int64                             `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialEligibilityPerPlan                bool                               `json:"trial_eligibility_per_plan" url:"trial_eligibility_per_plan"`
 	TrialExpiryPlan                        *PlanGroupPlanDetailResponseData   `json:"trial_expiry_plan,omitempty" url:"trial_expiry_plan,omitempty"`
 	TrialExpiryPlanID                      *string                            `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
 	TrialExpiryPlanPrice                   *BillingPriceView                  `json:"trial_expiry_plan_price,omitempty" url:"trial_expiry_plan_price,omitempty"`
@@ -1982,6 +2015,13 @@ func (p *PlanGroupDetailResponseData) GetTrialDays() *int64 {
 	return p.TrialDays
 }
 
+func (p *PlanGroupDetailResponseData) GetTrialEligibilityPerPlan() bool {
+	if p == nil {
+		return false
+	}
+	return p.TrialEligibilityPerPlan
+}
+
 func (p *PlanGroupDetailResponseData) GetTrialExpiryPlan() *PlanGroupPlanDetailResponseData {
 	if p == nil {
 		return nil
@@ -2025,10 +2065,12 @@ func (p *PlanGroupDetailResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (p *PlanGroupDetailResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAddOns sets the AddOns field and marks it as non-optional;
@@ -2262,6 +2304,13 @@ func (p *PlanGroupDetailResponseData) SetTrialDays(trialDays *int64) {
 	p.require(planGroupDetailResponseDataFieldTrialDays)
 }
 
+// SetTrialEligibilityPerPlan sets the TrialEligibilityPerPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupDetailResponseData) SetTrialEligibilityPerPlan(trialEligibilityPerPlan bool) {
+	p.TrialEligibilityPerPlan = trialEligibilityPerPlan
+	p.require(planGroupDetailResponseDataFieldTrialEligibilityPerPlan)
+}
+
 // SetTrialExpiryPlan sets the TrialExpiryPlan field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupDetailResponseData) SetTrialExpiryPlan(trialExpiryPlan *PlanGroupPlanDetailResponseData) {
@@ -2377,10 +2426,12 @@ func (p *PlanGroupPlanEntitlementsOrder) GetExtraProperties() map[string]interfa
 }
 
 func (p *PlanGroupPlanEntitlementsOrder) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -2465,9 +2516,10 @@ var (
 	planGroupResponseDataFieldSyncCustomerBillingDetails             = big.NewInt(1 << 22)
 	planGroupResponseDataFieldTaxCollectionEnabled                   = big.NewInt(1 << 23)
 	planGroupResponseDataFieldTrialDays                              = big.NewInt(1 << 24)
-	planGroupResponseDataFieldTrialExpiryPlanID                      = big.NewInt(1 << 25)
-	planGroupResponseDataFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 26)
-	planGroupResponseDataFieldTrialPaymentMethodRequired             = big.NewInt(1 << 27)
+	planGroupResponseDataFieldTrialEligibilityPerPlan                = big.NewInt(1 << 25)
+	planGroupResponseDataFieldTrialExpiryPlanID                      = big.NewInt(1 << 26)
+	planGroupResponseDataFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 27)
+	planGroupResponseDataFieldTrialPaymentMethodRequired             = big.NewInt(1 << 28)
 )
 
 type PlanGroupResponseData struct {
@@ -2496,6 +2548,7 @@ type PlanGroupResponseData struct {
 	SyncCustomerBillingDetails             bool                           `json:"sync_customer_billing_details" url:"sync_customer_billing_details"`
 	TaxCollectionEnabled                   bool                           `json:"tax_collection_enabled" url:"tax_collection_enabled"`
 	TrialDays                              *int64                         `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	TrialEligibilityPerPlan                bool                           `json:"trial_eligibility_per_plan" url:"trial_eligibility_per_plan"`
 	TrialExpiryPlanID                      *string                        `json:"trial_expiry_plan_id,omitempty" url:"trial_expiry_plan_id,omitempty"`
 	TrialExpiryPlanPriceID                 *string                        `json:"trial_expiry_plan_price_id,omitempty" url:"trial_expiry_plan_price_id,omitempty"`
 	TrialPaymentMethodRequired             *bool                          `json:"trial_payment_method_required,omitempty" url:"trial_payment_method_required,omitempty"`
@@ -2682,6 +2735,13 @@ func (p *PlanGroupResponseData) GetTrialDays() *int64 {
 	return p.TrialDays
 }
 
+func (p *PlanGroupResponseData) GetTrialEligibilityPerPlan() bool {
+	if p == nil {
+		return false
+	}
+	return p.TrialEligibilityPerPlan
+}
+
 func (p *PlanGroupResponseData) GetTrialExpiryPlanID() *string {
 	if p == nil {
 		return nil
@@ -2711,10 +2771,12 @@ func (p *PlanGroupResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PlanGroupResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetAddOnCompatibilities sets the AddOnCompatibilities field and marks it as non-optional;
@@ -2892,6 +2954,13 @@ func (p *PlanGroupResponseData) SetTrialDays(trialDays *int64) {
 	p.require(planGroupResponseDataFieldTrialDays)
 }
 
+// SetTrialEligibilityPerPlan sets the TrialEligibilityPerPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupResponseData) SetTrialEligibilityPerPlan(trialEligibilityPerPlan bool) {
+	p.TrialEligibilityPerPlan = trialEligibilityPerPlan
+	p.require(planGroupResponseDataFieldTrialEligibilityPerPlan)
+}
+
 // SetTrialExpiryPlanID sets the TrialExpiryPlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanGroupResponseData) SetTrialExpiryPlanID(trialExpiryPlanID *string) {
@@ -3016,10 +3085,12 @@ func (c *CreatePlanGroupResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreatePlanGroupResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3108,10 +3179,12 @@ func (g *GetPlanGroupParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPlanGroupParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetIncludeCompanyCounts sets the IncludeCompanyCounts field and marks it as non-optional;
@@ -3202,10 +3275,12 @@ func (g *GetPlanGroupResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPlanGroupResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3303,10 +3378,12 @@ func (u *UpdatePlanGroupResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdatePlanGroupResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3401,9 +3478,10 @@ var (
 	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 32)
 	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 33)
 	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 34)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 35)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 36)
-	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 37)
+	updatePlanGroupRequestBodyFieldTrialEligibilityPerPlan                = big.NewInt(1 << 35)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 36)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 37)
+	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 38)
 )
 
 type UpdatePlanGroupRequestBody struct {
@@ -3443,6 +3521,7 @@ type UpdatePlanGroupRequestBody struct {
 	ShowZeroPriceAsFree                    bool                              `json:"show_zero_price_as_free" url:"-"`
 	SyncCustomerBillingDetails             bool                              `json:"sync_customer_billing_details" url:"-"`
 	TrialDays                              *int64                            `json:"trial_days,omitempty" url:"-"`
+	TrialEligibilityPerPlan                *bool                             `json:"trial_eligibility_per_plan,omitempty" url:"-"`
 	TrialExpiryPlanID                      *string                           `json:"trial_expiry_plan_id,omitempty" url:"-"`
 	TrialExpiryPlanPriceID                 *string                           `json:"trial_expiry_plan_price_id,omitempty" url:"-"`
 	TrialPaymentMethodRequired             *bool                             `json:"trial_payment_method_required,omitempty" url:"-"`
@@ -3452,10 +3531,12 @@ type UpdatePlanGroupRequestBody struct {
 }
 
 func (u *UpdatePlanGroupRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAddOnCompatibilities sets the AddOnCompatibilities field and marks it as non-optional;
@@ -3701,6 +3782,13 @@ func (u *UpdatePlanGroupRequestBody) SetSyncCustomerBillingDetails(syncCustomerB
 func (u *UpdatePlanGroupRequestBody) SetTrialDays(trialDays *int64) {
 	u.TrialDays = trialDays
 	u.require(updatePlanGroupRequestBodyFieldTrialDays)
+}
+
+// SetTrialEligibilityPerPlan sets the TrialEligibilityPerPlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetTrialEligibilityPerPlan(trialEligibilityPerPlan *bool) {
+	u.TrialEligibilityPerPlan = trialEligibilityPerPlan
+	u.require(updatePlanGroupRequestBodyFieldTrialEligibilityPerPlan)
 }
 
 // SetTrialExpiryPlanID sets the TrialExpiryPlanID field and marks it as non-optional;

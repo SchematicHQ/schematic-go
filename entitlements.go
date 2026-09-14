@@ -47,10 +47,12 @@ type CountCompanyOverridesRequest struct {
 }
 
 func (c *CountCompanyOverridesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -136,10 +138,12 @@ type CountFeatureCompaniesRequest struct {
 }
 
 func (c *CountFeatureCompaniesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -202,10 +206,12 @@ type CountFeatureUsageRequest struct {
 }
 
 func (c *CountFeatureUsageRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -291,10 +297,12 @@ type CountFeatureUsersRequest struct {
 }
 
 func (c *CountFeatureUsersRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -368,10 +376,12 @@ type CountPlanEntitlementsRequest struct {
 }
 
 func (c *CountPlanEntitlementsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -485,10 +495,12 @@ type CreateCompanyOverrideRequestBody struct {
 }
 
 func (c *CreateCompanyOverrideRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -678,10 +690,12 @@ type CreatePlanEntitlementRequestBody struct {
 }
 
 func (c *CreatePlanEntitlementRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProductID sets the BillingProductID field and marks it as non-optional;
@@ -957,10 +971,12 @@ type DuplicatePlanEntitlementsRequestBody struct {
 }
 
 func (d *DuplicatePlanEntitlementsRequestBody) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetSourcePlanID sets the SourcePlanID field and marks it as non-optional;
@@ -1011,10 +1027,12 @@ type GetFeatureUsageByCompanyRequest struct {
 }
 
 func (g *GetFeatureUsageByCompanyRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetKeys sets the Keys field and marks it as non-optional;
@@ -1044,10 +1062,12 @@ type GetFeatureUsageTimeSeriesRequest struct {
 }
 
 func (g *GetFeatureUsageTimeSeriesRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1107,10 +1127,12 @@ type GetUserUsageByCompanyRequest struct {
 }
 
 func (g *GetUserUsageByCompanyRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1163,10 +1185,12 @@ type GetUserUsageDetailRequest struct {
 }
 
 func (g *GetUserUsageDetailRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1234,10 +1258,12 @@ type ListCompanyOverridesRequest struct {
 }
 
 func (l *ListCompanyOverridesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1323,10 +1349,12 @@ type ListFeatureCompaniesRequest struct {
 }
 
 func (l *ListFeatureCompaniesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -1389,10 +1417,12 @@ type ListFeatureUsageRequest struct {
 }
 
 func (l *ListFeatureUsageRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1489,10 +1519,12 @@ type ListFeatureUsageHistoryRequest struct {
 }
 
 func (l *ListFeatureUsageHistoryRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
@@ -1564,10 +1596,12 @@ type ListFeatureUsersRequest struct {
 }
 
 func (l *ListFeatureUsersRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -1641,10 +1675,12 @@ type ListPlanEntitlementsRequest struct {
 }
 
 func (l *ListPlanEntitlementsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -1825,10 +1861,12 @@ func (c *CreditUsage) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreditUsage) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCreditConsumptionRate sets the CreditConsumptionRate field and marks it as non-optional;
@@ -1983,10 +2021,12 @@ func (d *DuplicatePlanEntitlementsResponseResponseData) GetExtraProperties() map
 }
 
 func (d *DuplicatePlanEntitlementsResponseResponseData) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2425,10 +2465,12 @@ func (f *FeatureCompanyResponseData) GetExtraProperties() map[string]interface{}
 }
 
 func (f *FeatureCompanyResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
 	}
-	f.explicitFields.Or(f.explicitFields, field)
+	next.Or(next, field)
+	f.explicitFields = next
 }
 
 // SetAccess sets the Access field and marks it as non-optional;
@@ -2888,10 +2930,12 @@ func (f *FeatureCompanyUserResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (f *FeatureCompanyUserResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
 	}
-	f.explicitFields.Or(f.explicitFields, field)
+	next.Or(next, field)
+	f.explicitFields = next
 }
 
 // SetAccess sets the Access field and marks it as non-optional;
@@ -3113,10 +3157,12 @@ func (f *FeatureUsageHistoryResponseData) GetExtraProperties() map[string]interf
 }
 
 func (f *FeatureUsageHistoryResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
 	}
-	f.explicitFields.Or(f.explicitFields, field)
+	next.Or(next, field)
+	f.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -3280,10 +3326,12 @@ func (f *FeatureUsageTimeSeriesResponseData) GetExtraProperties() map[string]int
 }
 
 func (f *FeatureUsageTimeSeriesResponseData) require(field *big.Int) {
-	if f.explicitFields == nil {
-		f.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
 	}
-	f.explicitFields.Or(f.explicitFields, field)
+	next.Or(next, field)
+	f.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -3437,10 +3485,12 @@ func (l *LimitTimeSeriesPointResponseData) GetExtraProperties() map[string]inter
 }
 
 func (l *LimitTimeSeriesPointResponseData) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetEffectiveAt sets the EffectiveAt field and marks it as non-optional;
@@ -3564,10 +3614,12 @@ func (s *SkippedEntitlementErrorResponseData) GetExtraProperties() map[string]in
 }
 
 func (s *SkippedEntitlementErrorResponseData) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetMessage sets the Message field and marks it as non-optional;
@@ -3675,10 +3727,12 @@ func (s *SkippedEntitlementResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (s *SkippedEntitlementResponseData) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetEntitlementID sets the EntitlementID field and marks it as non-optional;
@@ -3807,10 +3861,12 @@ func (u *UsageTimeSeriesPointResponseData) GetExtraProperties() map[string]inter
 }
 
 func (u *UsageTimeSeriesPointResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
@@ -3978,10 +4034,12 @@ func (u *UserCreditUsageResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (u *UserCreditUsageResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
@@ -4108,10 +4166,12 @@ func (u *UserDailyCreditPointResponseData) GetExtraProperties() map[string]inter
 }
 
 func (u *UserDailyCreditPointResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCreditsUsed sets the CreditsUsed field and marks it as non-optional;
@@ -4227,10 +4287,12 @@ func (u *UserDailyUsagePointResponseData) GetExtraProperties() map[string]interf
 }
 
 func (u *UserDailyUsagePointResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetDate sets the Date field and marks it as non-optional;
@@ -4383,10 +4445,12 @@ func (u *UserFeatureUsageResponseData) GetExtraProperties() map[string]interface
 }
 
 func (u *UserFeatureUsageResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetFeature sets the Feature field and marks it as non-optional;
@@ -4541,10 +4605,12 @@ func (u *UserUsageByCompanyResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (u *UserUsageByCompanyResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCredits sets the Credits field and marks it as non-optional;
@@ -4718,10 +4784,12 @@ func (u *UserUsageDetailResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (u *UserUsageDetailResponseData) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCredits sets the Credits field and marks it as non-optional;
@@ -4938,10 +5006,12 @@ func (c *CountCompanyOverridesParams) GetExtraProperties() map[string]interface{
 }
 
 func (c *CountCompanyOverridesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -5088,10 +5158,12 @@ func (c *CountCompanyOverridesResponse) GetExtraProperties() map[string]interfac
 }
 
 func (c *CountCompanyOverridesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5209,10 +5281,12 @@ func (c *CountFeatureCompaniesParams) GetExtraProperties() map[string]interface{
 }
 
 func (c *CountFeatureCompaniesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -5324,10 +5398,12 @@ func (c *CountFeatureCompaniesResponse) GetExtraProperties() map[string]interfac
 }
 
 func (c *CountFeatureCompaniesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5492,10 +5568,12 @@ func (c *CountFeatureUsageParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountFeatureUsageParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -5642,10 +5720,12 @@ func (c *CountFeatureUsageResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CountFeatureUsageResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -5763,10 +5843,12 @@ func (c *CountFeatureUsersParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountFeatureUsersParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -5878,10 +5960,12 @@ func (c *CountFeatureUsersResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (c *CountFeatureUsersResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6071,10 +6155,12 @@ func (c *CountPlanEntitlementsParams) GetExtraProperties() map[string]interface{
 }
 
 func (c *CountPlanEntitlementsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -6235,10 +6321,12 @@ func (c *CountPlanEntitlementsResponse) GetExtraProperties() map[string]interfac
 }
 
 func (c *CountPlanEntitlementsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6336,10 +6424,12 @@ func (c *CreateCompanyOverrideResponse) GetExtraProperties() map[string]interfac
 }
 
 func (c *CreateCompanyOverrideResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6437,10 +6527,12 @@ func (c *CreatePlanEntitlementResponse) GetExtraProperties() map[string]interfac
 }
 
 func (c *CreatePlanEntitlementResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6538,10 +6630,12 @@ func (d *DeleteCompanyOverrideResponse) GetExtraProperties() map[string]interfac
 }
 
 func (d *DeleteCompanyOverrideResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6639,10 +6733,12 @@ func (d *DeletePlanEntitlementResponse) GetExtraProperties() map[string]interfac
 }
 
 func (d *DeletePlanEntitlementResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6740,10 +6836,12 @@ func (d *DuplicatePlanEntitlementsResponse) GetExtraProperties() map[string]inte
 }
 
 func (d *DuplicatePlanEntitlementsResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6841,10 +6939,12 @@ func (g *GetCompanyOverrideResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (g *GetCompanyOverrideResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -6933,10 +7033,12 @@ func (g *GetFeatureUsageByCompanyParams) GetExtraProperties() map[string]interfa
 }
 
 func (g *GetFeatureUsageByCompanyParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetKeys sets the Keys field and marks it as non-optional;
@@ -7027,10 +7129,12 @@ func (g *GetFeatureUsageByCompanyResponse) GetExtraProperties() map[string]inter
 }
 
 func (g *GetFeatureUsageByCompanyResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7155,10 +7259,12 @@ func (g *GetFeatureUsageTimeSeriesParams) GetExtraProperties() map[string]interf
 }
 
 func (g *GetFeatureUsageTimeSeriesParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -7289,10 +7395,12 @@ func (g *GetFeatureUsageTimeSeriesResponse) GetExtraProperties() map[string]inte
 }
 
 func (g *GetFeatureUsageTimeSeriesResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7390,10 +7498,12 @@ func (g *GetPlanEntitlementResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (g *GetPlanEntitlementResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7513,10 +7623,12 @@ func (g *GetUserUsageByCompanyParams) GetExtraProperties() map[string]interface{
 }
 
 func (g *GetUserUsageByCompanyParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -7640,10 +7752,12 @@ func (g *GetUserUsageByCompanyResponse) GetExtraProperties() map[string]interfac
 }
 
 func (g *GetUserUsageByCompanyResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -7763,10 +7877,12 @@ func (g *GetUserUsageDetailParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetUserUsageDetailParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -7890,10 +8006,12 @@ func (g *GetUserUsageDetailResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (g *GetUserUsageDetailResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8063,10 +8181,12 @@ func (l *ListCompanyOverridesParams) GetExtraProperties() map[string]interface{}
 }
 
 func (l *ListCompanyOverridesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -8213,10 +8333,12 @@ func (l *ListCompanyOverridesResponse) GetExtraProperties() map[string]interface
 }
 
 func (l *ListCompanyOverridesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8334,10 +8456,12 @@ func (l *ListFeatureCompaniesParams) GetExtraProperties() map[string]interface{}
 }
 
 func (l *ListFeatureCompaniesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -8449,10 +8573,12 @@ func (l *ListFeatureCompaniesResponse) GetExtraProperties() map[string]interface
 }
 
 func (l *ListFeatureCompaniesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8602,10 +8728,12 @@ func (l *ListFeatureUsageHistoryParams) GetExtraProperties() map[string]interfac
 }
 
 func (l *ListFeatureUsageHistoryParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
@@ -8750,10 +8878,12 @@ func (l *ListFeatureUsageHistoryResponse) GetExtraProperties() map[string]interf
 }
 
 func (l *ListFeatureUsageHistoryResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -8918,10 +9048,12 @@ func (l *ListFeatureUsageParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFeatureUsageParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -9068,10 +9200,12 @@ func (l *ListFeatureUsageResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFeatureUsageResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9189,10 +9323,12 @@ func (l *ListFeatureUsersParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFeatureUsersParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -9304,10 +9440,12 @@ func (l *ListFeatureUsersResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListFeatureUsersResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9497,10 +9635,12 @@ func (l *ListPlanEntitlementsParams) GetExtraProperties() map[string]interface{}
 }
 
 func (l *ListPlanEntitlementsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -9661,10 +9801,12 @@ func (l *ListPlanEntitlementsResponse) GetExtraProperties() map[string]interface
 }
 
 func (l *ListPlanEntitlementsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9762,10 +9904,12 @@ func (u *UpdateCompanyOverrideResponse) GetExtraProperties() map[string]interfac
 }
 
 func (u *UpdateCompanyOverrideResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9863,10 +10007,12 @@ func (u *UpdatePlanEntitlementResponse) GetExtraProperties() map[string]interfac
 }
 
 func (u *UpdatePlanEntitlementResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -9964,10 +10110,12 @@ func (u *UpsertPlanEntitlementForBillingProductResponse) GetExtraProperties() ma
 }
 
 func (u *UpsertPlanEntitlementForBillingProductResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -10056,10 +10204,12 @@ type UpdateCompanyOverrideRequestBody struct {
 }
 
 func (u *UpdateCompanyOverrideRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetCreditConsumptionRate sets the CreditConsumptionRate field and marks it as non-optional;
@@ -10229,10 +10379,12 @@ type UpdatePlanEntitlementRequestBody struct {
 }
 
 func (u *UpdatePlanEntitlementRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetBillingProductID sets the BillingProductID field and marks it as non-optional;
@@ -10557,10 +10709,12 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 }
 
 func (c *CreateBillingLinkedPlanEntitlementRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProductID sets the BillingProductID field and marks it as non-optional;

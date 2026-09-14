@@ -22,10 +22,12 @@ type CompleteMigrationNowRequestBody struct {
 }
 
 func (c *CompleteMigrationNowRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
@@ -78,10 +80,12 @@ type CountCompanyMigrationsRequest struct {
 }
 
 func (c *CountCompanyMigrationsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetMigrationID sets the MigrationID field and marks it as non-optional;
@@ -139,10 +143,12 @@ type CountMigrationsRequest struct {
 }
 
 func (c *CountMigrationsRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
@@ -199,10 +205,12 @@ type CreateMigrationInput struct {
 }
 
 func (c *CreateMigrationInput) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
@@ -304,10 +312,12 @@ type ListCompanyMigrationsRequest struct {
 }
 
 func (l *ListCompanyMigrationsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetMigrationID sets the MigrationID field and marks it as non-optional;
@@ -365,10 +375,12 @@ type ListMigrationsRequest struct {
 }
 
 func (l *ListMigrationsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
@@ -419,10 +431,12 @@ type PreviewMigrationRequestBody struct {
 }
 
 func (p *PreviewMigrationRequestBody) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;
@@ -493,10 +507,12 @@ type RetryMigrationRequestBody struct {
 }
 
 func (r *RetryMigrationRequestBody) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetErrorCodes sets the ErrorCodes field and marks it as non-optional;
@@ -717,10 +733,12 @@ func (p *PlanVersionCompanyMigrationResponseData) GetExtraProperties() map[strin
 }
 
 func (p *PlanVersionCompanyMigrationResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -997,10 +1015,12 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) GetExtraProperties() ma
 }
 
 func (p *PlanVersionMigrationPreviewCompanyResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1132,10 +1152,12 @@ func (p *PlanVersionMigrationPreviewResponseData) GetExtraProperties() map[strin
 }
 
 func (p *PlanVersionMigrationPreviewResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompanies sets the Companies field and marks it as non-optional;
@@ -1376,10 +1398,12 @@ func (p *PlanVersionMigrationResponseData) GetExtraProperties() map[string]inter
 }
 
 func (p *PlanVersionMigrationResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetCompletedAt sets the CompletedAt field and marks it as non-optional;
@@ -1644,10 +1668,12 @@ func (c *CancelMigrationResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CancelMigrationResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1745,10 +1771,12 @@ func (c *CompleteMigrationNowResponse) GetExtraProperties() map[string]interface
 }
 
 func (c *CompleteMigrationNowResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1875,10 +1903,12 @@ func (c *CountCompanyMigrationsParams) GetExtraProperties() map[string]interface
 }
 
 func (c *CountCompanyMigrationsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1997,10 +2027,12 @@ func (c *CountCompanyMigrationsResponse) GetExtraProperties() map[string]interfa
 }
 
 func (c *CountCompanyMigrationsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2118,10 +2150,12 @@ func (c *CountMigrationsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountMigrationsParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2233,10 +2267,12 @@ func (c *CountMigrationsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountMigrationsResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2334,10 +2370,12 @@ func (c *CreateMigrationResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateMigrationResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2435,10 +2473,12 @@ func (g *GetMigrationResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetMigrationResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2565,10 +2605,12 @@ func (l *ListCompanyMigrationsParams) GetExtraProperties() map[string]interface{
 }
 
 func (l *ListCompanyMigrationsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2687,10 +2729,12 @@ func (l *ListCompanyMigrationsResponse) GetExtraProperties() map[string]interfac
 }
 
 func (l *ListCompanyMigrationsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2808,10 +2852,12 @@ func (l *ListMigrationsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListMigrationsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2923,10 +2969,12 @@ func (l *ListMigrationsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListMigrationsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3024,10 +3072,12 @@ func (p *PreviewMigrationResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PreviewMigrationResponse) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3125,10 +3175,12 @@ func (r *RetryCompanyMigrationResponse) GetExtraProperties() map[string]interfac
 }
 
 func (r *RetryCompanyMigrationResponse) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3226,10 +3278,12 @@ func (r *RetryMigrationResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (r *RetryMigrationResponse) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

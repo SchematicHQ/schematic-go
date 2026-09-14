@@ -32,10 +32,12 @@ type CountLicensesRequest struct {
 }
 
 func (c *CountLicensesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
@@ -95,10 +97,12 @@ type ListLicensesRequest struct {
 }
 
 func (l *ListLicensesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
@@ -192,10 +196,12 @@ func (l *LicenseResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *LicenseResponseData) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -348,10 +354,12 @@ func (c *CountLicensesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountLicensesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
@@ -470,10 +478,12 @@ func (c *CountLicensesResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountLicensesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -571,10 +581,12 @@ func (g *GetSingleLicenseResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetSingleLicenseResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -701,10 +713,12 @@ func (l *ListLicensesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListLicensesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetFeatureIDs sets the FeatureIDs field and marks it as non-optional;
@@ -823,10 +837,12 @@ func (l *ListLicensesResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListLicensesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

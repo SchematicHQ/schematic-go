@@ -22,10 +22,12 @@ type ClaimStripeSandboxKeysRequestBody struct {
 }
 
 func (c *ClaimStripeSandboxKeysRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetToken sets the Token field and marks it as non-optional;
@@ -74,10 +76,12 @@ type InstallStripeSandboxRequestBody struct {
 }
 
 func (i *InstallStripeSandboxRequestBody) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetCountry sets the Country field and marks it as non-optional;
@@ -155,10 +159,12 @@ type ListIntegrationsRequest struct {
 }
 
 func (l *ListIntegrationsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBillingOnly sets the BillingOnly field and marks it as non-optional;
@@ -226,10 +232,12 @@ type StartDataImportRequestBody struct {
 }
 
 func (s *StartDataImportRequestBody) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetCompanyMatchingCriteria sets the CompanyMatchingCriteria field and marks it as non-optional;
@@ -321,10 +329,12 @@ func (c *ClaimedStripeSandboxKeysResponseData) GetExtraProperties() map[string]i
 }
 
 func (c *ClaimedStripeSandboxKeysResponseData) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetPublishable sets the Publishable field and marks it as non-optional;
@@ -430,10 +440,12 @@ func (c *ClerkIntegrationConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *ClerkIntegrationConfig) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetFirstEventsReceived sets the FirstEventsReceived field and marks it as non-optional;
@@ -588,10 +600,12 @@ func (i *InstallIntegrationRequestBody) GetExtraProperties() map[string]interfac
 }
 
 func (i *InstallIntegrationRequestBody) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetCompanyMatchingCriteria sets the CompanyMatchingCriteria field and marks it as non-optional;
@@ -725,10 +739,12 @@ func (i *IntegrationCapabilities) GetExtraProperties() map[string]interface{} {
 }
 
 func (i *IntegrationCapabilities) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetAuthorPlans sets the AuthorPlans field and marks it as non-optional;
@@ -1102,10 +1118,12 @@ func (i *IntegrationInstallConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (i *IntegrationInstallConfig) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetCompanyMatchingCriteria sets the CompanyMatchingCriteria field and marks it as non-optional;
@@ -1279,10 +1297,12 @@ func (i *IntegrationInstallResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (i *IntegrationInstallResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetCapabilities sets the Capabilities field and marks it as non-optional;
@@ -1386,10 +1406,12 @@ func (i *IntegrationWebhookURLResponseData) GetExtraProperties() map[string]inte
 }
 
 func (i *IntegrationWebhookURLResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetType sets the Type field and marks it as non-optional;
@@ -1477,10 +1499,12 @@ func (i *IntegrationsDataSetResponseData) GetExtraProperties() map[string]interf
 }
 
 func (i *IntegrationsDataSetResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetKeys sets the Keys field and marks it as non-optional;
@@ -1624,10 +1648,12 @@ func (i *IntegrationsListResponseData) GetExtraProperties() map[string]interface
 }
 
 func (i *IntegrationsListResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetCapabilities sets the Capabilities field and marks it as non-optional;
@@ -1801,10 +1827,12 @@ func (i *IntegrationsResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (i *IntegrationsResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetCreatedAt sets the CreatedAt field and marks it as non-optional;
@@ -1926,10 +1954,12 @@ func (m *MetronomeIntegrationConfig) GetExtraProperties() map[string]interface{}
 }
 
 func (m *MetronomeIntegrationConfig) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetExternalCustomerIDKey sets the ExternalCustomerIDKey field and marks it as non-optional;
@@ -2011,10 +2041,12 @@ func (o *OrbIntegrationConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (o *OrbIntegrationConfig) require(field *big.Int) {
-	if o.explicitFields == nil {
-		o.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if o.explicitFields != nil {
+		next.Set(o.explicitFields)
 	}
-	o.explicitFields.Or(o.explicitFields, field)
+	next.Or(next, field)
+	o.explicitFields = next
 }
 
 // SetExternalCustomerIDKey sets the ExternalCustomerIDKey field and marks it as non-optional;
@@ -2186,10 +2218,12 @@ func (s *StripeIntegrationConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (s *StripeIntegrationConfig) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetAccountID sets the AccountID field and marks it as non-optional;
@@ -2368,10 +2402,12 @@ func (s *StripeSandboxClaimLink) GetExtraProperties() map[string]interface{} {
 }
 
 func (s *StripeSandboxClaimLink) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetClaimURL sets the ClaimURL field and marks it as non-optional;
@@ -2481,10 +2517,12 @@ func (s *StripeSandboxCountriesResponseData) GetExtraProperties() map[string]int
 }
 
 func (s *StripeSandboxCountriesResponseData) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetCountries sets the Countries field and marks it as non-optional;
@@ -2619,10 +2657,12 @@ func (s *StripeSandboxInstallResponseData) GetExtraProperties() map[string]inter
 }
 
 func (s *StripeSandboxInstallResponseData) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetAPIKeys sets the APIKeys field and marks it as non-optional;
@@ -2775,10 +2815,12 @@ func (s *StripeSandboxKeysResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (s *StripeSandboxKeysResponseData) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetMcp sets the Mcp field and marks it as non-optional;
@@ -2884,10 +2926,12 @@ func (w *WorkOsIntegrationConfig) GetExtraProperties() map[string]interface{} {
 }
 
 func (w *WorkOsIntegrationConfig) require(field *big.Int) {
-	if w.explicitFields == nil {
-		w.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if w.explicitFields != nil {
+		next.Set(w.explicitFields)
 	}
-	w.explicitFields.Or(w.explicitFields, field)
+	next.Or(next, field)
+	w.explicitFields = next
 }
 
 // SetFirstEventsReceived sets the FirstEventsReceived field and marks it as non-optional;
@@ -2985,10 +3029,12 @@ func (a *AssumeStripeInstalledResponse) GetExtraProperties() map[string]interfac
 }
 
 func (a *AssumeStripeInstalledResponse) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3086,10 +3132,12 @@ func (c *ClaimStripeSandboxKeysResponse) GetExtraProperties() map[string]interfa
 }
 
 func (c *ClaimStripeSandboxKeysResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3187,10 +3235,12 @@ func (g *GetIntegrationWebhookURLResponse) GetExtraProperties() map[string]inter
 }
 
 func (g *GetIntegrationWebhookURLResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3288,10 +3338,12 @@ func (g *GetStripeSandboxClaimLinkResponse) GetExtraProperties() map[string]inte
 }
 
 func (g *GetStripeSandboxClaimLinkResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3389,10 +3441,12 @@ func (g *GetStripeSandboxKeysResponse) GetExtraProperties() map[string]interface
 }
 
 func (g *GetStripeSandboxKeysResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3490,10 +3544,12 @@ func (i *InstallIntegrationResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (i *InstallIntegrationResponse) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3591,10 +3647,12 @@ func (i *InstallStripeClaimableSandboxResponse) GetExtraProperties() map[string]
 }
 
 func (i *InstallStripeClaimableSandboxResponse) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3692,10 +3750,12 @@ func (i *InstallStripeResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (i *InstallStripeResponse) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3840,10 +3900,12 @@ func (l *ListIntegrationsParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListIntegrationsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetBillingOnly sets the BillingOnly field and marks it as non-optional;
@@ -3976,10 +4038,12 @@ func (l *ListIntegrationsResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListIntegrationsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4077,10 +4141,12 @@ func (l *ListStripeSandboxCountriesResponse) GetExtraProperties() map[string]int
 }
 
 func (l *ListStripeSandboxCountriesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4178,10 +4244,12 @@ func (l *LoadSampleDataSetResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (l *LoadSampleDataSetResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4279,10 +4347,12 @@ func (r *RunIntegrationResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (r *RunIntegrationResponse) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4380,10 +4450,12 @@ func (s *StartDataImportResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (s *StartDataImportResponse) require(field *big.Int) {
-	if s.explicitFields == nil {
-		s.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
 	}
-	s.explicitFields.Or(s.explicitFields, field)
+	next.Or(next, field)
+	s.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4481,10 +4553,12 @@ func (u *UninstallIntegrationResponse) GetExtraProperties() map[string]interface
 }
 
 func (u *UninstallIntegrationResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

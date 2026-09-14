@@ -22,10 +22,12 @@ type GetActivityRequest struct {
 }
 
 func (g *GetActivityRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -53,10 +55,12 @@ type GetEnvironmentFeatureUsageTimeSeriesRequest struct {
 }
 
 func (g *GetEnvironmentFeatureUsageTimeSeriesRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEndTime sets the EndTime field and marks it as non-optional;
@@ -105,10 +109,12 @@ type GetEnvironmentTraitUsageTimeSeriesRequest struct {
 }
 
 func (g *GetEnvironmentTraitUsageTimeSeriesRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEndTime sets the EndTime field and marks it as non-optional;
@@ -151,10 +157,12 @@ type GetPlanGrowthRequest struct {
 }
 
 func (g *GetPlanGrowthRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetMonths sets the Months field and marks it as non-optional;
@@ -180,10 +188,12 @@ type GetTopFeaturesByUsageRequest struct {
 }
 
 func (g *GetTopFeaturesByUsageRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEndTime sets the EndTime field and marks it as non-optional;
@@ -281,10 +291,12 @@ func (a *ActivityEntryResponseData) GetExtraProperties() map[string]interface{} 
 }
 
 func (a *ActivityEntryResponseData) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetActorName sets the ActorName field and marks it as non-optional;
@@ -408,10 +420,12 @@ func (a *ActivityResponseResponseData) GetExtraProperties() map[string]interface
 }
 
 func (a *ActivityResponseResponseData) require(field *big.Int) {
-	if a.explicitFields == nil {
-		a.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
 	}
-	a.explicitFields.Or(a.explicitFields, field)
+	next.Or(next, field)
+	a.explicitFields = next
 }
 
 // SetEntries sets the Entries field and marks it as non-optional;
@@ -510,10 +524,12 @@ func (e *EnvironmentFeatureUsageTimeSeriesResponseData) GetExtraProperties() map
 }
 
 func (e *EnvironmentFeatureUsageTimeSeriesResponseData) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -626,10 +642,12 @@ func (e *EnvironmentTraitUsageTimeSeriesResponseData) GetExtraProperties() map[s
 }
 
 func (e *EnvironmentTraitUsageTimeSeriesResponseData) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetFeatureID sets the FeatureID field and marks it as non-optional;
@@ -733,10 +751,12 @@ func (e *EnvironmentUsagePointResponseData) GetExtraProperties() map[string]inte
 }
 
 func (e *EnvironmentUsagePointResponseData) require(field *big.Int) {
-	if e.explicitFields == nil {
-		e.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
 	}
-	e.explicitFields.Or(e.explicitFields, field)
+	next.Or(next, field)
+	e.explicitFields = next
 }
 
 // SetTimestamp sets the Timestamp field and marks it as non-optional;
@@ -877,10 +897,12 @@ func (i *InsightsSummaryResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (i *InsightsSummaryResponseData) require(field *big.Int) {
-	if i.explicitFields == nil {
-		i.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
 	}
-	i.explicitFields.Or(i.explicitFields, field)
+	next.Or(next, field)
+	i.explicitFields = next
 }
 
 // SetActiveCredits sets the ActiveCredits field and marks it as non-optional;
@@ -1005,10 +1027,12 @@ func (m *MrrResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (m *MrrResponseData) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetAmount sets the Amount field and marks it as non-optional;
@@ -1123,10 +1147,12 @@ func (p *PlanGrowthPointResponseData) GetExtraProperties() map[string]interface{
 }
 
 func (p *PlanGrowthPointResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetMonth sets the Month field and marks it as non-optional;
@@ -1236,10 +1262,12 @@ func (p *PlanGrowthResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PlanGrowthResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetPoints sets the Points field and marks it as non-optional;
@@ -1365,10 +1393,12 @@ func (t *TopFeatureByUsageResponseData) GetExtraProperties() map[string]interfac
 }
 
 func (t *TopFeatureByUsageResponseData) require(field *big.Int) {
-	if t.explicitFields == nil {
-		t.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if t.explicitFields != nil {
+		next.Set(t.explicitFields)
 	}
-	t.explicitFields.Or(t.explicitFields, field)
+	next.Or(next, field)
+	t.explicitFields = next
 }
 
 // SetChangePct sets the ChangePct field and marks it as non-optional;
@@ -1484,10 +1514,12 @@ func (t *TopFeaturesByUsageResponseData) GetExtraProperties() map[string]interfa
 }
 
 func (t *TopFeaturesByUsageResponseData) require(field *big.Int) {
-	if t.explicitFields == nil {
-		t.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if t.explicitFields != nil {
+		next.Set(t.explicitFields)
 	}
-	t.explicitFields.Or(t.explicitFields, field)
+	next.Or(next, field)
+	t.explicitFields = next
 }
 
 // SetFeatures sets the Features field and marks it as non-optional;
@@ -1569,10 +1601,12 @@ func (g *GetActivityParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetActivityParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1663,10 +1697,12 @@ func (g *GetActivityResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetActivityResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1782,10 +1818,12 @@ func (g *GetEnvironmentFeatureUsageTimeSeriesParams) GetExtraProperties() map[st
 }
 
 func (g *GetEnvironmentFeatureUsageTimeSeriesParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEndTime sets the EndTime field and marks it as non-optional;
@@ -1909,10 +1947,12 @@ func (g *GetEnvironmentFeatureUsageTimeSeriesResponse) GetExtraProperties() map[
 }
 
 func (g *GetEnvironmentFeatureUsageTimeSeriesResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2028,10 +2068,12 @@ func (g *GetEnvironmentTraitUsageTimeSeriesParams) GetExtraProperties() map[stri
 }
 
 func (g *GetEnvironmentTraitUsageTimeSeriesParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEndTime sets the EndTime field and marks it as non-optional;
@@ -2155,10 +2197,12 @@ func (g *GetEnvironmentTraitUsageTimeSeriesResponse) GetExtraProperties() map[st
 }
 
 func (g *GetEnvironmentTraitUsageTimeSeriesResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2247,10 +2291,12 @@ func (g *GetPlanGrowthParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPlanGrowthParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetMonths sets the Months field and marks it as non-optional;
@@ -2341,10 +2387,12 @@ func (g *GetPlanGrowthResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPlanGrowthResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2442,10 +2490,12 @@ func (g *GetSummaryResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetSummaryResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2552,10 +2602,12 @@ func (g *GetTopFeaturesByUsageParams) GetExtraProperties() map[string]interface{
 }
 
 func (g *GetTopFeaturesByUsageParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetEndTime sets the EndTime field and marks it as non-optional;
@@ -2672,10 +2724,12 @@ func (g *GetTopFeaturesByUsageResponse) GetExtraProperties() map[string]interfac
 }
 
 func (g *GetTopFeaturesByUsageResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

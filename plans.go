@@ -32,10 +32,12 @@ type CountBillingProductMatchCompaniesRequest struct {
 }
 
 func (c *CountBillingProductMatchCompaniesRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -70,20 +72,21 @@ var (
 	countPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
 	countPlansRequestFieldCompanyScopedOnly     = big.NewInt(1 << 1)
 	countPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	countPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 3)
-	countPlansRequestFieldForInitialPlan        = big.NewInt(1 << 4)
-	countPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
-	countPlansRequestFieldHasProductID          = big.NewInt(1 << 6)
-	countPlansRequestFieldIDs                   = big.NewInt(1 << 7)
-	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 8)
-	countPlansRequestFieldPlanType              = big.NewInt(1 << 9)
-	countPlansRequestFieldQ                     = big.NewInt(1 << 10)
-	countPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 11)
-	countPlansRequestFieldWithEntitlements      = big.NewInt(1 << 12)
-	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 13)
-	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 14)
-	countPlansRequestFieldLimit                 = big.NewInt(1 << 15)
-	countPlansRequestFieldOffset                = big.NewInt(1 << 16)
+	countPlansRequestFieldExcludeUnused         = big.NewInt(1 << 3)
+	countPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 4)
+	countPlansRequestFieldForInitialPlan        = big.NewInt(1 << 5)
+	countPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
+	countPlansRequestFieldHasProductID          = big.NewInt(1 << 7)
+	countPlansRequestFieldIDs                   = big.NewInt(1 << 8)
+	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 9)
+	countPlansRequestFieldPlanType              = big.NewInt(1 << 10)
+	countPlansRequestFieldQ                     = big.NewInt(1 << 11)
+	countPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 12)
+	countPlansRequestFieldWithEntitlements      = big.NewInt(1 << 13)
+	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 14)
+	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 15)
+	countPlansRequestFieldLimit                 = big.NewInt(1 << 16)
+	countPlansRequestFieldOffset                = big.NewInt(1 << 17)
 )
 
 type CountPlansRequest struct {
@@ -92,6 +95,8 @@ type CountPlansRequest struct {
 	CompanyScopedOnly *bool `json:"-" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"-" url:"exclude_company_scoped,omitempty"`
+	// Exclude plans that nothing is using: no company is on the plan and it has no draft version
+	ExcludeUnused *bool `json:"-" url:"exclude_unused,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
 	ForFallbackPlan *bool `json:"-" url:"for_fallback_plan,omitempty"`
 	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
@@ -124,10 +129,12 @@ type CountPlansRequest struct {
 }
 
 func (c *CountPlansRequest) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -149,6 +156,13 @@ func (c *CountPlansRequest) SetCompanyScopedOnly(companyScopedOnly *bool) {
 func (c *CountPlansRequest) SetExcludeCompanyScoped(excludeCompanyScoped *bool) {
 	c.ExcludeCompanyScoped = excludeCompanyScoped
 	c.require(countPlansRequestFieldExcludeCompanyScoped)
+}
+
+// SetExcludeUnused sets the ExcludeUnused field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansRequest) SetExcludeUnused(excludeUnused *bool) {
+	c.ExcludeUnused = excludeUnused
+	c.require(countPlansRequestFieldExcludeUnused)
 }
 
 // SetForFallbackPlan sets the ForFallbackPlan field and marks it as non-optional;
@@ -271,10 +285,12 @@ type CreateCustomPlanRequestBody struct {
 }
 
 func (c *CreateCustomPlanRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -352,10 +368,12 @@ type DeletePlanVersionRequest struct {
 }
 
 func (d *DeletePlanVersionRequest) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetPromoteArchivedVersion sets the PromoteArchivedVersion field and marks it as non-optional;
@@ -378,10 +396,12 @@ type GetPlanRequest struct {
 }
 
 func (g *GetPlanRequest) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
@@ -413,10 +433,12 @@ type ListBillingProductMatchCompaniesRequest struct {
 }
 
 func (l *ListBillingProductMatchCompaniesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -478,10 +500,12 @@ type ListCustomPlanBillingsRequest struct {
 }
 
 func (l *ListCustomPlanBillingsRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -547,10 +571,12 @@ type ListPlanIssuesRequest struct {
 }
 
 func (l *ListPlanIssuesRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -571,20 +597,21 @@ var (
 	listPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
 	listPlansRequestFieldCompanyScopedOnly     = big.NewInt(1 << 1)
 	listPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	listPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 3)
-	listPlansRequestFieldForInitialPlan        = big.NewInt(1 << 4)
-	listPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
-	listPlansRequestFieldHasProductID          = big.NewInt(1 << 6)
-	listPlansRequestFieldIDs                   = big.NewInt(1 << 7)
-	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 8)
-	listPlansRequestFieldPlanType              = big.NewInt(1 << 9)
-	listPlansRequestFieldQ                     = big.NewInt(1 << 10)
-	listPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 11)
-	listPlansRequestFieldWithEntitlements      = big.NewInt(1 << 12)
-	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 13)
-	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 14)
-	listPlansRequestFieldLimit                 = big.NewInt(1 << 15)
-	listPlansRequestFieldOffset                = big.NewInt(1 << 16)
+	listPlansRequestFieldExcludeUnused         = big.NewInt(1 << 3)
+	listPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 4)
+	listPlansRequestFieldForInitialPlan        = big.NewInt(1 << 5)
+	listPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
+	listPlansRequestFieldHasProductID          = big.NewInt(1 << 7)
+	listPlansRequestFieldIDs                   = big.NewInt(1 << 8)
+	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 9)
+	listPlansRequestFieldPlanType              = big.NewInt(1 << 10)
+	listPlansRequestFieldQ                     = big.NewInt(1 << 11)
+	listPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 12)
+	listPlansRequestFieldWithEntitlements      = big.NewInt(1 << 13)
+	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 14)
+	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 15)
+	listPlansRequestFieldLimit                 = big.NewInt(1 << 16)
+	listPlansRequestFieldOffset                = big.NewInt(1 << 17)
 )
 
 type ListPlansRequest struct {
@@ -593,6 +620,8 @@ type ListPlansRequest struct {
 	CompanyScopedOnly *bool `json:"-" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"-" url:"exclude_company_scoped,omitempty"`
+	// Exclude plans that nothing is using: no company is on the plan and it has no draft version
+	ExcludeUnused *bool `json:"-" url:"exclude_unused,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
 	ForFallbackPlan *bool `json:"-" url:"for_fallback_plan,omitempty"`
 	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
@@ -625,10 +654,12 @@ type ListPlansRequest struct {
 }
 
 func (l *ListPlansRequest) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -650,6 +681,13 @@ func (l *ListPlansRequest) SetCompanyScopedOnly(companyScopedOnly *bool) {
 func (l *ListPlansRequest) SetExcludeCompanyScoped(excludeCompanyScoped *bool) {
 	l.ExcludeCompanyScoped = excludeCompanyScoped
 	l.require(listPlansRequestFieldExcludeCompanyScoped)
+}
+
+// SetExcludeUnused sets the ExcludeUnused field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansRequest) SetExcludeUnused(excludeUnused *bool) {
+	l.ExcludeUnused = excludeUnused
+	l.require(listPlansRequestFieldExcludeUnused)
 }
 
 // SetForFallbackPlan sets the ForFallbackPlan field and marks it as non-optional;
@@ -794,10 +832,12 @@ type PublishPlanVersionRequestBody struct {
 }
 
 func (p *PublishPlanVersionRequestBody) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetActivationStrategy sets the ActivationStrategy field and marks it as non-optional;
@@ -953,10 +993,12 @@ type RetryCustomPlanBillingRequestBody struct {
 }
 
 func (r *RetryCustomPlanBillingRequestBody) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetActivationStrategy sets the ActivationStrategy field and marks it as non-optional;
@@ -1087,10 +1129,12 @@ func (c *CountBillingProductMatchCompaniesParams) GetExtraProperties() map[strin
 }
 
 func (c *CountBillingProductMatchCompaniesParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1202,10 +1246,12 @@ func (c *CountBillingProductMatchCompaniesResponse) GetExtraProperties() map[str
 }
 
 func (c *CountBillingProductMatchCompaniesResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1269,20 +1315,21 @@ var (
 	countPlansParamsFieldCompanyID             = big.NewInt(1 << 0)
 	countPlansParamsFieldCompanyScopedOnly     = big.NewInt(1 << 1)
 	countPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	countPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 3)
-	countPlansParamsFieldForInitialPlan        = big.NewInt(1 << 4)
-	countPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
-	countPlansParamsFieldHasProductID          = big.NewInt(1 << 6)
-	countPlansParamsFieldIDs                   = big.NewInt(1 << 7)
-	countPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 8)
-	countPlansParamsFieldLimit                 = big.NewInt(1 << 9)
-	countPlansParamsFieldOffset                = big.NewInt(1 << 10)
-	countPlansParamsFieldPlanType              = big.NewInt(1 << 11)
-	countPlansParamsFieldQ                     = big.NewInt(1 << 12)
-	countPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 13)
-	countPlansParamsFieldWithEntitlements      = big.NewInt(1 << 14)
-	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 15)
-	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 16)
+	countPlansParamsFieldExcludeUnused         = big.NewInt(1 << 3)
+	countPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 4)
+	countPlansParamsFieldForInitialPlan        = big.NewInt(1 << 5)
+	countPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
+	countPlansParamsFieldHasProductID          = big.NewInt(1 << 7)
+	countPlansParamsFieldIDs                   = big.NewInt(1 << 8)
+	countPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 9)
+	countPlansParamsFieldLimit                 = big.NewInt(1 << 10)
+	countPlansParamsFieldOffset                = big.NewInt(1 << 11)
+	countPlansParamsFieldPlanType              = big.NewInt(1 << 12)
+	countPlansParamsFieldQ                     = big.NewInt(1 << 13)
+	countPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 14)
+	countPlansParamsFieldWithEntitlements      = big.NewInt(1 << 15)
+	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 16)
+	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 17)
 )
 
 type CountPlansParams struct {
@@ -1291,6 +1338,8 @@ type CountPlansParams struct {
 	CompanyScopedOnly *bool `json:"company_scoped_only,omitempty" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"exclude_company_scoped,omitempty" url:"exclude_company_scoped,omitempty"`
+	// Exclude plans that nothing is using: no company is on the plan and it has no draft version
+	ExcludeUnused *bool `json:"exclude_unused,omitempty" url:"exclude_unused,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
 	ForFallbackPlan *bool `json:"for_fallback_plan,omitempty" url:"for_fallback_plan,omitempty"`
 	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
@@ -1344,6 +1393,13 @@ func (c *CountPlansParams) GetExcludeCompanyScoped() *bool {
 		return nil
 	}
 	return c.ExcludeCompanyScoped
+}
+
+func (c *CountPlansParams) GetExcludeUnused() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ExcludeUnused
 }
 
 func (c *CountPlansParams) GetForFallbackPlan() *bool {
@@ -1452,10 +1508,12 @@ func (c *CountPlansParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountPlansParams) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -1477,6 +1535,13 @@ func (c *CountPlansParams) SetCompanyScopedOnly(companyScopedOnly *bool) {
 func (c *CountPlansParams) SetExcludeCompanyScoped(excludeCompanyScoped *bool) {
 	c.ExcludeCompanyScoped = excludeCompanyScoped
 	c.require(countPlansParamsFieldExcludeCompanyScoped)
+}
+
+// SetExcludeUnused sets the ExcludeUnused field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansParams) SetExcludeUnused(excludeUnused *bool) {
+	c.ExcludeUnused = excludeUnused
+	c.require(countPlansParamsFieldExcludeUnused)
 }
 
 // SetForFallbackPlan sets the ForFallbackPlan field and marks it as non-optional;
@@ -1658,10 +1723,12 @@ func (c *CountPlansResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CountPlansResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1759,10 +1826,12 @@ func (c *CreateCustomPlanResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreateCustomPlanResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1860,10 +1929,12 @@ func (c *CreatePlanResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (c *CreatePlanResponse) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -1961,10 +2032,12 @@ func (d *DeletePlanResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeletePlanResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2053,10 +2126,12 @@ func (d *DeletePlanVersionParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (d *DeletePlanVersionParams) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetPromoteArchivedVersion sets the PromoteArchivedVersion field and marks it as non-optional;
@@ -2147,10 +2222,12 @@ func (d *DeletePlanVersionResponse) GetExtraProperties() map[string]interface{} 
 }
 
 func (d *DeletePlanVersionResponse) require(field *big.Int) {
-	if d.explicitFields == nil {
-		d.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if d.explicitFields != nil {
+		next.Set(d.explicitFields)
 	}
-	d.explicitFields.Or(d.explicitFields, field)
+	next.Or(next, field)
+	d.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2240,10 +2317,12 @@ func (g *GetPlanParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPlanParams) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
@@ -2334,10 +2413,12 @@ func (g *GetPlanResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPlanResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2457,10 +2538,12 @@ func (l *ListBillingProductMatchCompaniesParams) GetExtraProperties() map[string
 }
 
 func (l *ListBillingProductMatchCompaniesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2572,10 +2655,12 @@ func (l *ListBillingProductMatchCompaniesResponse) GetExtraProperties() map[stri
 }
 
 func (l *ListBillingProductMatchCompaniesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2725,10 +2810,12 @@ func (l *ListCustomPlanBillingsParams) GetExtraProperties() map[string]interface
 }
 
 func (l *ListCustomPlanBillingsParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -2861,10 +2948,12 @@ func (l *ListCustomPlanBillingsResponse) GetExtraProperties() map[string]interfa
 }
 
 func (l *ListCustomPlanBillingsResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -2962,10 +3051,12 @@ func (l *ListPlanIssuesParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListPlanIssuesParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -3063,10 +3154,12 @@ func (l *ListPlanIssuesResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListPlanIssuesResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3130,20 +3223,21 @@ var (
 	listPlansParamsFieldCompanyID             = big.NewInt(1 << 0)
 	listPlansParamsFieldCompanyScopedOnly     = big.NewInt(1 << 1)
 	listPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	listPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 3)
-	listPlansParamsFieldForInitialPlan        = big.NewInt(1 << 4)
-	listPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 5)
-	listPlansParamsFieldHasProductID          = big.NewInt(1 << 6)
-	listPlansParamsFieldIDs                   = big.NewInt(1 << 7)
-	listPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 8)
-	listPlansParamsFieldLimit                 = big.NewInt(1 << 9)
-	listPlansParamsFieldOffset                = big.NewInt(1 << 10)
-	listPlansParamsFieldPlanType              = big.NewInt(1 << 11)
-	listPlansParamsFieldQ                     = big.NewInt(1 << 12)
-	listPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 13)
-	listPlansParamsFieldWithEntitlements      = big.NewInt(1 << 14)
-	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 15)
-	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 16)
+	listPlansParamsFieldExcludeUnused         = big.NewInt(1 << 3)
+	listPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 4)
+	listPlansParamsFieldForInitialPlan        = big.NewInt(1 << 5)
+	listPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
+	listPlansParamsFieldHasProductID          = big.NewInt(1 << 7)
+	listPlansParamsFieldIDs                   = big.NewInt(1 << 8)
+	listPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 9)
+	listPlansParamsFieldLimit                 = big.NewInt(1 << 10)
+	listPlansParamsFieldOffset                = big.NewInt(1 << 11)
+	listPlansParamsFieldPlanType              = big.NewInt(1 << 12)
+	listPlansParamsFieldQ                     = big.NewInt(1 << 13)
+	listPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 14)
+	listPlansParamsFieldWithEntitlements      = big.NewInt(1 << 15)
+	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 16)
+	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 17)
 )
 
 type ListPlansParams struct {
@@ -3152,6 +3246,8 @@ type ListPlansParams struct {
 	CompanyScopedOnly *bool `json:"company_scoped_only,omitempty" url:"company_scoped_only,omitempty"`
 	// Exclude plans that are scoped to a company (custom plans assigned to a company)
 	ExcludeCompanyScoped *bool `json:"exclude_company_scoped,omitempty" url:"exclude_company_scoped,omitempty"`
+	// Exclude plans that nothing is using: no company is on the plan and it has no draft version
+	ExcludeUnused *bool `json:"exclude_unused,omitempty" url:"exclude_unused,omitempty"`
 	// Filter for plans valid as fallback plans (not linked to billing)
 	ForFallbackPlan *bool `json:"for_fallback_plan,omitempty" url:"for_fallback_plan,omitempty"`
 	// Filter for plans valid as initial plans (not linked to billing, free, or auto-cancelling trial)
@@ -3205,6 +3301,13 @@ func (l *ListPlansParams) GetExcludeCompanyScoped() *bool {
 		return nil
 	}
 	return l.ExcludeCompanyScoped
+}
+
+func (l *ListPlansParams) GetExcludeUnused() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.ExcludeUnused
 }
 
 func (l *ListPlansParams) GetForFallbackPlan() *bool {
@@ -3313,10 +3416,12 @@ func (l *ListPlansParams) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListPlansParams) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
@@ -3338,6 +3443,13 @@ func (l *ListPlansParams) SetCompanyScopedOnly(companyScopedOnly *bool) {
 func (l *ListPlansParams) SetExcludeCompanyScoped(excludeCompanyScoped *bool) {
 	l.ExcludeCompanyScoped = excludeCompanyScoped
 	l.require(listPlansParamsFieldExcludeCompanyScoped)
+}
+
+// SetExcludeUnused sets the ExcludeUnused field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansParams) SetExcludeUnused(excludeUnused *bool) {
+	l.ExcludeUnused = excludeUnused
+	l.require(listPlansParamsFieldExcludeUnused)
 }
 
 // SetForFallbackPlan sets the ForFallbackPlan field and marks it as non-optional;
@@ -3519,10 +3631,12 @@ func (l *ListPlansResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (l *ListPlansResponse) require(field *big.Int) {
-	if l.explicitFields == nil {
-		l.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
 	}
-	l.explicitFields.Or(l.explicitFields, field)
+	next.Or(next, field)
+	l.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3620,10 +3734,12 @@ func (m *MarkCustomPlanBillingPaidResponse) GetExtraProperties() map[string]inte
 }
 
 func (m *MarkCustomPlanBillingPaidResponse) require(field *big.Int) {
-	if m.explicitFields == nil {
-		m.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
 	}
-	m.explicitFields.Or(m.explicitFields, field)
+	next.Or(next, field)
+	m.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3721,10 +3837,12 @@ func (p *PublishPlanVersionResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (p *PublishPlanVersionResponse) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3822,10 +3940,12 @@ func (r *RetryCustomPlanBillingResponse) GetExtraProperties() map[string]interfa
 }
 
 func (r *RetryCustomPlanBillingResponse) require(field *big.Int) {
-	if r.explicitFields == nil {
-		r.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
 	}
-	r.explicitFields.Or(r.explicitFields, field)
+	next.Or(next, field)
+	r.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -3923,10 +4043,12 @@ func (u *UpdateCompanyPlansResponse) GetExtraProperties() map[string]interface{}
 }
 
 func (u *UpdateCompanyPlansResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4024,10 +4146,12 @@ func (u *UpdatePlanResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (u *UpdatePlanResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4125,10 +4249,12 @@ func (u *UpsertBillingProductPlanResponse) GetExtraProperties() map[string]inter
 }
 
 func (u *UpsertBillingProductPlanResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4226,10 +4352,12 @@ func (u *UpsertPlanForBillingProductResponse) GetExtraProperties() map[string]in
 }
 
 func (u *UpsertPlanForBillingProductResponse) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;
@@ -4302,10 +4430,12 @@ type UpdateCompanyPlansRequestBody struct {
 }
 
 func (u *UpdateCompanyPlansRequestBody) require(field *big.Int) {
-	if u.explicitFields == nil {
-		u.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
 	}
-	u.explicitFields.Or(u.explicitFields, field)
+	next.Or(next, field)
+	u.explicitFields = next
 }
 
 // SetAddOnIDs sets the AddOnIDs field and marks it as non-optional;
@@ -4367,10 +4497,12 @@ type CreateBillingLinkedPlanRequestBody struct {
 }
 
 func (c *CreateBillingLinkedPlanRequestBody) require(field *big.Int) {
-	if c.explicitFields == nil {
-		c.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
 	}
-	c.explicitFields.Or(c.explicitFields, field)
+	next.Or(next, field)
+	c.explicitFields = next
 }
 
 // SetBillingProvider sets the BillingProvider field and marks it as non-optional;

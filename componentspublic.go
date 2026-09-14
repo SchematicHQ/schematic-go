@@ -391,10 +391,12 @@ func (p *PlanViewPublicResponseData) GetExtraProperties() map[string]interface{}
 }
 
 func (p *PlanViewPublicResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetActiveVersion sets the ActiveVersion field and marks it as non-optional;
@@ -832,10 +834,12 @@ func (p *PublicPlansResponseData) GetExtraProperties() map[string]interface{} {
 }
 
 func (p *PublicPlansResponseData) require(field *big.Int) {
-	if p.explicitFields == nil {
-		p.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
 	}
-	p.explicitFields.Or(p.explicitFields, field)
+	next.Or(next, field)
+	p.explicitFields = next
 }
 
 // SetActiveAddOns sets the ActiveAddOns field and marks it as non-optional;
@@ -982,10 +986,12 @@ func (g *GetPublicPlansResponse) GetExtraProperties() map[string]interface{} {
 }
 
 func (g *GetPublicPlansResponse) require(field *big.Int) {
-	if g.explicitFields == nil {
-		g.explicitFields = big.NewInt(0)
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
 	}
-	g.explicitFields.Or(g.explicitFields, field)
+	next.Or(next, field)
+	g.explicitFields = next
 }
 
 // SetData sets the Data field and marks it as non-optional;

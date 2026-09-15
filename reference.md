@@ -15545,6 +15545,12 @@ request := &schematichq.ListPlansRequest{
     WithEntitlements: schematichq.Bool(
         true,
     ),
+    WithPublishedVersion: schematichq.Bool(
+        true,
+    ),
+    WithoutEntitlementForIncludeDrafts: schematichq.Bool(
+        true,
+    ),
     WithoutEntitlementFor: schematichq.String(
         "without_entitlement_for",
     ),
@@ -15681,6 +15687,22 @@ client.Plans.ListPlans(
 <dd>
 
 **withEntitlements:** `*bool` — Include each plan's entitlements in the response
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withPublishedVersion:** `*bool` — Only return plans that have a published version
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withoutEntitlementForIncludeDrafts:** `*bool` — With without_entitlement_for, also treat an entitlement on a plan's draft version as existing
     
 </dd>
 </dl>
@@ -16293,6 +16315,12 @@ request := &schematichq.CountPlansRequest{
     WithEntitlements: schematichq.Bool(
         true,
     ),
+    WithPublishedVersion: schematichq.Bool(
+        true,
+    ),
+    WithoutEntitlementForIncludeDrafts: schematichq.Bool(
+        true,
+    ),
     WithoutEntitlementFor: schematichq.String(
         "without_entitlement_for",
     ),
@@ -16429,6 +16457,22 @@ client.Plans.CountPlans(
 <dd>
 
 **withEntitlements:** `*bool` — Include each plan's entitlements in the response
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withPublishedVersion:** `*bool` — Only return plans that have a published version
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**withoutEntitlementForIncludeDrafts:** `*bool` — With without_entitlement_for, also treat an entitlement on a plan's draft version as existing
     
 </dd>
 </dl>
@@ -22020,7 +22064,12 @@ client.Planmigrations.CountCompanyMigrations(
 
 ```go
 request := &schematichq.ListMigrationsRequest{
-    PlanVersionID: "plan_version_id",
+    FeatureID: schematichq.String(
+        "feature_id",
+    ),
+    PlanVersionID: schematichq.String(
+        "plan_version_id",
+    ),
     Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
@@ -22047,7 +22096,15 @@ client.Planmigrations.ListMigrations(
 <dl>
 <dd>
 
-**planVersionID:** `string` 
+**featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` 
     
 </dd>
 </dl>
@@ -22398,7 +22455,12 @@ client.Planmigrations.RetryMigration(
 
 ```go
 request := &schematichq.CountMigrationsRequest{
-    PlanVersionID: "plan_version_id",
+    FeatureID: schematichq.String(
+        "feature_id",
+    ),
+    PlanVersionID: schematichq.String(
+        "plan_version_id",
+    ),
     Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
@@ -22425,7 +22487,15 @@ client.Planmigrations.CountMigrations(
 <dl>
 <dd>
 
-**planVersionID:** `string` 
+**featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planVersionID:** `*string` 
     
 </dd>
 </dl>

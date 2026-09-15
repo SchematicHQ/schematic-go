@@ -235,6 +235,12 @@ func (c *Client) CreateCustomPlan(
 //	    WithEntitlements: schematichq.Bool(
 //	        true,
 //	    ),
+//	    WithPublishedVersion: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutEntitlementForIncludeDrafts: schematichq.Bool(
+//	        true,
+//	    ),
 //	    WithoutEntitlementFor: schematichq.String(
 //	        "without_entitlement_for",
 //	    ),
@@ -546,6 +552,12 @@ func (c *Client) CountBillingProductMatchCompanies(
 //	        "scoped_to_company_id",
 //	    ),
 //	    WithEntitlements: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithPublishedVersion: schematichq.Bool(
+//	        true,
+//	    ),
+//	    WithoutEntitlementForIncludeDrafts: schematichq.Bool(
 //	        true,
 //	    ),
 //	    WithoutEntitlementFor: schematichq.String(

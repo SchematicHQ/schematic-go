@@ -69,24 +69,26 @@ func (c *CountBillingProductMatchCompaniesRequest) SetOffset(offset *int64) {
 }
 
 var (
-	countPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
-	countPlansRequestFieldCompanyScopedOnly     = big.NewInt(1 << 1)
-	countPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	countPlansRequestFieldExcludeUnused         = big.NewInt(1 << 3)
-	countPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 4)
-	countPlansRequestFieldForInitialPlan        = big.NewInt(1 << 5)
-	countPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
-	countPlansRequestFieldHasProductID          = big.NewInt(1 << 7)
-	countPlansRequestFieldIDs                   = big.NewInt(1 << 8)
-	countPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 9)
-	countPlansRequestFieldPlanType              = big.NewInt(1 << 10)
-	countPlansRequestFieldQ                     = big.NewInt(1 << 11)
-	countPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 12)
-	countPlansRequestFieldWithEntitlements      = big.NewInt(1 << 13)
-	countPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 14)
-	countPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 15)
-	countPlansRequestFieldLimit                 = big.NewInt(1 << 16)
-	countPlansRequestFieldOffset                = big.NewInt(1 << 17)
+	countPlansRequestFieldCompanyID                          = big.NewInt(1 << 0)
+	countPlansRequestFieldCompanyScopedOnly                  = big.NewInt(1 << 1)
+	countPlansRequestFieldExcludeCompanyScoped               = big.NewInt(1 << 2)
+	countPlansRequestFieldExcludeUnused                      = big.NewInt(1 << 3)
+	countPlansRequestFieldForFallbackPlan                    = big.NewInt(1 << 4)
+	countPlansRequestFieldForInitialPlan                     = big.NewInt(1 << 5)
+	countPlansRequestFieldForTrialExpiryPlan                 = big.NewInt(1 << 6)
+	countPlansRequestFieldHasProductID                       = big.NewInt(1 << 7)
+	countPlansRequestFieldIDs                                = big.NewInt(1 << 8)
+	countPlansRequestFieldIncludeDraftVersions               = big.NewInt(1 << 9)
+	countPlansRequestFieldPlanType                           = big.NewInt(1 << 10)
+	countPlansRequestFieldQ                                  = big.NewInt(1 << 11)
+	countPlansRequestFieldScopedToCompanyID                  = big.NewInt(1 << 12)
+	countPlansRequestFieldWithEntitlements                   = big.NewInt(1 << 13)
+	countPlansRequestFieldWithPublishedVersion               = big.NewInt(1 << 14)
+	countPlansRequestFieldWithoutEntitlementForIncludeDrafts = big.NewInt(1 << 15)
+	countPlansRequestFieldWithoutEntitlementFor              = big.NewInt(1 << 16)
+	countPlansRequestFieldWithoutPaidProductID               = big.NewInt(1 << 17)
+	countPlansRequestFieldLimit                              = big.NewInt(1 << 18)
+	countPlansRequestFieldOffset                             = big.NewInt(1 << 19)
 )
 
 type CountPlansRequest struct {
@@ -115,6 +117,10 @@ type CountPlansRequest struct {
 	ScopedToCompanyID *string `json:"-" url:"scoped_to_company_id,omitempty"`
 	// Include each plan's entitlements in the response
 	WithEntitlements *bool `json:"-" url:"with_entitlements,omitempty"`
+	// Only return plans that have a published version
+	WithPublishedVersion *bool `json:"-" url:"with_published_version,omitempty"`
+	// With without_entitlement_for, also treat an entitlement on a plan's draft version as existing
+	WithoutEntitlementForIncludeDrafts *bool `json:"-" url:"without_entitlement_for_include_drafts,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -233,6 +239,20 @@ func (c *CountPlansRequest) SetScopedToCompanyID(scopedToCompanyID *string) {
 func (c *CountPlansRequest) SetWithEntitlements(withEntitlements *bool) {
 	c.WithEntitlements = withEntitlements
 	c.require(countPlansRequestFieldWithEntitlements)
+}
+
+// SetWithPublishedVersion sets the WithPublishedVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansRequest) SetWithPublishedVersion(withPublishedVersion *bool) {
+	c.WithPublishedVersion = withPublishedVersion
+	c.require(countPlansRequestFieldWithPublishedVersion)
+}
+
+// SetWithoutEntitlementForIncludeDrafts sets the WithoutEntitlementForIncludeDrafts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansRequest) SetWithoutEntitlementForIncludeDrafts(withoutEntitlementForIncludeDrafts *bool) {
+	c.WithoutEntitlementForIncludeDrafts = withoutEntitlementForIncludeDrafts
+	c.require(countPlansRequestFieldWithoutEntitlementForIncludeDrafts)
 }
 
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
@@ -594,24 +614,26 @@ func (l *ListPlanIssuesRequest) SetPlanVersionID(planVersionID *string) {
 }
 
 var (
-	listPlansRequestFieldCompanyID             = big.NewInt(1 << 0)
-	listPlansRequestFieldCompanyScopedOnly     = big.NewInt(1 << 1)
-	listPlansRequestFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	listPlansRequestFieldExcludeUnused         = big.NewInt(1 << 3)
-	listPlansRequestFieldForFallbackPlan       = big.NewInt(1 << 4)
-	listPlansRequestFieldForInitialPlan        = big.NewInt(1 << 5)
-	listPlansRequestFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
-	listPlansRequestFieldHasProductID          = big.NewInt(1 << 7)
-	listPlansRequestFieldIDs                   = big.NewInt(1 << 8)
-	listPlansRequestFieldIncludeDraftVersions  = big.NewInt(1 << 9)
-	listPlansRequestFieldPlanType              = big.NewInt(1 << 10)
-	listPlansRequestFieldQ                     = big.NewInt(1 << 11)
-	listPlansRequestFieldScopedToCompanyID     = big.NewInt(1 << 12)
-	listPlansRequestFieldWithEntitlements      = big.NewInt(1 << 13)
-	listPlansRequestFieldWithoutEntitlementFor = big.NewInt(1 << 14)
-	listPlansRequestFieldWithoutPaidProductID  = big.NewInt(1 << 15)
-	listPlansRequestFieldLimit                 = big.NewInt(1 << 16)
-	listPlansRequestFieldOffset                = big.NewInt(1 << 17)
+	listPlansRequestFieldCompanyID                          = big.NewInt(1 << 0)
+	listPlansRequestFieldCompanyScopedOnly                  = big.NewInt(1 << 1)
+	listPlansRequestFieldExcludeCompanyScoped               = big.NewInt(1 << 2)
+	listPlansRequestFieldExcludeUnused                      = big.NewInt(1 << 3)
+	listPlansRequestFieldForFallbackPlan                    = big.NewInt(1 << 4)
+	listPlansRequestFieldForInitialPlan                     = big.NewInt(1 << 5)
+	listPlansRequestFieldForTrialExpiryPlan                 = big.NewInt(1 << 6)
+	listPlansRequestFieldHasProductID                       = big.NewInt(1 << 7)
+	listPlansRequestFieldIDs                                = big.NewInt(1 << 8)
+	listPlansRequestFieldIncludeDraftVersions               = big.NewInt(1 << 9)
+	listPlansRequestFieldPlanType                           = big.NewInt(1 << 10)
+	listPlansRequestFieldQ                                  = big.NewInt(1 << 11)
+	listPlansRequestFieldScopedToCompanyID                  = big.NewInt(1 << 12)
+	listPlansRequestFieldWithEntitlements                   = big.NewInt(1 << 13)
+	listPlansRequestFieldWithPublishedVersion               = big.NewInt(1 << 14)
+	listPlansRequestFieldWithoutEntitlementForIncludeDrafts = big.NewInt(1 << 15)
+	listPlansRequestFieldWithoutEntitlementFor              = big.NewInt(1 << 16)
+	listPlansRequestFieldWithoutPaidProductID               = big.NewInt(1 << 17)
+	listPlansRequestFieldLimit                              = big.NewInt(1 << 18)
+	listPlansRequestFieldOffset                             = big.NewInt(1 << 19)
 )
 
 type ListPlansRequest struct {
@@ -640,6 +662,10 @@ type ListPlansRequest struct {
 	ScopedToCompanyID *string `json:"-" url:"scoped_to_company_id,omitempty"`
 	// Include each plan's entitlements in the response
 	WithEntitlements *bool `json:"-" url:"with_entitlements,omitempty"`
+	// Only return plans that have a published version
+	WithPublishedVersion *bool `json:"-" url:"with_published_version,omitempty"`
+	// With without_entitlement_for, also treat an entitlement on a plan's draft version as existing
+	WithoutEntitlementForIncludeDrafts *bool `json:"-" url:"without_entitlement_for_include_drafts,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"-" url:"without_entitlement_for,omitempty"`
 	// Filter out plans that have a paid billing product ID
@@ -758,6 +784,20 @@ func (l *ListPlansRequest) SetScopedToCompanyID(scopedToCompanyID *string) {
 func (l *ListPlansRequest) SetWithEntitlements(withEntitlements *bool) {
 	l.WithEntitlements = withEntitlements
 	l.require(listPlansRequestFieldWithEntitlements)
+}
+
+// SetWithPublishedVersion sets the WithPublishedVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansRequest) SetWithPublishedVersion(withPublishedVersion *bool) {
+	l.WithPublishedVersion = withPublishedVersion
+	l.require(listPlansRequestFieldWithPublishedVersion)
+}
+
+// SetWithoutEntitlementForIncludeDrafts sets the WithoutEntitlementForIncludeDrafts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansRequest) SetWithoutEntitlementForIncludeDrafts(withoutEntitlementForIncludeDrafts *bool) {
+	l.WithoutEntitlementForIncludeDrafts = withoutEntitlementForIncludeDrafts
+	l.require(listPlansRequestFieldWithoutEntitlementForIncludeDrafts)
 }
 
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
@@ -1312,24 +1352,26 @@ func (c *CountBillingProductMatchCompaniesResponse) String() string {
 
 // Input parameters
 var (
-	countPlansParamsFieldCompanyID             = big.NewInt(1 << 0)
-	countPlansParamsFieldCompanyScopedOnly     = big.NewInt(1 << 1)
-	countPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	countPlansParamsFieldExcludeUnused         = big.NewInt(1 << 3)
-	countPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 4)
-	countPlansParamsFieldForInitialPlan        = big.NewInt(1 << 5)
-	countPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
-	countPlansParamsFieldHasProductID          = big.NewInt(1 << 7)
-	countPlansParamsFieldIDs                   = big.NewInt(1 << 8)
-	countPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 9)
-	countPlansParamsFieldLimit                 = big.NewInt(1 << 10)
-	countPlansParamsFieldOffset                = big.NewInt(1 << 11)
-	countPlansParamsFieldPlanType              = big.NewInt(1 << 12)
-	countPlansParamsFieldQ                     = big.NewInt(1 << 13)
-	countPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 14)
-	countPlansParamsFieldWithEntitlements      = big.NewInt(1 << 15)
-	countPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 16)
-	countPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 17)
+	countPlansParamsFieldCompanyID                          = big.NewInt(1 << 0)
+	countPlansParamsFieldCompanyScopedOnly                  = big.NewInt(1 << 1)
+	countPlansParamsFieldExcludeCompanyScoped               = big.NewInt(1 << 2)
+	countPlansParamsFieldExcludeUnused                      = big.NewInt(1 << 3)
+	countPlansParamsFieldForFallbackPlan                    = big.NewInt(1 << 4)
+	countPlansParamsFieldForInitialPlan                     = big.NewInt(1 << 5)
+	countPlansParamsFieldForTrialExpiryPlan                 = big.NewInt(1 << 6)
+	countPlansParamsFieldHasProductID                       = big.NewInt(1 << 7)
+	countPlansParamsFieldIDs                                = big.NewInt(1 << 8)
+	countPlansParamsFieldIncludeDraftVersions               = big.NewInt(1 << 9)
+	countPlansParamsFieldLimit                              = big.NewInt(1 << 10)
+	countPlansParamsFieldOffset                             = big.NewInt(1 << 11)
+	countPlansParamsFieldPlanType                           = big.NewInt(1 << 12)
+	countPlansParamsFieldQ                                  = big.NewInt(1 << 13)
+	countPlansParamsFieldScopedToCompanyID                  = big.NewInt(1 << 14)
+	countPlansParamsFieldWithEntitlements                   = big.NewInt(1 << 15)
+	countPlansParamsFieldWithPublishedVersion               = big.NewInt(1 << 16)
+	countPlansParamsFieldWithoutEntitlementFor              = big.NewInt(1 << 17)
+	countPlansParamsFieldWithoutEntitlementForIncludeDrafts = big.NewInt(1 << 18)
+	countPlansParamsFieldWithoutPaidProductID               = big.NewInt(1 << 19)
 )
 
 type CountPlansParams struct {
@@ -1362,8 +1404,12 @@ type CountPlansParams struct {
 	ScopedToCompanyID *string `json:"scoped_to_company_id,omitempty" url:"scoped_to_company_id,omitempty"`
 	// Include each plan's entitlements in the response
 	WithEntitlements *bool `json:"with_entitlements,omitempty" url:"with_entitlements,omitempty"`
+	// Only return plans that have a published version
+	WithPublishedVersion *bool `json:"with_published_version,omitempty" url:"with_published_version,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
+	// With without_entitlement_for, also treat an entitlement on a plan's draft version as existing
+	WithoutEntitlementForIncludeDrafts *bool `json:"without_entitlement_for_include_drafts,omitempty" url:"without_entitlement_for_include_drafts,omitempty"`
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"without_paid_product_id,omitempty" url:"without_paid_product_id,omitempty"`
 
@@ -1486,11 +1532,25 @@ func (c *CountPlansParams) GetWithEntitlements() *bool {
 	return c.WithEntitlements
 }
 
+func (c *CountPlansParams) GetWithPublishedVersion() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithPublishedVersion
+}
+
 func (c *CountPlansParams) GetWithoutEntitlementFor() *string {
 	if c == nil {
 		return nil
 	}
 	return c.WithoutEntitlementFor
+}
+
+func (c *CountPlansParams) GetWithoutEntitlementForIncludeDrafts() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.WithoutEntitlementForIncludeDrafts
 }
 
 func (c *CountPlansParams) GetWithoutPaidProductID() *bool {
@@ -1628,11 +1688,25 @@ func (c *CountPlansParams) SetWithEntitlements(withEntitlements *bool) {
 	c.require(countPlansParamsFieldWithEntitlements)
 }
 
+// SetWithPublishedVersion sets the WithPublishedVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansParams) SetWithPublishedVersion(withPublishedVersion *bool) {
+	c.WithPublishedVersion = withPublishedVersion
+	c.require(countPlansParamsFieldWithPublishedVersion)
+}
+
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CountPlansParams) SetWithoutEntitlementFor(withoutEntitlementFor *string) {
 	c.WithoutEntitlementFor = withoutEntitlementFor
 	c.require(countPlansParamsFieldWithoutEntitlementFor)
+}
+
+// SetWithoutEntitlementForIncludeDrafts sets the WithoutEntitlementForIncludeDrafts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountPlansParams) SetWithoutEntitlementForIncludeDrafts(withoutEntitlementForIncludeDrafts *bool) {
+	c.WithoutEntitlementForIncludeDrafts = withoutEntitlementForIncludeDrafts
+	c.require(countPlansParamsFieldWithoutEntitlementForIncludeDrafts)
 }
 
 // SetWithoutPaidProductID sets the WithoutPaidProductID field and marks it as non-optional;
@@ -3220,24 +3294,26 @@ func (l *ListPlanIssuesResponse) String() string {
 
 // Input parameters
 var (
-	listPlansParamsFieldCompanyID             = big.NewInt(1 << 0)
-	listPlansParamsFieldCompanyScopedOnly     = big.NewInt(1 << 1)
-	listPlansParamsFieldExcludeCompanyScoped  = big.NewInt(1 << 2)
-	listPlansParamsFieldExcludeUnused         = big.NewInt(1 << 3)
-	listPlansParamsFieldForFallbackPlan       = big.NewInt(1 << 4)
-	listPlansParamsFieldForInitialPlan        = big.NewInt(1 << 5)
-	listPlansParamsFieldForTrialExpiryPlan    = big.NewInt(1 << 6)
-	listPlansParamsFieldHasProductID          = big.NewInt(1 << 7)
-	listPlansParamsFieldIDs                   = big.NewInt(1 << 8)
-	listPlansParamsFieldIncludeDraftVersions  = big.NewInt(1 << 9)
-	listPlansParamsFieldLimit                 = big.NewInt(1 << 10)
-	listPlansParamsFieldOffset                = big.NewInt(1 << 11)
-	listPlansParamsFieldPlanType              = big.NewInt(1 << 12)
-	listPlansParamsFieldQ                     = big.NewInt(1 << 13)
-	listPlansParamsFieldScopedToCompanyID     = big.NewInt(1 << 14)
-	listPlansParamsFieldWithEntitlements      = big.NewInt(1 << 15)
-	listPlansParamsFieldWithoutEntitlementFor = big.NewInt(1 << 16)
-	listPlansParamsFieldWithoutPaidProductID  = big.NewInt(1 << 17)
+	listPlansParamsFieldCompanyID                          = big.NewInt(1 << 0)
+	listPlansParamsFieldCompanyScopedOnly                  = big.NewInt(1 << 1)
+	listPlansParamsFieldExcludeCompanyScoped               = big.NewInt(1 << 2)
+	listPlansParamsFieldExcludeUnused                      = big.NewInt(1 << 3)
+	listPlansParamsFieldForFallbackPlan                    = big.NewInt(1 << 4)
+	listPlansParamsFieldForInitialPlan                     = big.NewInt(1 << 5)
+	listPlansParamsFieldForTrialExpiryPlan                 = big.NewInt(1 << 6)
+	listPlansParamsFieldHasProductID                       = big.NewInt(1 << 7)
+	listPlansParamsFieldIDs                                = big.NewInt(1 << 8)
+	listPlansParamsFieldIncludeDraftVersions               = big.NewInt(1 << 9)
+	listPlansParamsFieldLimit                              = big.NewInt(1 << 10)
+	listPlansParamsFieldOffset                             = big.NewInt(1 << 11)
+	listPlansParamsFieldPlanType                           = big.NewInt(1 << 12)
+	listPlansParamsFieldQ                                  = big.NewInt(1 << 13)
+	listPlansParamsFieldScopedToCompanyID                  = big.NewInt(1 << 14)
+	listPlansParamsFieldWithEntitlements                   = big.NewInt(1 << 15)
+	listPlansParamsFieldWithPublishedVersion               = big.NewInt(1 << 16)
+	listPlansParamsFieldWithoutEntitlementFor              = big.NewInt(1 << 17)
+	listPlansParamsFieldWithoutEntitlementForIncludeDrafts = big.NewInt(1 << 18)
+	listPlansParamsFieldWithoutPaidProductID               = big.NewInt(1 << 19)
 )
 
 type ListPlansParams struct {
@@ -3270,8 +3346,12 @@ type ListPlansParams struct {
 	ScopedToCompanyID *string `json:"scoped_to_company_id,omitempty" url:"scoped_to_company_id,omitempty"`
 	// Include each plan's entitlements in the response
 	WithEntitlements *bool `json:"with_entitlements,omitempty" url:"with_entitlements,omitempty"`
+	// Only return plans that have a published version
+	WithPublishedVersion *bool `json:"with_published_version,omitempty" url:"with_published_version,omitempty"`
 	// Filter out plans that already have a plan entitlement for the specified feature ID
 	WithoutEntitlementFor *string `json:"without_entitlement_for,omitempty" url:"without_entitlement_for,omitempty"`
+	// With without_entitlement_for, also treat an entitlement on a plan's draft version as existing
+	WithoutEntitlementForIncludeDrafts *bool `json:"without_entitlement_for_include_drafts,omitempty" url:"without_entitlement_for_include_drafts,omitempty"`
 	// Filter out plans that have a paid billing product ID
 	WithoutPaidProductID *bool `json:"without_paid_product_id,omitempty" url:"without_paid_product_id,omitempty"`
 
@@ -3394,11 +3474,25 @@ func (l *ListPlansParams) GetWithEntitlements() *bool {
 	return l.WithEntitlements
 }
 
+func (l *ListPlansParams) GetWithPublishedVersion() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithPublishedVersion
+}
+
 func (l *ListPlansParams) GetWithoutEntitlementFor() *string {
 	if l == nil {
 		return nil
 	}
 	return l.WithoutEntitlementFor
+}
+
+func (l *ListPlansParams) GetWithoutEntitlementForIncludeDrafts() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.WithoutEntitlementForIncludeDrafts
 }
 
 func (l *ListPlansParams) GetWithoutPaidProductID() *bool {
@@ -3536,11 +3630,25 @@ func (l *ListPlansParams) SetWithEntitlements(withEntitlements *bool) {
 	l.require(listPlansParamsFieldWithEntitlements)
 }
 
+// SetWithPublishedVersion sets the WithPublishedVersion field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansParams) SetWithPublishedVersion(withPublishedVersion *bool) {
+	l.WithPublishedVersion = withPublishedVersion
+	l.require(listPlansParamsFieldWithPublishedVersion)
+}
+
 // SetWithoutEntitlementFor sets the WithoutEntitlementFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListPlansParams) SetWithoutEntitlementFor(withoutEntitlementFor *string) {
 	l.WithoutEntitlementFor = withoutEntitlementFor
 	l.require(listPlansParamsFieldWithoutEntitlementFor)
+}
+
+// SetWithoutEntitlementForIncludeDrafts sets the WithoutEntitlementForIncludeDrafts field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListPlansParams) SetWithoutEntitlementForIncludeDrafts(withoutEntitlementForIncludeDrafts *bool) {
+	l.WithoutEntitlementForIncludeDrafts = withoutEntitlementForIncludeDrafts
+	l.require(listPlansParamsFieldWithoutEntitlementForIncludeDrafts)
 }
 
 // SetWithoutPaidProductID sets the WithoutPaidProductID field and marks it as non-optional;

@@ -18,6 +18,7 @@ import (
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/schematichq/schematic-go/rulesengine"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewSchematicClient(t *testing.T) {
@@ -259,7 +260,10 @@ func TestTrackEventWithOptions(t *testing.T) {
 		&schematicgo.EventBodyIdentify{Keys: map[string]string{"foo": "bar"}},
 		schematicclient.WithIdentifyIdempotencyKey("dedupe-2"),
 	)
-	time.Sleep(30 * time.Millisecond)
+	// Flush synchronously rather than sleeping: Flush returns only once the
+	// batch has been sent, which also establishes the happens-before edge for
+	// reading `captured` here.
+	require.NoError(t, client.Flush(ctx))
 
 	// Decode and inspect each event in the batch.
 	var batch struct {

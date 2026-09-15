@@ -164,6 +164,10 @@ func main() {
 
 This call is non-blocking and there is no response to check.
 
+Events are buffered and sent in batches, so a tracked event is not delivered
+the moment `Track` returns. See [Flushing events](#flushing-events) for how to
+make sure they land.
+
 If you want to record large numbers of the same event at once, or perhaps measure usage in terms of a unit like tokens or memory, you can optionally specify a quantity for your event:
 
 ```go
@@ -194,6 +198,52 @@ func main() {
   })
 }
 ```
+
+### Flushing events
+
+Identify and track events are buffered and sent in batches. `Close` flushes
+whatever is still buffered and blocks until the send has completed, so
+`defer client.Close()` is enough to keep events recorded just before shutdown
+from being lost:
+
+```go
+client := schematicclient.NewSchematicClient(option.WithAPIKey(apiKey))
+defer client.Close()
+```
+
+The wait is bounded, so a slow or unreachable endpoint delays shutdown but
+cannot hang it. The default budget is 10 seconds; lower it if your process has
+a short termination grace period:
+
+```go
+client := schematicclient.NewSchematicClient(
+  option.WithAPIKey(apiKey),
+  option.WithShutdownTimeout(3*time.Second),
+)
+defer client.Close()
+```
+
+When a specific event must be durable before your code proceeds -- redeeming a
+credit lease, say, where a lost event means the work never gets billed -- use
+`Flush` instead of shutting the client down. It returns only once the buffered
+events have been accepted by Schematic, and returns an error if they were not:
+
+```go
+client.Track(ctx, &schematicgo.EventBodyTrack{
+  Event: "credit-lease-redeemed",
+  Company: map[string]string{
+    "id": "your-company-id",
+  },
+})
+
+if err := client.Flush(ctx); err != nil {
+  // The event did not land; retry or record it elsewhere.
+  return err
+}
+```
+
+The context bounds the send itself, retries included. `Flush` returns
+`client.ErrClientClosed` if the client has already been closed.
 
 ### Creating and updating companies
 

@@ -75,6 +75,61 @@ func TestPartialCompany_CreditBalances_NilExistingMap(t *testing.T) {
 	assert.Equal(t, map[string]float64{"credit-1": 42.5}, merged.CreditBalances)
 }
 
+func TestPartialCompany_CreditPostpaid_ReplacesMap(t *testing.T) {
+	existing := baseCompany()
+	limit := 100.0
+	existing.CreditPostpaid = rulesengine.CreditPostpaidMap{
+		"credit-1": {OverdraftLimit: &limit},
+		"credit-2": {},
+	}
+	partial := json.RawMessage(`{"credit_postpaid":{"credit-2":{"overdraft_limit":25}}}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	// credit-1 is absent from the partial, so it is off.
+	require.Len(t, merged.CreditPostpaid, 1)
+	require.NotNil(t, merged.CreditPostpaid["credit-2"].OverdraftLimit)
+	assert.Equal(t, 25.0, *merged.CreditPostpaid["credit-2"].OverdraftLimit)
+
+	// Original not mutated.
+	require.Len(t, existing.CreditPostpaid, 2)
+	assert.Nil(t, existing.CreditPostpaid["credit-2"].OverdraftLimit)
+}
+
+func TestPartialCompany_CreditPostpaid_NullEntryIsOff(t *testing.T) {
+	existing := baseCompany()
+	existing.CreditPostpaid = rulesengine.CreditPostpaidMap{"credit-1": {}}
+	partial := json.RawMessage(`{"credit_postpaid":{"credit-1":null,"credit-2":{}}}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	assert.Equal(t, rulesengine.CreditPostpaidMap{"credit-2": {}}, merged.CreditPostpaid)
+}
+
+func TestPartialCompany_CreditPostpaid_NullClearsMap(t *testing.T) {
+	existing := baseCompany()
+	existing.CreditPostpaid = rulesengine.CreditPostpaidMap{"credit-1": {}}
+	partial := json.RawMessage(`{"credit_postpaid":null}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	assert.Empty(t, merged.CreditPostpaid)
+}
+
+func TestPartialCompany_CreditPostpaid_KeptWhenAbsentFromPartial(t *testing.T) {
+	existing := baseCompany()
+	existing.CreditPostpaid = rulesengine.CreditPostpaidMap{"credit-1": {}}
+	partial := json.RawMessage(`{"credit_balances":{"credit-1":-5.0}}`)
+
+	merged, err := PartialCompany(existing, partial)
+	require.NoError(t, err)
+
+	assert.Equal(t, rulesengine.CreditPostpaidMap{"credit-1": {}}, merged.CreditPostpaid)
+}
+
 func TestPartialCompany_UpsertsMetric(t *testing.T) {
 	existing := baseCompany()
 	existing.Metrics = rulesengine.CompanyMetricCollection{
@@ -626,6 +681,33 @@ func TestPartialUser_MultipleFieldsInOnePayload(t *testing.T) {
 
 func TestDeepCopyCompany_Nil(t *testing.T) {
 	assert.Nil(t, DeepCopyCompany(nil))
+}
+
+func TestDeepCopyCompany_CreditPostpaid(t *testing.T) {
+	limit := 100.0
+	orig := baseCompany()
+	orig.CreditPostpaid = rulesengine.CreditPostpaidMap{
+		"credit-1": {OverdraftLimit: &limit},
+		"credit-2": {},
+	}
+
+	cp := DeepCopyCompany(orig)
+	assert.Equal(t, orig.CreditPostpaid, cp.CreditPostpaid)
+
+	// The limit pointer is copied, not shared.
+	*cp.CreditPostpaid["credit-1"].OverdraftLimit = 5
+	assert.Equal(t, 100.0, *orig.CreditPostpaid["credit-1"].OverdraftLimit)
+
+	// The map is independent.
+	delete(cp.CreditPostpaid, "credit-2")
+	cp.CreditPostpaid["credit-3"] = rulesengine.CreditPostpaidConfig{}
+	assert.Len(t, orig.CreditPostpaid, 2)
+	assert.Contains(t, orig.CreditPostpaid, "credit-2")
+	assert.NotContains(t, orig.CreditPostpaid, "credit-3")
+
+	// A nil map stays nil, so the company still omits the field.
+	orig.CreditPostpaid = nil
+	assert.Nil(t, DeepCopyCompany(orig).CreditPostpaid)
 }
 
 func TestDeepCopyCompany_FullCopy(t *testing.T) {

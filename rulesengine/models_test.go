@@ -28,11 +28,66 @@ func TestEnvelopeHasNoNulls(t *testing.T) {
 	for _, frag := range []string{
 		`"rules":null`, `"traits":null`, `"metrics":null`, `"keys":null`,
 		`"billing_product_ids":null`, `"plan_ids":null`, `"plan_version_ids":null`,
-		`"credit_balances":null`, `"entitlements":null`,
+		`"credit_balances":null`, `"credit_postpaid":null`, `"entitlements":null`,
 	} {
 		if strings.Contains(string(raw), frag) {
 			t.Errorf("collection serialized as null: %s", frag)
 		}
+	}
+}
+
+// TestCompanyCreditPostpaidRoundTrip pins the credit_postpaid wire shape the
+// engine reads. A null entry means postpaid off, so decoding must drop it:
+// kept as a zero config, it would re-marshal as {} and the engine would read
+// that as postpaid on with no limit.
+func TestCompanyCreditPostpaidRoundTrip(t *testing.T) {
+	const payload = `{"id":"comp-1","account_id":"a","environment_id":"e","credit_postpaid":{` +
+		`"limited":{"overdraft_limit":100},"unlimited":{},"off":null}}`
+
+	var c Company
+	if err := json.Unmarshal([]byte(payload), &c); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(c.CreditPostpaid); got != 2 {
+		t.Fatalf("want 2 postpaid credits, got %d: %v", got, c.CreditPostpaid)
+	}
+	if _, ok := c.CreditPostpaid["off"]; ok {
+		t.Error("null entry should decode as absent (postpaid off)")
+	}
+	if limited, ok := c.CreditPostpaid["limited"]; !ok || limited.OverdraftLimit == nil || *limited.OverdraftLimit != 100 {
+		t.Errorf("limited = %+v, want overdraft_limit 100", limited)
+	}
+	if unlimited, ok := c.CreditPostpaid["unlimited"]; !ok || unlimited.OverdraftLimit != nil {
+		t.Errorf("unlimited = %+v (present %v), want present with no limit", unlimited, ok)
+	}
+
+	out, err := json.Marshal(&c)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var wire struct {
+		CreditPostpaid map[string]json.RawMessage `json:"credit_postpaid"`
+	}
+	if err := json.Unmarshal(out, &wire); err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]string{"limited": `{"overdraft_limit":100}`, "unlimited": `{}`}
+	if len(wire.CreditPostpaid) != len(want) {
+		t.Fatalf("re-marshaled credit_postpaid = %s", out)
+	}
+	for creditID, entry := range want {
+		if got := string(wire.CreditPostpaid[creditID]); got != entry {
+			t.Errorf("credit_postpaid[%q] = %s, want %s", creditID, got, entry)
+		}
+	}
+
+	// A company without postpaid omits the field, which the engine reads as off.
+	out, err = json.Marshal(&Company{ID: "comp-2"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(out), "credit_postpaid") {
+		t.Errorf("empty credit_postpaid should be omitted: %s", out)
 	}
 }
 

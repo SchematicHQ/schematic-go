@@ -11,8 +11,8 @@ import (
 // PartialCompany merges a partial JSON update into an existing Company and
 // returns the result. The original is not mutated. Each key in partialJSON
 // names a Company JSON field; the SDK dispatches per-field merge semantics:
-// maps shallow-merge, keyed collections upsert by their natural key, and
-// scalar fields replace.
+// maps shallow-merge (except credit_postpaid, which replaces), keyed
+// collections upsert by their natural key, and scalar fields replace.
 //
 // Partials don't carry refreshed entitlements, so when credit_balances or
 // metrics change without an accompanying entitlements field, we re-derive
@@ -66,6 +66,17 @@ func PartialCompany(existing *rulesengine.Company, partialJSON json.RawMessage) 
 			}
 			maps.Copy(merged.CreditBalances, cb)
 			creditBalanceUpdates = cb
+		case "credit_postpaid":
+			// Replace rather than merge per key. The API builds this map whole
+			// from the company's postpaid-enabled grants, so a partial carries the
+			// full current map. A per-key merge also could not turn a credit off:
+			// a null entry decodes to nothing, which would leave the cached entry
+			// on. Replacing fails closed for any credit the partial leaves out.
+			var postpaid rulesengine.CreditPostpaidMap
+			if err := json.Unmarshal(raw, &postpaid); err != nil {
+				return nil, fmt.Errorf("unmarshal field %q: %w", key, err)
+			}
+			merged.CreditPostpaid = postpaid
 		case "entitlements":
 			var ents []*rulesengine.FeatureEntitlement
 			if err := json.Unmarshal(raw, &ents); err != nil {
@@ -270,6 +281,17 @@ func DeepCopyCompany(c *rulesengine.Company) *rulesengine.Company {
 	if c.CreditBalances != nil {
 		cp.CreditBalances = make(map[string]float64, len(c.CreditBalances))
 		maps.Copy(cp.CreditBalances, c.CreditBalances)
+	}
+
+	if c.CreditPostpaid != nil {
+		cp.CreditPostpaid = make(rulesengine.CreditPostpaidMap, len(c.CreditPostpaid))
+		for creditID, postpaid := range c.CreditPostpaid {
+			if postpaid.OverdraftLimit != nil {
+				limit := *postpaid.OverdraftLimit
+				postpaid.OverdraftLimit = &limit
+			}
+			cp.CreditPostpaid[creditID] = postpaid
+		}
 	}
 
 	maps.Copy(cp.Keys, c.Keys)

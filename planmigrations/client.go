@@ -130,7 +130,12 @@ func (c *Client) CountCompanyMigrations(
 // Example:
 //
 //	request := &schematichq.ListMigrationsRequest{
-//	    PlanVersionID: "plan_version_id",
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
 //	    Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
@@ -294,7 +299,12 @@ func (c *Client) RetryMigration(
 // Example:
 //
 //	request := &schematichq.CountMigrationsRequest{
-//	    PlanVersionID: "plan_version_id",
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
 //	    Status: schematichq.PlanVersionMigrationStatusCancelled.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),

@@ -124,14 +124,16 @@ func (c *CountCompanyMigrationsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	countMigrationsRequestFieldPlanVersionID = big.NewInt(1 << 0)
-	countMigrationsRequestFieldStatus        = big.NewInt(1 << 1)
-	countMigrationsRequestFieldLimit         = big.NewInt(1 << 2)
-	countMigrationsRequestFieldOffset        = big.NewInt(1 << 3)
+	countMigrationsRequestFieldFeatureID     = big.NewInt(1 << 0)
+	countMigrationsRequestFieldPlanVersionID = big.NewInt(1 << 1)
+	countMigrationsRequestFieldStatus        = big.NewInt(1 << 2)
+	countMigrationsRequestFieldLimit         = big.NewInt(1 << 3)
+	countMigrationsRequestFieldOffset        = big.NewInt(1 << 4)
 )
 
 type CountMigrationsRequest struct {
-	PlanVersionID string                      `json:"-" url:"plan_version_id"`
+	FeatureID     *string                     `json:"-" url:"feature_id,omitempty"`
+	PlanVersionID *string                     `json:"-" url:"plan_version_id,omitempty"`
 	Status        *PlanVersionMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
@@ -151,9 +153,16 @@ func (c *CountMigrationsRequest) require(field *big.Int) {
 	c.explicitFields = next
 }
 
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountMigrationsRequest) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(countMigrationsRequestFieldFeatureID)
+}
+
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CountMigrationsRequest) SetPlanVersionID(planVersionID string) {
+func (c *CountMigrationsRequest) SetPlanVersionID(planVersionID *string) {
 	c.PlanVersionID = planVersionID
 	c.require(countMigrationsRequestFieldPlanVersionID)
 }
@@ -356,14 +365,16 @@ func (l *ListCompanyMigrationsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	listMigrationsRequestFieldPlanVersionID = big.NewInt(1 << 0)
-	listMigrationsRequestFieldStatus        = big.NewInt(1 << 1)
-	listMigrationsRequestFieldLimit         = big.NewInt(1 << 2)
-	listMigrationsRequestFieldOffset        = big.NewInt(1 << 3)
+	listMigrationsRequestFieldFeatureID     = big.NewInt(1 << 0)
+	listMigrationsRequestFieldPlanVersionID = big.NewInt(1 << 1)
+	listMigrationsRequestFieldStatus        = big.NewInt(1 << 2)
+	listMigrationsRequestFieldLimit         = big.NewInt(1 << 3)
+	listMigrationsRequestFieldOffset        = big.NewInt(1 << 4)
 )
 
 type ListMigrationsRequest struct {
-	PlanVersionID string                      `json:"-" url:"plan_version_id"`
+	FeatureID     *string                     `json:"-" url:"feature_id,omitempty"`
+	PlanVersionID *string                     `json:"-" url:"plan_version_id,omitempty"`
 	Status        *PlanVersionMigrationStatus `json:"-" url:"status,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
@@ -383,9 +394,16 @@ func (l *ListMigrationsRequest) require(field *big.Int) {
 	l.explicitFields = next
 }
 
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListMigrationsRequest) SetFeatureID(featureID *string) {
+	l.FeatureID = featureID
+	l.require(listMigrationsRequestFieldFeatureID)
+}
+
 // SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (l *ListMigrationsRequest) SetPlanVersionID(planVersionID string) {
+func (l *ListMigrationsRequest) SetPlanVersionID(planVersionID *string) {
 	l.PlanVersionID = planVersionID
 	l.require(listMigrationsRequestFieldPlanVersionID)
 }
@@ -1217,45 +1235,49 @@ func (p *PlanVersionMigrationPreviewResponseData) String() string {
 }
 
 var (
-	planVersionMigrationResponseDataFieldCompletedAt        = big.NewInt(1 << 0)
-	planVersionMigrationResponseDataFieldCompletedCompanies = big.NewInt(1 << 1)
-	planVersionMigrationResponseDataFieldCreatedAt          = big.NewInt(1 << 2)
-	planVersionMigrationResponseDataFieldError              = big.NewInt(1 << 3)
-	planVersionMigrationResponseDataFieldFailedCompanies    = big.NewInt(1 << 4)
-	planVersionMigrationResponseDataFieldID                 = big.NewInt(1 << 5)
-	planVersionMigrationResponseDataFieldNextDueAt          = big.NewInt(1 << 6)
-	planVersionMigrationResponseDataFieldPlanID             = big.NewInt(1 << 7)
-	planVersionMigrationResponseDataFieldPlanVersionIDFrom  = big.NewInt(1 << 8)
-	planVersionMigrationResponseDataFieldPlanVersionIDTo    = big.NewInt(1 << 9)
-	planVersionMigrationResponseDataFieldPlanVersionIDsFrom = big.NewInt(1 << 10)
-	planVersionMigrationResponseDataFieldProrationBehavior  = big.NewInt(1 << 11)
-	planVersionMigrationResponseDataFieldSkippedCompanies   = big.NewInt(1 << 12)
-	planVersionMigrationResponseDataFieldStartedAt          = big.NewInt(1 << 13)
-	planVersionMigrationResponseDataFieldStatus             = big.NewInt(1 << 14)
-	planVersionMigrationResponseDataFieldStrategy           = big.NewInt(1 << 15)
-	planVersionMigrationResponseDataFieldTotalCompanies     = big.NewInt(1 << 16)
-	planVersionMigrationResponseDataFieldUpdatedAt          = big.NewInt(1 << 17)
+	planVersionMigrationResponseDataFieldCompletedAt          = big.NewInt(1 << 0)
+	planVersionMigrationResponseDataFieldCompletedCompanies   = big.NewInt(1 << 1)
+	planVersionMigrationResponseDataFieldCreatedAt            = big.NewInt(1 << 2)
+	planVersionMigrationResponseDataFieldError                = big.NewInt(1 << 3)
+	planVersionMigrationResponseDataFieldFailedCompanies      = big.NewInt(1 << 4)
+	planVersionMigrationResponseDataFieldFeatureID            = big.NewInt(1 << 5)
+	planVersionMigrationResponseDataFieldFeaturePlanRolloutID = big.NewInt(1 << 6)
+	planVersionMigrationResponseDataFieldID                   = big.NewInt(1 << 7)
+	planVersionMigrationResponseDataFieldNextDueAt            = big.NewInt(1 << 8)
+	planVersionMigrationResponseDataFieldPlanID               = big.NewInt(1 << 9)
+	planVersionMigrationResponseDataFieldPlanVersionIDFrom    = big.NewInt(1 << 10)
+	planVersionMigrationResponseDataFieldPlanVersionIDTo      = big.NewInt(1 << 11)
+	planVersionMigrationResponseDataFieldPlanVersionIDsFrom   = big.NewInt(1 << 12)
+	planVersionMigrationResponseDataFieldProrationBehavior    = big.NewInt(1 << 13)
+	planVersionMigrationResponseDataFieldSkippedCompanies     = big.NewInt(1 << 14)
+	planVersionMigrationResponseDataFieldStartedAt            = big.NewInt(1 << 15)
+	planVersionMigrationResponseDataFieldStatus               = big.NewInt(1 << 16)
+	planVersionMigrationResponseDataFieldStrategy             = big.NewInt(1 << 17)
+	planVersionMigrationResponseDataFieldTotalCompanies       = big.NewInt(1 << 18)
+	planVersionMigrationResponseDataFieldUpdatedAt            = big.NewInt(1 << 19)
 )
 
 type PlanVersionMigrationResponseData struct {
-	CompletedAt        *time.Time                   `json:"completed_at,omitempty" url:"completed_at,omitempty"`
-	CompletedCompanies int64                        `json:"completed_companies" url:"completed_companies"`
-	CreatedAt          time.Time                    `json:"created_at" url:"created_at"`
-	Error              *string                      `json:"error,omitempty" url:"error,omitempty"`
-	FailedCompanies    int64                        `json:"failed_companies" url:"failed_companies"`
-	ID                 string                       `json:"id" url:"id"`
-	NextDueAt          *time.Time                   `json:"next_due_at,omitempty" url:"next_due_at,omitempty"`
-	PlanID             string                       `json:"plan_id" url:"plan_id"`
-	PlanVersionIDFrom  *string                      `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
-	PlanVersionIDTo    string                       `json:"plan_version_id_to" url:"plan_version_id_to"`
-	PlanVersionIDsFrom []string                     `json:"plan_version_ids_from" url:"plan_version_ids_from"`
-	ProrationBehavior  *MigrationProrationBehavior  `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
-	SkippedCompanies   int64                        `json:"skipped_companies" url:"skipped_companies"`
-	StartedAt          *time.Time                   `json:"started_at,omitempty" url:"started_at,omitempty"`
-	Status             PlanVersionMigrationStatus   `json:"status" url:"status"`
-	Strategy           PlanVersionMigrationStrategy `json:"strategy" url:"strategy"`
-	TotalCompanies     int64                        `json:"total_companies" url:"total_companies"`
-	UpdatedAt          time.Time                    `json:"updated_at" url:"updated_at"`
+	CompletedAt          *time.Time                   `json:"completed_at,omitempty" url:"completed_at,omitempty"`
+	CompletedCompanies   int64                        `json:"completed_companies" url:"completed_companies"`
+	CreatedAt            time.Time                    `json:"created_at" url:"created_at"`
+	Error                *string                      `json:"error,omitempty" url:"error,omitempty"`
+	FailedCompanies      int64                        `json:"failed_companies" url:"failed_companies"`
+	FeatureID            *string                      `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FeaturePlanRolloutID *string                      `json:"feature_plan_rollout_id,omitempty" url:"feature_plan_rollout_id,omitempty"`
+	ID                   string                       `json:"id" url:"id"`
+	NextDueAt            *time.Time                   `json:"next_due_at,omitempty" url:"next_due_at,omitempty"`
+	PlanID               string                       `json:"plan_id" url:"plan_id"`
+	PlanVersionIDFrom    *string                      `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
+	PlanVersionIDTo      string                       `json:"plan_version_id_to" url:"plan_version_id_to"`
+	PlanVersionIDsFrom   []string                     `json:"plan_version_ids_from" url:"plan_version_ids_from"`
+	ProrationBehavior    *MigrationProrationBehavior  `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
+	SkippedCompanies     int64                        `json:"skipped_companies" url:"skipped_companies"`
+	StartedAt            *time.Time                   `json:"started_at,omitempty" url:"started_at,omitempty"`
+	Status               PlanVersionMigrationStatus   `json:"status" url:"status"`
+	Strategy             PlanVersionMigrationStrategy `json:"strategy" url:"strategy"`
+	TotalCompanies       int64                        `json:"total_companies" url:"total_companies"`
+	UpdatedAt            time.Time                    `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1297,6 +1319,20 @@ func (p *PlanVersionMigrationResponseData) GetFailedCompanies() int64 {
 		return 0
 	}
 	return p.FailedCompanies
+}
+
+func (p *PlanVersionMigrationResponseData) GetFeatureID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.FeatureID
+}
+
+func (p *PlanVersionMigrationResponseData) GetFeaturePlanRolloutID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.FeaturePlanRolloutID
 }
 
 func (p *PlanVersionMigrationResponseData) GetID() string {
@@ -1439,6 +1475,20 @@ func (p *PlanVersionMigrationResponseData) SetError(error_ *string) {
 func (p *PlanVersionMigrationResponseData) SetFailedCompanies(failedCompanies int64) {
 	p.FailedCompanies = failedCompanies
 	p.require(planVersionMigrationResponseDataFieldFailedCompanies)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationResponseData) SetFeatureID(featureID *string) {
+	p.FeatureID = featureID
+	p.require(planVersionMigrationResponseDataFieldFeatureID)
+}
+
+// SetFeaturePlanRolloutID sets the FeaturePlanRolloutID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationResponseData) SetFeaturePlanRolloutID(featurePlanRolloutID *string) {
+	p.FeaturePlanRolloutID = featurePlanRolloutID
+	p.require(planVersionMigrationResponseDataFieldFeaturePlanRolloutID)
 }
 
 // SetID sets the ID field and marks it as non-optional;
@@ -2093,13 +2143,15 @@ func (c *CountCompanyMigrationsResponse) String() string {
 
 // Input parameters
 var (
-	countMigrationsParamsFieldLimit         = big.NewInt(1 << 0)
-	countMigrationsParamsFieldOffset        = big.NewInt(1 << 1)
-	countMigrationsParamsFieldPlanVersionID = big.NewInt(1 << 2)
-	countMigrationsParamsFieldStatus        = big.NewInt(1 << 3)
+	countMigrationsParamsFieldFeatureID     = big.NewInt(1 << 0)
+	countMigrationsParamsFieldLimit         = big.NewInt(1 << 1)
+	countMigrationsParamsFieldOffset        = big.NewInt(1 << 2)
+	countMigrationsParamsFieldPlanVersionID = big.NewInt(1 << 3)
+	countMigrationsParamsFieldStatus        = big.NewInt(1 << 4)
 )
 
 type CountMigrationsParams struct {
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -2112,6 +2164,13 @@ type CountMigrationsParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CountMigrationsParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
 }
 
 func (c *CountMigrationsParams) GetLimit() *int64 {
@@ -2156,6 +2215,13 @@ func (c *CountMigrationsParams) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountMigrationsParams) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(countMigrationsParamsFieldFeatureID)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -2795,13 +2861,15 @@ func (l *ListCompanyMigrationsResponse) String() string {
 
 // Input parameters
 var (
-	listMigrationsParamsFieldLimit         = big.NewInt(1 << 0)
-	listMigrationsParamsFieldOffset        = big.NewInt(1 << 1)
-	listMigrationsParamsFieldPlanVersionID = big.NewInt(1 << 2)
-	listMigrationsParamsFieldStatus        = big.NewInt(1 << 3)
+	listMigrationsParamsFieldFeatureID     = big.NewInt(1 << 0)
+	listMigrationsParamsFieldLimit         = big.NewInt(1 << 1)
+	listMigrationsParamsFieldOffset        = big.NewInt(1 << 2)
+	listMigrationsParamsFieldPlanVersionID = big.NewInt(1 << 3)
+	listMigrationsParamsFieldStatus        = big.NewInt(1 << 4)
 )
 
 type ListMigrationsParams struct {
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -2814,6 +2882,13 @@ type ListMigrationsParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (l *ListMigrationsParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
 }
 
 func (l *ListMigrationsParams) GetLimit() *int64 {
@@ -2858,6 +2933,13 @@ func (l *ListMigrationsParams) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	l.explicitFields = next
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListMigrationsParams) SetFeatureID(featureID *string) {
+	l.FeatureID = featureID
+	l.require(listMigrationsParamsFieldFeatureID)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;

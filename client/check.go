@@ -25,9 +25,16 @@ const (
 	// reservationTrackIdempotencyPrefix namespaces the settling track event's
 	// dedupe key, which is derived from the reservation ID.
 	reservationTrackIdempotencyPrefix = "lease-reservation:"
-	// leaseReleaseTimeout bounds the release of this process's leases on close,
-	// so a hung API call cannot hold up a shutdown.
-	leaseReleaseTimeout = 5 * time.Second
+	// releaseTimeout bounds a best-effort release, which nobody is waiting on
+	// and which the server would eventually do itself at the hold's expiry.
+	releaseTimeout = 5 * time.Second
+	// closeTimeout is the whole budget a Close spends winding the client down,
+	// shared across every wait inside it.
+	closeTimeout = 10 * time.Second
+	// identifyFlushTimeout bounds the flush an identify does before prewarming,
+	// so an API that is slow to take the event cannot hold the prewarm, or a
+	// Close waiting on it, open.
+	identifyFlushTimeout = 5 * time.Second
 	// prewarmPollInterval is how often a prewarm retries the company fetch while
 	// waiting for the entity to surface over DataStream.
 	prewarmPollInterval = 100 * time.Millisecond
@@ -777,9 +784,15 @@ func (c *SchematicClient) checkWithServerReservation(
 	}
 	if eventSubtype == "" {
 		c.logger.Error(ctx, fmt.Sprintf("Server reservation: reservation %s for flag %s names no event subtype; releasing it, since it could never be settled", held.ID, flagKey))
-		if _, err := c.Credits.ReleaseCreditReservation(ctx, held.ID); err != nil {
+		// Detached and unretried: the caller is not waiting on this, a release
+		// the caller's cancellation cut short would park the credits until the
+		// hold expires, and the call is idempotent, so a retry buys nothing the
+		// expiry does not.
+		releaseCtx, cancelRelease := context.WithTimeout(context.WithoutCancel(ctx), releaseTimeout)
+		if _, err := c.Credits.ReleaseCreditReservation(releaseCtx, held.ID, option.WithoutRetries()); err != nil {
 			c.logger.Warn(ctx, fmt.Sprintf("Server reservation: failed to release %s (%v); its hold is refunded when it expires", held.ID, err))
 		}
+		cancelRelease()
 		if !o.failOpen {
 			return c.checkFailureResult(flagKey, o, "missing_event_subtype")
 		}

@@ -309,7 +309,7 @@ func opDropLease(h *harness, op operation) {
 
 func opTryReserve(h *harness, op operation) {
 	h.t.Helper()
-	balance, ok, err := h.leases.TryReserve(h.ctx, op.CompanyID, op.CreditTypeID, op.Credits)
+	balance, _, ok, err := h.leases.TryReserve(h.ctx, op.CompanyID, op.CreditTypeID, op.Credits)
 	require.NoError(h.t, err)
 	assertNullableNumber(h.t, op.Expect, "balance", balance, ok)
 }

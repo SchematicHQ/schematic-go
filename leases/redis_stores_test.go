@@ -42,7 +42,7 @@ func TestRedisLeaseStoreRejectsNonFiniteAndNegativeDebits(t *testing.T) {
 	// The string form of NaN parses back to a Lua nan, slips through the `<`
 	// comparison, and would poison the shared balance for every pod.
 	for _, credits := range []float64{math.NaN(), math.Inf(1), -1} {
-		_, ok, err := b.leases.TryReserve(ctx, "co_1", "ct_1", credits)
+		_, _, ok, err := b.leases.TryReserve(ctx, "co_1", "ct_1", credits)
 		require.NoError(t, err)
 		assert.False(t, ok)
 	}
@@ -117,7 +117,7 @@ func TestRedisLeaseStoreConcurrentTryReserveIsAtomic(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			_, ok, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 1)
+			_, _, ok, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 1)
 			assert.NoError(t, err)
 			if ok {
 				mu.Lock()
@@ -166,7 +166,7 @@ func TestRedisReservationStoreSweepReconcilesAnEvictedHashWithoutRefunding(t *te
 	b := newRedisBackend(t)
 	installLease(t, b.leases, b.clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
 
-	_, _, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	_, _, _, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 100)
 	require.NoError(t, err)
 	require.NoError(t, b.reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 10_000, b.clock)))
 	b.server.Del(DefaultKeyPrefix + reservationKeyNamespace + "res_1")
@@ -230,7 +230,7 @@ func TestRedisReservationStoreDoubleConsumeClaimsOnce(t *testing.T) {
 	b := newRedisBackend(t)
 	installLease(t, b.leases, b.clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
 
-	_, _, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	_, _, _, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 100)
 	require.NoError(t, err)
 	require.NoError(t, b.reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 60_000, b.clock)))
 
@@ -256,7 +256,7 @@ func TestRedisLeaseStoreKeepsFractionalAmountsExact(t *testing.T) {
 	b := newRedisBackend(t)
 	installLease(t, b.leases, b.clock, "lse_1", "co_1", "ct_1", 10, 3_600_000)
 
-	balance, ok, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 2.5)
+	balance, _, ok, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 2.5)
 	require.NoError(t, err)
 	require.True(t, ok)
 	assert.Equal(t, 7.5, balance)

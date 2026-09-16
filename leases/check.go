@@ -242,13 +242,14 @@ func CheckWithLease(
 	}
 
 	// TryReserve is the atomic gate: check and debit in one step, returning the
-	// post-debit balance so the pre-debit figure needs no second read.
-	balance, reserved, err := deps.Leases.TryReserve(ctx, company.ID, creditID, creditCost)
+	// post-debit balance so the pre-debit figure needs no second read, and the
+	// lease it debited.
+	balance, debited, reserved, err := deps.Leases.TryReserve(ctx, company.ID, creditID, creditCost)
 	if err == nil && !reserved {
 		// Pass the cost as required credits so a single large request extends
 		// even while the ratio still sits above the water mark.
 		deps.Manager.MaybeExtend(ctx, company.ID, creditID, &creditCost)
-		balance, reserved, err = deps.Leases.TryReserve(ctx, company.ID, creditID, creditCost)
+		balance, debited, reserved, err = deps.Leases.TryReserve(ctx, company.ID, creditID, creditCost)
 	}
 	if err != nil {
 		log.Error(ctx, fmt.Sprintf("Lease check: reserve against %s/%s failed: %v", company.ID, creditID, err))
@@ -264,8 +265,14 @@ func CheckWithLease(
 	// debit, which a later consume would refund into a double-spend.
 	resolved := deps.Manager.ResolveConfig(creditID)
 	record := ReservationRecord{
-		ID:               deps.newReservationID(),
-		LeaseID:          lease.LeaseID,
+		ID: deps.newReservationID(),
+		// The lease the debit came out of, which the slot may have taken on
+		// since the acquire above: the window between them spans the extend's
+		// network call. A record pinned to the lease the acquire returned would
+		// have its refunds dropped and would bill the wrong lease. A store that
+		// names no lease leaves the acquired one, which is the closest thing to
+		// the truth available.
+		LeaseID:          fallbackString(debited, lease.LeaseID),
 		CompanyID:        company.ID,
 		CreditTypeID:     creditID,
 		EventSubtype:     eventSubtype,
@@ -278,7 +285,7 @@ func CheckWithLease(
 	}
 	if err := deps.Reservations.Add(ctx, record); err != nil {
 		log.Error(ctx, fmt.Sprintf("Lease check: failed to persist reservation %s: %v", record.ID, err))
-		undoDebit(ctx, deps, record, lease.LeaseID)
+		undoDebit(ctx, deps, record)
 		return failure("lease_store_error")
 	}
 
@@ -393,13 +400,13 @@ func staticFailureOutcome(req CheckRequest, reason string, flag *rulesengine.Fla
 // undoDebit returns a debit whose reservation record never landed, rather than
 // stranding it until lease expiry. Consume claims whatever slice of the add made
 // it to the store and refunds it; nothing claimed means nothing landed, so the
-// debit is refunded directly. Both are pinned to this lease. If the undo itself
-// fails, accept the bounded leak: the slice comes back at lease expiry, which
-// beats risking a double refund.
-func undoDebit(ctx context.Context, deps CheckDeps, record ReservationRecord, leaseID string) {
+// debit is refunded directly. Both are pinned to the lease the debit came out
+// of. If the undo itself fails, accept the bounded leak: the slice comes back at
+// lease expiry, which beats risking a double refund.
+func undoDebit(ctx context.Context, deps CheckDeps, record ReservationRecord) {
 	_, claimed, err := deps.Reservations.Consume(ctx, record.ID, 0)
 	if err == nil && !claimed {
-		err = deps.Leases.Refund(ctx, record.CompanyID, record.CreditTypeID, record.CreditsReserved, leaseID)
+		err = deps.Leases.Refund(ctx, record.CompanyID, record.CreditTypeID, record.CreditsReserved, record.LeaseID)
 	}
 	if err != nil {
 		deps.logger().Warn(ctx, fmt.Sprintf("Lease check: could not undo the local debit for %s (%v); the slice is reclaimed at lease expiry", record.ID, err))

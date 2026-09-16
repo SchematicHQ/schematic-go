@@ -70,14 +70,34 @@ func NewEventBuffer(
 }
 
 // Flush sends whatever is buffered right now instead of waiting for the next
-// tick. The client's worker calls it so an identify can reach the server before
-// a prewarm starts polling for the company.
+// tick, on the calling goroutine.
 func (b *eventBuffer) Flush() {
-	b.mutex.Lock()
-	events := b.batcher.Flush()
-	b.mutex.Unlock()
+	b.sendEvents(b.drain())
+}
 
-	b.sendEvents(events)
+// FlushAsync sends whatever is buffered right now on a goroutine of its own, and
+// closes the returned channel once that send has finished.
+//
+// It is what a caller that must not block on network I/O uses: the client's
+// event worker services flush requests, and a synchronous send there would hold
+// every enqueued event behind a batch the API is slow to accept. Draining first
+// means the events are out of the buffer before this returns, so a later flush
+// cannot send them twice.
+func (b *eventBuffer) FlushAsync() <-chan struct{} {
+	events := b.drain()
+	sent := make(chan struct{})
+	go func() {
+		defer close(sent)
+		b.sendEvents(events)
+	}()
+	return sent
+}
+
+// drain takes everything buffered right now, under the lock.
+func (b *eventBuffer) drain() []*schematicgo.CreateEventRequestBody {
+	b.mutex.Lock()
+	defer b.mutex.Unlock()
+	return b.batcher.Flush()
 }
 
 // sendEvents sends events outside the lock so Push callers aren't blocked during HTTP retries.

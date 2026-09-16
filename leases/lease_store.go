@@ -35,12 +35,17 @@ type LeaseStore interface {
 	Replace(ctx context.Context, grant LeaseGrant) (bool, error)
 
 	// TryReserve atomically checks and debits, returning the post-debit
-	// balance. It reports ok=false, touching nothing, when there is no lease,
-	// the lease has expired, the balance is short, or credits is not a finite
-	// non-negative number. Returning the balance rather than a bool lets the
-	// caller derive the pre-debit figure as balance+credits without a racy
-	// follow-up read.
-	TryReserve(ctx context.Context, companyID, creditTypeID string, credits float64) (balance float64, ok bool, err error)
+	// balance and the lease the credits came out of. It reports ok=false,
+	// touching nothing, when there is no lease, the lease has expired, the
+	// balance is short, or credits is not a finite non-negative number.
+	// Returning the balance rather than a bool lets the caller derive the
+	// pre-debit figure as balance+credits without a racy follow-up read.
+	//
+	// leaseID is read in the same atomic step as the debit. The slot's lease
+	// can be replaced between a caller's acquire and its reserve, so a hold
+	// pinned to the lease the caller last saw would send its refunds to a lease
+	// that never held the credits, and bill that lease for the usage.
+	TryReserve(ctx context.Context, companyID, creditTypeID string, credits float64) (balance float64, leaseID string, ok bool, err error)
 
 	// Refund returns credits to the slot's balance, clamped at the granted
 	// amount. With a non-empty pinLeaseID the refund applies only while the
@@ -136,11 +141,11 @@ func (s *InMemoryLeaseStore) Replace(_ context.Context, grant LeaseGrant) (bool,
 	return true, nil
 }
 
-func (s *InMemoryLeaseStore) TryReserve(_ context.Context, companyID, creditTypeID string, credits float64) (float64, bool, error) {
+func (s *InMemoryLeaseStore) TryReserve(_ context.Context, companyID, creditTypeID string, credits float64) (float64, string, bool, error) {
 	// NaN passes every comparison below, and a NaN balance would approve every
 	// later reserve, so it never reaches the arithmetic.
 	if !IsValidQuantity(credits) {
-		return 0, false, nil
+		return 0, "", false, nil
 	}
 	key := LeaseKey(companyID, creditTypeID)
 	release := s.locks.lock(key)
@@ -148,17 +153,20 @@ func (s *InMemoryLeaseStore) TryReserve(_ context.Context, companyID, creditType
 
 	entry := s.load(key)
 	if entry == nil {
-		return 0, false, nil
+		return 0, "", false, nil
 	}
 	if !entry.ExpiresAt.After(s.clock()) {
-		return 0, false, nil
+		return 0, "", false, nil
 	}
 	if entry.LocalRemainingCredits < credits {
-		return 0, false, nil
+		return 0, "", false, nil
 	}
 	entry.LocalRemainingCredits -= credits
 	s.store(key, *entry)
-	return entry.LocalRemainingCredits, true, nil
+	// Read under the slot lock, so it names the lease this debit actually came
+	// out of rather than whichever one the slot holds by the time the caller
+	// looks again.
+	return entry.LocalRemainingCredits, entry.LeaseID, true, nil
 }
 
 func (s *InMemoryLeaseStore) Refund(_ context.Context, companyID, creditTypeID string, credits float64, pinLeaseID string) error {

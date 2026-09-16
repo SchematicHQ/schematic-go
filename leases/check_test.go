@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"math"
+	"sync"
 	"testing"
 	"time"
 
@@ -455,4 +456,78 @@ func TestSettleQuantityRoundsAPartialUnitUp(t *testing.T) {
 	assert.Equal(t, int64(4), SettleQuantity(4))
 	assert.Equal(t, int64(5), SettleQuantity(4.1))
 	assert.Equal(t, int64(0), SettleQuantity(0))
+}
+
+// swapBeforeReserve replaces the slot's lease just before the debit lands,
+// which is the window a check's acquire and its reserve straddle.
+type swapBeforeReserve struct {
+	LeaseStore
+	once sync.Once
+	swap func()
+}
+
+func (s *swapBeforeReserve) TryReserve(ctx context.Context, companyID, creditTypeID string, credits float64) (float64, string, bool, error) {
+	s.once.Do(s.swap)
+	return s.LeaseStore.TryReserve(ctx, companyID, creditTypeID, credits)
+}
+
+// The window between a check's acquire and its debit spans a network call, so
+// the slot can be carrying a successor by the time the debit lands. The hold
+// has to name the lease the credits actually came out of: pinned to the lease
+// the acquire returned, its refund would be dropped and the settling track
+// event would bill a lease that never held the usage.
+func TestCheckWithLeasePinsTheHoldToTheLeaseItDebited(t *testing.T) {
+	for _, factory := range backendFactories {
+		t.Run(factory.name, func(t *testing.T) {
+			ctx := context.Background()
+			b := factory.make(t)
+			installLease(t, b.leases, b.clock, "lse_1", "co_1", testCreditID, 1000, 300_000)
+
+			swapped := &swapBeforeReserve{LeaseStore: b.leases, swap: func() {
+				// lse_1 expires and a successor takes the slot, as it would
+				// while the check sat in its extend call.
+				b.clock.advance(400 * time.Second)
+				installLease(t, b.leases, b.clock, "lse_2", "co_1", testCreditID, 1000, 800_000)
+			}}
+
+			manager := NewLeaseManager(&scriptedWireClient{clock: b.clock}, b.leases, LeaseManagerOptions{
+				Reservations: b.reservations,
+				Config:       ResolvedLeaseConfig{LeaseSize: 1000, LeaseDuration: 5 * time.Minute, ReservationTTL: time.Minute},
+				Clock:        b.clock.Now,
+			})
+			t.Cleanup(manager.Stop)
+
+			deps := CheckDeps{
+				DataStream: &fakeDataStream{
+					flag:    &rulesengine.Flag{ID: "flag_1", Key: "inference"},
+					company: testCompany(),
+					results: []*rulesengine.CheckFlagResult{creditEntitlementResult(true, "probe"), plainResult(true, "ok")},
+				},
+				Leases:       swapped,
+				Reservations: b.reservations,
+				Manager:      manager,
+				Clock:        b.clock.Now,
+			}
+			outcome := CheckWithLease(ctx, deps, baseRequest(), func(context.Context) *CheckOutcome {
+				t.Error("the check should have gated, not fallen back")
+				return &CheckOutcome{}
+			})
+			manager.drainBackground()
+
+			require.NotNil(t, outcome.Reservation)
+			assert.Equal(t, "lse_2", outcome.Reservation.LeaseID, "the hold names the lease the debit came out of")
+			entry, err := b.leases.Get(ctx, "co_1", testCreditID)
+			require.NoError(t, err)
+			assert.Equal(t, 900.0, entry.LocalRemainingCredits, "and that is the lease that paid")
+
+			// The refund is pinned to the record's lease, so a record naming
+			// the wrong one silently drops it.
+			_, claimed, err := b.reservations.Consume(ctx, outcome.Reservation.ID, 0)
+			require.NoError(t, err)
+			require.True(t, claimed)
+			entry, err = b.leases.Get(ctx, "co_1", testCreditID)
+			require.NoError(t, err)
+			assert.Equal(t, 1000.0, entry.LocalRemainingCredits, "the refund reaches the lease that was debited")
+		})
+	}
 }

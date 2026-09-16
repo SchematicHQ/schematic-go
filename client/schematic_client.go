@@ -541,18 +541,21 @@ func (c *SchematicClient) Close() {
 		}
 	}()
 
+	// One budget for the whole teardown, rather than each step's timeout in
+	// turn: a caller closing a client wants a bounded wait, not the sum of
+	// every wait inside it.
+	ctx, cancel := context.WithTimeout(context.Background(), closeTimeout)
+	defer cancel()
+
 	// Before the lease plumbing goes away, since these goroutines call into it.
-	c.stopBackground()
+	c.stopBackground(ctx)
 
 	if c.leaseManager != nil {
-		c.leaseManager.Stop()
+		c.leaseManager.StopWithContext(ctx)
 		// Releasing hands the unspent remainder of this process's leases back to
-		// the company balance now instead of at expiry. Bounded, so a hung API
-		// call cannot hold up the shutdown; the manager skips a shared store,
-		// whose leases sibling processes still draw on.
-		ctx, cancel := context.WithTimeout(context.Background(), leaseReleaseTimeout)
+		// the company balance now instead of at expiry. The manager skips a
+		// shared store, whose leases sibling processes still draw on.
 		c.leaseManager.ReleaseAllLocalLeases(ctx)
-		cancel()
 	}
 
 	close(c.stopWorker)
@@ -587,8 +590,9 @@ func (c *SchematicClient) spawnBackground(fn func()) bool {
 }
 
 // stopBackground refuses further background work and waits out what is already
-// running, bounded so a stalled call cannot hold up a shutdown.
-func (c *SchematicClient) stopBackground() {
+// running, bounded by the caller's close budget so a stalled call cannot hold up
+// a shutdown.
+func (c *SchematicClient) stopBackground(ctx context.Context) {
 	c.backgroundMu.Lock()
 	c.closed = true
 	c.backgroundMu.Unlock()
@@ -598,12 +602,10 @@ func (c *SchematicClient) stopBackground() {
 		c.background.Wait()
 		close(waited)
 	}()
-	timer := time.NewTimer(leases.DefaultStopTimeout)
-	defer timer.Stop()
 	select {
 	case <-waited:
-	case <-timer.C:
-		c.logger.Warn(context.Background(), fmt.Sprintf("Timed out after %s waiting for background client work to finish; closing anyway", leases.DefaultStopTimeout))
+	case <-ctx.Done():
+		c.logger.Warn(ctx, "Gave up waiting for background client work to finish; closing anyway")
 	}
 }
 
@@ -665,9 +667,15 @@ func (c *SchematicClient) Identify(
 		// The buffer otherwise holds the identify for up to its flush period,
 		// which outlasts the prewarm's own wait for the company to surface, so
 		// the prewarm would be polling for an entity the server has not been
-		// told about yet.
-		if err := c.flushEvents(prewarmCtx); err != nil {
-			c.logger.Debug(prewarmCtx, fmt.Sprintf("Identify: flushing before the prewarm failed: %v", err))
+		// told about yet. Only a client-mode prewarm does that polling, and the
+		// wait is capped: an identify the API is slow to take must not hold a
+		// lease warm-up, or a Close behind it, open indefinitely.
+		if c.leaseManager != nil {
+			flushCtx, cancelFlush := context.WithTimeout(prewarmCtx, identifyFlushTimeout)
+			if err := c.flushEvents(flushCtx); err != nil {
+				c.logger.Debug(prewarmCtx, fmt.Sprintf("Identify: flushing before the prewarm failed: %v", err))
+			}
+			cancelFlush()
 		}
 		if err := c.Prewarm(prewarmCtx, evalCtx, o.prewarm); err != nil {
 			c.logger.Warn(prewarmCtx, fmt.Sprintf("Identify: prewarm failed: %v", err))
@@ -809,9 +817,7 @@ func (c *SchematicClient) worker() {
 		case ack := <-c.flushRequests:
 			// Enqueueing an event only hands it to this loop, so drain what is
 			// already queued first: a caller that enqueued and then asked for a
-			// flush means the flush to cover that event. Then flush
-			// synchronously, since the caller is waiting on the send having
-			// happened, not on it having been asked for.
+			// flush means the flush to cover that event.
 			for drained := true; drained; {
 				select {
 				case event := <-c.events:
@@ -820,8 +826,16 @@ func (c *SchematicClient) worker() {
 					drained = false
 				}
 			}
-			buffer.Flush()
-			close(ack)
+			// The send itself runs elsewhere. It retries for seconds, and this
+			// loop is the only reader of c.events, so a send here would back
+			// every enqueueEvent up behind the API, a client-mode check's
+			// flag_check included. The acknowledgement still waits on the send
+			// having happened, since that is what the caller asked for.
+			sent := buffer.FlushAsync()
+			go func() {
+				<-sent
+				close(ack)
+			}()
 		case <-c.stopWorker:
 			buffer.Stop()
 			return

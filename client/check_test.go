@@ -76,6 +76,9 @@ func (r *requestRecorder) find(suffix string) (recordedRequest, bool) {
 type stub struct {
 	status int
 	body   any
+	// block, when set, holds the request open until the channel is closed, so a
+	// test can drive an API that is slow to answer.
+	block chan struct{}
 }
 
 // serveStubs records every request and answers it with the stub whose path
@@ -94,6 +97,9 @@ func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(
 		for suffix, s := range stubs {
 			if !strings.HasSuffix(req.URL.Path, suffix) {
 				continue
+			}
+			if s.block != nil {
+				<-s.block
 			}
 			data, err := json.Marshal(s.body)
 			if err != nil {
@@ -528,6 +534,31 @@ func TestCheckMissingEventSubtypeReleasesTheHold(t *testing.T) {
 
 		assert.False(t, result.Allowed)
 		assert.Equal(t, "missing_event_subtype", result.Reason)
+		releases := 0
+		for _, path := range rec.paths() {
+			if strings.HasSuffix(path, releasePath) {
+				releases++
+			}
+		}
+		assert.Equal(t, 1, releases, "the release is best effort, and the hold expires anyway, so it is not retried")
+	})
+
+	t.Run("Releases under a context of its own", func(t *testing.T) {
+		rec := &requestRecorder{}
+		client := serverModeClient(t, rec, map[string]stub{
+			checkAndReservePath: {body: reserveResponse(true, heldReservation(nil))},
+			releasePath:         {body: map[string]any{"data": map[string]any{}}},
+		})
+
+		// This check sets no timeout, so the caller's context carries no
+		// deadline: a release that has one is a release detached from the
+		// caller and bounded on its own.
+		result := client.Check(context.Background(), testEvalCtx(), "test-flag", schematicclient.WithUsage(10))
+
+		assert.False(t, result.Allowed)
+		released, ok := rec.find("/billing/credits/reservations/res_123/release")
+		require.True(t, ok)
+		assert.True(t, released.hasDeadline, "a best-effort release does not ride the caller's context")
 	})
 
 	t.Run("Keeps the server's verdict when failing open", func(t *testing.T) {

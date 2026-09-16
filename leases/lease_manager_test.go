@@ -29,9 +29,15 @@ type gatedWireClient struct {
 	duringAcquire func()
 }
 
-func (w *gatedWireClient) Acquire(context.Context, string, string, float64, time.Time) (*LeaseGrant, error) {
+func (w *gatedWireClient) Acquire(ctx context.Context, _, _ string, _ float64, _ time.Time) (*LeaseGrant, error) {
 	w.acquires.Add(1)
-	<-w.gate
+	// Honors the context the way an HTTP call would, so a test can cancel a
+	// call in flight.
+	select {
+	case <-w.gate:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 	if w.duringAcquire != nil {
 		during := w.duringAcquire
 		w.duringAcquire = nil
@@ -41,9 +47,13 @@ func (w *gatedWireClient) Acquire(context.Context, string, string, float64, time
 	return &grant, nil
 }
 
-func (w *gatedWireClient) Extend(context.Context, string, float64, time.Time) (*LeaseGrant, error) {
+func (w *gatedWireClient) Extend(ctx context.Context, _ string, _ float64, _ time.Time) (*LeaseGrant, error) {
 	w.extends.Add(1)
-	<-w.gate
+	select {
+	case <-w.gate:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
 	grant := w.extendGrant
 	return &grant, nil
 }
@@ -128,7 +138,7 @@ func TestAcquireDoesNotWaitOnAnInFlightExtend(t *testing.T) {
 	clock := newVirtualClock()
 	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
 	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
-	_, _, err := store.TryReserve(ctx, "co_1", "ct_1", 900)
+	_, _, _, err := store.TryReserve(ctx, "co_1", "ct_1", 900)
 	require.NoError(t, err)
 
 	wire := &gatedWireClient{
@@ -233,7 +243,7 @@ func TestStartSweepRunsAndStopJoinsTheLoop(t *testing.T) {
 	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
 	reservations := NewInMemoryReservationStore(store, InMemoryReservationStoreOptions{Clock: clock.Now})
 
-	_, _, err := store.TryReserve(ctx, "co_1", "ct_1", 100)
+	_, _, _, err := store.TryReserve(ctx, "co_1", "ct_1", 100)
 	require.NoError(t, err)
 	// Already expired, so the first tick sweeps it back to the lease.
 	require.NoError(t, reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 0, clock)))
@@ -265,7 +275,7 @@ func TestStartSweepRunsAndStopJoinsTheLoop(t *testing.T) {
 
 func TestFlightGroupCollapsesConcurrentCallsPerKey(t *testing.T) {
 	t.Parallel()
-	var group flightGroup
+	group := flightGroup{spawn: goSpawn}
 	gate := make(chan struct{})
 	started := make(chan struct{})
 	var calls atomic.Int64
@@ -275,7 +285,7 @@ func TestFlightGroupCollapsesConcurrentCallsPerKey(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			entry := group.do("slot", func() *LeaseState {
+			entry := group.do(t.Context(), "slot", func() *LeaseState {
 				if calls.Add(1) == 1 {
 					close(started)
 				}
@@ -291,7 +301,7 @@ func TestFlightGroupCollapsesConcurrentCallsPerKey(t *testing.T) {
 	wg.Wait()
 
 	// A different key never joins an unrelated flight.
-	other := group.do("other", func() *LeaseState { return &LeaseState{LeaseID: "lse_2"} })
+	other := group.do(t.Context(), "other", func() *LeaseState { return &LeaseState{LeaseID: "lse_2"} })
 	assert.Equal(t, "lse_2", other.LeaseID)
 }
 
@@ -299,7 +309,7 @@ func TestFlightGroupCollapsesConcurrentCallsPerKey(t *testing.T) {
 // satisfy an acquire for the same slot, or the other way round.
 func TestSeparateFlightGroupsDoNotSatisfyEachOther(t *testing.T) {
 	t.Parallel()
-	var acquires, extends flightGroup
+	acquires, extends := flightGroup{spawn: goSpawn}, flightGroup{spawn: goSpawn}
 	gate := make(chan struct{})
 	started := make(chan struct{})
 
@@ -307,7 +317,7 @@ func TestSeparateFlightGroupsDoNotSatisfyEachOther(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		entry := acquires.do("slot", func() *LeaseState {
+		entry := acquires.do(t.Context(), "slot", func() *LeaseState {
 			close(started)
 			<-gate
 			return &LeaseState{LeaseID: "lse_acquired"}
@@ -318,11 +328,18 @@ func TestSeparateFlightGroupsDoNotSatisfyEachOther(t *testing.T) {
 
 	// The acquire for this very slot is still blocked; the extend runs its own
 	// call rather than riding that result.
-	extended := extends.do("slot", func() *LeaseState { return &LeaseState{LeaseID: "lse_extended"} })
+	extended := extends.do(t.Context(), "slot", func() *LeaseState { return &LeaseState{LeaseID: "lse_extended"} })
 	assert.Equal(t, "lse_extended", extended.LeaseID)
 
 	close(gate)
 	wg.Wait()
+}
+
+// goSpawn stands in for the manager's own spawn, which is what tracks a flight
+// and recovers a panic in it.
+func goSpawn(fn func()) bool {
+	go fn()
+	return true
 }
 
 func closedGate() chan struct{} {
@@ -340,7 +357,7 @@ func TestStopIsBoundedWhenBackgroundWorkStalls(t *testing.T) {
 	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
 	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
 	// Below the water mark, so the background extend actually fires.
-	_, _, err := store.TryReserve(ctx, "co_1", "ct_1", 900)
+	_, _, _, err := store.TryReserve(ctx, "co_1", "ct_1", 900)
 	require.NoError(t, err)
 
 	wire := &gatedWireClient{
@@ -372,7 +389,7 @@ func TestSpawnAfterStopIsRefused(t *testing.T) {
 	clock := newVirtualClock()
 	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
 	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
-	_, _, err := store.TryReserve(ctx, "co_1", "ct_1", 900)
+	_, _, _, err := store.TryReserve(ctx, "co_1", "ct_1", 900)
 	require.NoError(t, err)
 
 	wire := &gatedWireClient{
@@ -388,4 +405,57 @@ func TestSpawnAfterStopIsRefused(t *testing.T) {
 	assert.NotPanics(t, func() { manager.ExtendInBackground(ctx, "co_1", "ct_1") })
 	manager.drainBackground()
 	assert.Zero(t, wire.extends.Load(), "a refused spawn runs nothing")
+}
+
+// A shared acquire runs on a context of its own: the first caller's
+// cancellation or short deadline must not decide what every other caller
+// waiting on the slot gets.
+func TestAcquireFlightOutlivesTheFirstCallersContext(t *testing.T) {
+	t.Parallel()
+	clock := newVirtualClock()
+	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	wire := &gatedWireClient{
+		gate:  make(chan struct{}),
+		grant: LeaseGrant{LeaseID: "lse_1", CompanyID: "co_1", CreditTypeID: "ct_1", GrantedAmount: 1000, ExpiresAt: clock.at(300_000)},
+	}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{Clock: clock.Now})
+	t.Cleanup(manager.Stop)
+
+	firstCtx, cancelFirst := context.WithCancel(context.Background())
+	first := make(chan *LeaseState, 1)
+	go func() { first <- manager.AcquireIfNeeded(firstCtx, "co_1", "ct_1") }()
+	require.Eventually(t, func() bool { return wire.acquires.Load() == 1 }, time.Second, time.Millisecond)
+
+	second := make(chan *LeaseState, 1)
+	go func() { second <- manager.AcquireIfNeeded(context.Background(), "co_1", "ct_1") }()
+	time.Sleep(20 * time.Millisecond)
+
+	cancelFirst()
+	assert.Nil(t, <-first, "a caller that gave up waiting gets nothing")
+
+	close(wire.gate)
+	entry := <-second
+	require.NotNil(t, entry, "the shared call is not the first caller's to cancel")
+	assert.Equal(t, "lse_1", entry.LeaseID)
+	assert.Equal(t, int64(1), wire.acquires.Load(), "the flight is still shared")
+}
+
+// A check racing a Close must not install a lease after ReleaseAllLocalLeases
+// has listed the slots: nobody would be left to release it.
+func TestAcquireAfterStopIsRefused(t *testing.T) {
+	t.Parallel()
+	clock := newVirtualClock()
+	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	wire := &gatedWireClient{
+		gate:  closedGate(),
+		grant: LeaseGrant{LeaseID: "lse_1", CompanyID: "co_1", CreditTypeID: "ct_1", GrantedAmount: 1000, ExpiresAt: clock.at(300_000)},
+	}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{Clock: clock.Now})
+	manager.Stop()
+
+	assert.Nil(t, manager.AcquireIfNeeded(context.Background(), "co_1", "ct_1"))
+	assert.Zero(t, wire.acquires.Load(), "a refused acquire makes no wire call")
+	entries, err := store.List(context.Background())
+	require.NoError(t, err)
+	assert.Empty(t, entries, "and installs nothing for the release pass to miss")
 }

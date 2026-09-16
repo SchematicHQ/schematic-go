@@ -560,3 +560,63 @@ func TestClientModePrewarmAcquiresCreditTypesConcurrently(t *testing.T) {
 
 	require.NoError(t, err)
 }
+
+// The event worker is the only reader of the client's event channel, so it must
+// never block on the network. An identify's prewarm asks it for a flush; if the
+// worker sent that batch itself, its retries would back up every later event,
+// a client-mode check's flag_check included.
+func TestClientModeIdentifyFlushDoesNotBlockEventEnqueue(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{})
+	rec := &requestRecorder{}
+	blocked := make(chan struct{})
+	// A buffer period no test would outlast, so the only send in play is the
+	// one the identify's prewarm asks for.
+	client := clientModeClient(t, rec, map[string]stub{
+		leaseAcquirePath: {body: leaseResponse("lse_1", 10000)},
+		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}, block: blocked},
+	}, server.URL, core.CreditLeaseConfig{}, option.WithEventBufferPeriod(time.Minute))
+	defer client.Close()
+	defer close(blocked)
+
+	client.Identify(t.Context(), &schematicgo.EventBodyIdentify{
+		Keys:    map[string]string{"id": "user_1"},
+		Company: &schematicgo.EventBodyIdentifyCompany{Keys: map[string]string{"id": testCompanyID}},
+	}, schematicclient.WithIdentifyPrewarm([]string{testCreditID}))
+	require.Eventually(t, func() bool {
+		_, sending := rec.find(eventBatchPath)
+		return sending
+	}, 2*time.Second, 10*time.Millisecond, "the flush should reach the API, where it stalls")
+
+	// More events than the channel holds, so anything blocking the worker
+	// blocks the caller too.
+	enqueued := make(chan struct{})
+	go func() {
+		defer close(enqueued)
+		for i := 0; i < 150; i++ {
+			client.Track(t.Context(), &schematicgo.EventBodyTrack{Event: testEventSubtype})
+		}
+	}()
+	select {
+	case <-enqueued:
+	case <-time.After(5 * time.Second):
+		t.Fatal("enqueueing events blocked behind the stalled flush")
+	}
+}
+
+// Server mode keeps no lease to warm, so an identify that asks for a prewarm
+// has nothing to flush for and its events ride the buffer as usual.
+func TestServerModeIdentifyPrewarmDoesNotFlush(t *testing.T) {
+	rec := &requestRecorder{}
+	client := serverModeClient(t, rec, map[string]stub{
+		eventBatchPath: {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	}, option.WithEventBufferPeriod(time.Minute))
+
+	client.Identify(t.Context(), &schematicgo.EventBodyIdentify{
+		Keys:    map[string]string{"id": "user_1"},
+		Company: &schematicgo.EventBodyIdentifyCompany{Keys: map[string]string{"id": testCompanyID}},
+	}, schematicclient.WithIdentifyPrewarm([]string{testCreditID}))
+	time.Sleep(200 * time.Millisecond)
+
+	_, flushed := rec.find(eventBatchPath)
+	assert.False(t, flushed, "no flush is owed when there is no lease to warm: %v", rec.paths())
+}

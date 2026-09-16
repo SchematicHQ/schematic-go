@@ -36,7 +36,7 @@ func TestInMemoryReservationStoreClampsNonFiniteConsumption(t *testing.T) {
 	installLease(t, leases, clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
 	reservations := NewInMemoryReservationStore(leases, InMemoryReservationStoreOptions{Clock: clock.Now})
 
-	_, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	_, _, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
 	require.NoError(t, err)
 	require.NoError(t, reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 60_000, clock)))
 
@@ -60,7 +60,7 @@ func TestInMemoryReservationStoreConcurrentConsumeClaimsOnce(t *testing.T) {
 	installLease(t, leases, clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
 	reservations := NewInMemoryReservationStore(leases, InMemoryReservationStoreOptions{Clock: clock.Now})
 
-	_, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	_, _, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
 	require.NoError(t, err)
 	require.NoError(t, reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 60_000, clock)))
 
@@ -95,7 +95,7 @@ func TestInMemoryReservationStoreSweepRacesSettleWithoutDoubleRefunding(t *testi
 	installLease(t, leases, clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
 	reservations := NewInMemoryReservationStore(leases, InMemoryReservationStoreOptions{Clock: clock.Now})
 
-	_, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	_, _, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
 	require.NoError(t, err)
 	// Already past its TTL, so the sweeper is eligible to claim it too.
 	require.NoError(t, reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 0, clock)))

@@ -24,7 +24,7 @@ func TestInMemoryLeaseStoreRejectsNonFiniteAndNegativeDebits(t *testing.T) {
 	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 100, 60_000)
 
 	for _, credits := range []float64{math.NaN(), math.Inf(1), math.Inf(-1), -1} {
-		balance, ok, err := store.TryReserve(ctx, "co_1", "ct_1", credits)
+		balance, _, ok, err := store.TryReserve(ctx, "co_1", "ct_1", credits)
 		require.NoError(t, err)
 		assert.False(t, ok)
 		assert.Zero(t, balance)
@@ -37,7 +37,7 @@ func TestInMemoryLeaseStoreRejectsNonFiniteAndNegativeDebits(t *testing.T) {
 	require.NotNil(t, entry)
 	assert.Equal(t, 100.0, entry.LocalRemainingCredits)
 
-	_, ok, err := store.TryReserve(ctx, "co_1", "ct_1", 101)
+	_, _, ok, err := store.TryReserve(ctx, "co_1", "ct_1", 101)
 	require.NoError(t, err)
 	assert.False(t, ok)
 }
@@ -48,7 +48,7 @@ func TestInMemoryLeaseStoreRefundIgnoresNonFiniteAmounts(t *testing.T) {
 	clock := newVirtualClock()
 	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
 	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 100, 60_000)
-	_, _, err := store.TryReserve(ctx, "co_1", "ct_1", 40)
+	_, _, _, err := store.TryReserve(ctx, "co_1", "ct_1", 40)
 	require.NoError(t, err)
 
 	require.NoError(t, store.Refund(ctx, "co_1", "ct_1", math.NaN(), ""))
@@ -76,7 +76,7 @@ func TestInMemoryLeaseStoreConcurrentTryReserveIsAtomic(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			_, ok, err := store.TryReserve(ctx, "co_1", "ct_1", 1)
+			_, _, ok, err := store.TryReserve(ctx, "co_1", "ct_1", 1)
 			assert.NoError(t, err)
 			if ok {
 				granted.Add(1)
@@ -107,12 +107,12 @@ func TestInMemoryLeaseStoreConcurrentSlotsStayIndependent(t *testing.T) {
 		wg.Add(2)
 		go func() {
 			defer wg.Done()
-			_, _, err := store.TryReserve(ctx, "co_1", "ct_1", 1)
+			_, _, _, err := store.TryReserve(ctx, "co_1", "ct_1", 1)
 			assert.NoError(t, err)
 		}()
 		go func() {
 			defer wg.Done()
-			_, _, err := store.TryReserve(ctx, "co_2", "ct_1", 2)
+			_, _, _, err := store.TryReserve(ctx, "co_2", "ct_1", 2)
 			assert.NoError(t, err)
 		}()
 	}

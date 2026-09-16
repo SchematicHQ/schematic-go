@@ -3,6 +3,7 @@ package leases
 import (
 	"context"
 	"errors"
+	"fmt"
 	"math"
 	"strconv"
 	"time"
@@ -33,8 +34,12 @@ const (
 // `expiresAt`); `redis.replicate_commands()` first, so the non-deterministic
 // TIME read is allowed alongside writes on Redis 5/6.
 //
-// The script bodies are byte-identical to the Node and Python SDKs', which is
-// what lets all three fleets share one Redis.
+// The key layout and hash fields are identical to the Node and Python SDKs',
+// which is what lets all three fleets share one Redis. The script bodies are
+// identical too, except that this SDK's try-reserve also returns the leaseId it
+// debited: reading it in the same atomic step is how a hold gets pinned to the
+// lease the credits actually came from. The extra reply field changes nothing
+// another fleet reads.
 const leaseNowMs = `
 redis.replicate_commands()
 local t = redis.call('TIME')
@@ -89,10 +94,11 @@ return 1
 
 // Atomic check-and-decrement on `localRemainingCredits`. Returns the post-debit
 // balance as a string (a Lua number reply truncates to integer, which would
-// corrupt fractional credit costs); nil if there is no lease, the lease has
-// expired, or there is insufficient remaining. The expiry guard compares
-// against the Redis server clock, so a reserve against an expired-but-not-yet-
-// evicted row during the TTL grace window is rejected.
+// corrupt fractional credit costs) alongside the leaseId it came out of; nil if
+// there is no lease, the lease has expired, or there is insufficient remaining.
+// The expiry guard compares against the Redis server clock, so a reserve
+// against an expired-but-not-yet-evicted row during the TTL grace window is
+// rejected.
 const tryReserveScriptSource = leaseNowMs + `
 local raw = redis.call('HGET', KEYS[1], 'localRemainingCredits')
 if not raw then return false end
@@ -103,7 +109,7 @@ local requested = tonumber(ARGV[1])
 if remaining < requested then return false end
 local new_remaining = remaining - requested
 redis.call('HSET', KEYS[1], 'localRemainingCredits', tostring(new_remaining))
-return tostring(new_remaining)
+return {tostring(new_remaining), redis.call('HGET', KEYS[1], 'leaseId') or ''}
 `
 
 // Refund credits, clamped at `grantedAmount`. ARGV[2], when non-empty, pins the
@@ -255,26 +261,35 @@ func (s *RedisLeaseStore) Replace(ctx context.Context, grant LeaseGrant) (bool, 
 	return result == 1, nil
 }
 
-func (s *RedisLeaseStore) TryReserve(ctx context.Context, companyID, creditTypeID string, credits float64) (float64, bool, error) {
+func (s *RedisLeaseStore) TryReserve(ctx context.Context, companyID, creditTypeID string, credits float64) (float64, string, bool, error) {
 	// Reject non-finite/negative debits before they reach the script: the
 	// string form of NaN parses back to a Lua nan, slips through the `<`
 	// comparison, and would poison the SHARED balance for every pod.
 	if !IsValidQuantity(credits) {
-		return 0, false, nil
+		return 0, "", false, nil
 	}
-	balance, err := tryReserveScript.Run(
+	reply, err := tryReserveScript.Run(
 		ctx,
 		s.client,
 		[]string{s.hashKey(companyID, creditTypeID)},
 		formatAmount(credits),
-	).Float64()
+	).Slice()
 	if errors.Is(err, redis.Nil) {
-		return 0, false, nil
+		return 0, "", false, nil
 	}
 	if err != nil {
-		return 0, false, err
+		return 0, "", false, err
 	}
-	return balance, true, nil
+	if len(reply) != 2 {
+		return 0, "", false, fmt.Errorf("try-reserve returned %d fields, want the balance and the lease id", len(reply))
+	}
+	rawBalance, _ := reply[0].(string)
+	balance, err := strconv.ParseFloat(rawBalance, 64)
+	if err != nil {
+		return 0, "", false, fmt.Errorf("try-reserve returned an unparseable balance %q: %w", rawBalance, err)
+	}
+	leaseID, _ := reply[1].(string)
+	return balance, leaseID, true, nil
 }
 
 func (s *RedisLeaseStore) Refund(ctx context.Context, companyID, creditTypeID string, credits float64, pinLeaseID string) error {

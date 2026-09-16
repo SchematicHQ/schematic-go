@@ -116,10 +116,10 @@ type LeaseManager struct {
 
 	background sync.WaitGroup
 
-	mu        sync.Mutex
-	stopped   bool
-	sweepStop chan struct{}
-	sweepDone chan struct{}
+	mu          sync.Mutex
+	stopped     bool
+	sweepCancel context.CancelFunc
+	sweepDone   chan struct{}
 }
 
 // LeaseManagerOptions configures a LeaseManager. The zero value resolves every
@@ -156,7 +156,7 @@ func NewLeaseManager(wire WireClient, leases LeaseStore, opts LeaseManagerOption
 	if logger == nil {
 		logger = noopLogger{}
 	}
-	return &LeaseManager{
+	manager := &LeaseManager{
 		wire:         wire,
 		leases:       leases,
 		reservations: opts.Reservations,
@@ -167,6 +167,9 @@ func NewLeaseManager(wire WireClient, leases LeaseStore, opts LeaseManagerOption
 		clock:        orNow(opts.Clock),
 		logger:       logger,
 	}
+	manager.acquireFlights.spawn = manager.spawn
+	manager.extendFlights.spawn = manager.spawn
+	return manager
 }
 
 // ResolveConfig returns the knobs for one credit type.
@@ -178,6 +181,13 @@ func (m *LeaseManager) ResolveConfig(creditTypeID string) ResolvedLeaseConfig {
 // none is live. It returns nil rather than an error when the wire or the store
 // is down, so the caller routes the outcome through fail-open/fail-closed.
 func (m *LeaseManager) AcquireIfNeeded(ctx context.Context, companyID, creditTypeID string) *LeaseState {
+	if m.isStopped() {
+		// A lease installed after ReleaseAllLocalLeases has listed the slots
+		// would be held until it expires server-side, with nobody left to
+		// release it.
+		m.logger.Debug(ctx, fmt.Sprintf("Not acquiring a credit lease for %s/%s: the manager is stopped", companyID, creditTypeID))
+		return nil
+	}
 	existing, err := m.leases.Get(ctx, companyID, creditTypeID)
 	if err != nil {
 		m.logger.Error(ctx, fmt.Sprintf("Failed to read lease store for %s/%s: %v", companyID, creditTypeID, err))
@@ -192,8 +202,14 @@ func (m *LeaseManager) AcquireIfNeeded(ctx context.Context, companyID, creditTyp
 	// and its replace, clobbering a lease that pod just installed. Reading a
 	// stale entry in the gap is harmless, since every path that acts on a lease
 	// re-guards on expiry.
-	return m.acquireFlights.do(LeaseKey(companyID, creditTypeID), func() *LeaseState {
-		return m.acquire(ctx, companyID, creditTypeID)
+	return m.acquireFlights.do(ctx, LeaseKey(companyID, creditTypeID), func() *LeaseState {
+		// The flight is shared, so it runs detached: the first caller's
+		// cancellation or short deadline would otherwise hand every waiter on
+		// the slot a nil lease. Each waiter still honors its own context while
+		// it waits.
+		detached, cancel := detachedContext(ctx)
+		defer cancel()
+		return m.acquire(detached, companyID, creditTypeID)
 	})
 }
 
@@ -274,8 +290,12 @@ func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID 
 	if !belowWatermark && !belowRequired {
 		return entry
 	}
-	return m.extendFlights.do(LeaseKey(companyID, creditTypeID), func() *LeaseState {
-		return m.extend(ctx, *entry, resolved, requiredCredits)
+	return m.extendFlights.do(ctx, LeaseKey(companyID, creditTypeID), func() *LeaseState {
+		// Detached for the same reason the acquire flight is: one caller's
+		// deadline must not decide what every waiter on the slot gets.
+		detached, cancel := detachedContext(ctx)
+		defer cancel()
+		return m.extend(detached, *entry, resolved, requiredCredits)
 	})
 }
 
@@ -370,29 +390,32 @@ func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 func (m *LeaseManager) StartSweep() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	if m.reservations == nil || m.stopped || m.sweepStop != nil {
+	if m.reservations == nil || m.stopped || m.sweepCancel != nil {
 		return
 	}
-	stop := make(chan struct{})
+	// The sweep itself runs on this context, not a background one, so a Stop
+	// landing behind a Redis backlog cancels the sweep in flight instead of
+	// waiting out a whole pass over the reservation table.
+	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan struct{})
-	m.sweepStop = stop
+	m.sweepCancel = cancel
 	m.sweepDone = done
-	go m.sweepLoop(stop, done)
+	go m.sweepLoop(ctx, done)
 }
 
-func (m *LeaseManager) sweepLoop(stop <-chan struct{}, done chan<- struct{}) {
+func (m *LeaseManager) sweepLoop(ctx context.Context, done chan<- struct{}) {
 	defer close(done)
 	ticker := time.NewTicker(m.sweepEvery)
 	defer ticker.Stop()
 	for {
 		select {
-		case <-stop:
+		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			if _, err := m.reservations.SweepExpired(context.Background()); err != nil {
+			if _, err := m.reservations.SweepExpired(ctx); err != nil && ctx.Err() == nil {
 				// Keep the loop alive: a sweep failure is transient (a Redis
 				// blip), and the next tick retries.
-				m.logger.Debug(context.Background(), fmt.Sprintf("Reservation sweep failed: %v", err))
+				m.logger.Debug(ctx, fmt.Sprintf("Reservation sweep failed: %v", err))
 			}
 		}
 	}
@@ -403,15 +426,25 @@ func (m *LeaseManager) sweepLoop(stop <-chan struct{}, done chan<- struct{}) {
 // at DetachedWorkTimeout and unwinds on its own, so a shutdown does not sit
 // behind it.
 func (m *LeaseManager) Stop() {
+	m.StopWithContext(context.Background())
+}
+
+// StopWithContext is Stop under the caller's own shutdown budget: every wait
+// ends when ctx does, so a client tearing down several subsystems spends one
+// deadline across all of them rather than each timeout in turn.
+func (m *LeaseManager) StopWithContext(ctx context.Context) {
 	m.mu.Lock()
-	stop, done := m.sweepStop, m.sweepDone
+	cancelSweep, done := m.sweepCancel, m.sweepDone
 	m.stopped = true
-	m.sweepStop, m.sweepDone = nil, nil
+	m.sweepCancel, m.sweepDone = nil, nil
 	m.mu.Unlock()
 
-	if stop != nil {
-		close(stop)
-		<-done
+	if cancelSweep != nil {
+		cancelSweep()
+		select {
+		case <-done:
+		case <-ctx.Done():
+		}
 	}
 
 	waited := make(chan struct{})
@@ -423,12 +456,21 @@ func (m *LeaseManager) Stop() {
 	defer timer.Stop()
 	select {
 	case <-waited:
+	case <-ctx.Done():
 	case <-timer.C:
-		m.logger.Warn(context.Background(), fmt.Sprintf(
+		m.logger.Warn(ctx, fmt.Sprintf(
 			"Timed out after %s waiting for background credit lease work; it is capped at %s and unwinds on its own",
 			m.stopTimeout, DetachedWorkTimeout,
 		))
 	}
+}
+
+// isStopped reads the flag under the lock spawn takes, so an acquire and a Stop
+// racing cannot both conclude they got there first.
+func (m *LeaseManager) isStopped() bool {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return m.stopped
 }
 
 // spawn runs a fire-and-forget step, reporting whether it started one. It
@@ -464,9 +506,14 @@ func (m *LeaseManager) drainBackground() {
 }
 
 // flightGroup collapses concurrent calls for one slot into a single in-flight
-// call. Best-effort: a caller racing ahead of the registration still issues its
-// own wire call.
+// call, which runs on a goroutine of its own so that no one caller's context
+// decides what every other caller on the slot gets. Best-effort: a caller
+// racing ahead of the registration still issues its own wire call.
 type flightGroup struct {
+	// spawn runs the shared call, tracked so a Stop waits it out and a panic in
+	// it never reaches the host process.
+	spawn func(func()) bool
+
 	mu       sync.Mutex
 	inFlight map[string]*flight
 }
@@ -476,12 +523,11 @@ type flight struct {
 	result *LeaseState
 }
 
-func (g *flightGroup) do(key string, fn func() *LeaseState) *LeaseState {
+func (g *flightGroup) do(ctx context.Context, key string, fn func() *LeaseState) *LeaseState {
 	g.mu.Lock()
 	if existing, ok := g.inFlight[key]; ok {
 		g.mu.Unlock()
-		<-existing.done
-		return existing.result
+		return existing.wait(ctx)
 	}
 	call := &flight{done: make(chan struct{})}
 	if g.inFlight == nil {
@@ -490,16 +536,33 @@ func (g *flightGroup) do(key string, fn func() *LeaseState) *LeaseState {
 	g.inFlight[key] = call
 	g.mu.Unlock()
 
-	defer func() {
+	finish := func() {
 		g.mu.Lock()
 		if g.inFlight[key] == call {
 			delete(g.inFlight, key)
 		}
 		g.mu.Unlock()
 		close(call.done)
-	}()
-	call.result = fn()
-	return call.result
+	}
+	if !g.spawn(func() {
+		defer finish()
+		call.result = fn()
+	}) {
+		finish()
+		return nil
+	}
+	return call.wait(ctx)
+}
+
+// wait blocks for the shared call, or for the caller's own context to end,
+// whichever lands first.
+func (f *flight) wait(ctx context.Context) *LeaseState {
+	select {
+	case <-f.done:
+		return f.result
+	case <-ctx.Done():
+		return nil
+	}
 }
 
 // noopLogger keeps the manager's logging calls total without forcing a logger

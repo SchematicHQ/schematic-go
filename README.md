@@ -796,42 +796,71 @@ When running in Replicator Mode, the client will:
 
 ## Credit Leases and Reservations
 
-For features metered by credit burndown, such as inference tokens, `Check` reserves credits for the work you are about to do and `TrackWithReservation` settles the reservation with the actual usage. The reservation comes off the company's balance up front, so a concurrent check sees the credits as spoken for, and the unspent slice returns when the usage is reported.
+For features metered by credit burndown, such as inference tokens, `Check` reserves credits for the work you are about to do and `TrackWithReservation` settles the reservation with the actual usage. The SDK gates in one of two modes:
 
-Opt in with `option.WithCreditLeases`:
+- **Client mode** draws a *lease*, a tranche of credits, from the server and carves a per-operation *reservation* out of it locally, so a check needs no API call. It needs [DataStream](#datastream), and on a multi-process deployment a shared Redis so every process gates against the same lease.
+- **Server mode** makes one `check-and-reserve` API call per check. No lease, no Redis, no local state.
+
+`Mode` defaults to `auto`, which picks client mode when DataStream is enabled and server mode otherwise.
+
+### Setup
 
 ```go
 import (
+  "time"
+
+  "github.com/redis/go-redis/v9"
+  schematicclient "github.com/schematichq/schematic-go/client"
   core "github.com/schematichq/schematic-go/core"
   option "github.com/schematichq/schematic-go/option"
-  schematicclient "github.com/schematichq/schematic-go/client"
 )
+
+redisClient := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
 
 client := schematicclient.NewSchematicClient(
   option.WithAPIKey(apiKey),
+  option.WithDatastream(option.WithRedisClient(redisClient)), // also backs lease state
   option.WithCreditLeases(core.CreditLeaseConfig{
-    Mode:                  core.CreditLeaseModeServer,
-    DefaultReservationTTL: time.Minute,
+    DefaultLeaseSize:      10_000,          // credits drawn per lease
+    DefaultLeaseDuration:  5 * time.Minute, // how long a lease lives
+    DefaultReservationTTL: time.Minute,     // how long a reservation survives unsettled
   }),
 )
 defer client.Close()
 ```
 
-Then reserve the operation's upper bound, do the work, and report what it actually used:
+Set `RedisClient` on the config to keep lease state in a different Redis than the DataStream cache. Without any Redis, lease state stays per process, which the SDK warns about at startup, and `Close` releases what this process holds.
+
+Server mode needs only a TTL:
+
+```go
+client := schematicclient.NewSchematicClient(
+  option.WithAPIKey(apiKey),
+  option.WithCreditLeases(core.CreditLeaseConfig{
+    DefaultReservationTTL: time.Minute, // how long the server reserves the credits if no track settles them, max 1 hour
+  }),
+)
+```
+
+Only `Mode` and `DefaultReservationTTL` apply in server mode; the SDK warns at startup when a client-only option is set.
+
+### Checking and tracking
+
+Reserve the operation's upper bound, do the work, and report what it actually used. The unspent slice returns to the balance.
 
 ```go
 result := client.Check(ctx, evaluationCtx, "inference",
-  schematicclient.WithUsage(1000),
-  schematicclient.WithEventSubtype("inference_tokens"),
+  schematicclient.WithUsage(1000),                      // upper bound for this operation
+  schematicclient.WithEventSubtype("inference_tokens"), // the metered event
 )
 if !result.Allowed {
-  return fmt.Errorf("not allowed: %s", result.Reason)
+  return fmt.Errorf("credit balance exceeded: %s", result.Reason)
 }
 
 tokensUsed := runInference()
 
-// A check can allow without reserving anything, for instance an unmetered
-// feature. The usage still has to be reported.
+// A check can allow without reserving anything, for instance when the feature
+// is not metered by credits. That usage still has to be tracked.
 if result.Reservation != nil {
   client.TrackWithReservation(ctx, result.Reservation, tokensUsed)
 } else {
@@ -843,67 +872,43 @@ if result.Reservation != nil {
 }
 ```
 
-A check that cannot gate, because the API is unreachable or errored, fails closed by default: `Allowed` is false and nothing is reserved. Pass `schematicclient.WithFailOpen()` where letting traffic through beats denying it, and in server mode the check returns your default value instead, from `schematicclient.WithCheckDefault` or the client's flag defaults, with `_fail_open` appended to the reason. Insufficient credits is not one of those cases: the server knows the credits are not there, so the check denies with reason `Insufficient credits` whatever the failure mode says.
+An unsettled reservation is refunded at `DefaultReservationTTL`. A settle arriving later still bills the server, since the event carries an idempotency key derived from the reservation ID, but no longer re-debits the local lease, so size the TTL above the longest expected gap between `Check` and `TrackWithReservation`.
 
-An unsettled reservation is refunded at `DefaultReservationTTL`, so size it above the longest gap you expect between `Check` and `TrackWithReservation`. The settling event carries an idempotency key derived from the reservation ID, so a duplicate or retried settle is dropped server-side rather than billed twice.
+### Pre-warming
+
+Warm the lease when the user is identified, so a session's first check does not wait on a lease acquire:
+
+```go
+client.Identify(ctx, &schematicgo.EventBodyIdentify{
+  Keys:    map[string]string{"user-id": "your-user-id"},
+  Company: &schematicgo.EventBodyIdentifyCompany{Keys: map[string]string{"id": "your-company-id"}},
+}, schematicclient.WithIdentifyPrewarm([]string{"credit-type-id"}))
+```
+
+Or call `client.Prewarm(ctx, evaluationCtx, []string{"credit-type-id"})` directly, which returns any acquire error. Both are no-ops in server mode.
+
+### When a check cannot gate
+
+A check that cannot gate, because the API is unreachable, Redis is down, or the lease is exhausted, fails closed by default: `Allowed` is false and nothing is reserved. Pass `schematicclient.WithFailOpen()` where letting traffic through beats denying it.
+
+In client mode, fail-open still runs the flag's rules with the credit balance assumed sufficient, so plan targeting and every non-credit condition apply and only the credit gate is bypassed. In server mode it returns your default value (`schematicclient.WithCheckDefault`, else the client's flag default), which is false unless you set one. Insufficient credits is different: the server knows the credits are not there, so the check denies with reason `Insufficient credits` whatever the failure mode says.
 
 ### Configuration Options
 
-Every field of `core.CreditLeaseConfig`:
+All fields live on `core.CreditLeaseConfig`. Everything below `DefaultReservationTTL` applies to client mode only.
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Mode` | `core.CreditLeaseMode` | `auto` | Where reservations are made: `server`, `client`, or `auto` |
-| `DefaultReservationTTL` | `time.Duration` | 1 minute | How long a reservation survives unsettled. Server mode clamps it to 59 minutes, the furthest out the API will reserve credits. Client mode keeps it as written, since there it only tells the local sweeper when to refund |
-| `DefaultLeaseDuration` | `time.Duration` | 5 minutes | Lease lifetime requested at acquire and extend (client mode) |
-| `DefaultLeaseSize` | `float64` | 10000 | Credits requested per acquire, and the minimum extend tranche (client mode) |
-| `LowWaterMark` | `float64` | 0.25 | Remaining/granted ratio at or below which a background extend fires (client mode) |
-| `SweepInterval` | `time.Duration` | 1 second | How often expired reservations are swept back to their leases (client mode) |
-| `PrewarmResolveTimeout` | `*time.Duration` | 5 seconds | How long a prewarm waits for a freshly identified company to surface over DataStream. Set it to zero to skip the wait, so a prewarm warms only a company the cache already holds (client mode) |
-| `RedisClient` | `redis.UniversalClient` | DataStream's client | Redis backing lease and reservation state. Without one, and without a DataStream cache to borrow from, lease state stays per process (client mode) |
-| `RedisKeyPrefix` | `string` | `schematic:` | Prefix for lease and reservation keys, the same default the other SDKs use (client mode) |
-| `Overrides` | `map[string]core.CreditLeaseOverride` | none | Per credit type overrides, keyed by credit type ID (client mode) |
-
-An override sets `LeaseSize`, `LeaseDuration`, `ReservationTTL`, or `LowWaterMark` for one credit type; a nil field keeps the client-wide default.
-
-`auto` picks client mode when DataStream is enabled and server mode otherwise. The SDK warns at startup when a client-mode option is set on a client that resolves to server mode, and when `client` is asked for without DataStream, which gates nothing.
-
-### Client mode
-
-In client mode the SDK asks the API for a *lease*, a tranche of credits for one company and credit type, and carves each reservation out of that tranche locally. A check gates against the lease's remaining credits instead of a round trip. The SDK extends a lease in the background once it drops to `LowWaterMark`, and, without Redis, releases what this process still has on `Close`; a shared lease belongs to every process, so `Close` leaves it for the sweeper.
-
-Client mode needs DataStream, which supplies the flags and company data the check evaluates against. Give it a Redis client too whenever more than one process serves the same companies: lease state in Redis is what keeps two processes from spending the same credits twice.
-
-```go
-client := schematicclient.NewSchematicClient(
-  option.WithAPIKey(apiKey),
-  option.WithDatastream(),
-  option.WithCreditLeases(core.CreditLeaseConfig{
-    Mode:             core.CreditLeaseModeClient,
-    RedisClient:      redisClient,
-    DefaultLeaseSize: 50000,
-  }),
-)
-defer client.Close()
-```
-
-The `Check` and `TrackWithReservation` calls are the same as in server mode. What changes is where the reservation is made, so the settling event names the lease rather than a server-side reservation.
-
-The first check for a company pays for the acquire. `Prewarm` moves that cost off the request path:
-
-```go
-if err := client.Prewarm(ctx, evaluationCtx, []string{"credit-type-id"}); err != nil {
-  log.Printf("prewarm failed: %v", err)
-}
-```
-
-`WithIdentifyPrewarm` does the same at the point you already identify the company, in the background:
-
-```go
-client.Identify(ctx, body, schematicclient.WithIdentifyPrewarm([]string{"credit-type-id"}))
-```
-
-When a lease cannot be acquired, or has nothing left, the check fails closed by default. Under `WithFailOpen` it evaluates as if the balance were unlimited and reserves nothing.
+| `Mode` | `core.CreditLeaseMode` | `auto` | `client`, `server`, or `auto` (client when DataStream is enabled). |
+| `DefaultReservationTTL` | `time.Duration` | 1 minute | How long an unsettled reservation survives. Capped at one hour in server mode. |
+| `DefaultLeaseDuration` | `time.Duration` | 5 minutes | Lease lifetime requested at acquire and extend. |
+| `DefaultLeaseSize` | `float64` | 10000 | Credits requested per acquire, and the minimum extend tranche. |
+| `LowWaterMark` | `float64` | 0.25 | Extend in the background when the lease balance dips below this fraction. |
+| `SweepInterval` | `time.Duration` | 1 second | How often expired reservations are swept back to their leases. |
+| `PrewarmResolveTimeout` | `*time.Duration` | 5 seconds | How long `Prewarm` waits for a freshly identified company to surface. Zero skips the wait. |
+| `RedisClient` | `redis.UniversalClient` | the DataStream cache's client | Client for lease and reservation state. |
+| `RedisKeyPrefix` | `string` | `schematic:` | Key prefix for lease and reservation keys. Matches the Node and Python SDKs. |
+| `Overrides` | `map[string]core.CreditLeaseOverride` | none | Per-credit-type overrides of the four knobs above, keyed by credit type ID. A nil field keeps the client-wide default. |
 
 ## Errors
 

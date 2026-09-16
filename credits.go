@@ -1035,11 +1035,14 @@ func (d *DeleteBillingPlanCreditGrantRequest) SetApplyToExisting(applyToExisting
 var (
 	extendCreditLeaseRequestBodyFieldAdditionalAmount = big.NewInt(1 << 0)
 	extendCreditLeaseRequestBodyFieldExpiresAt        = big.NewInt(1 << 1)
+	extendCreditLeaseRequestBodyFieldIdempotencyKey   = big.NewInt(1 << 2)
 )
 
 type ExtendCreditLeaseRequestBody struct {
 	AdditionalAmount float64    `json:"additional_amount" url:"-"`
 	ExpiresAt        *time.Time `json:"expires_at,omitempty" url:"-"`
+	// A caller-chosen key for safe retries: a second request with the same key returns the lease as it stands instead of growing it again. Keys are unique per environment across every extend
+	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1066,6 +1069,13 @@ func (e *ExtendCreditLeaseRequestBody) SetAdditionalAmount(additionalAmount floa
 func (e *ExtendCreditLeaseRequestBody) SetExpiresAt(expiresAt *time.Time) {
 	e.ExpiresAt = expiresAt
 	e.require(extendCreditLeaseRequestBodyFieldExpiresAt)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *ExtendCreditLeaseRequestBody) SetIdempotencyKey(idempotencyKey *string) {
+	e.IdempotencyKey = idempotencyKey
+	e.require(extendCreditLeaseRequestBodyFieldIdempotencyKey)
 }
 
 func (e *ExtendCreditLeaseRequestBody) UnmarshalJSON(data []byte) error {

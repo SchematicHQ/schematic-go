@@ -25,11 +25,12 @@ const (
 	// reservationTrackIdempotencyPrefix namespaces the settling track event's
 	// dedupe key, which is derived from the reservation ID.
 	reservationTrackIdempotencyPrefix = "lease-reservation:"
-	// releaseTimeout bounds a best-effort release, which nobody is waiting on
-	// and which the server would eventually do itself at the hold's expiry.
+	// releaseTimeout bounds a best-effort release of a hold or a lease, which
+	// nobody is waiting on and which the server would eventually do itself at
+	// expiry. Close gives the releases it runs this budget of their own.
 	releaseTimeout = 5 * time.Second
-	// closeTimeout is the whole budget a Close spends winding the client down,
-	// shared across every wait inside it.
+	// closeTimeout is the budget a Close spends waiting out the work already
+	// running, shared across every one of those waits.
 	closeTimeout = 10 * time.Second
 	// identifyFlushTimeout bounds the flush an identify does before prewarming,
 	// so an API that is slow to take the event cannot hold the prewarm, or a
@@ -444,9 +445,11 @@ func setClientOnlyLeaseFields(cfg *core.CreditLeaseConfig) []string {
 // effectiveLeaseMode is which mode a check with usage resolves to on this
 // client. The empty string means no credit gating at all.
 //
-// It resolves per check rather than once at construction so a DataStream that
-// went away after construction falls to server mode rather than silently
-// dropping every check to a plain, ungated flag check.
+// DataStream counts as available when the client built a DataStream client at
+// construction, not when the socket is up, so the answer is the same for the
+// client's life. A socket that drops mid-run therefore stays in client mode,
+// where the flow degrades per check instead: the entity lookups it needs fail,
+// and each check falls back to a plain API check that holds nothing.
 func (c *SchematicClient) effectiveLeaseMode() core.CreditLeaseMode {
 	if c.creditLeases == nil || c.isOffline {
 		return ""
@@ -671,10 +674,16 @@ func (c *SchematicClient) checkFallback(
 	ctx, cancel := o.withTimeout(ctx)
 	defer cancel()
 
-	resp, err := c.CheckFlagWithEntitlement(ctx, evalCtxWithPreflight(evalCtx, o), flagKey)
+	// The variant that keeps the failure: the public method answers an
+	// unreachable API with the flag default and no error, which would decide
+	// the verdict here without the caller's fail-open choice ever being read.
+	resp, err := c.checkFlagWithEntitlement(ctx, evalCtxWithPreflight(evalCtx, o), flagKey)
 	if err != nil || resp == nil {
-		value := c.resolveCheckDefault(flagKey, o)
-		return &CheckResult{Allowed: value, Value: value, FlagKey: flagKey, Reason: "error"}
+		if err == nil {
+			err = fmt.Errorf("the check of flag %s returned no response", flagKey)
+		}
+		c.logger.Error(ctx, fmt.Sprintf("Check: flag %s could not be evaluated: %v", flagKey, err))
+		return c.checkErrorResult(flagKey, o, err)
 	}
 
 	return &CheckResult{
@@ -922,6 +931,16 @@ func (c *SchematicClient) checkFailureResult(flagKey string, o *checkOptions, re
 		Reason:  reason + "_fail_open",
 		Error:   reason,
 	}
+}
+
+// checkErrorResult resolves a plain check that never reached a verdict, through
+// the same fail-open contract the credit paths use, and carries the underlying
+// error: a defaulted value on its own cannot tell a caller that nothing
+// evaluated the flag.
+func (c *SchematicClient) checkErrorResult(flagKey string, o *checkOptions, err error) *CheckResult {
+	result := c.checkFailureResult(flagKey, o, "check_failed")
+	result.Error = err.Error()
+	return result
 }
 
 func (c *SchematicClient) resolveCheckDefault(flagKey string, o *checkOptions) bool {

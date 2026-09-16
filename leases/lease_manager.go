@@ -193,6 +193,13 @@ func (m *LeaseManager) AcquireIfNeeded(ctx context.Context, companyID, creditTyp
 		m.logger.Error(ctx, fmt.Sprintf("Failed to read lease store for %s/%s: %v", companyID, creditTypeID, err))
 		return nil
 	}
+	// Liveness here is judged on this pod's clock, while the Redis store re-reads
+	// expiry against the Redis server's clock inside TryReserve. The two can
+	// disagree, so a lease this call hands back can still be refused there, and
+	// the check routes that through its fail-open handling. Assumed rather than
+	// reconciled: the stores keep an expired row for a grace window precisely so
+	// clocks within it agree on what is live, and a TIME round trip per check
+	// would buy nothing else.
 	if existing != nil && existing.ExpiresAt.After(m.clock()) {
 		return existing
 	}
@@ -290,6 +297,12 @@ func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID 
 	if !belowWatermark && !belowRequired {
 		return entry
 	}
+	// A caller joining an extend already in flight gets whatever that extend was
+	// sized for, which may be a smaller shortfall than its own, so a large check
+	// can still come back short and fail its post-extend reserve. It re-extends
+	// on the next check rather than looping here, since sizing the shared flight
+	// to the largest waiter means holding it open for waiters that have not
+	// arrived yet. All three SDKs share the limitation.
 	return m.extendFlights.do(ctx, LeaseKey(companyID, creditTypeID), func() *LeaseState {
 		// Detached for the same reason the acquire flight is: one caller's
 		// deadline must not decide what every waiter on the slot gets.

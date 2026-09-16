@@ -45,10 +45,14 @@ type SchematicClient struct {
 
 	// background tracks the goroutines the client spawns on a caller's behalf,
 	// so Close can wait them out instead of letting them call into plumbing it
-	// is about to tear down.
-	backgroundMu sync.Mutex
-	background   sync.WaitGroup
-	closed       bool
+	// is about to tear down. backgroundCtx is what that work runs on: it
+	// outlives the request that started it, and Close cancels it, so a call
+	// stuck on the wire cannot spend the whole shutdown budget.
+	backgroundMu     sync.Mutex
+	background       sync.WaitGroup
+	backgroundCtx    context.Context
+	cancelBackground context.CancelFunc
+	closed           bool
 }
 
 // CheckFlagResponse is an alias for core.CheckFlagResponse to preserve the public API.
@@ -83,8 +87,11 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		}
 	}
 
+	backgroundCtx, cancelBackground := context.WithCancel(context.Background())
 	client := &SchematicClient{
 		Client:                  NewClient(opts...),
+		backgroundCtx:           backgroundCtx,
+		cancelBackground:        cancelBackground,
 		errors:                  make(chan error, 100),
 		ctxErrors:               make(chan *core.CtxError, 100),
 		eventBufferPeriod:       options.EventBufferPeriod,
@@ -135,6 +142,18 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 // CheckFlagWithEntitlement checks a flag and returns the full response including entitlement information.
 // Note: The deprecated FeatureAllocation and FeatureUsage* fields are not included in the response.
 func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
+	// This method has always answered an unreachable API with the flag default
+	// and a nil error, and callers rely on that. checkFlagWithEntitlement is
+	// the variant that keeps the failure.
+	resp, _ := c.checkFlagWithEntitlement(ctx, evalCtx, flagKey)
+	return resp, nil
+}
+
+// checkFlagWithEntitlement is CheckFlagWithEntitlement with the failure behind
+// a defaulted answer kept. Check needs it to tell "the flag evaluated to false"
+// from "nothing evaluated the flag", which is the difference between a verdict
+// and the caller's fail-open choice.
+func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
 	if c.isOffline {
 		return &CheckFlagResponse{
 			FlagKey: flagKey,
@@ -147,12 +166,12 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
 		if err != nil {
 			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
-			return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
+			return c.checkFlagAPI(ctx, evalCtx, flagKey)
 		}
 
 		checkFlagResp := toCheckFlagResponse(resp)
 		if checkFlagResp == nil {
-			return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
+			return c.checkFlagAPI(ctx, evalCtx, flagKey)
 		}
 
 		body := schematicgo.EventBody{
@@ -176,7 +195,7 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 		return checkFlagResp, nil
 	}
 
-	return c.checkFlagAPI(ctx, evalCtx, flagKey), nil
+	return c.checkFlagAPI(ctx, evalCtx, flagKey)
 }
 
 // CheckFlags evaluates multiple flags for the given context.
@@ -378,7 +397,10 @@ func flagResponseDataToCheckFlagResponse(f *schematicgo.CheckFlagResponseData) *
 	}
 }
 
-func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (result *CheckFlagResponse) {
+// checkFlagAPI evaluates a flag over the REST API. It always answers, falling
+// back to the flag default, and reports alongside the answer whether anything
+// actually evaluated the flag.
+func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (result *CheckFlagResponse, failure error) {
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
@@ -387,6 +409,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 				Value:   c.getFlagDefault(flagKey),
 				Reason:  "error",
 			}
+			failure = fmt.Errorf("panic while checking flag %s: %v", flagKey, r)
 		}
 	}()
 
@@ -406,7 +429,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		for _, provider := range c.flagCheckCacheProviders {
 			if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
 				result := *cached
-				return &result
+				return &result, nil
 			}
 		}
 	}
@@ -422,7 +445,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 			FlagKey: flagKey,
 			Value:   c.getFlagDefault(flagKey),
 			Reason:  "error",
-		}
+		}, err
 	}
 
 	if resp == nil {
@@ -431,7 +454,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 			FlagKey: flagKey,
 			Value:   c.getFlagDefault(flagKey),
 			Reason:  "no response",
-		}
+		}, fmt.Errorf("the check of flag %s returned no response", flagKey)
 	}
 
 	checkFlagResp := &CheckFlagResponse{
@@ -460,7 +483,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		}()
 	}
 
-	return checkFlagResp
+	return checkFlagResp, nil
 }
 
 // toCheckFlagResponse converts a rulesengine.CheckFlagResult to CheckFlagResponse,
@@ -541,21 +564,37 @@ func (c *SchematicClient) Close() {
 		}
 	}()
 
-	// One budget for the whole teardown, rather than each step's timeout in
-	// turn: a caller closing a client wants a bounded wait, not the sum of
-	// every wait inside it.
+	// One budget for winding down the work already running, rather than each
+	// step's timeout in turn: a caller closing a client wants a bounded wait,
+	// not the sum of every wait inside it.
 	ctx, cancel := context.WithTimeout(context.Background(), closeTimeout)
 	defer cancel()
 
-	// Before the lease plumbing goes away, since these goroutines call into it.
-	c.stopBackground(ctx)
+	// Refuse and cancel first, so what follows waits on work that is already
+	// unwinding rather than work still starting.
+	c.beginClosing()
 
 	if c.leaseManager != nil {
+		// Stops the sweep, refuses new lease work, and waits out the acquires
+		// already in flight. Nothing can install a lease afterwards, which is
+		// what makes the release below safe to run off a listing.
 		c.leaseManager.StopWithContext(ctx)
+	}
+	// After the manager is stopped, so a prewarm still on its feet is refused a
+	// lease rather than starting a fresh acquire, and the wait stays short.
+	c.awaitBackground(ctx)
+
+	if c.leaseManager != nil {
 		// Releasing hands the unspent remainder of this process's leases back to
 		// the company balance now instead of at expiry. The manager skips a
 		// shared store, whose leases sibling processes still draw on.
-		c.leaseManager.ReleaseAllLocalLeases(ctx)
+		//
+		// Its own budget: the releases are the one step whose work has not
+		// started yet, so however long the waits above took, they still run on
+		// a live context rather than failing one by one on an expired one.
+		releaseCtx, cancelRelease := context.WithTimeout(context.Background(), releaseTimeout)
+		c.leaseManager.ReleaseAllLocalLeases(releaseCtx)
+		cancelRelease()
 	}
 
 	close(c.stopWorker)
@@ -589,14 +628,32 @@ func (c *SchematicClient) spawnBackground(fn func()) bool {
 	return true
 }
 
-// stopBackground refuses further background work and waits out what is already
-// running, bounded by the caller's close budget so a stalled call cannot hold up
-// a shutdown.
-func (c *SchematicClient) stopBackground(ctx context.Context) {
+// backgroundContext is what work spawned on a caller's behalf runs on. It keeps
+// the caller's values, so logging still carries them, but takes its
+// cancellation from the client: a request that ends must not cut the work
+// short, and a Close must.
+func (c *SchematicClient) backgroundContext(ctx context.Context) (context.Context, context.CancelFunc) {
+	detached, cancel := context.WithCancel(context.WithoutCancel(ctx))
+	stop := context.AfterFunc(c.backgroundCtx, cancel)
+	return detached, func() {
+		stop()
+		cancel()
+	}
+}
+
+// beginClosing refuses further background work and cancels what is running.
+// Split from the wait so a Close can cancel everything up front and then wait
+// once, rather than waiting out each stalled call in turn.
+func (c *SchematicClient) beginClosing() {
 	c.backgroundMu.Lock()
 	c.closed = true
 	c.backgroundMu.Unlock()
+	c.cancelBackground()
+}
 
+// awaitBackground waits out the background work still running, bounded by the
+// caller's close budget so a stalled call cannot hold up a shutdown.
+func (c *SchematicClient) awaitBackground(ctx context.Context) {
 	waited := make(chan struct{})
 	go func() {
 		c.background.Wait()
@@ -659,11 +716,13 @@ func (c *SchematicClient) Identify(
 		c.logger.Debug(ctx, "Identify: a prewarm needs company keys on the identify event")
 		return
 	}
-	// Detached, so a caller that cancels the request context still gets its
-	// leases warmed, and unawaited, so the identify does not wait on the wire.
+	// Off the caller's cancellation, so a caller that cancels the request
+	// context still gets its leases warmed, and unawaited, so the identify does
+	// not wait on the wire. A Close still cuts it short.
 	evalCtx := &schematicgo.CheckFlagRequestBody{Company: body.Company.Keys, User: body.Keys}
-	prewarmCtx := context.WithoutCancel(ctx)
+	prewarmCtx, releasePrewarmCtx := c.backgroundContext(ctx)
 	spawned := c.spawnBackground(func() {
+		defer releasePrewarmCtx()
 		// The buffer otherwise holds the identify for up to its flush period,
 		// which outlasts the prewarm's own wait for the company to surface, so
 		// the prewarm would be polling for an entity the server has not been
@@ -682,6 +741,7 @@ func (c *SchematicClient) Identify(
 		}
 	})
 	if !spawned {
+		releasePrewarmCtx()
 		c.logger.Debug(ctx, "Identify: the client is closing, so the prewarm was skipped")
 	}
 }

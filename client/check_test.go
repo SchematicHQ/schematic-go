@@ -34,6 +34,9 @@ type recordedRequest struct {
 	path        string
 	body        []byte
 	hasDeadline bool
+	// onDeadCtx says the SDK made this call on a context that had already
+	// expired, so nothing would have reached a real server.
+	onDeadCtx bool
 }
 
 type requestRecorder struct {
@@ -92,14 +95,30 @@ func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(
 			body, _ = io.ReadAll(req.Body)
 		}
 		_, hasDeadline := req.Context().Deadline()
-		rec.record(recordedRequest{path: req.URL.Path, body: body, hasDeadline: hasDeadline})
+		rec.record(recordedRequest{
+			path:        req.URL.Path,
+			body:        body,
+			hasDeadline: hasDeadline,
+			onDeadCtx:   req.Context().Err() != nil,
+		})
+
+		// A request whose context is already done never reaches a server, which
+		// is what a real transport does and what makes a test able to tell a
+		// call the SDK still had budget for from one it did not.
+		if err := req.Context().Err(); err != nil {
+			return nil, err
+		}
 
 		for suffix, s := range stubs {
 			if !strings.HasSuffix(req.URL.Path, suffix) {
 				continue
 			}
 			if s.block != nil {
-				<-s.block
+				select {
+				case <-s.block:
+				case <-req.Context().Done():
+					return nil, req.Context().Err()
+				}
 			}
 			data, err := json.Marshal(s.body)
 			if err != nil {
@@ -958,4 +977,110 @@ func TestCheckFractionalUsage(t *testing.T) {
 	// bound, so the fraction rounds up rather than down.
 	eventUsage := body["preflight"].(map[string]any)["event_usage"].(map[string]any)
 	assert.Equal(t, float64(3), eventUsage["quantity"])
+}
+
+// A check the API could not answer is not a verdict. Fail-closed is the
+// default, and the caller gets the error rather than a defaulted value that
+// reads like the server said no.
+func TestCheckFailsClosedWhenTheAPIFails(t *testing.T) {
+	rec := &requestRecorder{}
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(serveStubs(t, rec, map[string]stub{
+		checkPath: {status: http.StatusInternalServerError, body: map[string]any{"error": "boom"}},
+	})).AnyTimes()
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		core.WithDefaultFlagValues(map[string]bool{"test-flag": true}),
+	)
+	defer client.Close()
+
+	result := client.Check(context.Background(), testEvalCtx(), "test-flag", schematicclient.WithUsage(10))
+
+	assert.False(t, result.Allowed, "a flag default must not stand in for a verdict")
+	assert.False(t, result.Value)
+	assert.Equal(t, "check_failed", result.Reason)
+	assert.NotEmpty(t, result.Error, "the caller is told what went wrong")
+}
+
+// Fail-open returns the caller's own default, which is the whole point of
+// asking for it.
+func TestCheckFailsOpenToTheCallersDefaultWhenTheAPIFails(t *testing.T) {
+	rec := &requestRecorder{}
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(serveStubs(t, rec, map[string]stub{
+		checkPath: {status: http.StatusInternalServerError, body: map[string]any{"error": "boom"}},
+	})).AnyTimes()
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+	)
+	defer client.Close()
+
+	result := client.Check(context.Background(), testEvalCtx(), "test-flag",
+		schematicclient.WithUsage(10),
+		schematicclient.WithFailOpen(),
+		schematicclient.WithCheckDefault(true),
+	)
+
+	assert.True(t, result.Allowed)
+	assert.True(t, result.Value)
+	assert.Equal(t, "check_failed_fail_open", result.Reason)
+	assert.NotEmpty(t, result.Error)
+}
+
+// Without a per-check default, fail-open falls to the flag default the client
+// was configured with.
+func TestCheckFailingOpenUsesTheConfiguredFlagDefault(t *testing.T) {
+	rec := &requestRecorder{}
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(serveStubs(t, rec, map[string]stub{
+		checkPath: {status: http.StatusInternalServerError, body: map[string]any{"error": "boom"}},
+	})).AnyTimes()
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		core.WithDefaultFlagValues(map[string]bool{"test-flag": true}),
+	)
+	defer client.Close()
+
+	result := client.Check(context.Background(), testEvalCtx(), "test-flag",
+		schematicclient.WithUsage(10),
+		schematicclient.WithFailOpen(),
+	)
+
+	assert.True(t, result.Allowed)
+	assert.Equal(t, "check_failed_fail_open", result.Reason)
+}
+
+// CheckFlagWithEntitlement has always answered an unreachable API with the flag
+// default and no error. Check reads the failure through an internal variant, so
+// the public contract is unchanged.
+func TestCheckFlagWithEntitlementStillAnswersWithTheDefaultAndNoError(t *testing.T) {
+	rec := &requestRecorder{}
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(serveStubs(t, rec, map[string]stub{
+		checkPath: {status: http.StatusInternalServerError, body: map[string]any{"error": "boom"}},
+	})).AnyTimes()
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		core.WithDefaultFlagValues(map[string]bool{"test-flag": true}),
+	)
+	defer client.Close()
+
+	resp, err := client.CheckFlagWithEntitlement(context.Background(), testEvalCtx(), "test-flag")
+
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	assert.True(t, resp.Value)
+	assert.Equal(t, "error", resp.Reason)
 }

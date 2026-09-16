@@ -620,3 +620,124 @@ func TestServerModeIdentifyPrewarmDoesNotFlush(t *testing.T) {
 	_, flushed := rec.find(eventBatchPath)
 	assert.False(t, flushed, "no flush is owed when there is no lease to warm: %v", rec.paths())
 }
+
+// Client mode with nothing to gate against: the flag never reaches the cache,
+// so the check falls back to the plain API check, and that fails too. The
+// caller's fail-open choice is what decides the verdict, not the flag default.
+func TestClientModeCheckFailsOpenWhenDataStreamAndTheAPIAreBothDown(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{})
+	rec := &requestRecorder{}
+	client := clientModeClient(t, rec, map[string]stub{
+		checkPath:      {status: http.StatusInternalServerError, body: map[string]any{"error": "boom"}},
+		eventBatchPath: {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	}, server.URL, core.CreditLeaseConfig{})
+	defer client.Close()
+
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"id": testCompanyID}}
+	denied := client.Check(t.Context(), evalCtx, testFlagKey,
+		schematicclient.WithUsage(50),
+		schematicclient.WithEventSubtype(testEventSubtype),
+	)
+	assert.False(t, denied.Allowed)
+	assert.Equal(t, "check_failed", denied.Reason)
+	assert.NotEmpty(t, denied.Error)
+
+	allowed := client.Check(t.Context(), evalCtx, testFlagKey,
+		schematicclient.WithUsage(50),
+		schematicclient.WithEventSubtype(testEventSubtype),
+		schematicclient.WithFailOpen(),
+		schematicclient.WithCheckDefault(true),
+	)
+	assert.True(t, allowed.Allowed, "reason: %s, error: %s", allowed.Reason, allowed.Error)
+	assert.Equal(t, "check_failed_fail_open", allowed.Reason)
+	assert.NotEmpty(t, allowed.Error)
+}
+
+// A prewarm stuck on the wire used to eat the whole close budget, leaving the
+// releases to run on a context that had already expired, so every one of them
+// failed and the credits sat held until the leases expired server-side.
+func TestCloseReleasesLeasesWhileAPrewarmIsStuckOnTheWire(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{pushFlags: true, serveCompany: true})
+	rec := &requestRecorder{}
+	blocked := make(chan struct{})
+	defer close(blocked)
+	// A buffer period no test would outlast, so the only send in play is the
+	// one the prewarm asks for, and it never comes back.
+	client := clientModeClient(t, rec, map[string]stub{
+		leaseAcquirePath: {body: leaseResponse("lse_1", 10000)},
+		leaseReleasePath: {body: leaseResponse("lse_1", 10000)},
+		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}, block: blocked},
+	}, server.URL, core.CreditLeaseConfig{}, option.WithEventBufferPeriod(time.Minute))
+
+	// A lease for the close to hand back.
+	result := client.Check(t.Context(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"id": testCompanyID},
+	}, testFlagKey, schematicclient.WithUsage(50), schematicclient.WithEventSubtype(testEventSubtype))
+	require.NotNil(t, result.Reservation)
+
+	// The prewarm flushes the identify before warming anything, and this API
+	// never answers that flush, so the prewarm is stuck on the wire.
+	client.Identify(t.Context(), &schematicgo.EventBodyIdentify{
+		Keys:    map[string]string{"id": "user_1"},
+		Company: &schematicgo.EventBodyIdentifyCompany{Keys: map[string]string{"id": testCompanyID}},
+	}, schematicclient.WithIdentifyPrewarm([]string{testCreditID}))
+	require.Eventually(t, func() bool {
+		_, flushing := rec.find(eventBatchPath)
+		return flushing
+	}, 2*time.Second, 10*time.Millisecond, "the flush should reach the API, where it stalls")
+
+	start := time.Now()
+	client.Close()
+
+	assert.Less(t, time.Since(start), 2*time.Second, "a stalled prewarm is cancelled, not waited out")
+	released, ok := rec.find(leaseReleasePath)
+	require.True(t, ok, "the lease is released on close: %v", rec.paths())
+	assert.False(t, released.onDeadCtx, "the release runs on a context that still has budget")
+}
+
+// An acquire that started before the close can still install a lease. The close
+// waits it out before listing, so the lease it installs is released rather than
+// left held until it expires server-side.
+func TestCloseReleasesALeaseInstalledByAnAcquireRacingIt(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{pushFlags: true, serveCompany: true})
+	rec := &requestRecorder{}
+	acquiring := make(chan struct{})
+	client := clientModeClient(t, rec, map[string]stub{
+		leaseAcquirePath: {body: leaseResponse("lse_1", 10000), block: acquiring},
+		leaseReleasePath: {body: leaseResponse("lse_1", 10000)},
+		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	}, server.URL, core.CreditLeaseConfig{})
+
+	checked := make(chan struct{})
+	go func() {
+		defer close(checked)
+		client.Check(t.Context(), &schematicgo.CheckFlagRequestBody{
+			Company: map[string]string{"id": testCompanyID},
+		}, testFlagKey, schematicclient.WithUsage(50), schematicclient.WithEventSubtype(testEventSubtype))
+	}()
+	require.Eventually(t, func() bool {
+		_, acquired := rec.find(leaseAcquirePath)
+		return acquired
+	}, 2*time.Second, 10*time.Millisecond, "the acquire should be in flight")
+
+	closed := make(chan struct{})
+	go func() {
+		defer close(closed)
+		client.Close()
+	}()
+	// Let the close reach its wait before the acquire lands, so the lease is
+	// installed while the client is already shutting down.
+	time.Sleep(200 * time.Millisecond)
+	close(acquiring)
+
+	select {
+	case <-closed:
+	case <-time.After(15 * time.Second):
+		t.Fatal("the close never finished")
+	}
+	<-checked
+
+	released, ok := rec.find(leaseReleasePath)
+	require.True(t, ok, "no lease survives the close: %v", rec.paths())
+	assert.Contains(t, released.path, "lse_1")
+}

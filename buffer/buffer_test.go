@@ -40,8 +40,9 @@ func TestEventBuffer_Integration(t *testing.T) {
 		time.Sleep(10 * time.Millisecond)
 
 		// Should have flushed
-		require.Len(t, mockSender.calls, 1)
-		assert.Len(t, mockSender.calls[0].events, 2)
+		calls := mockSender.snapshot()
+		require.Len(t, calls, 1)
+		assert.Len(t, calls[0].events, 2)
 	})
 
 	t.Run("periodic flush works", func(t *testing.T) {
@@ -70,7 +71,7 @@ func TestEventBuffer_Integration(t *testing.T) {
 		time.Sleep(100 * time.Millisecond)
 
 		// Should have been flushed
-		assert.GreaterOrEqual(t, len(mockSender.calls), 1)
+		assert.GreaterOrEqual(t, len(mockSender.snapshot()), 1)
 
 		// Cleanup
 		buffer.Stop()
@@ -126,17 +127,28 @@ func TestComponentIntegration(t *testing.T) {
 
 		// Verify
 		assert.NoError(t, err)
-		assert.Len(t, sender.calls, 1)
-		assert.Len(t, sender.calls[0].events, 3)
+		calls := sender.snapshot()
+		assert.Len(t, calls, 1)
+		assert.Len(t, calls[0].events, 3)
 	})
 }
 
 // Mock implementations for testing
 
+// mockSender is written from whichever goroutine is flushing and read from the
+// test's, so every access goes through the mutex.
 type mockSender struct {
+	mu        sync.Mutex
 	calls     []mockCall
 	responses []error
 	callIndex int
+}
+
+// snapshot is the calls recorded so far.
+func (m *mockSender) snapshot() []mockCall {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	return append([]mockCall(nil), m.calls...)
 }
 
 type mockCall struct {
@@ -145,6 +157,8 @@ type mockCall struct {
 }
 
 func (m *mockSender) SendBatch(ctx context.Context, events []*schematicgo.CreateEventRequestBody) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	m.calls = append(m.calls, mockCall{ctx: ctx, events: events})
 	if m.callIndex < len(m.responses) {
 		err := m.responses[m.callIndex]
@@ -202,7 +216,7 @@ func TestEventBuffer_ShutdownFlushesRemaining(t *testing.T) {
 	}
 
 	// No flush should have happened yet
-	require.Len(t, mockSender.calls, 0)
+	require.Len(t, mockSender.snapshot(), 0)
 
 	// Stop the buffer, which should flush remaining events
 	buffer.Stop()
@@ -212,7 +226,7 @@ func TestEventBuffer_ShutdownFlushesRemaining(t *testing.T) {
 
 	// Verify all 5 events were flushed
 	totalEvents := 0
-	for _, call := range mockSender.calls {
+	for _, call := range mockSender.snapshot() {
 		totalEvents += len(call.events)
 	}
 	assert.Equal(t, 5, totalEvents)
@@ -296,4 +310,74 @@ func TestEventBuffer_ConcurrentPush(t *testing.T) {
 
 	// Verify all events were eventually sent
 	assert.Equal(t, totalExpected, sender.totalEvents())
+}
+
+// slowSender holds each batch on the wire for a beat, so a Stop that does not
+// wait finishes before the send does.
+type slowSender struct {
+	delay time.Duration
+
+	mu    sync.Mutex
+	batch int
+}
+
+func (s *slowSender) SendBatch(_ context.Context, events []*schematicgo.CreateEventRequestBody) error {
+	time.Sleep(s.delay)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.batch += len(events)
+	return nil
+}
+
+func (s *slowSender) sent() int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.batch
+}
+
+// A flush the client asked for runs on a goroutine of its own, so a Stop that
+// did not wait for it would let the process exit with the batch still in the
+// air: an identify flushed ahead of a prewarm, most of all.
+func TestEventBuffer_StopWaitsForAnAsyncFlush(t *testing.T) {
+	sender := &slowSender{delay: 200 * time.Millisecond}
+	buffer := &eventBuffer{
+		batcher:  NewBatcher(100),
+		sender:   sender,
+		errors:   make(chan error, 10),
+		interval: time.Minute,
+		logger:   &mockLogger{},
+		shutdown: make(chan struct{}),
+	}
+	buffer.startPeriodicFlush()
+
+	buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "async-flush"})
+	sent := buffer.FlushAsync()
+	buffer.Stop()
+
+	assert.Equal(t, 1, sender.sent(), "Stop returned before the flush it started had finished")
+	select {
+	case <-sent:
+	default:
+		t.Fatal("the flush should have completed by the time Stop returned")
+	}
+}
+
+// The ticker loop sends whatever is still buffered on its way out, which is the
+// other half of the same promise.
+func TestEventBuffer_StopWaitsForTheShutdownFlush(t *testing.T) {
+	sender := &slowSender{delay: 200 * time.Millisecond}
+	buffer := &eventBuffer{
+		batcher:  NewBatcher(100),
+		sender:   sender,
+		errors:   make(chan error, 10),
+		interval: time.Minute,
+		logger:   &mockLogger{},
+		shutdown: make(chan struct{}),
+	}
+	buffer.startPeriodicFlush()
+
+	buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "shutdown-flush"})
+	buffer.Stop()
+
+	assert.Equal(t, 1, sender.sent(), "Stop returned before the shutdown flush had finished")
 }

@@ -63,7 +63,10 @@ var claimScript = redis.NewScript(claimScriptSource)
 // Every mutation is a single-key operation (or single-key Lua), so the store is
 // correct on standalone and clustered Redis alike: the unspent-slice refund is
 // delegated to the lease store rather than reaching across to the lease hash
-// inside a multi-key script.
+// inside a multi-key script. Add is the one exception, grouping its writes in a
+// transaction so a hold cannot land without the expiry that reaps it; on a
+// cluster, where a cross-slot transaction is refused, it falls back to the same
+// single-key writes.
 type RedisReservationStore struct {
 	client    redis.UniversalClient
 	leases    ReservationRefunder
@@ -106,14 +109,33 @@ func (s *RedisReservationStore) byCreditKey(companyID, creditTypeID string) stri
 	return s.keyPrefix + reservationByCreditNamespace + companyID + ":" + creditTypeID
 }
 
+// Add records a hold: the reservation hash, the expiry that reaps it, and the
+// two indexes the sweeper and ReservedCredits read.
+//
+// The four writes go out as one MULTI/EXEC. Issued separately, an expiry that
+// failed on its own left a hash with no TTL and no index entry, which nothing
+// would ever reap: the sweeper never sees it and Redis never evicts it.
 func (s *RedisReservationStore) Add(ctx context.Context, reservation ReservationRecord) error {
+	pipe := s.client.TxPipeline()
+	s.queueAdd(ctx, pipe, reservation)
+	_, err := pipe.Exec(ctx)
+	// Redis Cluster refuses a transaction whose keys span slots, and these keys
+	// are laid out to match the Node and Python SDKs', so they cannot be
+	// hash-tagged onto one slot. There the writes go out one at a time, as they
+	// always have.
+	if errors.Is(err, redis.ErrCrossSlot) {
+		return s.addOneAtATime(ctx, reservation)
+	}
+	return err
+}
+
+// queueAdd writes the hold through w, which is either a pipeline collecting the
+// writes or the client itself running them one at a time, and returns the
+// commands so a direct caller can read their errors.
+func (s *RedisReservationStore) queueAdd(ctx context.Context, w redis.Cmdable, reservation ReservationRecord) []redis.Cmder {
 	expiresMs := toEpochMs(reservation.ExpiresAt)
 	hashKey := s.hashKey(reservation.ID)
-	// The hash goes out first so the reservation exists before anything
-	// references it. These are independent single-key ops rather than one
-	// multi-key script: a partial failure at worst leaves an un-indexed
-	// reservation that the TTL reaps, never a double-spend.
-	if err := s.client.HSet(ctx, hashKey, map[string]any{
+	hash := w.HSet(ctx, hashKey, map[string]any{
 		"id":               reservation.ID,
 		"leaseId":          reservation.LeaseID,
 		"companyId":        reservation.CompanyID,
@@ -124,22 +146,31 @@ func (s *RedisReservationStore) Add(ctx context.Context, reservation Reservation
 		"consumptionRate":  formatAmount(reservation.ConsumptionRate),
 		"expiresAt":        strconv.FormatInt(expiresMs, 10),
 		"evalCtx":          encodeEvalCtx(reservation),
-	}).Err(); err != nil {
-		return err
-	}
-	if err := s.client.PExpireAt(ctx, hashKey, fromEpochMs(expiresMs+reservationTTLGraceMs)).Err(); err != nil {
-		return err
-	}
-	member := encodeMember(reservation.CompanyID, reservation.CreditTypeID, reservation.ID)
-	if err := s.client.ZAdd(ctx, s.indexKey(), redis.Z{Score: float64(expiresMs), Member: member}).Err(); err != nil {
-		return err
-	}
-	return s.client.HSet(
+	})
+	expiry := w.PExpireAt(ctx, hashKey, fromEpochMs(expiresMs+reservationTTLGraceMs))
+	index := w.ZAdd(ctx, s.indexKey(), redis.Z{
+		Score:  float64(expiresMs),
+		Member: encodeMember(reservation.CompanyID, reservation.CreditTypeID, reservation.ID),
+	})
+	byCredit := w.HSet(
 		ctx,
 		s.byCreditKey(reservation.CompanyID, reservation.CreditTypeID),
 		reservation.ID,
 		formatAmount(reservation.CreditsReserved),
-	).Err()
+	)
+	return []redis.Cmder{hash, expiry, index, byCredit}
+}
+
+// addOneAtATime is the cluster path: the same writes as independent single-key
+// ops, the hash first so the reservation exists before anything references it.
+// A partial failure leaves a hold the caller undoes, never a double-spend.
+func (s *RedisReservationStore) addOneAtATime(ctx context.Context, reservation ReservationRecord) error {
+	for _, cmd := range s.queueAdd(ctx, s.client, reservation) {
+		if err := cmd.Err(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (s *RedisReservationStore) Get(ctx context.Context, id string) (*ReservationRecord, error) {
@@ -173,10 +204,12 @@ func (s *RedisReservationStore) Consume(ctx context.Context, id string, creditsC
 	// Index cleanup, single-key ops. The per-tenant hash loses the slice BEFORE
 	// the refund below, so the lease (local remaining plus this hash) never
 	// transiently double-counts it. Both are best-effort: a failed cleanup must
-	// not abort the settle.
+	// not abort the settle. The per-tenant field goes first, since the expiry
+	// index is what the sweeper would reach a surviving field through: dropping
+	// that first and then failing here would inflate ReservedCredits forever.
 	member := encodeMember(companyID, creditTypeID, id)
-	_ = s.client.ZRem(ctx, s.indexKey(), member).Err()
 	_ = s.client.HDel(ctx, s.byCreditKey(companyID, creditTypeID), id).Err()
+	_ = s.client.ZRem(ctx, s.indexKey(), member).Err()
 
 	consumed := clampConsumption(creditsConsumed, reserved)
 	if refund := reserved - consumed; refund > 0 {

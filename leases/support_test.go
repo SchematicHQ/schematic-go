@@ -294,3 +294,90 @@ func installLease(t *testing.T, store LeaseStore, clock *virtualClock, leaseID, 
 	require.NoError(t, err)
 	require.True(t, wrote)
 }
+
+// elapse moves both clocks a Redis-backed test depends on: the store's, which
+// decides whether a lease or a hold has expired, and miniredis's TTL
+// bookkeeping, which decides when the row is evicted.
+func elapse(b *backend, d time.Duration) {
+	b.clock.advance(d)
+	b.server.FastForward(d)
+}
+
+// commandRecorder records the commands a store issues, and can fail a whole
+// pipelined batch: miniredis cannot inject failures, so the hook is the only
+// seam for one.
+type commandRecorder struct {
+	mu       sync.Mutex
+	commands []string
+	batches  [][]string
+	failWith error
+}
+
+func (r *commandRecorder) DialHook(next redis.DialHook) redis.DialHook { return next }
+
+func (r *commandRecorder) ProcessHook(next redis.ProcessHook) redis.ProcessHook {
+	return func(ctx context.Context, cmd redis.Cmder) error {
+		r.mu.Lock()
+		r.commands = append(r.commands, cmd.Name())
+		r.mu.Unlock()
+		return next(ctx, cmd)
+	}
+}
+
+func (r *commandRecorder) ProcessPipelineHook(next redis.ProcessPipelineHook) redis.ProcessPipelineHook {
+	return func(ctx context.Context, cmds []redis.Cmder) error {
+		names := make([]string, 0, len(cmds))
+		for _, cmd := range cmds {
+			names = append(names, cmd.Name())
+		}
+		if indexOf(names, "multi") == -1 {
+			// Connection setup pipelines, which are nobody's subject here.
+			return next(ctx, cmds)
+		}
+		r.mu.Lock()
+		r.batches = append(r.batches, names)
+		failWith := r.failWith
+		r.mu.Unlock()
+		if failWith != nil {
+			for _, cmd := range cmds {
+				cmd.SetErr(failWith)
+			}
+			return failWith
+		}
+		return next(ctx, cmds)
+	}
+}
+
+// failTransactions makes every later transaction fail, standing in for a Redis
+// that drops one partway.
+func (r *commandRecorder) failTransactions(err error) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.failWith = err
+}
+
+// order is the commands issued so far, lowercased by go-redis.
+func (r *commandRecorder) order() []string {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return append([]string(nil), r.commands...)
+}
+
+func (r *commandRecorder) lastBatch() []string {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	if len(r.batches) == 0 {
+		return nil
+	}
+	return append([]string(nil), r.batches[len(r.batches)-1]...)
+}
+
+// indexOf is where a command first appears in what a store issued.
+func indexOf(commands []string, name string) int {
+	for i, command := range commands {
+		if command == name {
+			return i
+		}
+	}
+	return -1
+}

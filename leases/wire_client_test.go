@@ -23,8 +23,9 @@ import (
 )
 
 // What NewAPIWireClient puts on the wire, and what it does with what comes back.
-// Both lease calls move credits and carry no idempotency key, so a retry would
-// take a second hold or grant a tranche twice; these pin that neither retries.
+// Both lease calls are safe to retry, acquire because the server hands back the
+// slot's existing lease and extend because it carries an idempotency key; these
+// pin that a retried attempt grows the lease once.
 
 type wireRequest struct {
 	method string
@@ -43,10 +44,24 @@ func (r *wireRecorder) all() []wireRequest {
 	return append([]wireRequest(nil), r.requests...)
 }
 
+// scriptedResponse is one answer the test server hands back.
+type scriptedResponse struct {
+	status int
+	body   any
+}
+
 // newTestWireClient answers every request with status and body, recording what
 // was asked.
 func newTestWireClient(t *testing.T, status int, body any) (WireClient, *wireRecorder) {
 	t.Helper()
+	return newScriptedWireClient(t, scriptedResponse{status: status, body: body})
+}
+
+// newScriptedWireClient answers each request with the next scripted response,
+// staying on the last one once the script runs out, and records what was asked.
+func newScriptedWireClient(t *testing.T, script ...scriptedResponse) (WireClient, *wireRecorder) {
+	t.Helper()
+	require.NotEmpty(t, script)
 	recorder := &wireRecorder{}
 	ctrl := gomock.NewController(t)
 	httpClient := mocks.NewMockHTTPClient(ctrl)
@@ -56,22 +71,41 @@ func newTestWireClient(t *testing.T, status int, body any) (WireClient, *wireRec
 			raw, _ = io.ReadAll(req.Body)
 		}
 		recorder.mu.Lock()
+		attempt := len(recorder.requests)
 		recorder.requests = append(recorder.requests, wireRequest{method: req.Method, path: req.URL.Path, body: raw})
 		recorder.mu.Unlock()
 
-		encoded, err := json.Marshal(body)
+		if attempt >= len(script) {
+			attempt = len(script) - 1
+		}
+		encoded, err := json.Marshal(script[attempt].body)
 		if err != nil {
 			return nil, err
 		}
 		return &http.Response{
-			Status:     fmt.Sprint(status),
-			StatusCode: status,
+			Status:     fmt.Sprint(script[attempt].status),
+			StatusCode: script[attempt].status,
 			Body:       io.NopCloser(bytes.NewReader(encoded)),
 		}, nil
 	}).AnyTimes()
 
 	options := core.NewRequestOptions(option.WithAPIKey("test-api-key"), option.WithHTTPClient(httpClient))
 	return NewAPIWireClient(credits.NewClient(options)), recorder
+}
+
+// idempotencyKeys is the key each recorded request carried, empty string for a
+// request that carried none.
+func (r *wireRecorder) idempotencyKeys(t *testing.T) []string {
+	t.Helper()
+	keys := make([]string, 0, len(r.all()))
+	for _, request := range r.all() {
+		var sent struct {
+			IdempotencyKey string `json:"idempotency_key"`
+		}
+		require.NoError(t, json.Unmarshal(request.body, &sent))
+		keys = append(keys, sent.IdempotencyKey)
+	}
+	return keys
 }
 
 func leaseResponseData() *schematicgo.CreditLeaseResponseData {
@@ -138,39 +172,93 @@ func TestAPIWireClientReleaseNamesTheLease(t *testing.T) {
 	assert.Contains(t, requests[0].path, "lse_1")
 }
 
-func TestAPIWireClientNeverRetriesACallThatMovesCredits(t *testing.T) {
-	// A retried acquire is a second hold against the company balance, and a
-	// retried extend grants the tranche twice. Neither request carries an
-	// idempotency key, so the default retry policy must not apply.
-	for _, testCase := range []struct {
-		name string
-		call func(WireClient) error
-		body any
-	}{
-		{
-			name: "acquire",
-			body: &schematicgo.AcquireCreditLeaseResponse{},
-			call: func(wire WireClient) error {
-				_, err := wire.Acquire(context.Background(), "co_1", "ct_1", 1000, time.Now())
-				return err
-			},
-		},
-		{
-			name: "extend",
-			body: &schematicgo.ExtendCreditLeaseResponse{},
-			call: func(wire WireClient) error {
-				_, err := wire.Extend(context.Background(), "lse_1", 1000, time.Now())
-				return err
-			},
-		},
-	} {
-		t.Run(testCase.name, func(t *testing.T) {
-			wire, recorder := newTestWireClient(t, http.StatusInternalServerError, testCase.body)
+func TestAPIWireClientExtendKeysEveryCallSeparately(t *testing.T) {
+	data := leaseResponseData()
+	data.GrantedAmount = 2000
+	wire, recorder := newTestWireClient(t, http.StatusOK, &schematicgo.ExtendCreditLeaseResponse{Data: data})
 
-			require.Error(t, testCase.call(wire))
-			assert.Len(t, recorder.all(), 1)
-		})
-	}
+	_, err := wire.Extend(context.Background(), "lse_1", 1000, time.Date(2026, 1, 1, 0, 10, 0, 0, time.UTC))
+	require.NoError(t, err)
+	_, err = wire.Extend(context.Background(), "lse_1", 1000, time.Date(2026, 1, 1, 0, 15, 0, 0, time.UTC))
+	require.NoError(t, err)
+
+	keys := recorder.idempotencyKeys(t)
+	require.Len(t, keys, 2)
+	assert.NotEmpty(t, keys[0])
+	// Two deliberate grows have to be told apart, or the second would be
+	// answered with the first one's lease.
+	assert.NotEqual(t, keys[0], keys[1])
+}
+
+func TestAPIWireClientExtendRetriesUnderOneKey(t *testing.T) {
+	t.Parallel()
+	data := leaseResponseData()
+	data.GrantedAmount = 2000
+	wire, recorder := newScriptedWireClient(t,
+		scriptedResponse{status: http.StatusBadGateway, body: &schematicgo.ExtendCreditLeaseResponse{}},
+		scriptedResponse{status: http.StatusOK, body: &schematicgo.ExtendCreditLeaseResponse{Data: data}},
+	)
+
+	grant, err := wire.Extend(context.Background(), "lse_1", 1000, time.Date(2026, 1, 1, 0, 10, 0, 0, time.UTC))
+
+	require.NoError(t, err)
+	assert.Equal(t, 2000.0, grant.GrantedAmount)
+	keys := recorder.idempotencyKeys(t)
+	require.Len(t, keys, 2)
+	assert.NotEmpty(t, keys[0])
+	// One key across the attempts is what keeps the retry from growing the
+	// lease a second time.
+	assert.Equal(t, keys[0], keys[1])
+}
+
+func TestAPIWireClientAcquireRetriesAfterALostResponse(t *testing.T) {
+	t.Parallel()
+	wire, recorder := newScriptedWireClient(t,
+		scriptedResponse{status: http.StatusBadGateway, body: &schematicgo.AcquireCreditLeaseResponse{}},
+		scriptedResponse{status: http.StatusOK, body: &schematicgo.AcquireCreditLeaseResponse{Data: leaseResponseData()}},
+	)
+
+	grant, err := wire.Acquire(context.Background(), "co_1", "ct_1", 1000, time.Date(2026, 1, 1, 0, 5, 0, 0, time.UTC))
+
+	require.NoError(t, err)
+	require.NotNil(t, grant)
+	assert.Equal(t, "lse_1", grant.LeaseID)
+	assert.Equal(t, 1000.0, grant.GrantedAmount)
+	assert.Len(t, recorder.all(), 2)
+}
+
+// The manager sits on top of the retrying wire client, so a retried extend has
+// to leave the slot holding the server's total rather than twice the tranche.
+func TestManagerAppliesARetriedExtendOnce(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+
+	data := leaseResponseData()
+	data.GrantedAmount = 2000
+	wire, recorder := newScriptedWireClient(t,
+		scriptedResponse{status: http.StatusBadGateway, body: &schematicgo.ExtendCreditLeaseResponse{}},
+		scriptedResponse{status: http.StatusOK, body: &schematicgo.ExtendCreditLeaseResponse{Data: data}},
+	)
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{Clock: clock.Now})
+	t.Cleanup(manager.Stop)
+
+	required := 1500.0
+	entry := manager.MaybeExtend(ctx, "co_1", "ct_1", &required)
+
+	require.NotNil(t, entry)
+	assert.Equal(t, 2000.0, entry.GrantedAmount)
+	assert.Equal(t, 2000.0, entry.LocalRemainingCredits)
+
+	stored, err := store.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 2000.0, stored.GrantedAmount)
+
+	keys := recorder.idempotencyKeys(t)
+	require.Len(t, keys, 2)
+	assert.Equal(t, keys[0], keys[1])
 }
 
 func TestAPIWireClientRejectsAResponseWithoutALease(t *testing.T) {

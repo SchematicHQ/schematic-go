@@ -6,10 +6,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/credits"
-	"github.com/schematichq/schematic-go/option"
 )
 
 // WireClient is the three lease calls the manager makes. Narrow on purpose: it
@@ -31,6 +31,9 @@ func NewAPIWireClient(client *credits.Client) WireClient {
 	return &apiWireClient{credits: client}
 }
 
+// Acquire takes the default retry policy: the server hands back the slot's
+// existing active lease rather than opening a second one, so a retry after a
+// lost response returns the lease the first attempt created.
 func (c *apiWireClient) Acquire(ctx context.Context, companyID, creditTypeID string, requestedAmount float64, expiresAt time.Time) (*LeaseGrant, error) {
 	response, err := c.credits.AcquireCreditLease(
 		ctx,
@@ -40,9 +43,6 @@ func (c *apiWireClient) Acquire(ctx context.Context, companyID, creditTypeID str
 			RequestedAmount: requestedAmount,
 			ExpiresAt:       &expiresAt,
 		},
-		// A retried acquire is a second hold against the company balance, so
-		// this call never retries; the caller re-acquires on the next check.
-		option.WithoutRetries(),
 	)
 	if err != nil {
 		return nil, err
@@ -51,15 +51,19 @@ func (c *apiWireClient) Acquire(ctx context.Context, companyID, creditTypeID str
 }
 
 func (c *apiWireClient) Extend(ctx context.Context, leaseID string, additionalAmount float64, expiresAt time.Time) (*LeaseGrant, error) {
+	// An extend is an increment, so a retry without a key would grant the
+	// tranche twice. The key is minted once per extend and the retry loop
+	// resends this body, so every attempt of this extend collapses to one grow
+	// while a later extend gets its own key.
+	idempotencyKey := uuid.NewString()
 	response, err := c.credits.ExtendCreditLease(
 		ctx,
 		leaseID,
 		&schematicgo.ExtendCreditLeaseRequestBody{
 			AdditionalAmount: additionalAmount,
 			ExpiresAt:        &expiresAt,
+			IdempotencyKey:   &idempotencyKey,
 		},
-		// An extend is an increment, so a retry would grant the tranche twice.
-		option.WithoutRetries(),
 	)
 	if err != nil {
 		return nil, err

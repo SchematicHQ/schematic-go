@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
@@ -56,6 +57,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	client := &DataStreamClient{
 		engine:             engine,
 		apiKey:             options.ApiKey,
+		redisClient:        redisClient,
 		cacheTTL:           configurationOptions.CacheTTL,
 		logger:             options.Logger,
 		flagsCacheProvider: flagCacheProvider,
@@ -512,12 +514,35 @@ func (c *DataStreamClient) handleErrorMessage(ctx context.Context, resp *schemat
 	return fmt.Errorf("%s", respError.Error)
 }
 
+// preflightCheckFlagOptions translates the API's preflight body into the rules
+// engine's check options, so a flag evaluated locally answers the same
+// hypothetical the REST path would.
+func preflightCheckFlagOptions(preflight *schematicgo.PreflightRequestBody) []rulesengine.CheckFlagOption {
+	if preflight == nil {
+		return nil
+	}
+
+	opts := make([]rulesengine.CheckFlagOption, 0, 2+len(preflight.CreditCost))
+	if preflight.Usage != nil {
+		opts = append(opts, rulesengine.WithUsage(*preflight.Usage))
+	}
+	if preflight.EventUsage != nil {
+		opts = append(opts, rulesengine.WithEventUsage(preflight.EventUsage.EventSubtype, preflight.EventUsage.Quantity))
+	}
+	for creditID, cost := range preflight.CreditCost {
+		opts = append(opts, rulesengine.WithCreditCost(creditID, cost))
+	}
+	return opts
+}
+
 func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*rulesengine.CheckFlagResult, error) {
 	// Get flag first - return error if not found
 	flag, found := c.getFlag(ctx, flagKey)
 	if !found {
 		return nil, fmt.Errorf("flag not found: %s", flagKey)
 	}
+
+	checkOpts := preflightCheckFlagOptions(evalCtx.Preflight)
 
 	needsCompany := len(evalCtx.Company) > 0
 	needsUser := len(evalCtx.User) > 0
@@ -536,7 +561,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	// If we have all cached data we need, use it
 	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
 		// Evaluate against the rules engine with cached data
-		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag, checkOpts...)
 		if err != nil {
 			return nil, fmt.Errorf("rules engine error: %w", err)
 		}
@@ -547,7 +572,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	if c.replicatorMode {
 		// In replicator mode, if we don't have all cached data, evaluate with nil values instead of fetching
 		// The external replicator should have populated the cache with all necessary data
-		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag)
+		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag, checkOpts...)
 		if err != nil {
 			return nil, fmt.Errorf("rules engine error: %w", err)
 		}
@@ -587,7 +612,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 	}
 
 	// Evaluate against the rules engine
-	resp, err := c.engine.CheckFlag(ctx, company, user, flag)
+	resp, err := c.engine.CheckFlag(ctx, company, user, flag, checkOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
@@ -742,6 +767,51 @@ func (c *DataStreamClient) getFlag(ctx context.Context, key string) (*rulesengin
 		return nil, false
 	}
 	return flag, true
+}
+
+// The seams below are the slice of this client the credit-lease flow drives.
+// They are thin wrappers over the unexported paths a plain CheckFlag already
+// takes, exported so the flow can live in its own package rather than reaching
+// back into this one.
+
+// GetFlag reads a flag from the local cache, reporting whether it was there.
+func (c *DataStreamClient) GetFlag(ctx context.Context, key string) (*rulesengine.Flag, bool) {
+	return c.getFlag(ctx, key)
+}
+
+// GetCompany resolves company keys to the cached company, falling back to a live
+// fetch that waits for the entity to stream back.
+func (c *DataStreamClient) GetCompany(ctx context.Context, keys map[string]string) (*rulesengine.Company, error) {
+	return c.getCompany(ctx, keys)
+}
+
+// GetUser resolves user keys the same way GetCompany resolves company keys.
+func (c *DataStreamClient) GetUser(ctx context.Context, keys map[string]string) (*rulesengine.User, error) {
+	return c.getUser(ctx, keys)
+}
+
+// EvaluateFlag runs the rules engine against already-resolved entities, either
+// of which may be nil.
+func (c *DataStreamClient) EvaluateFlag(
+	ctx context.Context,
+	flag *rulesengine.Flag,
+	company *rulesengine.Company,
+	user *rulesengine.User,
+	opts ...rulesengine.CheckFlagOption,
+) (*rulesengine.CheckFlagResult, error) {
+	return c.engine.CheckFlag(ctx, company, user, flag, opts...)
+}
+
+// GetCachedCompany answers from the local cache alone, never over the wire.
+func (c *DataStreamClient) GetCachedCompany(keys map[string]string) *rulesengine.Company {
+	return c.getCompanyFromCache(keys)
+}
+
+// RedisClient is the Redis client this DataStream's caches share, or nil when
+// they are local. Credit leases reuse it so an existing Redis setup backs lease
+// state with no second client to wire up.
+func (c *DataStreamClient) RedisClient() redis.UniversalClient {
+	return c.redisClient
 }
 
 func (c *DataStreamClient) packageMessage(req *schematicdatastreamws.DataStreamReq) *schematicdatastreamws.DataStreamBaseReq {

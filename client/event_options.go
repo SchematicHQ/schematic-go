@@ -11,6 +11,8 @@ type eventOptions struct {
 	sentAt             *time.Time
 	trustedClientClock *bool
 	backfill           *bool
+	traits             map[string]any
+	prewarm            []string
 }
 
 // TrackOption configures optional metadata on a Track call. Fields map
@@ -46,6 +48,23 @@ func WithTrustedClientClock(b bool) TrackOption {
 // Requires a secret API key and implies trusted_client_clock.
 func WithBackfill(b bool) TrackOption {
 	return func(o *eventOptions) { o.backfill = &b }
+}
+
+// WithTrackTraits attaches traits to a Track event. Go carries traits on the
+// event body, so this is for the paths that build the body for you, notably
+// TrackWithReservation. On a Track whose body already names traits, these are
+// merged in and win on a key collision; the caller's body is never written
+// through.
+func WithTrackTraits(traits map[string]any) TrackOption {
+	return func(o *eventOptions) { o.traits = traits }
+}
+
+// WithIdentifyPrewarm acquires a credit lease per credit type once the identify
+// is enqueued, so the session's first Check does not pay the acquire round trip.
+// Client mode only, and best effort: it runs in the background and logs a
+// failure rather than holding up the identify.
+func WithIdentifyPrewarm(creditTypeIDs []string) IdentifyOption {
+	return func(o *eventOptions) { o.prewarm = creditTypeIDs }
 }
 
 // WithIdentifyIdempotencyKey supplies a client-side dedupe key for an

@@ -4,6 +4,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	schematicdatastreamws "github.com/schematichq/schematic-datastream-ws"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
@@ -31,6 +32,10 @@ type DataStreamClient struct {
 	userCache          *resourceCache[*rulesengine.User]
 	flagsCacheProvider FlagCacheProvider
 	apiKey             string
+	// redisClient is the client every cache provider shares, or nil when the
+	// caches are local. Kept so credit leases can reuse it rather than open a
+	// second connection pool to the same Redis.
+	redisClient redis.UniversalClient
 
 	// engine evaluates flags locally. It owns a compiled WebAssembly module and a
 	// pool of instances, so it is built once per client and closed alongside it.

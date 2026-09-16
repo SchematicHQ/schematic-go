@@ -358,3 +358,96 @@ func (s ReplicatorHealthInterval) applyDatastreamOptions(opts *DatastreamOptions
 func WithReplicatorHealthInterval(interval time.Duration) DatastreamOption {
 	return ReplicatorHealthInterval{interval: interval}
 }
+
+// Credit leases and reservations
+
+// CreditLeaseMode says where the credit hold taken by a check with usage lives.
+type CreditLeaseMode string
+
+const (
+	// CreditLeaseModeClient carves every hold out of a lease the SDK draws from
+	// the server and tracks locally, so a check costs no API call. It needs
+	// DataStream, and a shared Redis to gate across processes.
+	CreditLeaseModeClient CreditLeaseMode = "client"
+	// CreditLeaseModeServer takes the hold over the check-and-reserve API, one
+	// call per check. No DataStream, no Redis, no local state.
+	CreditLeaseModeServer CreditLeaseMode = "server"
+	// CreditLeaseModeAuto picks client mode when DataStream is enabled and
+	// server mode otherwise. The empty string means the same thing, so the zero
+	// value of a config is the default behavior.
+	CreditLeaseModeAuto CreditLeaseMode = "auto"
+)
+
+// CreditLeaseOverride adjusts the resolvable knobs for one credit type. Client
+// mode only, and a nil field keeps the config-level value.
+type CreditLeaseOverride struct {
+	// LeaseSize overrides CreditLeaseConfig.DefaultLeaseSize for this credit type.
+	LeaseSize *float64
+	// LeaseDuration overrides CreditLeaseConfig.DefaultLeaseDuration for this credit type.
+	LeaseDuration *time.Duration
+	// ReservationTTL overrides CreditLeaseConfig.DefaultReservationTTL for this credit type.
+	ReservationTTL *time.Duration
+	// LowWaterMark overrides CreditLeaseConfig.LowWaterMark for this credit type.
+	LowWaterMark *float64
+}
+
+// CreditLeaseConfig opts a client in to credit-gated checks, meaning
+// SchematicClient.Check and SchematicClient.TrackWithReservation. Leave it
+// unset and Check is a plain flag check that holds nothing.
+//
+// Every zero value means "use the default". The knobs below the first two steer
+// client mode alone, and a client whose mode resolves to server warns at
+// construction when one of them is set.
+type CreditLeaseConfig struct {
+	// Mode says where the hold lives. Defaults to CreditLeaseModeAuto, which
+	// picks client mode when DataStream is enabled and server mode otherwise.
+	Mode CreditLeaseMode
+	// DefaultReservationTTL is how long a hold survives unsettled. Size it above
+	// the longest expected gap between Check and TrackWithReservation. Defaults
+	// to one minute. Server mode clamps it to the furthest out the API will hold
+	// credits; client mode keeps it, since there the TTL only tells the local
+	// sweeper when to refund.
+	DefaultReservationTTL time.Duration
+	// DefaultLeaseDuration is the lease lifetime requested at acquire and
+	// extend. Defaults to five minutes. Client mode only.
+	DefaultLeaseDuration time.Duration
+	// DefaultLeaseSize is the credit amount requested per acquire, and the
+	// minimum extend tranche. Defaults to 10000. Client mode only.
+	DefaultLeaseSize float64
+	// LowWaterMark is the remaining/granted ratio at or below which a background
+	// extend fires. Defaults to 0.25. Client mode only.
+	LowWaterMark float64
+	// SweepInterval is how often expired reservations are swept back to their
+	// leases. Defaults to one second. Client mode only.
+	SweepInterval time.Duration
+	// PrewarmResolveTimeout is how long a prewarm waits for a freshly identified
+	// company to surface over DataStream. Nil defaults to five seconds. A zero
+	// duration skips the wait, so a prewarm warms only a company the cache
+	// already holds. Client mode only.
+	PrewarmResolveTimeout *time.Duration
+	// RedisClient backs lease and reservation state. Without one the SDK reuses
+	// the DataStream cache's Redis client, and failing that keeps lease state
+	// per process, which gates within one process only. Client mode only.
+	RedisClient redis.UniversalClient
+	// RedisKeyPrefix prefixes lease and reservation keys. Defaults to
+	// "schematic:", which is what the other SDKs use, so a mixed fleet shares
+	// the same leases. Client mode only.
+	RedisKeyPrefix string
+	// Overrides adjusts the resolvable knobs per credit type, keyed by credit
+	// type ID. Client mode only.
+	Overrides map[string]CreditLeaseOverride
+}
+
+type ClientOptCreditLeases struct {
+	config CreditLeaseConfig
+}
+
+func (c ClientOptCreditLeases) applyRequestOptions(opts *RequestOptions) {
+	cfg := c.config
+	opts.CreditLeases = &cfg
+}
+
+// WithCreditLeases enables credit-gated checks. See CreditLeaseConfig.
+func WithCreditLeases(config CreditLeaseConfig) RequestOption {
+	return ClientOptCreditLeases{config: config}
+}

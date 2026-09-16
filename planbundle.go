@@ -306,28 +306,30 @@ var (
 	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 9)
 	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 10)
 	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 11)
-	createEntitlementInBundleRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 12)
-	createEntitlementInBundleRequestBodyFieldPlanID                    = big.NewInt(1 << 13)
-	createEntitlementInBundleRequestBodyFieldPlanVersionID             = big.NewInt(1 << 14)
-	createEntitlementInBundleRequestBodyFieldPriceBehavior             = big.NewInt(1 << 15)
-	createEntitlementInBundleRequestBodyFieldPriceTiers                = big.NewInt(1 << 16)
-	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 17)
-	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 18)
-	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 19)
-	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
-	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
-	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 24)
-	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 25)
-	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
-	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
-	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 28)
-	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 29)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
+	createEntitlementInBundleRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 12)
+	createEntitlementInBundleRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 13)
+	createEntitlementInBundleRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 14)
+	createEntitlementInBundleRequestBodyFieldPlanID                    = big.NewInt(1 << 15)
+	createEntitlementInBundleRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
+	createEntitlementInBundleRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
+	createEntitlementInBundleRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
+	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 19)
+	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 20)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 21)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 22)
+	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 27)
+	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
+	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
+	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 30)
+	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 31)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 32)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 33)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 34)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 35)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
@@ -343,10 +345,14 @@ type CreateEntitlementInBundleRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
-	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
-	PlanID                  string                        `json:"plan_id" url:"plan_id"`
-	PlanVersionID           *string                       `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
-	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"overage_billing_cadence,omitempty"`
+	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
+	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.
+	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"overage_invoice_anchor,omitempty"`
+	PlanID               string                    `json:"plan_id" url:"plan_id"`
+	PlanVersionID        *string                   `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"quarterly_metered_price_id,omitempty"`
@@ -459,11 +465,25 @@ func (c *CreateEntitlementInBundleRequestBody) GetMonthlyUnitPriceDecimal() *str
 	return c.MonthlyUnitPriceDecimal
 }
 
+func (c *CreateEntitlementInBundleRequestBody) GetOverageBillingCadence() *BillingArrearsCadence {
+	if c == nil {
+		return nil
+	}
+	return c.OverageBillingCadence
+}
+
 func (c *CreateEntitlementInBundleRequestBody) GetOverageBillingProductID() *string {
 	if c == nil {
 		return nil
 	}
 	return c.OverageBillingProductID
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetOverageInvoiceAnchor() *BillingArrearsAnchor {
+	if c == nil {
+		return nil
+	}
+	return c.OverageInvoiceAnchor
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetPlanID() string {
@@ -713,11 +733,25 @@ func (c *CreateEntitlementInBundleRequestBody) SetMonthlyUnitPriceDecimal(monthl
 	c.require(createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal)
 }
 
+// SetOverageBillingCadence sets the OverageBillingCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetOverageBillingCadence(overageBillingCadence *BillingArrearsCadence) {
+	c.OverageBillingCadence = overageBillingCadence
+	c.require(createEntitlementInBundleRequestBodyFieldOverageBillingCadence)
+}
+
 // SetOverageBillingProductID sets the OverageBillingProductID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateEntitlementInBundleRequestBody) SetOverageBillingProductID(overageBillingProductID *string) {
 	c.OverageBillingProductID = overageBillingProductID
 	c.require(createEntitlementInBundleRequestBodyFieldOverageBillingProductID)
+}
+
+// SetOverageInvoiceAnchor sets the OverageInvoiceAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetOverageInvoiceAnchor(overageInvoiceAnchor *BillingArrearsAnchor) {
+	c.OverageInvoiceAnchor = overageInvoiceAnchor
+	c.require(createEntitlementInBundleRequestBodyFieldOverageInvoiceAnchor)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;

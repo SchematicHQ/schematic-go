@@ -1258,6 +1258,7 @@ type BillingArrearsCadence string
 const (
 	BillingArrearsCadenceEndOfBillingPeriod BillingArrearsCadence = "end_of_billing_period"
 	BillingArrearsCadenceMonthly            BillingArrearsCadence = "monthly"
+	BillingArrearsCadenceQuarterly          BillingArrearsCadence = "quarterly"
 )
 
 func NewBillingArrearsCadenceFromString(s string) (BillingArrearsCadence, error) {
@@ -1266,6 +1267,8 @@ func NewBillingArrearsCadenceFromString(s string) (BillingArrearsCadence, error)
 		return BillingArrearsCadenceEndOfBillingPeriod, nil
 	case "monthly":
 		return BillingArrearsCadenceMonthly, nil
+	case "quarterly":
+		return BillingArrearsCadenceQuarterly, nil
 	}
 	var t BillingArrearsCadence
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1862,6 +1865,7 @@ const (
 	BillingCreditGrantReasonBillingCreditAutoTopup BillingCreditGrantReason = "billing_credit_auto_topup"
 	BillingCreditGrantReasonFree                   BillingCreditGrantReason = "free"
 	BillingCreditGrantReasonPlan                   BillingCreditGrantReason = "plan"
+	BillingCreditGrantReasonPostpaidOverdraft      BillingCreditGrantReason = "postpaid_overdraft"
 	BillingCreditGrantReasonPurchased              BillingCreditGrantReason = "purchased"
 	BillingCreditGrantReasonRollover               BillingCreditGrantReason = "rollover"
 )
@@ -1876,6 +1880,8 @@ func NewBillingCreditGrantReasonFromString(s string) (BillingCreditGrantReason, 
 		return BillingCreditGrantReasonFree, nil
 	case "plan":
 		return BillingCreditGrantReasonPlan, nil
+	case "postpaid_overdraft":
+		return BillingCreditGrantReasonPostpaidOverdraft, nil
 	case "purchased":
 		return BillingCreditGrantReasonPurchased, nil
 	case "rollover":
@@ -14402,7 +14408,7 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	ApplyToExisting *bool `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
 	// Which boundary closes a monthly arrears window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Only applies when arrears_cadence is monthly; defaults to billing_period_start.
 	ArrearsAnchor *BillingArrearsAnchor `json:"arrears_anchor,omitempty" url:"arrears_anchor,omitempty"`
-	// How often postpaid charges are closed and invoiced: end_of_billing_period (the default) or monthly.
+	// How often postpaid charges are closed and invoiced: end_of_billing_period (the default) or monthly. Quarterly is not available for postpaid charges.
 	ArrearsCadence            *BillingArrearsCadence              `json:"arrears_cadence,omitempty" url:"arrears_cadence,omitempty"`
 	AutoTopupAmount           *int64                              `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
 	AutoTopupAmountType       *CreditAutoTopupAmountType          `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
@@ -28538,22 +28544,24 @@ var (
 	planEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 11)
 	planEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 12)
 	planEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 13)
-	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 14)
-	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 15)
-	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 16)
-	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 17)
-	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 18)
-	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 19)
-	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 20)
-	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 21)
-	planEntitlementResponseDataFieldUsageQuantity          = big.NewInt(1 << 22)
-	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 23)
-	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 24)
-	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 25)
-	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 26)
-	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 27)
-	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 28)
-	planEntitlementResponseDataFieldWarningTiers           = big.NewInt(1 << 29)
+	planEntitlementResponseDataFieldOverageBillingCadence  = big.NewInt(1 << 14)
+	planEntitlementResponseDataFieldOverageInvoiceAnchor   = big.NewInt(1 << 15)
+	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 16)
+	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 17)
+	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 18)
+	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 19)
+	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 20)
+	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 21)
+	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 22)
+	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 23)
+	planEntitlementResponseDataFieldUsageQuantity          = big.NewInt(1 << 24)
+	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 25)
+	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 26)
+	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 27)
+	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 28)
+	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 29)
+	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 30)
+	planEntitlementResponseDataFieldWarningTiers           = big.NewInt(1 << 31)
 )
 
 type PlanEntitlementResponseData struct {
@@ -28571,14 +28579,18 @@ type PlanEntitlementResponseData struct {
 	MeteredYearlyPrice     *BillingPriceView                        `json:"metered_yearly_price,omitempty" url:"metered_yearly_price,omitempty"`
 	MetricPeriod           *MetricPeriod                            `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset                  `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	Plan                   *PlanResponseData                        `json:"plan,omitempty" url:"plan,omitempty"`
-	PlanID                 string                                   `json:"plan_id" url:"plan_id"`
-	PriceBehavior          *EntitlementPriceBehavior                `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	RuleID                 string                                   `json:"rule_id" url:"rule_id"`
-	RuleIDUsageExceeded    *string                                  `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
-	SoftLimit              *int64                                   `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
-	UpdatedAt              time.Time                                `json:"updated_at" url:"updated_at"`
-	UsageBasedProduct      *BillingProductResponseData              `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
+	// How often overage charges are assessed and invoiced. Null or end_of_billing_period means the billing provider aggregates usage over the subscription's own period and bills it at period end. Monthly and quarterly mean Schematic assesses the overage each month or quarter and bills it on its own invoice. Only applies to overage price behavior.
+	OverageBillingCadence *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"overage_billing_cadence,omitempty"`
+	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end), which for a quarterly window means calendar quarters. Only meaningful when overage_billing_cadence is monthly or quarterly.
+	OverageInvoiceAnchor *BillingArrearsAnchor       `json:"overage_invoice_anchor,omitempty" url:"overage_invoice_anchor,omitempty"`
+	Plan                 *PlanResponseData           `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanID               string                      `json:"plan_id" url:"plan_id"`
+	PriceBehavior        *EntitlementPriceBehavior   `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	RuleID               string                      `json:"rule_id" url:"rule_id"`
+	RuleIDUsageExceeded  *string                     `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
+	SoftLimit            *int64                      `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	UpdatedAt            time.Time                   `json:"updated_at" url:"updated_at"`
+	UsageBasedProduct    *BillingProductResponseData `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
 	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
 	UsageQuantity *int64                             `json:"usage_quantity,omitempty" url:"usage_quantity,omitempty"`
 	ValueBool     *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
@@ -28692,6 +28704,20 @@ func (p *PlanEntitlementResponseData) GetMetricPeriodMonthReset() *MetricPeriodM
 		return nil
 	}
 	return p.MetricPeriodMonthReset
+}
+
+func (p *PlanEntitlementResponseData) GetOverageBillingCadence() *BillingArrearsCadence {
+	if p == nil {
+		return nil
+	}
+	return p.OverageBillingCadence
+}
+
+func (p *PlanEntitlementResponseData) GetOverageInvoiceAnchor() *BillingArrearsAnchor {
+	if p == nil {
+		return nil
+	}
+	return p.OverageInvoiceAnchor
 }
 
 func (p *PlanEntitlementResponseData) GetPlan() *PlanResponseData {
@@ -28918,6 +28944,20 @@ func (p *PlanEntitlementResponseData) SetMetricPeriod(metricPeriod *MetricPeriod
 func (p *PlanEntitlementResponseData) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	p.MetricPeriodMonthReset = metricPeriodMonthReset
 	p.require(planEntitlementResponseDataFieldMetricPeriodMonthReset)
+}
+
+// SetOverageBillingCadence sets the OverageBillingCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanEntitlementResponseData) SetOverageBillingCadence(overageBillingCadence *BillingArrearsCadence) {
+	p.OverageBillingCadence = overageBillingCadence
+	p.require(planEntitlementResponseDataFieldOverageBillingCadence)
+}
+
+// SetOverageInvoiceAnchor sets the OverageInvoiceAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanEntitlementResponseData) SetOverageInvoiceAnchor(overageInvoiceAnchor *BillingArrearsAnchor) {
+	p.OverageInvoiceAnchor = overageInvoiceAnchor
+	p.require(planEntitlementResponseDataFieldOverageInvoiceAnchor)
 }
 
 // SetPlan sets the Plan field and marks it as non-optional;
@@ -37214,7 +37254,7 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	ApplyToExisting *bool `json:"apply_to_existing,omitempty" url:"apply_to_existing,omitempty"`
 	// Which boundary closes a monthly arrears window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Only applies when arrears_cadence is monthly; defaults to billing_period_start. Send null to fall back to the default.
 	ArrearsAnchor *BillingArrearsAnchor `json:"arrears_anchor,omitempty" url:"arrears_anchor,omitempty"`
-	// How often postpaid charges are closed and invoiced: end_of_billing_period (the default) or monthly. Send null to fall back to the default.
+	// How often postpaid charges are closed and invoiced: end_of_billing_period (the default) or monthly. Quarterly is not available for postpaid charges. Send null to fall back to the default.
 	ArrearsCadence            *BillingArrearsCadence              `json:"arrears_cadence,omitempty" url:"arrears_cadence,omitempty"`
 	AutoTopupAmount           *int64                              `json:"auto_topup_amount,omitempty" url:"auto_topup_amount,omitempty"`
 	AutoTopupAmountType       *CreditAutoTopupAmountType          `json:"auto_topup_amount_type,omitempty" url:"auto_topup_amount_type,omitempty"`
@@ -38729,20 +38769,22 @@ var (
 	usageBasedEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 5)
 	usageBasedEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 6)
 	usageBasedEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 7)
-	usageBasedEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 8)
-	usageBasedEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 9)
-	usageBasedEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 10)
-	usageBasedEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 11)
-	usageBasedEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 12)
-	usageBasedEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 13)
-	usageBasedEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 14)
-	usageBasedEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 15)
-	usageBasedEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 16)
-	usageBasedEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 17)
-	usageBasedEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 18)
-	usageBasedEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 19)
-	usageBasedEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 20)
-	usageBasedEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 21)
+	usageBasedEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 8)
+	usageBasedEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 9)
+	usageBasedEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 10)
+	usageBasedEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 11)
+	usageBasedEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 12)
+	usageBasedEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 13)
+	usageBasedEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 14)
+	usageBasedEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 15)
+	usageBasedEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 16)
+	usageBasedEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 17)
+	usageBasedEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 18)
+	usageBasedEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 19)
+	usageBasedEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 20)
+	usageBasedEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 21)
+	usageBasedEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 22)
+	usageBasedEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 23)
 )
 
 type UsageBasedEntitlementRequestBody struct {
@@ -38754,8 +38796,12 @@ type UsageBasedEntitlementRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
-	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
-	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"overage_billing_cadence,omitempty"`
+	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
+	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.
+	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"overage_invoice_anchor,omitempty"`
+	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"quarterly_metered_price_id,omitempty"`
@@ -38834,11 +38880,25 @@ func (u *UsageBasedEntitlementRequestBody) GetMonthlyUnitPriceDecimal() *string 
 	return u.MonthlyUnitPriceDecimal
 }
 
+func (u *UsageBasedEntitlementRequestBody) GetOverageBillingCadence() *BillingArrearsCadence {
+	if u == nil {
+		return nil
+	}
+	return u.OverageBillingCadence
+}
+
 func (u *UsageBasedEntitlementRequestBody) GetOverageBillingProductID() *string {
 	if u == nil {
 		return nil
 	}
 	return u.OverageBillingProductID
+}
+
+func (u *UsageBasedEntitlementRequestBody) GetOverageInvoiceAnchor() *BillingArrearsAnchor {
+	if u == nil {
+		return nil
+	}
+	return u.OverageInvoiceAnchor
 }
 
 func (u *UsageBasedEntitlementRequestBody) GetPriceBehavior() *EntitlementPriceBehavior {
@@ -39004,11 +39064,25 @@ func (u *UsageBasedEntitlementRequestBody) SetMonthlyUnitPriceDecimal(monthlyUni
 	u.require(usageBasedEntitlementRequestBodyFieldMonthlyUnitPriceDecimal)
 }
 
+// SetOverageBillingCadence sets the OverageBillingCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetOverageBillingCadence(overageBillingCadence *BillingArrearsCadence) {
+	u.OverageBillingCadence = overageBillingCadence
+	u.require(usageBasedEntitlementRequestBodyFieldOverageBillingCadence)
+}
+
 // SetOverageBillingProductID sets the OverageBillingProductID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UsageBasedEntitlementRequestBody) SetOverageBillingProductID(overageBillingProductID *string) {
 	u.OverageBillingProductID = overageBillingProductID
 	u.require(usageBasedEntitlementRequestBodyFieldOverageBillingProductID)
+}
+
+// SetOverageInvoiceAnchor sets the OverageInvoiceAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UsageBasedEntitlementRequestBody) SetOverageInvoiceAnchor(overageInvoiceAnchor *BillingArrearsAnchor) {
+	u.OverageInvoiceAnchor = overageInvoiceAnchor
+	u.require(usageBasedEntitlementRequestBodyFieldOverageInvoiceAnchor)
 }
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;

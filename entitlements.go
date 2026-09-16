@@ -623,28 +623,30 @@ var (
 	createPlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 9)
 	createPlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 10)
 	createPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 11)
-	createPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 12)
-	createPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 13)
-	createPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 14)
-	createPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 15)
-	createPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 16)
-	createPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 17)
-	createPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 18)
-	createPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 19)
-	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
-	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
-	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
-	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 23)
-	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 24)
-	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 25)
-	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
-	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
-	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 28)
-	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 29)
-	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
-	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
+	createPlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 12)
+	createPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 13)
+	createPlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 14)
+	createPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 15)
+	createPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
+	createPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
+	createPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
+	createPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 19)
+	createPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 20)
+	createPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 21)
+	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 22)
+	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 23)
+	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 24)
+	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 25)
+	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 26)
+	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 27)
+	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
+	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
+	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 30)
+	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 31)
+	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 32)
+	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 33)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 34)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 35)
 )
 
 type CreatePlanEntitlementRequestBody struct {
@@ -660,10 +662,14 @@ type CreatePlanEntitlementRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"-"`
-	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"-"`
-	PlanID                  string                        `json:"plan_id" url:"-"`
-	PlanVersionID           *string                       `json:"plan_version_id,omitempty" url:"-"`
-	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"-"`
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"-"`
+	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"-"`
+	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.
+	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"-"`
+	PlanID               string                    `json:"plan_id" url:"-"`
+	PlanVersionID        *string                   `json:"plan_version_id,omitempty" url:"-"`
+	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"-"`
@@ -782,11 +788,25 @@ func (c *CreatePlanEntitlementRequestBody) SetMonthlyUnitPriceDecimal(monthlyUni
 	c.require(createPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal)
 }
 
+// SetOverageBillingCadence sets the OverageBillingCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetOverageBillingCadence(overageBillingCadence *BillingArrearsCadence) {
+	c.OverageBillingCadence = overageBillingCadence
+	c.require(createPlanEntitlementRequestBodyFieldOverageBillingCadence)
+}
+
 // SetOverageBillingProductID sets the OverageBillingProductID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreatePlanEntitlementRequestBody) SetOverageBillingProductID(overageBillingProductID *string) {
 	c.OverageBillingProductID = overageBillingProductID
 	c.require(createPlanEntitlementRequestBodyFieldOverageBillingProductID)
+}
+
+// SetOverageInvoiceAnchor sets the OverageInvoiceAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetOverageInvoiceAnchor(overageInvoiceAnchor *BillingArrearsAnchor) {
+	c.OverageInvoiceAnchor = overageInvoiceAnchor
+	c.require(createPlanEntitlementRequestBodyFieldOverageInvoiceAnchor)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;
@@ -10317,26 +10337,28 @@ var (
 	updatePlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 8)
 	updatePlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 9)
 	updatePlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 10)
-	updatePlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 11)
-	updatePlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 12)
-	updatePlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 13)
-	updatePlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 14)
-	updatePlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 15)
-	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 16)
-	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 17)
-	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 18)
-	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 19)
-	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 20)
-	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 21)
-	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 22)
-	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 23)
-	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 24)
-	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 25)
-	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 26)
-	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 27)
-	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 28)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 29)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 30)
+	updatePlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 11)
+	updatePlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 12)
+	updatePlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 13)
+	updatePlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 14)
+	updatePlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 15)
+	updatePlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 16)
+	updatePlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 17)
+	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 18)
+	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 19)
+	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 20)
+	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 21)
+	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 22)
+	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 23)
+	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 24)
+	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 25)
+	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 26)
+	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 27)
+	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 28)
+	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 29)
+	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 30)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 31)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 32)
 )
 
 type UpdatePlanEntitlementRequestBody struct {
@@ -10351,8 +10373,12 @@ type UpdatePlanEntitlementRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"-"`
-	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"-"`
-	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"-"`
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"-"`
+	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"-"`
+	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.
+	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"-"`
+	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"-"`
@@ -10464,11 +10490,25 @@ func (u *UpdatePlanEntitlementRequestBody) SetMonthlyUnitPriceDecimal(monthlyUni
 	u.require(updatePlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal)
 }
 
+// SetOverageBillingCadence sets the OverageBillingCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanEntitlementRequestBody) SetOverageBillingCadence(overageBillingCadence *BillingArrearsCadence) {
+	u.OverageBillingCadence = overageBillingCadence
+	u.require(updatePlanEntitlementRequestBodyFieldOverageBillingCadence)
+}
+
 // SetOverageBillingProductID sets the OverageBillingProductID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdatePlanEntitlementRequestBody) SetOverageBillingProductID(overageBillingProductID *string) {
 	u.OverageBillingProductID = overageBillingProductID
 	u.require(updatePlanEntitlementRequestBodyFieldOverageBillingProductID)
+}
+
+// SetOverageInvoiceAnchor sets the OverageInvoiceAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanEntitlementRequestBody) SetOverageInvoiceAnchor(overageInvoiceAnchor *BillingArrearsAnchor) {
+	u.OverageInvoiceAnchor = overageInvoiceAnchor
+	u.require(updatePlanEntitlementRequestBodyFieldOverageInvoiceAnchor)
 }
 
 // SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
@@ -10640,28 +10680,30 @@ var (
 	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 11)
 	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 12)
 	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 13)
-	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 14)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 15)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 19)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 20)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 21)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 22)
-	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 23)
-	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 24)
-	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 25)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 26)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 27)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 30)
-	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 31)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 32)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 33)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 34)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 35)
+	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 14)
+	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 15)
+	createBillingLinkedPlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 16)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 17)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 18)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 19)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 20)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 21)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 22)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 23)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 24)
+	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 25)
+	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 26)
+	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 27)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 28)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 29)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 30)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 31)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 32)
+	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 33)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 34)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 35)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 36)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 37)
 )
 
 type CreateBillingLinkedPlanEntitlementRequestBody struct {
@@ -10679,10 +10721,14 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"-"`
-	OverageBillingProductID *string                       `json:"overage_billing_product_id,omitempty" url:"-"`
-	PlanID                  string                        `json:"plan_id" url:"-"`
-	PlanVersionID           *string                       `json:"plan_version_id,omitempty" url:"-"`
-	PriceBehavior           *EntitlementPriceBehavior     `json:"price_behavior,omitempty" url:"-"`
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"-"`
+	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"-"`
+	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.
+	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"-"`
+	PlanID               string                    `json:"plan_id" url:"-"`
+	PlanVersionID        *string                   `json:"plan_version_id,omitempty" url:"-"`
+	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
 	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"-"`
@@ -10815,11 +10861,25 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMonthlyUnitPriceDecim
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal)
 }
 
+// SetOverageBillingCadence sets the OverageBillingCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetOverageBillingCadence(overageBillingCadence *BillingArrearsCadence) {
+	c.OverageBillingCadence = overageBillingCadence
+	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingCadence)
+}
+
 // SetOverageBillingProductID sets the OverageBillingProductID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetOverageBillingProductID(overageBillingProductID *string) {
 	c.OverageBillingProductID = overageBillingProductID
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingProductID)
+}
+
+// SetOverageInvoiceAnchor sets the OverageInvoiceAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetOverageInvoiceAnchor(overageInvoiceAnchor *BillingArrearsAnchor) {
+	c.OverageInvoiceAnchor = overageInvoiceAnchor
+	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldOverageInvoiceAnchor)
 }
 
 // SetPlanID sets the PlanID field and marks it as non-optional;

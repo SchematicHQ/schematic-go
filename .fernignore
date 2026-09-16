@@ -28,6 +28,10 @@ core/custom_options.go
 core/logger.go
 custom_types.go
 custom_types_test.go
+client/check.go
+client/check_client_mode_test.go
+client/check_internal_test.go
+client/check_test.go
 client/conversion_test.go
 client/event_options.go
 client/schematic_client.go
@@ -40,6 +44,7 @@ datastream/client.go
 datastream/resource_cache.go
 datastream/client_test.go
 datastream/consts.go
+datastream/preflight_test.go
 datastream/types.go
 datastream/version_test.go
 datastream/version.go
@@ -64,3 +69,5 @@ webhooks/verification_test.go
 WASM_VERSION
 scripts/
 rulesengine/
+conformance/
+leases/

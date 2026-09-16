@@ -6,6 +6,7 @@ import core "github.com/schematichq/schematic-go/core"
 // to fulfill the options interface, but we alias them here so that clients can
 // import all of their options from a single package.
 
+var WithCreditLeases = core.WithCreditLeases
 var WithDefaultFlagValues = core.WithDefaultFlagValues
 var WithDisableFlagCheckCache = core.WithDisableFlagCheckCache
 var WithEventBufferPeriod = core.WithEventBufferPeriod

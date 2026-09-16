@@ -1037,3 +1037,127 @@ func TestPartialCompanyMessage_MergesIntoCachedCompany(t *testing.T) {
 }
 
 func ptr[T any](v T) *T { return &v }
+
+// createMockCreditFlagData builds a single-flag message whose one rule is a
+// credit-balance condition, so a preflight that prices the action above the
+// company's balance flips the verdict.
+func createMockCreditFlagData(flagKey string, creditID string, consumptionRate float64) string {
+	condition := &rulesengine.Condition{
+		ID:              "cond_credit",
+		AccountID:       "account_XXXX",
+		EnvironmentID:   "env_XXXX",
+		ConditionType:   rulesengine.ConditionTypeCredit,
+		Operator:        rulesengine.ComparableOperatorLt,
+		CreditID:        ptr(creditID),
+		ConsumptionRate: ptr(consumptionRate),
+	}
+	flag := &rulesengine.Flag{
+		ID:            fmt.Sprintf("flag_%s", flagKey),
+		AccountID:     "account_XXXX",
+		EnvironmentID: "env_XXXX",
+		Key:           flagKey,
+		DefaultValue:  false,
+		Rules: rulesengine.JSONSlice[*rulesengine.Rule]{
+			{
+				ID:            "rule_credit",
+				AccountID:     "account_XXXX",
+				EnvironmentID: "env_XXXX",
+				RuleType:      rulesengine.RuleTypeStandard,
+				Name:          "credit balance",
+				Priority:      1,
+				Value:         true,
+				Conditions:    rulesengine.JSONSlice[*rulesengine.Condition]{condition},
+			},
+		},
+	}
+
+	flagData, _ := json.Marshal(flag)
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeFlag),
+		Data:        flagData,
+		MessageType: schematicdatastreamws.MessageTypeFull,
+	}
+	respData, _ := json.Marshal(resp)
+
+	return string(respData)
+}
+
+// createMockCompanyDataWithCredits is createMockCompanyData with a credit
+// balance the flag above can be gated on.
+func createMockCompanyDataWithCredits(companyID string, creditID string, balance float64) string {
+	company := &rulesengine.Company{
+		ID:             fmt.Sprintf("comp_%s", companyID),
+		AccountID:      "account_XXXX",
+		EnvironmentID:  "env_XXXX",
+		Keys:           map[string]string{"company_id": companyID},
+		CreditBalances: map[string]float64{creditID: balance},
+	}
+
+	companyData, _ := json.Marshal(company)
+	resp := schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		Data:        companyData,
+		MessageType: schematicdatastreamws.MessageTypeFull,
+	}
+	respData, _ := json.Marshal(resp)
+
+	return string(respData)
+}
+
+func TestCheckFlagThreadsPreflight(t *testing.T) {
+	server, incomingMessages, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+	configOptions := &core.DatastreamOptions{CacheTTL: 5 * time.Minute}
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+
+	client := datastream.NewDataStreamClient(clientOptions, configOptions)
+	client.Start()
+	defer client.Close()
+
+	// Wait for connection and initial flags
+	time.Sleep(300 * time.Millisecond)
+
+	creditID := "credit-abc"
+	flagKey := "credit-flag"
+	outgoingMessages <- createMockCreditFlagData(flagKey, creditID, 0.0001)
+	time.Sleep(100 * time.Millisecond)
+
+	go func() {
+		for msg := range incomingMessages {
+			var req schematicdatastreamws.DataStreamBaseReq
+			_ = json.Unmarshal([]byte(msg), &req)
+
+			if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
+				companyID := req.Data.Keys["company_id"]
+				outgoingMessages <- createMockCompanyDataWithCredits(companyID, creditID, 1.0)
+			}
+		}
+	}()
+
+	ctx := context.Background()
+	company := map[string]string{"company_id": "123"}
+
+	// Without a preflight the balance covers the condition.
+	result, err := client.CheckFlag(ctx, &schematicgo.CheckFlagRequestBody{Company: company}, flagKey)
+	require.NoError(t, err)
+	assert.True(t, result.Value, "Flag should be on with no usage to price")
+
+	// 20000 x 0.0001 = 2 credits against a balance of 1.
+	result, err = client.CheckFlag(ctx, &schematicgo.CheckFlagRequestBody{
+		Company:   company,
+		Preflight: &schematicgo.PreflightRequestBody{Usage: ptr(int64(20_000))},
+	}, flagKey)
+	require.NoError(t, err)
+	assert.False(t, result.Value, "Preflighted usage above the balance should deny")
+
+	// 50 x 0.0001 = 0.005 credits, well inside the balance.
+	result, err = client.CheckFlag(ctx, &schematicgo.CheckFlagRequestBody{
+		Company:   company,
+		Preflight: &schematicgo.PreflightRequestBody{Usage: ptr(int64(50))},
+	}, flagKey)
+	require.NoError(t, err)
+	assert.True(t, result.Value, "Preflighted usage inside the balance should allow")
+}

@@ -361,6 +361,36 @@ func main() {
 }
 ```
 
+#### Preflight
+
+To ask whether an action *would* be allowed before performing it, set `Preflight` on the evaluation context. The usage is applied to any numeric condition the flag evaluates, so a company one call short of its limit comes back false:
+
+```go
+evaluationCtx := &schematicgo.CheckFlagRequestBody{
+  Company: map[string]string{
+    "id": "your-company-id",
+  },
+  Preflight: &schematicgo.PreflightRequestBody{
+    Usage: schematicgo.Int64(100),
+  },
+}
+
+resp, err := client.CheckFlagWithEntitlement(context.Background(), evaluationCtx, "some-flag-key")
+```
+
+Use `EventUsage` instead of `Usage` when you know which event the usage will be recorded under, so only conditions measuring that subtype move:
+
+```go
+Preflight: &schematicgo.PreflightRequestBody{
+  EventUsage: &schematicgo.PreflightEventUsageRequestBody{
+    EventSubtype: "inference_tokens",
+    Quantity:     1000,
+  },
+}
+```
+
+Only the flag value reflects the preflight; the entitlement and usage figures in the response are the company's current, unsimulated ones. Preflighted checks are never served from, or written to, the flag check cache.
+
 ### Checking multiple flags
 
 When you need to evaluate several flags for the same company/user context, `CheckFlags` returns the full result for each requested flag in a single call. Pass `nil` or an empty slice for `keys` to retrieve every flag defined for the context.
@@ -763,6 +793,117 @@ When running in Replicator Mode, the client will:
 - Periodically check if the replicator service is ready
 - Use cached data populated by the external replicator service
 - Fall back to direct API calls if the replicator is not available
+
+## Credit Leases and Reservations
+
+For features metered by credit burndown, such as inference tokens, `Check` reserves credits for the work you are about to do and `TrackWithReservation` settles the reservation with the actual usage. The reservation comes off the company's balance up front, so a concurrent check sees the credits as spoken for, and the unspent slice returns when the usage is reported.
+
+Opt in with `option.WithCreditLeases`:
+
+```go
+import (
+  core "github.com/schematichq/schematic-go/core"
+  option "github.com/schematichq/schematic-go/option"
+  schematicclient "github.com/schematichq/schematic-go/client"
+)
+
+client := schematicclient.NewSchematicClient(
+  option.WithAPIKey(apiKey),
+  option.WithCreditLeases(core.CreditLeaseConfig{
+    Mode:                  core.CreditLeaseModeServer,
+    DefaultReservationTTL: time.Minute,
+  }),
+)
+defer client.Close()
+```
+
+Then reserve the operation's upper bound, do the work, and report what it actually used:
+
+```go
+result := client.Check(ctx, evaluationCtx, "inference",
+  schematicclient.WithUsage(1000),
+  schematicclient.WithEventSubtype("inference_tokens"),
+)
+if !result.Allowed {
+  return fmt.Errorf("not allowed: %s", result.Reason)
+}
+
+tokensUsed := runInference()
+
+// A check can allow without reserving anything, for instance an unmetered
+// feature. The usage still has to be reported.
+if result.Reservation != nil {
+  client.TrackWithReservation(ctx, result.Reservation, tokensUsed)
+} else {
+  client.Track(ctx, &schematicgo.EventBodyTrack{
+    Event:    "inference_tokens",
+    Company:  map[string]string{"id": "your-company-id"},
+    Quantity: schematicgo.Int64(tokensUsed),
+  })
+}
+```
+
+A check that cannot gate, because the API is unreachable or errored, fails closed by default: `Allowed` is false and nothing is reserved. Pass `schematicclient.WithFailOpen()` where letting traffic through beats denying it, and in server mode the check returns your default value instead, from `schematicclient.WithCheckDefault` or the client's flag defaults, with `_fail_open` appended to the reason. Insufficient credits is not one of those cases: the server knows the credits are not there, so the check denies with reason `Insufficient credits` whatever the failure mode says.
+
+An unsettled reservation is refunded at `DefaultReservationTTL`, so size it above the longest gap you expect between `Check` and `TrackWithReservation`. The settling event carries an idempotency key derived from the reservation ID, so a duplicate or retried settle is dropped server-side rather than billed twice.
+
+### Configuration Options
+
+Every field of `core.CreditLeaseConfig`:
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Mode` | `core.CreditLeaseMode` | `auto` | Where reservations are made: `server`, `client`, or `auto` |
+| `DefaultReservationTTL` | `time.Duration` | 1 minute | How long a reservation survives unsettled. Server mode clamps it to 59 minutes, the furthest out the API will reserve credits. Client mode keeps it as written, since there it only tells the local sweeper when to refund |
+| `DefaultLeaseDuration` | `time.Duration` | 5 minutes | Lease lifetime requested at acquire and extend (client mode) |
+| `DefaultLeaseSize` | `float64` | 10000 | Credits requested per acquire, and the minimum extend tranche (client mode) |
+| `LowWaterMark` | `float64` | 0.25 | Remaining/granted ratio at or below which a background extend fires (client mode) |
+| `SweepInterval` | `time.Duration` | 1 second | How often expired reservations are swept back to their leases (client mode) |
+| `PrewarmResolveTimeout` | `*time.Duration` | 5 seconds | How long a prewarm waits for a freshly identified company to surface over DataStream. Set it to zero to skip the wait, so a prewarm warms only a company the cache already holds (client mode) |
+| `RedisClient` | `redis.UniversalClient` | DataStream's client | Redis backing lease and reservation state. Without one, and without a DataStream cache to borrow from, lease state stays per process (client mode) |
+| `RedisKeyPrefix` | `string` | `schematic:` | Prefix for lease and reservation keys, the same default the other SDKs use (client mode) |
+| `Overrides` | `map[string]core.CreditLeaseOverride` | none | Per credit type overrides, keyed by credit type ID (client mode) |
+
+An override sets `LeaseSize`, `LeaseDuration`, `ReservationTTL`, or `LowWaterMark` for one credit type; a nil field keeps the client-wide default.
+
+`auto` picks client mode when DataStream is enabled and server mode otherwise. The SDK warns at startup when a client-mode option is set on a client that resolves to server mode, and when `client` is asked for without DataStream, which gates nothing.
+
+### Client mode
+
+In client mode the SDK asks the API for a *lease*, a tranche of credits for one company and credit type, and carves each reservation out of that tranche locally. A check gates against the lease's remaining credits instead of a round trip. The SDK extends a lease in the background once it drops to `LowWaterMark`, and, without Redis, releases what this process still has on `Close`; a shared lease belongs to every process, so `Close` leaves it for the sweeper.
+
+Client mode needs DataStream, which supplies the flags and company data the check evaluates against. Give it a Redis client too whenever more than one process serves the same companies: lease state in Redis is what keeps two processes from spending the same credits twice.
+
+```go
+client := schematicclient.NewSchematicClient(
+  option.WithAPIKey(apiKey),
+  option.WithDatastream(),
+  option.WithCreditLeases(core.CreditLeaseConfig{
+    Mode:             core.CreditLeaseModeClient,
+    RedisClient:      redisClient,
+    DefaultLeaseSize: 50000,
+  }),
+)
+defer client.Close()
+```
+
+The `Check` and `TrackWithReservation` calls are the same as in server mode. What changes is where the reservation is made, so the settling event names the lease rather than a server-side reservation.
+
+The first check for a company pays for the acquire. `Prewarm` moves that cost off the request path:
+
+```go
+if err := client.Prewarm(ctx, evaluationCtx, []string{"credit-type-id"}); err != nil {
+  log.Printf("prewarm failed: %v", err)
+}
+```
+
+`WithIdentifyPrewarm` does the same at the point you already identify the company, in the background:
+
+```go
+client.Identify(ctx, body, schematicclient.WithIdentifyPrewarm([]string{"credit-type-id"}))
+```
+
+When a lease cannot be acquired, or has nothing left, the check fails closed by default. Under `WithFailOpen` it evaluates as if the balance were unlimited and reserves nothing.
 
 ## Errors
 

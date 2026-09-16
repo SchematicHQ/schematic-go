@@ -69,7 +69,10 @@ func NewEventBuffer(
 	return buffer
 }
 
-func (b *eventBuffer) flush() {
+// Flush sends whatever is buffered right now instead of waiting for the next
+// tick. The client's worker calls it so an identify can reach the server before
+// a prewarm starts polling for the company.
+func (b *eventBuffer) Flush() {
 	b.mutex.Lock()
 	events := b.batcher.Flush()
 	b.mutex.Unlock()
@@ -100,11 +103,11 @@ func (b *eventBuffer) periodicFlush() {
 			b.stopped = true
 
 			// flush any remaining events
-			b.flush()
+			b.Flush()
 
 			return
 		case <-ticker.C:
-			b.flush()
+			b.Flush()
 		}
 	}
 }

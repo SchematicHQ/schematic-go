@@ -94,7 +94,7 @@ func TestEventBuffer_Integration(t *testing.T) {
 
 		// Push and flush
 		buffer.Push(&schematicgo.CreateEventRequestBody{EventType: "test"})
-		buffer.flush()
+		buffer.Flush()
 
 		// Should receive error
 		select {

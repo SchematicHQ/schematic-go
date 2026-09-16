@@ -36,6 +36,7 @@ type RequestOptions struct {
 	UseDataStream              bool
 
 	// Schematic custom request option fields
+	CreditLeases            *CreditLeaseConfig
 	EventCaptureBaseURL     string
 	EventBufferPeriod       *time.Duration
 	FlagCheckCacheProviders []cache.CacheProvider[*CheckFlagResponse]

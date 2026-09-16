@@ -2,8 +2,10 @@ package client
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	schematicgo "github.com/schematichq/schematic-go"
@@ -12,6 +14,7 @@ import (
 	core "github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
 	"github.com/schematichq/schematic-go/flags"
+	"github.com/schematichq/schematic-go/leases"
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/schematichq/schematic-go/rulesengine"
@@ -20,6 +23,7 @@ import (
 type SchematicClient struct {
 	*Client
 
+	creditLeases            *core.CreditLeaseConfig
 	datastreamClient        *datastream.DataStreamClient
 	errors                  chan error
 	ctxErrors               chan *core.CtxError
@@ -27,11 +31,24 @@ type SchematicClient struct {
 	events                  chan *schematicgo.CreateEventRequestBody
 	flagCheckCacheProviders []cache.CacheProvider[*core.CheckFlagResponse]
 	flagDefaults            map[string]bool
+	flushRequests           chan chan struct{}
 	isOffline               bool
+	leaseManager            *leases.LeaseManager
+	leaseStore              leases.LeaseStore
 	logger                  core.Logger
 	options                 *core.RequestOptions
+	prewarmResolveTimeout   time.Duration
+	reservations            leases.ReservationStore
+	serverReservationTTL    time.Duration
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
+
+	// background tracks the goroutines the client spawns on a caller's behalf,
+	// so Close can wait them out instead of letting them call into plumbing it
+	// is about to tear down.
+	backgroundMu sync.Mutex
+	background   sync.WaitGroup
+	closed       bool
 }
 
 // CheckFlagResponse is an alias for core.CheckFlagResponse to preserve the public API.
@@ -74,6 +91,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		events:                  make(chan *schematicgo.CreateEventRequestBody, 100),
 		flagCheckCacheProviders: options.FlagCheckCacheProviders,
 		flagDefaults:            options.FlagDefaults,
+		flushRequests:           make(chan chan struct{}),
 		isOffline:               options.OfflineMode,
 		logger:                  options.Logger,
 		options:                 options,
@@ -94,6 +112,10 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		client.datastreamClient = datastream.NewDataStreamClient(datastreamOptions, options.DatastreamOptions)
 		client.datastreamClient.Start()
 	}
+
+	// After the datastream client, so the resolved mode knows whether DataStream
+	// is actually enabled.
+	client.configureCreditLeases(options.CreditLeases)
 
 	return client
 }
@@ -254,22 +276,29 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 		return results
 	}
 
+	// A preflighted check asks a hypothetical, and the cache key is only
+	// (flag, company, user), so it neither reads nor writes the cache. See
+	// checkFlagAPI.
+	useCache := evalCtx.Preflight == nil
+
 	// Check cache for all requested keys; return cached results only if every key hits.
 	cachedResults := make(map[string]*CheckFlagResponse, len(keys))
-	allCached := true
-	for _, key := range keys {
-		cacheKey := flags.FlagCheckCacheKey(evalCtx, key)
-		found := false
-		for _, provider := range c.flagCheckCacheProviders {
-			if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
-				cachedCopy := *cached
-				cachedResults[key] = &cachedCopy
-				found = true
-				break
+	allCached := useCache
+	if useCache {
+		for _, key := range keys {
+			cacheKey := flags.FlagCheckCacheKey(evalCtx, key)
+			found := false
+			for _, provider := range c.flagCheckCacheProviders {
+				if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
+					cachedCopy := *cached
+					cachedResults[key] = &cachedCopy
+					found = true
+					break
+				}
 			}
-		}
-		if !found {
-			allCached = false
+			if !found {
+				allCached = false
+			}
 		}
 	}
 
@@ -296,21 +325,23 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 	}
 
 	// Cache all fresh values asynchronously; keyed per flag+context.
-	toCache := make(map[string]*CheckFlagResponse, len(apiResults))
-	for flagKey, result := range apiResults {
-		cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
-		resultCopy := *result
-		toCache[cacheKey] = &resultCopy
-	}
-	go func() {
-		for cacheKey, value := range toCache {
-			for _, provider := range c.flagCheckCacheProviders {
-				if err := provider.Set(ctx, cacheKey, value, nil); err != nil {
-					c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+	if useCache {
+		toCache := make(map[string]*CheckFlagResponse, len(apiResults))
+		for flagKey, result := range apiResults {
+			cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
+			resultCopy := *result
+			toCache[cacheKey] = &resultCopy
+		}
+		go func() {
+			for cacheKey, value := range toCache {
+				for _, provider := range c.flagCheckCacheProviders {
+					if err := provider.Set(ctx, cacheKey, value, nil); err != nil {
+						c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
+					}
 				}
 			}
-		}
-	}()
+		}()
+	}
 
 	results := make([]*CheckFlagResponse, 0, len(keys))
 	for _, key := range keys {
@@ -364,11 +395,19 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		evalCtx = &schematicgo.CheckFlagRequestBody{}
 	}
 
+	// A preflighted check asks a hypothetical ("would this action be allowed?"),
+	// and the cache key is only (flag, company, user). Reading the cache would
+	// answer the hypothetical with the plain verdict, and writing it would serve
+	// the hypothetical to every later plain check, so a preflight skips both.
+	useCache := evalCtx.Preflight == nil
+
 	cacheKey := flags.FlagCheckCacheKey(evalCtx, flagKey)
-	for _, provider := range c.flagCheckCacheProviders {
-		if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
-			result := *cached
-			return &result
+	if useCache {
+		for _, provider := range c.flagCheckCacheProviders {
+			if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
+				result := *cached
+				return &result
+			}
 		}
 	}
 
@@ -407,17 +446,19 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		Value:       resp.Data.Value,
 	}
 
-	cachedCopy := *checkFlagResp
-	go func() {
-		for _, provider := range c.flagCheckCacheProviders {
-			if err := provider.Set(ctx, cacheKey, &cachedCopy, nil); err != nil {
-				c.ctxErrors <- &core.CtxError{
-					Ctx: ctx,
-					Err: err,
+	if useCache {
+		cachedCopy := *checkFlagResp
+		go func() {
+			for _, provider := range c.flagCheckCacheProviders {
+				if err := provider.Set(ctx, cacheKey, &cachedCopy, nil); err != nil {
+					c.ctxErrors <- &core.CtxError{
+						Ctx: ctx,
+						Err: err,
+					}
 				}
 			}
-		}
-	}()
+		}()
+	}
 
 	return checkFlagResp
 }
@@ -500,10 +541,90 @@ func (c *SchematicClient) Close() {
 		}
 	}()
 
+	// Before the lease plumbing goes away, since these goroutines call into it.
+	c.stopBackground()
+
+	if c.leaseManager != nil {
+		c.leaseManager.Stop()
+		// Releasing hands the unspent remainder of this process's leases back to
+		// the company balance now instead of at expiry. Bounded, so a hung API
+		// call cannot hold up the shutdown; the manager skips a shared store,
+		// whose leases sibling processes still draw on.
+		ctx, cancel := context.WithTimeout(context.Background(), leaseReleaseTimeout)
+		c.leaseManager.ReleaseAllLocalLeases(ctx)
+		cancel()
+	}
+
 	close(c.stopWorker)
 
 	if c.datastreamClient != nil {
 		c.datastreamClient.Close()
+	}
+}
+
+// spawnBackground runs work on the caller's behalf, tracked so Close can wait
+// it out. It refuses once the client is closing, since the plumbing that work
+// would touch is being torn down.
+func (c *SchematicClient) spawnBackground(fn func()) bool {
+	c.backgroundMu.Lock()
+	if c.closed {
+		c.backgroundMu.Unlock()
+		return false
+	}
+	c.background.Add(1)
+	c.backgroundMu.Unlock()
+
+	go func() {
+		defer c.background.Done()
+		defer func() {
+			if r := recover(); r != nil {
+				c.logger.Error(context.Background(), fmt.Sprintf("Panic occurred in background client work %v", r))
+			}
+		}()
+		fn()
+	}()
+	return true
+}
+
+// stopBackground refuses further background work and waits out what is already
+// running, bounded so a stalled call cannot hold up a shutdown.
+func (c *SchematicClient) stopBackground() {
+	c.backgroundMu.Lock()
+	c.closed = true
+	c.backgroundMu.Unlock()
+
+	waited := make(chan struct{})
+	go func() {
+		c.background.Wait()
+		close(waited)
+	}()
+	timer := time.NewTimer(leases.DefaultStopTimeout)
+	defer timer.Stop()
+	select {
+	case <-waited:
+	case <-timer.C:
+		c.logger.Warn(context.Background(), fmt.Sprintf("Timed out after %s waiting for background client work to finish; closing anyway", leases.DefaultStopTimeout))
+	}
+}
+
+// flushEvents sends everything buffered now rather than at the next tick. The
+// buffer belongs to the worker goroutine, so the request goes through it and
+// this waits for the worker's acknowledgement.
+func (c *SchematicClient) flushEvents(ctx context.Context) error {
+	ack := make(chan struct{})
+	select {
+	case c.flushRequests <- ack:
+	case <-c.stopWorker:
+		return errors.New("the event worker has stopped")
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+
+	select {
+	case <-ack:
+		return nil
+	case <-ctx.Done():
+		return ctx.Err()
 	}
 }
 
@@ -527,6 +648,33 @@ func (c *SchematicClient) Identify(
 			Ctx: ctx,
 			Err: err,
 		}
+	}
+
+	if len(o.prewarm) == 0 {
+		return
+	}
+	if body == nil || body.Company == nil || len(body.Company.Keys) == 0 {
+		c.logger.Debug(ctx, "Identify: a prewarm needs company keys on the identify event")
+		return
+	}
+	// Detached, so a caller that cancels the request context still gets its
+	// leases warmed, and unawaited, so the identify does not wait on the wire.
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: body.Company.Keys, User: body.Keys}
+	prewarmCtx := context.WithoutCancel(ctx)
+	spawned := c.spawnBackground(func() {
+		// The buffer otherwise holds the identify for up to its flush period,
+		// which outlasts the prewarm's own wait for the company to surface, so
+		// the prewarm would be polling for an entity the server has not been
+		// told about yet.
+		if err := c.flushEvents(prewarmCtx); err != nil {
+			c.logger.Debug(prewarmCtx, fmt.Sprintf("Identify: flushing before the prewarm failed: %v", err))
+		}
+		if err := c.Prewarm(prewarmCtx, evalCtx, o.prewarm); err != nil {
+			c.logger.Warn(prewarmCtx, fmt.Sprintf("Identify: prewarm failed: %v", err))
+		}
+	})
+	if !spawned {
+		c.logger.Debug(ctx, "Identify: the client is closing, so the prewarm was skipped")
 	}
 }
 
@@ -554,13 +702,14 @@ func (c *SchematicClient) Track(
 	opts ...TrackOption,
 ) {
 
-	eventBody := schematicgo.EventBody{
-		EventBodyTrack: body,
-	}
-
 	o := &eventOptions{}
 	for _, apply := range opts {
 		apply(o)
+	}
+
+	body = bodyWithTraits(body, o.traits)
+	eventBody := schematicgo.EventBody{
+		EventBodyTrack: body,
 	}
 
 	if err := c.enqueueEvent("track", eventBody, o); err != nil {
@@ -657,6 +806,22 @@ func (c *SchematicClient) worker() {
 			c.logger.Error(context.Background(), fmt.Sprintf("%v", err))
 		case err := <-c.ctxErrors:
 			c.logger.Error(err.Ctx, fmt.Sprintf("%v", err.Err))
+		case ack := <-c.flushRequests:
+			// Enqueueing an event only hands it to this loop, so drain what is
+			// already queued first: a caller that enqueued and then asked for a
+			// flush means the flush to cover that event. Then flush
+			// synchronously, since the caller is waiting on the send having
+			// happened, not on it having been asked for.
+			for drained := true; drained; {
+				select {
+				case event := <-c.events:
+					buffer.Push(event)
+				default:
+					drained = false
+				}
+			}
+			buffer.Flush()
+			close(ack)
 		case <-c.stopWorker:
 			buffer.Stop()
 			return

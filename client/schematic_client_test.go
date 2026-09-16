@@ -232,11 +232,14 @@ func TestTrackEventWithOptions(t *testing.T) {
 	assert.Nil(t, err)
 
 	// Capture the actual outgoing request body so we can assert the
-	// optional metadata fields make it onto the wire.
-	var captured []byte
+	// optional metadata fields make it onto the wire. The buffer flushes on its
+	// own goroutine, so the body comes back over a channel rather than through a
+	// variable shared with it.
+	capturedCh := make(chan []byte, 1)
 	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
-		captured, err = io.ReadAll(req.Body)
-		assert.Nil(t, err)
+		body, readErr := io.ReadAll(req.Body)
+		assert.Nil(t, readErr)
+		capturedCh <- body
 		return &http.Response{
 			Status:     "200",
 			StatusCode: 200,
@@ -259,7 +262,12 @@ func TestTrackEventWithOptions(t *testing.T) {
 		&schematicgo.EventBodyIdentify{Keys: map[string]string{"foo": "bar"}},
 		schematicclient.WithIdentifyIdempotencyKey("dedupe-2"),
 	)
-	time.Sleep(30 * time.Millisecond)
+	var captured []byte
+	select {
+	case captured = <-capturedCh:
+	case <-time.After(time.Second):
+		t.Fatal("event batch was never sent")
+	}
 
 	// Decode and inspect each event in the batch.
 	var batch struct {

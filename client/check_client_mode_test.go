@@ -34,6 +34,7 @@ import (
 const (
 	leaseAcquirePath = "/billing/credits/lease"
 	leaseReleasePath = "/release"
+	leaseExtendPath  = "/extend"
 	eventBatchPath   = "/batch"
 	testFlagKey      = "inference"
 	testCreditID     = "ct_1"
@@ -740,4 +741,69 @@ func TestCloseReleasesALeaseInstalledByAnAcquireRacingIt(t *testing.T) {
 	released, ok := rec.find(leaseReleasePath)
 	require.True(t, ok, "no lease survives the close: %v", rec.paths())
 	assert.Contains(t, released.path, "lse_1")
+}
+
+// The ticket's case, end to end with the first extend held mid-flight: a
+// sub-watermark check fires a fire-and-forget extend for one tranche, and a
+// check needing more than that tranche arrives while it is in flight.
+// Inheriting the tranche leaves the second check failing
+// insufficient_lease_balance with the credits sitting on the server.
+func TestClientModeCheckThatNeedsMoreThanTheExtendInFlightAskedFor(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{pushFlags: true, serveCompany: true})
+	rec := &requestRecorder{}
+	releaseExtend := make(chan struct{})
+	client := clientModeClient(t, rec, map[string]stub{
+		leaseAcquirePath: {body: leaseResponse("lse_1", 1000)},
+		leaseExtendPath: {
+			// The server's authoritative total after each extend.
+			bodies: []any{leaseResponse("lse_1", 2000), leaseResponse("lse_1", 3000)},
+			block:  releaseExtend,
+		},
+		leaseReleasePath: {body: leaseResponse("lse_1", 3000)},
+		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	}, server.URL, core.CreditLeaseConfig{DefaultLeaseSize: 1000, LowWaterMark: 0.25})
+	defer client.Close()
+
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"id": testCompanyID}}
+	// 800 of the 1000-credit lease, leaving 200: below the water mark, so this
+	// check's fire-and-forget extend goes out and hangs.
+	first := client.Check(t.Context(), evalCtx, testFlagKey,
+		schematicclient.WithUsage(800),
+		schematicclient.WithEventSubtype(testEventSubtype),
+	)
+	require.True(t, first.Allowed, "reason: %s, error: %s", first.Reason, first.Error)
+	require.Eventually(t, func() bool {
+		return countPaths(rec, leaseExtendPath) == 1
+	}, 2*time.Second, 10*time.Millisecond, "the watermark extend should be in flight")
+
+	// 1500 against 200 remaining: the reserve fails and the check asks for an
+	// extend, joining the tranche-sized flight.
+	second := make(chan *schematicclient.CheckResult, 1)
+	go func() {
+		second <- client.Check(t.Context(), evalCtx, testFlagKey,
+			schematicclient.WithUsage(1500),
+			schematicclient.WithEventSubtype(testEventSubtype),
+		)
+	}()
+	time.Sleep(100 * time.Millisecond)
+	assert.Equal(t, 1, countPaths(rec, leaseExtendPath), "the joiner waits the flight out rather than racing it")
+
+	close(releaseExtend)
+	result := <-second
+
+	require.True(t, result.Allowed, "reason: %s, error: %s", result.Reason, result.Error)
+	require.NotNil(t, result.Reservation)
+	assert.Equal(t, 1500.0, result.Reservation.CreditsReserved)
+	assert.GreaterOrEqual(t, countPaths(rec, leaseExtendPath), 2, "the joiner topped the lease up itself: %v", rec.paths())
+}
+
+// countPaths is how many recorded requests ended in suffix.
+func countPaths(rec *requestRecorder, suffix string) int {
+	count := 0
+	for _, path := range rec.paths() {
+		if strings.HasSuffix(path, suffix) {
+			count++
+		}
+	}
+	return count
 }

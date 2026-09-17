@@ -280,7 +280,17 @@ func (m *LeaseManager) acquire(ctx context.Context, companyID, creditTypeID stri
 // requiredCredits hint above the local remaining (a check just failed a reserve
 // of that size). Pass nil for requiredCredits to ask for the steady-state check
 // only. It returns nil rather than an error on any failure.
+//
+// A caller arriving while an extend is in flight joins it. If its own shortfall
+// is larger than what that extend asked for, it waits the flight out and then
+// issues exactly one follow-up extend for the remaining difference; otherwise it
+// would inherit a tranche-sized ask and fail its post-extend retry with credits
+// still sitting on the server.
 func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID string, requiredCredits *float64) *LeaseState {
+	return m.maybeExtend(ctx, companyID, creditTypeID, requiredCredits, true)
+}
+
+func (m *LeaseManager) maybeExtend(ctx context.Context, companyID, creditTypeID string, requiredCredits *float64, allowFollowUp bool) *LeaseState {
 	entry, err := m.leases.Get(ctx, companyID, creditTypeID)
 	if err != nil {
 		m.logger.Warn(ctx, fmt.Sprintf("Failed to read lease store for %s/%s: %v", companyID, creditTypeID, err))
@@ -301,19 +311,42 @@ func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID 
 	if !belowWatermark && !belowRequired {
 		return entry
 	}
-	// A caller joining an extend already in flight gets whatever that extend was
-	// sized for, which may be a smaller shortfall than its own, so a large check
-	// can still come back short and fail its post-extend reserve. It re-extends
-	// on the next check rather than looping here, since sizing the shared flight
-	// to the largest waiter means holding it open for waiters that have not
-	// arrived yet. All three SDKs share the limitation.
-	return m.extendFlights.do(ctx, LeaseKey(companyID, creditTypeID), func() *LeaseState {
+	// Size the extend to cover the request that triggered it: a single check
+	// needing more than remaining plus one tranche would otherwise fail its
+	// post-extend retry forever, however much balance the server has. The
+	// steady-state path keeps asking for the configured tranche. Sized here, one
+	// level above the wire call, so the flight registered below and the request
+	// body provably carry the same number for a joiner to compare against.
+	shortfall := 0.0
+	if requiredCredits != nil {
+		shortfall = *requiredCredits - entry.LocalRemainingCredits
+	}
+	additionalAmount := max(resolved.LeaseSize, shortfall)
+
+	result, flightAsk, joined := m.extendFlights.doSized(ctx, LeaseKey(companyID, creditTypeID), additionalAmount, func() *LeaseState {
 		// Detached for the same reason the acquire flight is: one caller's
 		// deadline must not decide what every waiter on the slot gets.
 		detached, cancel := detachedContext(ctx)
 		defer cancel()
-		return m.extend(detached, *entry, resolved, requiredCredits)
+		return m.extend(detached, *entry, resolved, additionalAmount)
 	})
+	// The flight already asked for at least what we need, which covers every
+	// watermark-driven joiner and any check the tranche fits. One wire call
+	// serves all of them, which is the point of single-flight.
+	if !joined || additionalAmount <= flightAsk {
+		return result
+	}
+	// Our shortfall outran the flight's ask. We waited it out rather than racing
+	// a second extend onto the same lease, and now top up the difference with
+	// exactly one more, re-read against the slot that flight just moved. The
+	// follow-up is not allowed one of its own: a company whose balance simply
+	// cannot reach the request would otherwise spin. A caller whose own context
+	// has already ended has stopped waiting for the answer, so a follow-up would
+	// buy it nothing.
+	if !allowFollowUp || ctx.Err() != nil {
+		return result
+	}
+	return m.maybeExtend(ctx, companyID, creditTypeID, requiredCredits, false)
 }
 
 // ExtendInBackground kicks off a water-mark extend without waiting for it: a
@@ -336,16 +369,8 @@ func detachedContext(ctx context.Context) (context.Context, context.CancelFunc) 
 	return context.WithTimeout(context.WithoutCancel(ctx), DetachedWorkTimeout)
 }
 
-func (m *LeaseManager) extend(ctx context.Context, entry LeaseState, resolved ResolvedLeaseConfig, requiredCredits *float64) *LeaseState {
-	// Size the extend to cover the request that triggered it: a single check
-	// needing more than remaining plus one tranche would otherwise fail its
-	// post-extend retry forever, however much balance the server has. The
-	// steady-state path keeps asking for the configured tranche.
-	shortfall := 0.0
-	if requiredCredits != nil {
-		shortfall = *requiredCredits - entry.LocalRemainingCredits
-	}
-	grant, err := m.wire.Extend(ctx, entry.LeaseID, max(resolved.LeaseSize, shortfall), m.clock().Add(resolved.LeaseDuration))
+func (m *LeaseManager) extend(ctx context.Context, entry LeaseState, resolved ResolvedLeaseConfig, additionalAmount float64) *LeaseState {
+	grant, err := m.wire.Extend(ctx, entry.LeaseID, additionalAmount, m.clock().Add(resolved.LeaseDuration))
 	if err != nil {
 		m.logger.Warn(ctx, fmt.Sprintf("Failed to extend credit lease %s: %v", entry.LeaseID, err))
 		return nil
@@ -536,23 +561,39 @@ type flightGroup struct {
 }
 
 type flight struct {
-	done   chan struct{}
-	result *LeaseState
+	done chan struct{}
+	// requestedAdditional is what an extend flight's wire call asks the server
+	// for, the figure a joiner compares its own shortfall against. Acquire
+	// flights are not sized against anything and leave it zero.
+	requestedAdditional float64
+	result              *LeaseState
 }
 
 func (g *flightGroup) do(ctx context.Context, key string, fn func() *LeaseState) *LeaseState {
+	result, _, _ := g.doSized(ctx, key, 0, fn)
+	return result
+}
+
+// doSized is do for a call whose size matters to a joiner: requestedAdditional
+// is what this call will ask the server for. It reports the figure the flight it
+// joined asked for, and whether it joined one rather than starting its own, so a
+// caller the flight does not cover can follow up.
+func (g *flightGroup) doSized(ctx context.Context, key string, requestedAdditional float64, fn func() *LeaseState) (*LeaseState, float64, bool) {
 	g.mu.Lock()
 	if existing, ok := g.inFlight[key]; ok {
 		g.mu.Unlock()
-		return existing.wait(ctx)
+		return existing.wait(ctx), existing.requestedAdditional, true
 	}
-	call := &flight{done: make(chan struct{})}
+	call := &flight{done: make(chan struct{}), requestedAdditional: requestedAdditional}
 	if g.inFlight == nil {
 		g.inFlight = make(map[string]*flight)
 	}
 	g.inFlight[key] = call
 	g.mu.Unlock()
 
+	// The cleanup is identity-guarded rather than an unconditional delete: a
+	// joiner whose shortfall outran this flight registers a follow-up for the
+	// same key, and this flight must not evict it.
 	finish := func() {
 		g.mu.Lock()
 		if g.inFlight[key] == call {
@@ -566,9 +607,9 @@ func (g *flightGroup) do(ctx context.Context, key string, fn func() *LeaseState)
 		call.result = fn()
 	}) {
 		finish()
-		return nil
+		return nil, requestedAdditional, false
 	}
-	return call.wait(ctx)
+	return call.wait(ctx), requestedAdditional, false
 }
 
 // wait blocks for the shared call, or for the caller's own context to end,

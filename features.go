@@ -11,20 +11,23 @@ import (
 )
 
 var (
-	checkAndReserveFlagRequestBodyFieldCompany   = big.NewInt(1 << 0)
-	checkAndReserveFlagRequestBodyFieldExpiresAt = big.NewInt(1 << 1)
-	checkAndReserveFlagRequestBodyFieldPreflight = big.NewInt(1 << 2)
-	checkAndReserveFlagRequestBodyFieldQuantity  = big.NewInt(1 << 3)
-	checkAndReserveFlagRequestBodyFieldUser      = big.NewInt(1 << 4)
+	checkAndReserveFlagRequestBodyFieldCompany        = big.NewInt(1 << 0)
+	checkAndReserveFlagRequestBodyFieldExpiresAt      = big.NewInt(1 << 1)
+	checkAndReserveFlagRequestBodyFieldIdempotencyKey = big.NewInt(1 << 2)
+	checkAndReserveFlagRequestBodyFieldPreflight      = big.NewInt(1 << 3)
+	checkAndReserveFlagRequestBodyFieldQuantity       = big.NewInt(1 << 4)
+	checkAndReserveFlagRequestBodyFieldUser           = big.NewInt(1 << 5)
 )
 
 type CheckAndReserveFlagRequestBody struct {
 	Company map[string]string `json:"company,omitempty" url:"-"`
 	// When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
 	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
-	// Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise the hold is quantity times the entitlement's consumption rate
+	// A caller-chosen key for safe retries: a second request with the same key returns the original reservation instead of taking another hold
+	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`
+	// Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise the hold is the entitlement's consumption rate times quantity, or, when quantity is omitted, times the usage stated here
 	Preflight *PreflightRequestBody `json:"preflight,omitempty" url:"-"`
-	// Units of the feature the operation will consume; defaults to 1. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event
+	// Units of the feature the operation will consume. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event. When it is omitted the units come from preflight.event_usage.quantity, if that event subtype is the entitlement's, else from preflight.usage, else 1
 	Quantity *float64          `json:"quantity,omitempty" url:"-"`
 	User     map[string]string `json:"user,omitempty" url:"-"`
 
@@ -53,6 +56,13 @@ func (c *CheckAndReserveFlagRequestBody) SetCompany(company map[string]string) {
 func (c *CheckAndReserveFlagRequestBody) SetExpiresAt(expiresAt *time.Time) {
 	c.ExpiresAt = expiresAt
 	c.require(checkAndReserveFlagRequestBodyFieldExpiresAt)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckAndReserveFlagRequestBody) SetIdempotencyKey(idempotencyKey *string) {
+	c.IdempotencyKey = idempotencyKey
+	c.require(checkAndReserveFlagRequestBodyFieldIdempotencyKey)
 }
 
 // SetPreflight sets the Preflight field and marks it as non-optional;

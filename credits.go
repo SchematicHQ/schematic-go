@@ -18,8 +18,9 @@ var (
 )
 
 type AcquireCreditLeaseRequestBody struct {
-	CompanyID       string     `json:"company_id" url:"-"`
-	CreditTypeID    string     `json:"credit_type_id" url:"-"`
+	CompanyID    string `json:"company_id" url:"-"`
+	CreditTypeID string `json:"credit_type_id" url:"-"`
+	// When the hold lapses if the lease is never released; defaults to five minutes from now and may be at most one hour out. The unspent hold is refunded on expiry
 	ExpiresAt       *time.Time `json:"expires_at,omitempty" url:"-"`
 	RequestedAmount float64    `json:"requested_amount" url:"-"`
 
@@ -1039,8 +1040,9 @@ var (
 )
 
 type ExtendCreditLeaseRequestBody struct {
-	AdditionalAmount float64    `json:"additional_amount" url:"-"`
-	ExpiresAt        *time.Time `json:"expires_at,omitempty" url:"-"`
+	AdditionalAmount float64 `json:"additional_amount" url:"-"`
+	// Pushes the lease's expiry out; may be at most one hour from now. Leave unset to keep the expiry the lease already has
+	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
 	// A caller-chosen key for safe retries: a second request with the same key returns the lease as it stands instead of growing it again. Keys are unique per environment across every extend
 	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`
 
@@ -3237,9 +3239,10 @@ var (
 	creditEventLedgerResponseDataFieldQuantityRemainingAtZeroOut = big.NewInt(1 << 26)
 	creditEventLedgerResponseDataFieldSourceID                   = big.NewInt(1 << 27)
 	creditEventLedgerResponseDataFieldToGrantID                  = big.NewInt(1 << 28)
-	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 29)
-	creditEventLedgerResponseDataFieldUsageReason                = big.NewInt(1 << 30)
-	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 31)
+	creditEventLedgerResponseDataFieldTransferReason             = big.NewInt(1 << 29)
+	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 30)
+	creditEventLedgerResponseDataFieldUsageReason                = big.NewInt(1 << 31)
+	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 32)
 )
 
 type CreditEventLedgerResponseData struct {
@@ -3272,6 +3275,7 @@ type CreditEventLedgerResponseData struct {
 	QuantityRemainingAtZeroOut *float64                           `json:"quantity_remaining_at_zero_out,omitempty" url:"quantity_remaining_at_zero_out,omitempty"`
 	SourceID                   int64                              `json:"source_id" url:"source_id"`
 	ToGrantID                  *string                            `json:"to_grant_id,omitempty" url:"to_grant_id,omitempty"`
+	TransferReason             *CreditTransferReason              `json:"transfer_reason,omitempty" url:"transfer_reason,omitempty"`
 	UsageEventID               *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
 	UsageReason                *CreditUsageReason                 `json:"usage_reason,omitempty" url:"usage_reason,omitempty"`
 	ZeroedOutReason            *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
@@ -3484,6 +3488,13 @@ func (c *CreditEventLedgerResponseData) GetToGrantID() *string {
 		return nil
 	}
 	return c.ToGrantID
+}
+
+func (c *CreditEventLedgerResponseData) GetTransferReason() *CreditTransferReason {
+	if c == nil {
+		return nil
+	}
+	return c.TransferReason
 }
 
 func (c *CreditEventLedgerResponseData) GetUsageEventID() *string {
@@ -3724,6 +3735,13 @@ func (c *CreditEventLedgerResponseData) SetSourceID(sourceID int64) {
 func (c *CreditEventLedgerResponseData) SetToGrantID(toGrantID *string) {
 	c.ToGrantID = toGrantID
 	c.require(creditEventLedgerResponseDataFieldToGrantID)
+}
+
+// SetTransferReason sets the TransferReason field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetTransferReason(transferReason *CreditTransferReason) {
+	c.TransferReason = transferReason
+	c.require(creditEventLedgerResponseDataFieldTransferReason)
 }
 
 // SetUsageEventID sets the UsageEventID field and marks it as non-optional;
@@ -4581,6 +4599,34 @@ func NewCreditSpendPolicyScopeFromString(s string) (CreditSpendPolicyScope, erro
 }
 
 func (c CreditSpendPolicyScope) Ptr() *CreditSpendPolicyScope {
+	return &c
+}
+
+type CreditTransferReason string
+
+const (
+	CreditTransferReasonOverdraftRecovery CreditTransferReason = "overdraft_recovery"
+	CreditTransferReasonPostpaidDebtMoved CreditTransferReason = "postpaid_debt_moved"
+	CreditTransferReasonPostpaidForgiven  CreditTransferReason = "postpaid_forgiven"
+	CreditTransferReasonPostpaidPaid      CreditTransferReason = "postpaid_paid"
+)
+
+func NewCreditTransferReasonFromString(s string) (CreditTransferReason, error) {
+	switch s {
+	case "overdraft_recovery":
+		return CreditTransferReasonOverdraftRecovery, nil
+	case "postpaid_debt_moved":
+		return CreditTransferReasonPostpaidDebtMoved, nil
+	case "postpaid_forgiven":
+		return CreditTransferReasonPostpaidForgiven, nil
+	case "postpaid_paid":
+		return CreditTransferReasonPostpaidPaid, nil
+	}
+	var t CreditTransferReason
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditTransferReason) Ptr() *CreditTransferReason {
 	return &c
 }
 

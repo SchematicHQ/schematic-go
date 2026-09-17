@@ -75,6 +75,24 @@ func (r *requestRecorder) find(suffix string) (recordedRequest, bool) {
 	return recordedRequest{}, false
 }
 
+// idempotencyKeys is the key each recorded request to a path carried, in call
+// order, empty string for a request that carried none.
+func (r *requestRecorder) idempotencyKeys(t *testing.T, suffix string) []string {
+	t.Helper()
+	keys := make([]string, 0)
+	for _, req := range r.all() {
+		if !strings.HasSuffix(req.path, suffix) {
+			continue
+		}
+		var sent struct {
+			IdempotencyKey string `json:"idempotency_key"`
+		}
+		require.NoError(t, json.Unmarshal(req.body, &sent))
+		keys = append(keys, sent.IdempotencyKey)
+	}
+	return keys
+}
+
 // stub is the canned answer for one endpoint.
 type stub struct {
 	status int
@@ -83,6 +101,9 @@ type stub struct {
 	// the last entry, so a test can script a path whose answer changes between
 	// calls.
 	bodies []any
+	// statuses scripts the status code the same way, so a test can drive a
+	// transient failure the retry recovers from.
+	statuses []int
 	// block, when set, holds the request open until the channel is closed, so a
 	// test can drive an API that is slow to answer.
 	block chan struct{}
@@ -122,12 +143,18 @@ func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(
 			// Claim this call's answer before blocking, so a scripted path hands
 			// out its entries in call order rather than in release order.
 			payload := s.body
-			if len(s.bodies) > 0 {
+			status := s.status
+			if len(s.bodies) > 0 || len(s.statuses) > 0 {
 				mu.Lock()
 				index := served[suffix]
 				served[suffix] = index + 1
 				mu.Unlock()
-				payload = s.bodies[min(index, len(s.bodies)-1)]
+				if len(s.bodies) > 0 {
+					payload = s.bodies[min(index, len(s.bodies)-1)]
+				}
+				if len(s.statuses) > 0 {
+					status = s.statuses[min(index, len(s.statuses)-1)]
+				}
 			}
 			if s.block != nil {
 				select {
@@ -140,7 +167,6 @@ func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(
 			if err != nil {
 				return nil, fmt.Errorf("could not marshal the stub for %s: %w", suffix, err)
 			}
-			status := s.status
 			if status == 0 {
 				status = http.StatusOK
 			}
@@ -472,9 +498,11 @@ func TestCheckServerError(t *testing.T) {
 		assert.False(t, result.Allowed)
 		assert.Equal(t, "server_reservation_failed", result.Reason)
 		assert.Equal(t, "server_reservation_failed", result.Error)
-		// A check-and-reserve carries no idempotency key, so a retry would take
-		// a second hold. The call must go out exactly once.
-		assert.Len(t, rec.all(), 1)
+		// The key makes the retry safe, so the default retry policy applies and
+		// every attempt of this check carries the same one.
+		keys := rec.idempotencyKeys(t, checkAndReservePath)
+		require.Len(t, keys, 2)
+		assert.Equal(t, keys[0], keys[1])
 	})
 
 	t.Run("Fails open to the explicit default", func(t *testing.T) {
@@ -511,6 +539,52 @@ func TestCheckServerError(t *testing.T) {
 		assert.True(t, result.Allowed)
 		assert.Equal(t, "server_reservation_failed_fail_open", result.Reason)
 	})
+}
+
+func TestCheckKeysEachCallSeparately(t *testing.T) {
+	t.Parallel()
+	rec := &requestRecorder{}
+	client := serverModeClient(t, rec, map[string]stub{
+		checkAndReservePath: {body: reserveResponse(true, heldReservation(schematicgo.String("inference_tokens")))},
+	})
+
+	client.Check(context.Background(), testEvalCtx(), "test-flag", schematicclient.WithUsage(10))
+	client.Check(context.Background(), testEvalCtx(), "test-flag", schematicclient.WithUsage(10))
+
+	keys := rec.idempotencyKeys(t, checkAndReservePath)
+	require.Len(t, keys, 2)
+	assert.NotEmpty(t, keys[0])
+	// Two deliberate checks each want their own hold, so the server has to be
+	// able to tell them apart.
+	assert.NotEqual(t, keys[0], keys[1])
+}
+
+func TestCheckRetriesUnderOneKey(t *testing.T) {
+	t.Parallel()
+	rec := &requestRecorder{}
+	client := serverModeClient(t, rec, map[string]stub{
+		checkAndReservePath: {
+			statuses: []int{http.StatusBadGateway, http.StatusOK},
+			bodies: []any{
+				map[string]any{"error": "bad gateway"},
+				reserveResponse(true, heldReservation(schematicgo.String("inference_tokens"))),
+			},
+		},
+	})
+
+	result := client.Check(context.Background(), testEvalCtx(), "test-flag", schematicclient.WithUsage(1000))
+
+	assert.True(t, result.Allowed)
+	assert.Empty(t, result.Error)
+	require.NotNil(t, result.Reservation, "the retry answers with the hold rather than a failed check")
+	assert.Equal(t, "res_123", result.Reservation.ID)
+
+	keys := rec.idempotencyKeys(t, checkAndReservePath)
+	require.Len(t, keys, 2)
+	assert.NotEmpty(t, keys[0])
+	// One key across the attempts is what lets the server hand the retry the
+	// hold the lost attempt already took.
+	assert.Equal(t, keys[0], keys[1])
 }
 
 func TestCheckDeniedFlagHoldsNothing(t *testing.T) {
@@ -676,6 +750,7 @@ func TestCheckHappyPath(t *testing.T) {
 	assert.True(t, req.hasDeadline, "WithCheckTimeout should bound the call")
 
 	body := decodeBody(t, req.body)
+	assert.NotEmpty(t, body["idempotency_key"])
 	assert.Equal(t, float64(1000), body["quantity"])
 	assert.Equal(t, map[string]any{"id": "comp-key"}, body["company"])
 	assert.Equal(t, map[string]any{"id": "user-key"}, body["user"])

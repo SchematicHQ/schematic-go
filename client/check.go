@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
 	schematicgo "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
@@ -726,18 +727,22 @@ func (c *SchematicClient) checkWithServerReservation(
 	defer cancel()
 
 	expiresAt := time.Now().UTC().Add(c.serverReservationTTL)
+	// A 502 arriving after the API committed the hold leaves a retry no way to
+	// tell a lost response from a rejected request. The key is minted once per
+	// check and the retry loop resends this body, so the server answers every
+	// attempt of this check with the one hold it already took, while the next
+	// check gets its own key and its own hold.
+	idempotencyKey := uuid.NewString()
 	body := &schematicgo.CheckAndReserveFlagRequestBody{
-		Company:   evalCtx.Company,
-		User:      evalCtx.User,
-		Quantity:  &usage,
-		ExpiresAt: &expiresAt,
-		Preflight: mergedPreflight(evalCtx.Preflight, o.preflight()),
+		Company:        evalCtx.Company,
+		User:           evalCtx.User,
+		Quantity:       &usage,
+		ExpiresAt:      &expiresAt,
+		IdempotencyKey: &idempotencyKey,
+		Preflight:      mergedPreflight(evalCtx.Preflight, o.preflight()),
 	}
 
-	// Never retry: the request carries no idempotency key, so a 502 arriving
-	// after the API committed the hold would have the default retry policy take
-	// a second hold, with the first parked until its TTL.
-	resp, err := c.Features.CheckAndReserveFlag(callCtx, flagKey, body, option.WithoutRetries())
+	resp, err := c.Features.CheckAndReserveFlag(callCtx, flagKey, body)
 	if err != nil {
 		// A 402 is the server's answer, not a failure to answer: it knows the
 		// credits are not there. Deny regardless of fail-open, which would

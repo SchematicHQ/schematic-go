@@ -459,3 +459,226 @@ func TestAcquireAfterStopIsRefused(t *testing.T) {
 	require.NoError(t, err)
 	assert.Empty(t, entries, "and installs nothing for the release pass to miss")
 }
+
+// extendScriptWire answers each extend from a queue of server totals, repeating
+// the last, and holds the first one open until the test releases it, so a caller
+// can arrive while an extend is in flight.
+type extendScriptWire struct {
+	release chan struct{}
+
+	mu     sync.Mutex
+	grants []LeaseGrant
+	calls  []extendCall
+}
+
+func (w *extendScriptWire) Acquire(context.Context, string, string, float64, time.Time) (*LeaseGrant, error) {
+	return nil, errors.New("no acquire is expected here")
+}
+
+func (w *extendScriptWire) Extend(ctx context.Context, leaseID string, additionalAmount float64, expiresAt time.Time) (*LeaseGrant, error) {
+	w.mu.Lock()
+	index := len(w.calls)
+	w.calls = append(w.calls, extendCall{leaseID: leaseID, additionalAmount: additionalAmount, expiresAt: expiresAt})
+	grant := w.grants[min(index, len(w.grants)-1)]
+	w.mu.Unlock()
+
+	if index == 0 {
+		select {
+		case <-w.release:
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+	}
+	grant.LeaseID = leaseID
+	return &grant, nil
+}
+
+func (w *extendScriptWire) Release(context.Context, string) error { return nil }
+
+func (w *extendScriptWire) extends() []extendCall {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return append([]extendCall(nil), w.calls...)
+}
+
+// drawnDownSlot is a lease of 1000 with 800 already reserved, so the slot sits
+// at 200 remaining, below the water mark every joiner test starts from.
+func drawnDownSlot(t *testing.T, wire WireClient) (*LeaseManager, LeaseStore, *virtualClock) {
+	t.Helper()
+	clock := newVirtualClock()
+	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+	_, _, _, err := store.TryReserve(context.Background(), "co_1", "ct_1", 800)
+	require.NoError(t, err)
+
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{
+		Clock:  clock.Now,
+		Config: ResolvedLeaseConfig{LeaseSize: 1000, LowWaterMark: 0.25},
+	})
+	t.Cleanup(manager.Stop)
+	return manager, store, clock
+}
+
+func serverTotal(clock *virtualClock, total float64) LeaseGrant {
+	return LeaseGrant{CompanyID: "co_1", CreditTypeID: "ct_1", GrantedAmount: total, ExpiresAt: clock.at(600_000)}
+}
+
+// A watermark extend asking for one tranche is in flight when a check needing
+// far more arrives. Taking the tranche would leave that check's post-extend
+// reserve failing with the credits sitting on the server.
+func TestExtendJoinerWhoseShortfallOutranTheFlightGetsItsOwnTopUp(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000), serverTotal(clock, 5800)}
+	manager, store, _ := drawnDownSlot(t, wire)
+
+	watermark := make(chan *LeaseState, 1)
+	go func() { watermark <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	require.Eventually(t, func() bool { return len(wire.extends()) == 1 }, time.Second, time.Millisecond)
+
+	required := 5000.0
+	joiner := make(chan *LeaseState, 1)
+	go func() { joiner <- manager.MaybeExtend(ctx, "co_1", "ct_1", &required) }()
+	// The joiner waits the flight out rather than racing a second extend onto
+	// the same lease, so nothing reaches the wire while it is held.
+	time.Sleep(20 * time.Millisecond)
+	assert.Len(t, wire.extends(), 1)
+
+	close(wire.release)
+	require.NotNil(t, <-watermark)
+	joined := <-joiner
+
+	calls := wire.extends()
+	require.Len(t, calls, 2, "exactly one follow-up")
+	assert.Equal(t, 1000.0, calls[0].additionalAmount, "the steady-state refresh asks for one tranche")
+	// 5000 required against the 1200 the first extend left: sized against the
+	// slot that flight just moved, not against the joiner's own stale read.
+	assert.Equal(t, 3800.0, calls[1].additionalAmount)
+	require.NotNil(t, joined)
+	assert.Equal(t, 5000.0, joined.LocalRemainingCredits)
+
+	entry, err := store.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 5000.0, entry.LocalRemainingCredits)
+}
+
+// The common case, and the fan-out the follow-up must not introduce: both asks
+// fit inside the tranche the flight already carries.
+func TestExtendJoinerTheFlightCoversSharesTheOneWireCall(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000)}
+	manager, _, _ := drawnDownSlot(t, wire)
+
+	watermark := make(chan *LeaseState, 1)
+	go func() { watermark <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	require.Eventually(t, func() bool { return len(wire.extends()) == 1 }, time.Second, time.Millisecond)
+
+	// 900 against 200 remaining is a 700 shortfall, inside the tranche.
+	required := 900.0
+	joiner := make(chan *LeaseState, 1)
+	go func() { joiner <- manager.MaybeExtend(ctx, "co_1", "ct_1", &required) }()
+	time.Sleep(20 * time.Millisecond)
+
+	close(wire.release)
+	first, joined := <-watermark, <-joiner
+
+	assert.Len(t, wire.extends(), 1, "one wire call serves both")
+	require.NotNil(t, joined)
+	assert.Equal(t, first, joined)
+	assert.Equal(t, 1200.0, joined.LocalRemainingCredits)
+}
+
+// The follow-up never chains: a company whose balance simply cannot reach the
+// request would otherwise spin extending.
+func TestExtendFollowUpDoesNotChainWhenTheServerCannotCover(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	// The server grants what it has, still far short of the ask.
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000), serverTotal(clock, 3000)}
+	manager, _, _ := drawnDownSlot(t, wire)
+
+	watermark := make(chan *LeaseState, 1)
+	go func() { watermark <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	require.Eventually(t, func() bool { return len(wire.extends()) == 1 }, time.Second, time.Millisecond)
+
+	required := 50_000.0
+	joiner := make(chan *LeaseState, 1)
+	go func() { joiner <- manager.MaybeExtend(ctx, "co_1", "ct_1", &required) }()
+	time.Sleep(20 * time.Millisecond)
+
+	close(wire.release)
+	require.NotNil(t, <-watermark)
+	joined := <-joiner
+
+	calls := wire.extends()
+	require.Len(t, calls, 2, "the follow-up spawns no follow-up of its own")
+	assert.Equal(t, 48_800.0, calls[1].additionalAmount)
+	require.NotNil(t, joined)
+	// Resolves short rather than chaining: the caller's reserve fails and the
+	// check reports insufficient balance, which is the honest answer.
+	assert.Equal(t, 2200.0, joined.LocalRemainingCredits)
+}
+
+// Two watermark-driven callers ask for the same tranche, so neither follows up
+// and the pair costs one wire call.
+func TestConcurrentWatermarkExtendsShareOneWireCall(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000)}
+	manager, _, _ := drawnDownSlot(t, wire)
+
+	first := make(chan *LeaseState, 1)
+	go func() { first <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	require.Eventually(t, func() bool { return len(wire.extends()) == 1 }, time.Second, time.Millisecond)
+
+	second := make(chan *LeaseState, 1)
+	go func() { second <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	time.Sleep(20 * time.Millisecond)
+
+	close(wire.release)
+	leading, joined := <-first, <-second
+
+	assert.Len(t, wire.extends(), 1)
+	require.NotNil(t, joined)
+	assert.Equal(t, leading, joined)
+	assert.Equal(t, 1200.0, joined.LocalRemainingCredits)
+}
+
+// A joiner whose shortfall outran the flight registers a follow-up for the same
+// key, so the finishing flight must clear only its own registration.
+func TestFlightGroupCleanupLeavesASuccessorRegistered(t *testing.T) {
+	t.Parallel()
+	group := flightGroup{spawn: goSpawn}
+	started, release := make(chan struct{}), make(chan struct{})
+	done := make(chan *LeaseState, 1)
+	go func() {
+		done <- group.do(context.Background(), "slot", func() *LeaseState {
+			close(started)
+			<-release
+			return &LeaseState{LeaseID: "lse_1"}
+		})
+	}()
+	<-started
+
+	successor := &flight{done: make(chan struct{})}
+	group.mu.Lock()
+	group.inFlight["slot"] = successor
+	group.mu.Unlock()
+
+	close(release)
+	<-done
+
+	group.mu.Lock()
+	registered := group.inFlight["slot"]
+	group.mu.Unlock()
+	assert.Same(t, successor, registered, "the first flight's cleanup does not evict the follow-up")
+}

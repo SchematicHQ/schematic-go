@@ -79,6 +79,10 @@ func (r *requestRecorder) find(suffix string) (recordedRequest, bool) {
 type stub struct {
 	status int
 	body   any
+	// bodies, when set, answers the calls to this endpoint in turn and repeats
+	// the last entry, so a test can script a path whose answer changes between
+	// calls.
+	bodies []any
 	// block, when set, holds the request open until the channel is closed, so a
 	// test can drive an API that is slow to answer.
 	block chan struct{}
@@ -89,6 +93,8 @@ type stub struct {
 // from one mock.
 func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(*http.Request) (*http.Response, error) {
 	t.Helper()
+	var mu sync.Mutex
+	served := make(map[string]int)
 	return func(req *http.Request) (*http.Response, error) {
 		var body []byte
 		if req.Body != nil {
@@ -113,6 +119,16 @@ func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(
 			if !strings.HasSuffix(req.URL.Path, suffix) {
 				continue
 			}
+			// Claim this call's answer before blocking, so a scripted path hands
+			// out its entries in call order rather than in release order.
+			payload := s.body
+			if len(s.bodies) > 0 {
+				mu.Lock()
+				index := served[suffix]
+				served[suffix] = index + 1
+				mu.Unlock()
+				payload = s.bodies[min(index, len(s.bodies)-1)]
+			}
 			if s.block != nil {
 				select {
 				case <-s.block:
@@ -120,7 +136,7 @@ func serveStubs(t *testing.T, rec *requestRecorder, stubs map[string]stub) func(
 					return nil, req.Context().Err()
 				}
 			}
-			data, err := json.Marshal(s.body)
+			data, err := json.Marshal(payload)
 			if err != nil {
 				return nil, fmt.Errorf("could not marshal the stub for %s: %w", suffix, err)
 			}

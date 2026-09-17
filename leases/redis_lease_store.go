@@ -34,12 +34,10 @@ const (
 // `expiresAt`); `redis.replicate_commands()` first, so the non-deterministic
 // TIME read is allowed alongside writes on Redis 5/6.
 //
-// The key layout and hash fields are identical to the Node and Python SDKs',
-// which is what lets all three fleets share one Redis. The script bodies are
-// identical too, except that this SDK's try-reserve also returns the leaseId it
-// debited: reading it in the same atomic step is how a hold gets pinned to the
-// lease the credits actually came from. The extra reply field changes nothing
-// another fleet reads.
+// The key layout, hash fields and script bodies are identical to the Node and
+// Python SDKs', which is what lets all three fleets share one Redis. Try-reserve
+// returns the leaseId it debited: reading it in the same atomic step is how a
+// hold gets pinned to the lease the credits actually came from.
 const leaseNowMs = `
 redis.replicate_commands()
 local t = redis.call('TIME')
@@ -96,12 +94,16 @@ return 1
 // balance as a string (a Lua number reply truncates to integer, which would
 // corrupt fractional credit costs) alongside the leaseId it came out of; nil if
 // there is no lease, the lease has expired, or there is insufficient remaining.
+// A hash without a leaseId is refused rather than debited: nothing could pin a
+// reservation to it, so the debit would be one no refund could ever reach.
 // The expiry guard compares against the Redis server clock, so a reserve
 // against an expired-but-not-yet-evicted row during the TTL grace window is
 // rejected.
 const tryReserveScriptSource = leaseNowMs + `
 local raw = redis.call('HGET', KEYS[1], 'localRemainingCredits')
 if not raw then return false end
+local lease_id = redis.call('HGET', KEYS[1], 'leaseId')
+if not lease_id then return false end
 local expiry = tonumber(redis.call('HGET', KEYS[1], 'expiresAt') or '0')
 if expiry <= now then return false end
 local remaining = tonumber(raw)
@@ -109,7 +111,7 @@ local requested = tonumber(ARGV[1])
 if remaining < requested then return false end
 local new_remaining = remaining - requested
 redis.call('HSET', KEYS[1], 'localRemainingCredits', tostring(new_remaining))
-return {tostring(new_remaining), redis.call('HGET', KEYS[1], 'leaseId') or ''}
+return { tostring(new_remaining), lease_id }
 `
 
 // Refund credits, clamped at `grantedAmount`. ARGV[2], when non-empty, pins the

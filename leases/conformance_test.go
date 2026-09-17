@@ -309,9 +309,18 @@ func opDropLease(h *harness, op operation) {
 
 func opTryReserve(h *harness, op operation) {
 	h.t.Helper()
-	balance, _, ok, err := h.leases.TryReserve(h.ctx, op.CompanyID, op.CreditTypeID, op.Credits)
+	balance, leaseID, ok, err := h.leases.TryReserve(h.ctx, op.CompanyID, op.CreditTypeID, op.Credits)
 	require.NoError(h.t, err)
 	assertNullableNumber(h.t, op.Expect, "balance", balance, ok)
+	// The charged lease is what a caller pins its reservation to, so a vector
+	// that names one is checking the pin, not just the arithmetic.
+	if op.Expect.has("lease_id") {
+		if op.Expect.isNull("lease_id") {
+			assert.False(h.t, ok)
+		} else {
+			assert.Equal(h.t, op.Expect.str(h.t, "lease_id"), leaseID)
+		}
+	}
 }
 
 func opRefundLease(h *harness, op operation) {

@@ -1865,7 +1865,9 @@ const (
 	BillingCreditGrantReasonBillingCreditAutoTopup BillingCreditGrantReason = "billing_credit_auto_topup"
 	BillingCreditGrantReasonFree                   BillingCreditGrantReason = "free"
 	BillingCreditGrantReasonPlan                   BillingCreditGrantReason = "plan"
+	BillingCreditGrantReasonPostpaidForgiven       BillingCreditGrantReason = "postpaid_forgiven"
 	BillingCreditGrantReasonPostpaidOverdraft      BillingCreditGrantReason = "postpaid_overdraft"
+	BillingCreditGrantReasonPostpaidSettlement     BillingCreditGrantReason = "postpaid_settlement"
 	BillingCreditGrantReasonPurchased              BillingCreditGrantReason = "purchased"
 	BillingCreditGrantReasonRollover               BillingCreditGrantReason = "rollover"
 )
@@ -1880,8 +1882,12 @@ func NewBillingCreditGrantReasonFromString(s string) (BillingCreditGrantReason, 
 		return BillingCreditGrantReasonFree, nil
 	case "plan":
 		return BillingCreditGrantReasonPlan, nil
+	case "postpaid_forgiven":
+		return BillingCreditGrantReasonPostpaidForgiven, nil
 	case "postpaid_overdraft":
 		return BillingCreditGrantReasonPostpaidOverdraft, nil
+	case "postpaid_settlement":
+		return BillingCreditGrantReasonPostpaidSettlement, nil
 	case "purchased":
 		return BillingCreditGrantReasonPurchased, nil
 	case "rollover":
@@ -1971,12 +1977,13 @@ var (
 	billingCreditResponseDataFieldDescription            = big.NewInt(1 << 7)
 	billingCreditResponseDataFieldIcon                   = big.NewInt(1 << 8)
 	billingCreditResponseDataFieldID                     = big.NewInt(1 << 9)
-	billingCreditResponseDataFieldName                   = big.NewInt(1 << 10)
-	billingCreditResponseDataFieldPluralName             = big.NewInt(1 << 11)
-	billingCreditResponseDataFieldPrice                  = big.NewInt(1 << 12)
-	billingCreditResponseDataFieldProduct                = big.NewInt(1 << 13)
-	billingCreditResponseDataFieldSingularName           = big.NewInt(1 << 14)
-	billingCreditResponseDataFieldUpdatedAt              = big.NewInt(1 << 15)
+	billingCreditResponseDataFieldLedgerAuthority        = big.NewInt(1 << 10)
+	billingCreditResponseDataFieldName                   = big.NewInt(1 << 11)
+	billingCreditResponseDataFieldPluralName             = big.NewInt(1 << 12)
+	billingCreditResponseDataFieldPrice                  = big.NewInt(1 << 13)
+	billingCreditResponseDataFieldProduct                = big.NewInt(1 << 14)
+	billingCreditResponseDataFieldSingularName           = big.NewInt(1 << 15)
+	billingCreditResponseDataFieldUpdatedAt              = big.NewInt(1 << 16)
 )
 
 type BillingCreditResponseData struct {
@@ -1990,6 +1997,7 @@ type BillingCreditResponseData struct {
 	Description            string                             `json:"description" url:"description"`
 	Icon                   *string                            `json:"icon,omitempty" url:"icon,omitempty"`
 	ID                     string                             `json:"id" url:"id"`
+	LedgerAuthority        BillingCreditLedgerAuthority       `json:"ledger_authority" url:"ledger_authority"`
 	Name                   string                             `json:"name" url:"name"`
 	PluralName             *string                            `json:"plural_name,omitempty" url:"plural_name,omitempty"`
 	Price                  *BillingPriceResponseData          `json:"price,omitempty" url:"price,omitempty"`
@@ -2072,6 +2080,13 @@ func (b *BillingCreditResponseData) GetID() string {
 		return ""
 	}
 	return b.ID
+}
+
+func (b *BillingCreditResponseData) GetLedgerAuthority() BillingCreditLedgerAuthority {
+	if b == nil {
+		return ""
+	}
+	return b.LedgerAuthority
 }
 
 func (b *BillingCreditResponseData) GetName() string {
@@ -2200,6 +2215,13 @@ func (b *BillingCreditResponseData) SetIcon(icon *string) {
 func (b *BillingCreditResponseData) SetID(id string) {
 	b.ID = id
 	b.require(billingCreditResponseDataFieldID)
+}
+
+// SetLedgerAuthority sets the LedgerAuthority field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCreditResponseData) SetLedgerAuthority(ledgerAuthority BillingCreditLedgerAuthority) {
+	b.LedgerAuthority = ledgerAuthority
+	b.require(billingCreditResponseDataFieldLedgerAuthority)
 }
 
 // SetName sets the Name field and marks it as non-optional;

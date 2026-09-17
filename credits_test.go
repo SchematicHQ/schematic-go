@@ -9621,6 +9621,14 @@ func TestSettersCreditEventLedgerResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetTransferReason", func(t *testing.T) {
+		obj := &CreditEventLedgerResponseData{}
+		var fernTestValueTransferReason *CreditTransferReason
+		obj.SetTransferReason(fernTestValueTransferReason)
+		assert.Equal(t, fernTestValueTransferReason, obj.TransferReason)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetUsageEventID", func(t *testing.T) {
 		obj := &CreditEventLedgerResponseData{}
 		var fernTestValueUsageEventID *string
@@ -10513,6 +10521,39 @@ func TestGettersCreditEventLedgerResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetToGrantID() // Should return zero value
+	})
+
+	t.Run("GetTransferReason", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		var expected *CreditTransferReason
+		obj.TransferReason = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetTransferReason(), "getter should return the property value")
+	})
+
+	t.Run("GetTransferReason_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		obj.TransferReason = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetTransferReason(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetTransferReason_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditEventLedgerResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetTransferReason() // Should return zero value
 	})
 
 	t.Run("GetUsageEventID", func(t *testing.T) {
@@ -11493,6 +11534,37 @@ func TestSettersMarkExplicitCreditEventLedgerResponseData(t *testing.T) {
 
 		// Act
 		obj.SetToGrantID(fernTestValueToGrantID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetTransferReason_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		var fernTestValueTransferReason *CreditTransferReason
+
+		// Act
+		obj.SetTransferReason(fernTestValueTransferReason)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -30384,6 +30456,49 @@ func TestEnumCreditSpendPolicyScope(t *testing.T) {
 
 	t.Run("Ptr", func(t *testing.T) {
 		val, err := NewCreditSpendPolicyScopeFromString("company")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
+func TestEnumCreditTransferReason(t *testing.T) {
+	t.Run("NewFromString_overdraft_recovery", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditTransferReasonFromString("overdraft_recovery")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditTransferReason("overdraft_recovery"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_postpaid_debt_moved", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditTransferReasonFromString("postpaid_debt_moved")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditTransferReason("postpaid_debt_moved"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_postpaid_forgiven", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditTransferReasonFromString("postpaid_forgiven")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditTransferReason("postpaid_forgiven"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_postpaid_paid", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditTransferReasonFromString("postpaid_paid")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditTransferReason("postpaid_paid"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewCreditTransferReasonFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewCreditTransferReasonFromString("overdraft_recovery")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

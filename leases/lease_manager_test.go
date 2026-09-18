@@ -682,3 +682,63 @@ func TestFlightGroupCleanupLeavesASuccessorRegistered(t *testing.T) {
 	group.mu.Unlock()
 	assert.Same(t, successor, registered, "the first flight's cleanup does not evict the follow-up")
 }
+
+// staleFirstReadStore hands its first reader a row from before an extend landed,
+// so a trigger can reach the flight registration on a view the wire has already
+// moved past.
+type staleFirstReadStore struct {
+	LeaseStore
+
+	mu    sync.Mutex
+	stale *LeaseState
+}
+
+func (s *staleFirstReadStore) Get(ctx context.Context, companyID, creditTypeID string) (*LeaseState, error) {
+	s.mu.Lock()
+	stale := s.stale
+	s.stale = nil
+	s.mu.Unlock()
+	if stale != nil {
+		return stale, nil
+	}
+	return s.LeaseStore.Get(ctx, companyID, creditTypeID)
+}
+
+// The second trigger reads the slot as it was before the first extend landed:
+// that flight is already gone, so nothing stops it reaching the wire but the
+// re-read the flight registration now makes.
+func TestExtendTriggeredByARowThePreviousExtendAlreadyMovedSendsNothing(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	close(wire.release)
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000)}
+
+	inner := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, inner, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+	_, _, _, err := inner.TryReserve(ctx, "co_1", "ct_1", 900)
+	require.NoError(t, err)
+	before, err := inner.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+
+	store := &staleFirstReadStore{LeaseStore: inner}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{
+		Clock:  clock.Now,
+		Config: ResolvedLeaseConfig{LeaseSize: 1000, LowWaterMark: 0.25},
+	})
+	t.Cleanup(manager.Stop)
+
+	require.NotNil(t, manager.MaybeExtend(ctx, "co_1", "ct_1", nil))
+	require.Len(t, wire.extends(), 1)
+
+	store.mu.Lock()
+	store.stale = before
+	store.mu.Unlock()
+	manager.MaybeExtend(ctx, "co_1", "ct_1", nil)
+
+	assert.Len(t, wire.extends(), 1)
+	entry, err := inner.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 2000.0, entry.GrantedAmount)
+}

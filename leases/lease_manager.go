@@ -291,24 +291,12 @@ func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID 
 }
 
 func (m *LeaseManager) maybeExtend(ctx context.Context, companyID, creditTypeID string, requiredCredits *float64, allowFollowUp bool) *LeaseState {
-	entry, err := m.leases.Get(ctx, companyID, creditTypeID)
-	if err != nil {
-		m.logger.Warn(ctx, fmt.Sprintf("Failed to read lease store for %s/%s: %v", companyID, creditTypeID, err))
-		return nil
-	}
+	entry := m.readLiveLease(ctx, companyID, creditTypeID)
 	if entry == nil {
 		return nil
 	}
-	// Never extend an expired lease: the server treats it as released and has
-	// already refunded its remainder, so the only correct move is a fresh
-	// acquire on the next check.
-	if !entry.ExpiresAt.After(m.clock()) {
-		return nil
-	}
 	resolved := m.ResolveConfig(creditTypeID)
-	belowWatermark := entry.LocalRemainingCredits/max(entry.GrantedAmount, 1) <= resolved.LowWaterMark
-	belowRequired := requiredCredits != nil && entry.LocalRemainingCredits < *requiredCredits
-	if !belowWatermark && !belowRequired {
+	if !m.needsExtend(entry, resolved, requiredCredits) {
 		return entry
 	}
 	// Size the extend to cover the request that triggered it: a single check
@@ -328,7 +316,7 @@ func (m *LeaseManager) maybeExtend(ctx context.Context, companyID, creditTypeID 
 		// deadline must not decide what every waiter on the slot gets.
 		detached, cancel := detachedContext(ctx)
 		defer cancel()
-		return m.extend(detached, *entry, resolved, additionalAmount)
+		return m.recheckAndExtend(detached, companyID, creditTypeID, resolved, requiredCredits, additionalAmount)
 	})
 	// The flight already asked for at least what we need, which covers every
 	// watermark-driven joiner and any check the tranche fits. One wire call
@@ -347,6 +335,56 @@ func (m *LeaseManager) maybeExtend(ctx context.Context, companyID, creditTypeID 
 		return result
 	}
 	return m.maybeExtend(ctx, companyID, creditTypeID, requiredCredits, false)
+}
+
+// readLiveLease reads the slot, reporting nothing when the read fails or the
+// lease is absent or expired. An expired lease is never extended: the server
+// treats it as released and has already refunded its remainder, so the only
+// correct move is a fresh acquire on the next check.
+func (m *LeaseManager) readLiveLease(ctx context.Context, companyID, creditTypeID string) *LeaseState {
+	entry, err := m.leases.Get(ctx, companyID, creditTypeID)
+	if err != nil {
+		m.logger.Warn(ctx, fmt.Sprintf("Failed to read lease store for %s/%s: %v", companyID, creditTypeID, err))
+		return nil
+	}
+	if entry == nil {
+		return nil
+	}
+	if !entry.ExpiresAt.After(m.clock()) {
+		return nil
+	}
+	return entry
+}
+
+// needsExtend reports whether the slot sits low enough to warrant an extend.
+func (m *LeaseManager) needsExtend(entry *LeaseState, resolved ResolvedLeaseConfig, requiredCredits *float64) bool {
+	belowWatermark := entry.LocalRemainingCredits/max(entry.GrantedAmount, 1) <= resolved.LowWaterMark
+	belowRequired := requiredCredits != nil && entry.LocalRemainingCredits < *requiredCredits
+	return belowWatermark || belowRequired
+}
+
+// recheckAndExtend re-reads the slot now that this flight owns it, and extends
+// only if the fresh row still warrants one. The row that decided this extend was
+// read before the flight was registered, so an extend that landed in that gap,
+// clearing its own flight on the way out, would otherwise be followed by a
+// second extend, under a new idempotency key, for a lease it already topped up.
+// The registered ask stands: a joiner compares its shortfall against that
+// figure, so the wire body has to carry it.
+func (m *LeaseManager) recheckAndExtend(
+	ctx context.Context,
+	companyID, creditTypeID string,
+	resolved ResolvedLeaseConfig,
+	requiredCredits *float64,
+	additionalAmount float64,
+) *LeaseState {
+	entry := m.readLiveLease(ctx, companyID, creditTypeID)
+	if entry == nil {
+		return nil
+	}
+	if !m.needsExtend(entry, resolved, requiredCredits) {
+		return entry
+	}
+	return m.extend(ctx, *entry, resolved, additionalAmount)
 }
 
 // ExtendInBackground kicks off a water-mark extend without waiting for it: a

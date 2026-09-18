@@ -3,6 +3,7 @@ package leases
 import (
 	"context"
 	"errors"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -681,4 +682,310 @@ func TestFlightGroupCleanupLeavesASuccessorRegistered(t *testing.T) {
 	registered := group.inFlight["slot"]
 	group.mu.Unlock()
 	assert.Same(t, successor, registered, "the first flight's cleanup does not evict the follow-up")
+}
+
+// staleFirstReadStore hands its first reader a row from before an extend landed,
+// so a trigger can reach the flight registration on a view the wire has already
+// moved past.
+type staleFirstReadStore struct {
+	LeaseStore
+
+	mu    sync.Mutex
+	stale *LeaseState
+}
+
+func (s *staleFirstReadStore) Get(ctx context.Context, companyID, creditTypeID string) (*LeaseState, error) {
+	s.mu.Lock()
+	stale := s.stale
+	s.stale = nil
+	s.mu.Unlock()
+	if stale != nil {
+		return stale, nil
+	}
+	return s.LeaseStore.Get(ctx, companyID, creditTypeID)
+}
+
+// The second trigger reads the slot as it was before the first extend landed:
+// that flight is already gone, so nothing stops it reaching the wire but the
+// re-read the flight registration now makes.
+func TestExtendTriggeredByARowThePreviousExtendAlreadyMovedSendsNothing(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	close(wire.release)
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000)}
+
+	inner := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, inner, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+	_, _, _, err := inner.TryReserve(ctx, "co_1", "ct_1", 900)
+	require.NoError(t, err)
+	before, err := inner.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+
+	store := &staleFirstReadStore{LeaseStore: inner}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{
+		Clock:  clock.Now,
+		Config: ResolvedLeaseConfig{LeaseSize: 1000, LowWaterMark: 0.25},
+	})
+	t.Cleanup(manager.Stop)
+
+	require.NotNil(t, manager.MaybeExtend(ctx, "co_1", "ct_1", nil))
+	require.Len(t, wire.extends(), 1)
+
+	store.mu.Lock()
+	store.stale = before
+	store.mu.Unlock()
+	manager.MaybeExtend(ctx, "co_1", "ct_1", nil)
+
+	assert.Len(t, wire.extends(), 1)
+	entry, err := inner.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 2000.0, entry.GrantedAmount)
+}
+
+// capturingLogger keeps the warnings a test wants to read back.
+type capturingLogger struct {
+	noopLogger
+
+	mu       sync.Mutex
+	warnings []string
+}
+
+func (l *capturingLogger) Warn(_ context.Context, message string, _ ...any) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.warnings = append(l.warnings, message)
+}
+
+func (l *capturingLogger) warned(substring string) bool {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	for _, warning := range l.warnings {
+		if strings.Contains(warning, substring) {
+			return true
+		}
+	}
+	return false
+}
+
+// stallingReleaseWire answers a release by hanging until the caller's budget
+// runs out, the way a wire call to a server that has stopped answering would.
+type stallingReleaseWire struct {
+	releases atomic.Int64
+}
+
+func (w *stallingReleaseWire) Acquire(context.Context, string, string, float64, time.Time) (*LeaseGrant, error) {
+	return nil, errors.New("no acquire is expected here")
+}
+
+func (w *stallingReleaseWire) Extend(context.Context, string, float64, time.Time) (*LeaseGrant, error) {
+	return nil, errors.New("no extend is expected here")
+}
+
+func (w *stallingReleaseWire) Release(ctx context.Context, _ string) error {
+	w.releases.Add(1)
+	<-ctx.Done()
+	return ctx.Err()
+}
+
+func TestReleaseAllLocalLeasesGivesUpOnAReleaseThatNeverLands(t *testing.T) {
+	t.Parallel()
+	clock := newVirtualClock()
+	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+	installLease(t, store, clock, "lse_2", "co_2", "ct_1", 1000, 300_000)
+	logger := &capturingLogger{}
+	wire := &stallingReleaseWire{}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{Clock: clock.Now, Logger: logger})
+	t.Cleanup(manager.Stop)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+	defer cancel()
+	started := time.Now()
+	manager.ReleaseAllLocalLeases(ctx)
+
+	assert.Less(t, time.Since(started), time.Second)
+	assert.True(t, logger.warned("releasing credit leases on close"))
+	// The budget ran out inside the first release, so the second is never tried.
+	assert.Equal(t, int64(1), wire.releases.Load())
+}
+
+// callerKey names the caller a context belongs to, so a test store can hold one
+// caller's read and pin an interleaving that is otherwise up to the scheduler.
+type callerKey struct{}
+
+// heldReadStore holds the named caller's nth read until the gate opens.
+type heldReadStore struct {
+	LeaseStore
+
+	caller string
+	nth    int
+	gate   chan struct{}
+
+	mu    sync.Mutex
+	reads int
+}
+
+func (s *heldReadStore) Get(ctx context.Context, companyID, creditTypeID string) (*LeaseState, error) {
+	if name, _ := ctx.Value(callerKey{}).(string); name == s.caller {
+		s.mu.Lock()
+		s.reads++
+		read := s.reads
+		s.mu.Unlock()
+		if read == s.nth {
+			<-s.gate
+		}
+	}
+	return s.LeaseStore.Get(ctx, companyID, creditTypeID)
+}
+
+// sequencedExtendWire announces each extend as it reaches the wire and holds it
+// until the test lets it answer.
+type sequencedExtendWire struct {
+	grants  []LeaseGrant
+	started []chan struct{}
+	release []chan struct{}
+
+	mu    sync.Mutex
+	calls []extendCall
+}
+
+func newSequencedExtendWire(grants ...LeaseGrant) *sequencedExtendWire {
+	wire := &sequencedExtendWire{grants: grants}
+	for range grants {
+		wire.started = append(wire.started, make(chan struct{}))
+		wire.release = append(wire.release, make(chan struct{}))
+	}
+	return wire
+}
+
+func (w *sequencedExtendWire) Acquire(context.Context, string, string, float64, time.Time) (*LeaseGrant, error) {
+	return nil, errors.New("no acquire is expected here")
+}
+
+func (w *sequencedExtendWire) Extend(ctx context.Context, leaseID string, additionalAmount float64, expiresAt time.Time) (*LeaseGrant, error) {
+	w.mu.Lock()
+	index := len(w.calls)
+	w.calls = append(w.calls, extendCall{leaseID: leaseID, additionalAmount: additionalAmount, expiresAt: expiresAt})
+	w.mu.Unlock()
+	if index >= len(w.grants) {
+		return nil, errors.New("unscripted extend")
+	}
+
+	close(w.started[index])
+	select {
+	case <-w.release[index]:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+	grant := w.grants[index]
+	grant.LeaseID = leaseID
+	return &grant, nil
+}
+
+func (w *sequencedExtendWire) Release(context.Context, string) error { return nil }
+
+func (w *sequencedExtendWire) extends() []extendCall {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return append([]extendCall(nil), w.calls...)
+}
+
+// Two checks join one refill, both needing more than it asked for. The smaller
+// one's follow-up registers first; taking its result would send the larger one's
+// retry back to a lease it already knows is short, with the credits sitting on
+// the server.
+func TestExtendFollowUpDoesNotInheritASmallerFollowUp(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := newSequencedExtendWire(
+		serverTotal(clock, 20_000), // the refill both checks join
+		serverTotal(clock, 22_000), // the smaller check's follow-up
+		serverTotal(clock, 40_000), // the larger check's own extend
+	)
+	close(wire.release[2])
+
+	inner := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, inner, clock, "lse_1", "co_1", "ct_1", 10_000, 300_000)
+	_, _, _, err := inner.TryReserve(ctx, "co_1", "ct_1", 10_000)
+	require.NoError(t, err)
+	// The larger check's second read waits for the smaller one's follow-up to
+	// reach the wire, so it is the flight the larger check finds on its way back.
+	store := &heldReadStore{LeaseStore: inner, caller: "larger", nth: 2, gate: wire.started[1]}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{
+		Clock:  clock.Now,
+		Config: ResolvedLeaseConfig{LeaseSize: 1_000, LowWaterMark: 0.25},
+	})
+	t.Cleanup(manager.Stop)
+
+	refillNeed, smallerNeed, largerNeed := 10_000.0, 12_000.0, 28_000.0
+	refill := make(chan *LeaseState, 1)
+	go func() { refill <- manager.MaybeExtend(ctx, "co_1", "ct_1", &refillNeed) }()
+	<-wire.started[0]
+
+	smaller := make(chan *LeaseState, 1)
+	go func() { smaller <- manager.MaybeExtend(ctx, "co_1", "ct_1", &smallerNeed) }()
+	time.Sleep(20 * time.Millisecond)
+	larger := make(chan *LeaseState, 1)
+	go func() {
+		larger <- manager.MaybeExtend(context.WithValue(ctx, callerKey{}, "larger"), "co_1", "ct_1", &largerNeed)
+	}()
+	time.Sleep(20 * time.Millisecond)
+	require.Len(t, wire.extends(), 1, "both checks join the refill")
+
+	close(wire.release[0])
+	// Let the larger check reach the smaller one's flight and join it before
+	// that flight answers.
+	<-wire.started[1]
+	time.Sleep(20 * time.Millisecond)
+	close(wire.release[1])
+
+	require.NotNil(t, <-refill)
+	smallerResult, largerResult := <-smaller, <-larger
+
+	calls := wire.extends()
+	require.Len(t, calls, 3)
+	assert.Equal(t, 10_000.0, calls[0].additionalAmount, "the refill")
+	assert.Equal(t, 2_000.0, calls[1].additionalAmount, "the smaller check's shortfall")
+	// Sized against the 12,000 the smaller check left behind rather than
+	// inherited from its 2,000 ask.
+	assert.Equal(t, 16_000.0, calls[2].additionalAmount)
+	require.NotNil(t, smallerResult)
+	assert.GreaterOrEqual(t, smallerResult.LocalRemainingCredits, smallerNeed)
+	require.NotNil(t, largerResult)
+	assert.GreaterOrEqual(t, largerResult.LocalRemainingCredits, largerNeed)
+}
+
+// A joiner waits on somebody else's wire call, which runs on whatever deadline
+// that caller set. A check with little time to spend must not sit behind it.
+func TestExtendJoinerStopsWaitingWhenItsOwnDeadlinePasses(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000)}
+	manager, store, _ := drawnDownSlot(t, wire)
+
+	watermark := make(chan *LeaseState, 1)
+	go func() { watermark <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	require.Eventually(t, func() bool { return len(wire.extends()) == 1 }, time.Second, time.Millisecond)
+
+	joinerCtx, cancel := context.WithTimeout(ctx, 50*time.Millisecond)
+	defer cancel()
+	started := time.Now()
+	joined := manager.MaybeExtend(joinerCtx, "co_1", "ct_1", nil)
+
+	assert.Nil(t, joined, "the joiner routes its own timeout through the caller's fail-open or fail-closed handling")
+	assert.Less(t, time.Since(started), time.Second)
+	assert.Len(t, wire.extends(), 1, "it joined rather than racing a second extend onto the same lease")
+
+	// The flight runs on for everybody still on it, and what it installs is
+	// there for the next check to read.
+	close(wire.release)
+	require.NotNil(t, <-watermark)
+	entry, err := store.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 2000.0, entry.GrantedAmount)
 }

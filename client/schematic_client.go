@@ -589,12 +589,11 @@ func (c *SchematicClient) Close() {
 		// the company balance now instead of at expiry. The manager skips a
 		// shared store, whose leases sibling processes still draw on.
 		//
-		// Its own budget: the releases are the one step whose work has not
-		// started yet, so however long the waits above took, they still run on
-		// a live context rather than failing one by one on an expired one.
-		releaseCtx, cancelRelease := context.WithTimeout(context.Background(), releaseTimeout)
-		c.leaseManager.ReleaseAllLocalLeases(releaseCtx)
-		cancelRelease()
+		// On what is left of the close budget rather than a fresh one: a caller
+		// closing a client asked for a bounded wait, and a store or a wire call
+		// that never lands must not stretch it. Whatever goes unreleased expires
+		// server-side.
+		c.leaseManager.ReleaseAllLocalLeases(ctx)
 	}
 
 	close(c.stopWorker)
@@ -769,7 +768,19 @@ func (c *SchematicClient) Track(
 	body *schematicgo.EventBodyTrack,
 	opts ...TrackOption,
 ) {
+	c.emitTrack(ctx, body, opts, true)
+}
 
+// emitTrack enqueues a track event, bumping the cached company metric with it
+// unless updateMetrics says not to. The bump is a local prediction of what the
+// stream will push back, so it belongs only to an event recording usage the
+// server has not already counted.
+func (c *SchematicClient) emitTrack(
+	ctx context.Context,
+	body *schematicgo.EventBodyTrack,
+	opts []TrackOption,
+	updateMetrics bool,
+) {
 	o := &eventOptions{}
 	for _, apply := range opts {
 		apply(o)
@@ -787,7 +798,7 @@ func (c *SchematicClient) Track(
 		}
 	}
 
-	if body.Company != nil && c.useDataStream() && c.datastreamClient.IsConnected() {
+	if updateMetrics && body.Company != nil && c.useDataStream() && c.datastreamClient.IsConnected() {
 		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{

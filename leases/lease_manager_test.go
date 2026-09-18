@@ -957,3 +957,35 @@ func TestExtendFollowUpDoesNotInheritASmallerFollowUp(t *testing.T) {
 	require.NotNil(t, largerResult)
 	assert.GreaterOrEqual(t, largerResult.LocalRemainingCredits, largerNeed)
 }
+
+// A joiner waits on somebody else's wire call, which runs on whatever deadline
+// that caller set. A check with little time to spend must not sit behind it.
+func TestExtendJoinerStopsWaitingWhenItsOwnDeadlinePasses(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	wire.grants = []LeaseGrant{serverTotal(clock, 2000)}
+	manager, store, _ := drawnDownSlot(t, wire)
+
+	watermark := make(chan *LeaseState, 1)
+	go func() { watermark <- manager.MaybeExtend(ctx, "co_1", "ct_1", nil) }()
+	require.Eventually(t, func() bool { return len(wire.extends()) == 1 }, time.Second, time.Millisecond)
+
+	joinerCtx, cancel := context.WithTimeout(ctx, 50*time.Millisecond)
+	defer cancel()
+	started := time.Now()
+	joined := manager.MaybeExtend(joinerCtx, "co_1", "ct_1", nil)
+
+	assert.Nil(t, joined, "the joiner routes its own timeout through the caller's fail-open or fail-closed handling")
+	assert.Less(t, time.Since(started), time.Second)
+	assert.Len(t, wire.extends(), 1, "it joined rather than racing a second extend onto the same lease")
+
+	// The flight runs on for everybody still on it, and what it installs is
+	// there for the next check to read.
+	close(wire.release)
+	require.NotNil(t, <-watermark)
+	entry, err := store.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 2000.0, entry.GrantedAmount)
+}

@@ -330,15 +330,20 @@ func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID 
 			defer cancel()
 			return m.recheckAndExtend(detached, companyID, creditTypeID, resolved, requiredCredits, additionalAmount)
 		})
+		// A joiner waits on somebody else's wire call, which runs on whatever
+		// deadline ITS caller set, so the wait is capped at this caller's own
+		// context: a check with 200ms to spend must not sit behind a 30s extend.
+		// Giving up abandons only this wait. The flight runs on for the callers
+		// still on it, and whatever it installs is there for the next check to
+		// read.
+		if joined && ctx.Err() != nil {
+			m.logger.Debug(ctx, fmt.Sprintf("Extend in flight for %s/%s outlasted the caller's deadline; not waiting on it", companyID, creditTypeID))
+			return result
+		}
 		// The flight asked for at least what we need, which covers every
 		// watermark-driven joiner and any check the tranche fits. One wire call
 		// serves all of them, which is the point of single-flight.
 		if !joined || additionalAmount <= flightAsk {
-			return result
-		}
-		// It asked for less. A caller whose own context has already ended has
-		// stopped waiting for the answer, so another round would buy it nothing.
-		if ctx.Err() != nil {
 			return result
 		}
 		// Go round again to re-read the slot that flight just moved, so what we

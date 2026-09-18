@@ -35,7 +35,9 @@ func SettleReservation(
 	record ReservationRecord,
 	actualQuantity float64,
 ) SettleOutcome {
-	_, claimed, err := reservations.Consume(ctx, record.ID, actualQuantity*record.ConsumptionRate)
+	// Rounded up for the same reason the hold is (see CheckWithLease): the debit
+	// has to move the local ledger by exactly what the track event bills.
+	_, claimed, err := reservations.Consume(ctx, record.ID, math.Ceil(actualQuantity)*record.ConsumptionRate)
 	return SettleOutcome{
 		Track:          BuildTrackEvent(record, SettleQuantity(actualQuantity)),
 		SettledLocally: err == nil && claimed,

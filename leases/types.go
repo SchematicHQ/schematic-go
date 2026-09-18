@@ -92,7 +92,8 @@ type ReservationRecord struct {
 	EventSubtype string
 	// QuantityReserved is the caller-declared usage, in event units.
 	QuantityReserved float64
-	// CreditsReserved is QuantityReserved * ConsumptionRate.
+	// CreditsReserved is ceil(QuantityReserved) * ConsumptionRate: whole event
+	// units, so the hold matches what the settle bills.
 	CreditsReserved float64
 	ConsumptionRate float64
 	// ExpiresAt is the instant past which the sweeper refunds the full hold.

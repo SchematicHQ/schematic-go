@@ -68,11 +68,12 @@ type checkOptions struct {
 type CheckOption func(*checkOptions)
 
 // WithUsage declares how many units of the feature the operation is about to
-// consume. The check holds quantity times the entitlement's consumption rate
-// from the company's credit balance, and returns a Reservation to settle with
-// TrackWithReservation. Fractional quantities are allowed, since a credit cost
-// need not fall on a whole unit. Without it, Check is a plain flag check that
-// holds nothing.
+// consume. The check holds that quantity, rounded up to a whole event unit,
+// times the entitlement's consumption rate from the company's credit balance,
+// and returns a Reservation to settle with TrackWithReservation. A fractional
+// quantity is allowed and is what the hold records; the credits it costs round
+// up, since the server bills whole events. Without it, Check is a plain flag
+// check that holds nothing.
 func WithUsage(quantity float64) CheckOption {
 	return func(o *checkOptions) { o.usage = &quantity }
 }
@@ -118,7 +119,8 @@ type Reservation struct {
 	EventSubtype string
 	// QuantityReserved is the units of usage the hold covers, as requested.
 	QuantityReserved float64
-	// CreditsReserved is QuantityReserved times ConsumptionRate.
+	// CreditsReserved is QuantityReserved, rounded up to a whole event unit,
+	// times ConsumptionRate.
 	CreditsReserved float64
 	// ConsumptionRate is the credits per unit of usage the hold was priced at.
 	ConsumptionRate float64

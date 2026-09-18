@@ -482,8 +482,10 @@ func TestClientModeCheckHoldsAFractionalUsage(t *testing.T) {
 
 	require.True(t, result.Allowed, "reason: %s, error: %s", result.Reason, result.Error)
 	require.NotNil(t, result.Reservation)
-	assert.Equal(t, 2.5, result.Reservation.QuantityReserved)
-	assert.Equal(t, 2.5, result.Reservation.CreditsReserved, "the fixture rate is one credit per unit")
+	assert.Equal(t, 2.5, result.Reservation.QuantityReserved, "the hold records the quantity the caller declared")
+	// The server bills whole events, so the credits the hold costs are sized
+	// from the rounded-up quantity the settle will charge.
+	assert.Equal(t, 3.0, result.Reservation.CreditsReserved, "the fixture rate is one credit per unit")
 }
 
 // overlappingAcquires answers a lease acquire only once the expected number of

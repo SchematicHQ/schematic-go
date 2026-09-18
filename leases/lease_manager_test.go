@@ -3,6 +3,7 @@ package leases
 import (
 	"context"
 	"errors"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -741,4 +742,71 @@ func TestExtendTriggeredByARowThePreviousExtendAlreadyMovedSendsNothing(t *testi
 	entry, err := inner.Get(ctx, "co_1", "ct_1")
 	require.NoError(t, err)
 	assert.Equal(t, 2000.0, entry.GrantedAmount)
+}
+
+// capturingLogger keeps the warnings a test wants to read back.
+type capturingLogger struct {
+	noopLogger
+
+	mu       sync.Mutex
+	warnings []string
+}
+
+func (l *capturingLogger) Warn(_ context.Context, message string, _ ...any) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	l.warnings = append(l.warnings, message)
+}
+
+func (l *capturingLogger) warned(substring string) bool {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	for _, warning := range l.warnings {
+		if strings.Contains(warning, substring) {
+			return true
+		}
+	}
+	return false
+}
+
+// stallingReleaseWire answers a release by hanging until the caller's budget
+// runs out, the way a wire call to a server that has stopped answering would.
+type stallingReleaseWire struct {
+	releases atomic.Int64
+}
+
+func (w *stallingReleaseWire) Acquire(context.Context, string, string, float64, time.Time) (*LeaseGrant, error) {
+	return nil, errors.New("no acquire is expected here")
+}
+
+func (w *stallingReleaseWire) Extend(context.Context, string, float64, time.Time) (*LeaseGrant, error) {
+	return nil, errors.New("no extend is expected here")
+}
+
+func (w *stallingReleaseWire) Release(ctx context.Context, _ string) error {
+	w.releases.Add(1)
+	<-ctx.Done()
+	return ctx.Err()
+}
+
+func TestReleaseAllLocalLeasesGivesUpOnAReleaseThatNeverLands(t *testing.T) {
+	t.Parallel()
+	clock := newVirtualClock()
+	store := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, store, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+	installLease(t, store, clock, "lse_2", "co_2", "ct_1", 1000, 300_000)
+	logger := &capturingLogger{}
+	wire := &stallingReleaseWire{}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{Clock: clock.Now, Logger: logger})
+	t.Cleanup(manager.Stop)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+	defer cancel()
+	started := time.Now()
+	manager.ReleaseAllLocalLeases(ctx)
+
+	assert.Less(t, time.Since(started), time.Second)
+	assert.True(t, logger.warned("releasing credit leases on close"))
+	// The budget ran out inside the first release, so the second is never tried.
+	assert.Equal(t, int64(1), wire.releases.Load())
 }

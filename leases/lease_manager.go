@@ -438,6 +438,9 @@ func (m *LeaseManager) extend(ctx context.Context, entry LeaseState, resolved Re
 // since sibling pods still draw on those leases. Expired leases are skipped
 // too: the server already swept them. Best-effort, with failures falling back
 // to server-side expiry.
+//
+// Bounded by ctx, so a store or a wire call that never lands cannot hold a
+// closing client open; whatever is left unreleased expires server-side.
 func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 	lister, ok := m.leases.(LeaseLister)
 	if !ok {
@@ -453,6 +456,9 @@ func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 		if !entry.ExpiresAt.After(now) {
 			continue
 		}
+		if ctx.Err() != nil {
+			break
+		}
 		if err := m.wire.Release(ctx, entry.LeaseID); err != nil {
 			m.logger.Warn(ctx, fmt.Sprintf("Failed to release credit lease %s on close (it will expire server-side): %v", entry.LeaseID, err))
 			continue
@@ -462,6 +468,9 @@ func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 			continue
 		}
 		m.logger.Debug(ctx, fmt.Sprintf("Released credit lease %s on close", entry.LeaseID))
+	}
+	if ctx.Err() != nil {
+		m.logger.Warn(ctx, "Ran out of budget releasing credit leases on close; any still held will be released by server-side expiry")
 	}
 }
 

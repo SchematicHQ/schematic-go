@@ -589,12 +589,11 @@ func (c *SchematicClient) Close() {
 		// the company balance now instead of at expiry. The manager skips a
 		// shared store, whose leases sibling processes still draw on.
 		//
-		// Its own budget: the releases are the one step whose work has not
-		// started yet, so however long the waits above took, they still run on
-		// a live context rather than failing one by one on an expired one.
-		releaseCtx, cancelRelease := context.WithTimeout(context.Background(), releaseTimeout)
-		c.leaseManager.ReleaseAllLocalLeases(releaseCtx)
-		cancelRelease()
+		// On what is left of the close budget rather than a fresh one: a caller
+		// closing a client asked for a bounded wait, and a store or a wire call
+		// that never lands must not stretch it. Whatever goes unreleased expires
+		// server-side.
+		c.leaseManager.ReleaseAllLocalLeases(ctx)
 	}
 
 	close(c.stopWorker)

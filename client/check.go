@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -354,20 +355,58 @@ func (c *SchematicClient) Prewarm(
 	return nil
 }
 
+// companyIDPrefix is the prefix a Schematic company id carries, whatever key
+// name it is passed under.
+const companyIDPrefix = "comp_"
+
+// schematicCompanyID is the Schematic id hiding among a set of entity keys,
+// recognized by its prefix. The server reads keys this way once its own key
+// lookup has come up empty, so {"account_id": "comp_1"} resolves and
+// {"id": "acme"} does not: the prefix decides, not the name of the key the value
+// sits under.
+//
+// Key names are walked in order, since a Go map has none of its own and an
+// arbitrary winner among several prefixed values would make a prewarm answer
+// differently run to run.
+func schematicCompanyID(keys map[string]string) string {
+	names := make([]string, 0, len(keys))
+	for name := range keys {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		if strings.HasPrefix(keys[name], companyIDPrefix) {
+			return keys[name]
+		}
+	}
+	return ""
+}
+
 // resolveCompanyIDForPrewarm turns company keys into the ID a lease is keyed by,
-// waiting for the company to surface over DataStream when only secondary keys
-// were given.
+// waiting for the company to surface over DataStream when the cache does not
+// already hold it.
+//
+// Resolved in the server's order: every supplied pair is an ordinary entity key
+// and gets looked up first, since an account is free to define a key called `id`
+// holding its own identifier. Only when nothing matches is a value read as the
+// company's own id, by its `comp_` prefix.
 //
 // An identify does not push a company into the DataStream cache, since companies
 // are only streamed on request, so this fetches rather than watching an empty
 // cache. A PrewarmResolveTimeout of zero keeps the cache lookup and skips the
 // wait, so an already-seen company still warms.
 func (c *SchematicClient) resolveCompanyIDForPrewarm(ctx context.Context, keys map[string]string) (string, error) {
-	if id := keys["id"]; id != "" {
-		return id, nil
+	// The keys resolved nothing, so fall back to a `comp_` value the way the
+	// server does once its own lookup comes up empty.
+	unresolved := func(reason error) (string, error) {
+		if id := schematicCompanyID(keys); id != "" {
+			return id, nil
+		}
+		return "", reason
 	}
+
 	if c.datastreamClient == nil {
-		return "", errors.New("prewarm needs DataStream to resolve company keys to an ID")
+		return unresolved(errors.New("prewarm needs DataStream to resolve company keys to an ID"))
 	}
 	// An earlier check or prewarm may already have cached this company, and that
 	// answer costs nothing.
@@ -375,7 +414,7 @@ func (c *SchematicClient) resolveCompanyIDForPrewarm(ctx context.Context, keys m
 		return cached.ID, nil
 	}
 	if c.prewarmResolveTimeout <= 0 {
-		return "", fmt.Errorf("prewarm: company %v is not cached and the resolve wait is off", keys)
+		return unresolved(fmt.Errorf("prewarm: company %v is not cached and the resolve wait is off", keys))
 	}
 
 	deadline := time.Now().Add(c.prewarmResolveTimeout)
@@ -388,7 +427,7 @@ func (c *SchematicClient) resolveCompanyIDForPrewarm(ctx context.Context, keys m
 		// has yet to ingest a preceding identify.
 		c.logger.Debug(ctx, fmt.Sprintf("Prewarm: DataStream company fetch failed (%v)", err))
 		if !time.Now().Before(deadline) {
-			return "", fmt.Errorf("prewarm: company %v did not resolve within %s; the first check acquires instead", keys, c.prewarmResolveTimeout)
+			return unresolved(fmt.Errorf("prewarm: company %v did not resolve within %s; the first check acquires instead", keys, c.prewarmResolveTimeout))
 		}
 		select {
 		case <-ctx.Done():

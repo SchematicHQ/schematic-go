@@ -39,7 +39,9 @@ const (
 	testFlagKey      = "inference"
 	testCreditID     = "ct_1"
 	testEventSubtype = "inference_tokens"
-	testCompanyID    = "co_1"
+	// Prefixed the way a Schematic company id is, so a prewarm whose keys the
+	// cache cannot resolve still falls back to it.
+	testCompanyID = "comp_1"
 )
 
 // creditFlag meters the feature by credit burndown, so a check with usage takes
@@ -396,16 +398,19 @@ func TestTrackTraitsNeverWriteThroughTheCallersBody(t *testing.T) {
 // An identify the server has not seen yet cannot be prewarmed: the buffer would
 // hold it past the prewarm's own wait for the company to surface.
 func TestClientModeIdentifyFlushesTheBufferBeforePrewarming(t *testing.T) {
-	// Company keys carrying an ID resolve without the socket, so the fixture
-	// serves nothing and the ordering under test is the only thing moving.
+	// The company id the keys carry resolves without the socket once the key
+	// lookup misses, and a zero resolve wait skips the fetch in between, so the
+	// fixture serves nothing and the ordering under test is the only thing
+	// moving.
 	server := startDataStreamServer(t, dataStreamFixture{})
 	rec := &requestRecorder{}
+	noWait := time.Duration(0)
 	// A buffer period no test would outlast, so only a forced flush can put the
 	// identify on the wire before the acquire.
 	client := clientModeClient(t, rec, map[string]stub{
 		leaseAcquirePath: {body: leaseResponse("lse_1", 10000)},
 		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}},
-	}, server.URL, core.CreditLeaseConfig{}, option.WithEventBufferPeriod(time.Minute))
+	}, server.URL, core.CreditLeaseConfig{PrewarmResolveTimeout: &noWait}, option.WithEventBufferPeriod(time.Minute))
 	defer client.Close()
 
 	client.Identify(t.Context(), &schematicgo.EventBodyIdentify{
@@ -808,4 +813,52 @@ func countPaths(rec *requestRecorder, suffix string) int {
 		}
 	}
 	return count
+}
+
+// An account is free to define an entity key called `id` holding its own
+// identifier, so every key is looked up before any value is read as a Schematic
+// company id.
+func TestClientModePrewarmResolvesAnAccountDefinedIDKeyThroughTheLookup(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{serveCompany: true})
+	rec := &requestRecorder{}
+	client := clientModeClient(t, rec, map[string]stub{
+		leaseAcquirePath: {body: leaseResponse("lse_1", 10000)},
+		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	}, server.URL, core.CreditLeaseConfig{})
+	defer client.Close()
+
+	err := client.Prewarm(t.Context(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"id": "acme"},
+	}, []string{testCreditID})
+
+	require.NoError(t, err)
+	req, ok := rec.find(leaseAcquirePath)
+	require.True(t, ok)
+	assert.Equal(t, testCompanyID, decodeBody(t, req.body)["company_id"], "the lease is keyed by the id the lookup returned")
+}
+
+// Only once the keys resolve nothing is a value read as the company's own id, by
+// its `comp_` prefix rather than by the name of the key it sits under.
+func TestClientModePrewarmFallsBackToASchematicIDTheKeysCarry(t *testing.T) {
+	server := startDataStreamServer(t, dataStreamFixture{})
+	rec := &requestRecorder{}
+	noWait := time.Duration(0)
+	// The server answers with the company it was asked for, which here is the
+	// id the keys carried.
+	granted := leaseResponse("lse_1", 10000)
+	granted.Data.CompanyID = "comp_9"
+	client := clientModeClient(t, rec, map[string]stub{
+		leaseAcquirePath: {body: granted},
+		eventBatchPath:   {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	}, server.URL, core.CreditLeaseConfig{PrewarmResolveTimeout: &noWait})
+	defer client.Close()
+
+	err := client.Prewarm(t.Context(), &schematicgo.CheckFlagRequestBody{
+		Company: map[string]string{"account_id": "comp_9"},
+	}, []string{testCreditID})
+
+	require.NoError(t, err)
+	req, ok := rec.find(leaseAcquirePath)
+	require.True(t, ok)
+	assert.Equal(t, "comp_9", decodeBody(t, req.body)["company_id"])
 }

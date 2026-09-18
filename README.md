@@ -887,6 +887,8 @@ client.Identify(ctx, &schematicgo.EventBodyIdentify{
 
 Or call `client.Prewarm(ctx, evaluationCtx, []string{"credit-type-id"})` directly, which returns any acquire error. Both are no-ops in server mode.
 
+Pre-warming resolves the company the way the server does: it looks the keys up first, whatever they are named, and only when nothing matches does it read a value carrying Schematic's `comp_` prefix as the company ID.
+
 ### When a check cannot gate
 
 A check that cannot gate, because the API is unreachable, Redis is down, or the lease is exhausted, fails closed by default: `Allowed` is false and nothing is reserved. Pass `schematicclient.WithFailOpen()` where letting traffic through beats denying it.

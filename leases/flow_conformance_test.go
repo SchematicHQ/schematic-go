@@ -76,12 +76,9 @@ type engineCallExpect struct {
 }
 
 type trackExpect struct {
-	Event *string `json:"event"`
-	// Quantity is the usage the vector declares, which a reference SDK with a
-	// numeric event quantity bills as-is. This SDK's track event carries an
-	// int64, so a fractional declaration bills as the whole unit it settles.
-	Quantity *float64 `json:"quantity"`
-	LeaseID  *string  `json:"lease_id"`
+	Event    *string `json:"event"`
+	Quantity *int64  `json:"quantity"`
+	LeaseID  *string `json:"lease_id"`
 }
 
 // ---------------------------------------------------------------------------
@@ -372,7 +369,7 @@ func opTrack(h *harness, op operation) {
 	}
 	if want.Quantity != nil {
 		require.NotNil(h.t, outcome.Track.Quantity)
-		assert.Equal(h.t, SettleQuantity(*want.Quantity), *outcome.Track.Quantity)
+		assert.Equal(h.t, *want.Quantity, *outcome.Track.Quantity)
 	}
 	if want.LeaseID != nil {
 		require.NotNil(h.t, outcome.Track.LeaseID)

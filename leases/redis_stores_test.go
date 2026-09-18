@@ -268,10 +268,11 @@ func TestRedisLeaseStoreKeepsFractionalAmountsExact(t *testing.T) {
 	assert.Equal(t, "7.5", raw)
 }
 
-// The hash, its expiry and both indexes go out as one transaction. Issued
-// separately, an expiry that failed on its own left a hash with no TTL and no
-// index entry, which nothing would ever reap.
-func TestRedisReservationStoreAddLandsAsOneTransaction(t *testing.T) {
+// The hash and its expiry go out as one transaction, and the two indexes follow
+// outside it. Issued separately, an expiry that failed on its own left a hash
+// with no TTL that nothing would ever reap once the sweeper dropped its index
+// entry.
+func TestRedisReservationStoreAddWritesTheHashAndItsTTLAsOneTransaction(t *testing.T) {
 	t.Parallel()
 	ctx := context.Background()
 	b := newRedisBackend(t)
@@ -281,11 +282,20 @@ func TestRedisReservationStoreAddLandsAsOneTransaction(t *testing.T) {
 	require.NoError(t, b.reservations.Add(ctx, newReservation("res_1", "lse_1", 100, 60_000, b.clock)))
 
 	assert.Equal(t,
-		[]string{"multi", "hset", "pexpireat", "zadd", "hset", "exec"},
+		[]string{"multi", "hset", "pexpireat", "exec"},
 		recorder.lastBatch(),
 	)
 	assert.Positive(t, b.server.TTL(DefaultKeyPrefix+reservationKeyNamespace+"res_1"),
 		"the hash carries the expiry that reaps it")
+
+	// The indexes land outside the transaction, since their keys hash to other
+	// slots than the reservation hash.
+	count, err := b.reservations.Count(ctx)
+	require.NoError(t, err)
+	assert.Equal(t, 1, count)
+	total, err := b.reservations.ReservedCredits(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 100.0, total)
 }
 
 func TestRedisReservationStoreAddLeavesNothingBehindWhenTheWriteFails(t *testing.T) {

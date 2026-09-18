@@ -1015,8 +1015,13 @@ func (o *checkOptions) withTimeout(ctx context.Context) (context.Context, contex
 // it to that subtype's condition; without one it goes out as the generic usage
 // knob. A usage no hold could be sized from is dropped rather than threaded,
 // since the server rejects it and it would only turn a check into an error.
+//
+// A zero simulates nothing, and it is not free to send: a preflighted check
+// asks a hypothetical, so it neither reads nor writes the flag-check cache.
+// Threading a zero would cost every such check its cache entry to ask the plain
+// question twice.
 func (o *checkOptions) preflight() *schematicgo.PreflightRequestBody {
-	if o.usage == nil || !leases.IsValidQuantity(*o.usage) {
+	if o.usage == nil || *o.usage == 0 || !leases.IsValidQuantity(*o.usage) {
 		return nil
 	}
 

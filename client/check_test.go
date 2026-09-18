@@ -433,6 +433,28 @@ func TestCheckZeroUsageUsesPlainCheck(t *testing.T) {
 	assert.Equal(t, []string{"/flags/test-flag/check"}, rec.paths())
 }
 
+// A zero simulates nothing, so the check asks the plain question and stays
+// cacheable. Threading it as a preflight would cost the flag its cache entry.
+func TestCheckZeroUsageSendsNoPreflightAndStaysCached(t *testing.T) {
+	for _, opts := range map[string][]schematicclient.CheckOption{
+		"usage":       {schematicclient.WithUsage(0)},
+		"event usage": {schematicclient.WithUsage(0), schematicclient.WithEventSubtype("inference_tokens")},
+	} {
+		rec := &requestRecorder{}
+		client := serverModeClient(t, rec, map[string]stub{checkPath: {body: checkFlagResponse(true)}})
+
+		assert.True(t, client.Check(context.Background(), testEvalCtx(), "test-flag", opts...).Allowed)
+		req, ok := rec.find(checkPath)
+		require.True(t, ok)
+		assert.Nil(t, decodeBody(t, req.body)["preflight"])
+
+		// The answer is cached, so a second identical check never reaches the API.
+		time.Sleep(10 * time.Millisecond)
+		assert.True(t, client.Check(context.Background(), testEvalCtx(), "test-flag", opts...).Allowed)
+		assert.Len(t, rec.all(), 1)
+	}
+}
+
 func TestCheckNegativeUsage(t *testing.T) {
 	t.Run("Fails closed", func(t *testing.T) {
 		rec := &requestRecorder{}

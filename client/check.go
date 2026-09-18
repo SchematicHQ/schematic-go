@@ -911,6 +911,11 @@ func (c *SchematicClient) TrackWithReservation(
 	// lease's sub-ledger instead; never send both, since the server prefers the
 	// lease ID.
 	var body *schematicgo.EventBodyTrack
+	// A settle that moved no local state must not move the cached company metric
+	// either: the server drops the duplicate event on its idempotency key, so
+	// bumping the metric would have the caller's retry deny its own next
+	// numeric-limit check on usage nobody recorded.
+	settledLocally := true
 	if reservation.Mode == core.CreditLeaseModeServer {
 		body = &schematicgo.EventBodyTrack{
 			Company:       reservation.Company,
@@ -920,7 +925,7 @@ func (c *SchematicClient) TrackWithReservation(
 			User:          reservation.User,
 		}
 	} else {
-		body = c.settleClientReservation(ctx, reservation, actualQuantity)
+		body, settledLocally = c.settleClientReservation(ctx, reservation, actualQuantity)
 	}
 
 	// The caller's options come last so an explicit idempotency key still wins.
@@ -928,11 +933,11 @@ func (c *SchematicClient) TrackWithReservation(
 		[]TrackOption{WithTrackIdempotencyKey(reservationTrackIdempotencyPrefix + reservation.ID)},
 		opts...,
 	)
-	c.Track(ctx, body, trackOpts...)
+	c.emitTrack(ctx, body, trackOpts, settledLocally)
 }
 
 // settleClientReservation consumes a client-mode hold against its lease and
-// hands back the event that bills it.
+// hands back the event that bills it, and whether the settle landed locally.
 //
 // The server is the source of truth for real consumption, so a settle that
 // cannot run locally still emits: the event's idempotency key is what keeps the
@@ -941,14 +946,14 @@ func (c *SchematicClient) settleClientReservation(
 	ctx context.Context,
 	reservation *Reservation,
 	actualQuantity int64,
-) *schematicgo.EventBodyTrack {
+) (*schematicgo.EventBodyTrack, bool) {
 	record := reservationRecord(reservation)
 	if c.reservations == nil {
 		// The handle came from a lease-configured client, so the event still
 		// needs its lease ID and its dedupe key even though this client holds
-		// nothing to settle.
+		// nothing to settle. It is the first emit of this usage all the same.
 		c.logger.Warn(ctx, "TrackWithReservation: client-mode credit leases are not configured here; emitting an unsettled track")
-		return leases.BuildTrackEvent(record, actualQuantity)
+		return leases.BuildTrackEvent(record, actualQuantity), true
 	}
 
 	outcome := leases.SettleReservation(ctx, c.reservations, record, float64(actualQuantity))
@@ -958,7 +963,7 @@ func (c *SchematicClient) settleClientReservation(
 	case !outcome.SettledLocally:
 		c.logger.Debug(ctx, fmt.Sprintf("TrackWithReservation: reservation %s was not settled locally (swept at its TTL, already settled, or the store is unreachable); the track is keyed for server-side dedupe", reservation.ID))
 	}
-	return outcome.Track
+	return outcome.Track, outcome.SettledLocally
 }
 
 // checkFailureResult resolves a check that could not gate. Fail-closed denies;

@@ -768,7 +768,19 @@ func (c *SchematicClient) Track(
 	body *schematicgo.EventBodyTrack,
 	opts ...TrackOption,
 ) {
+	c.emitTrack(ctx, body, opts, true)
+}
 
+// emitTrack enqueues a track event, bumping the cached company metric with it
+// unless updateMetrics says not to. The bump is a local prediction of what the
+// stream will push back, so it belongs only to an event recording usage the
+// server has not already counted.
+func (c *SchematicClient) emitTrack(
+	ctx context.Context,
+	body *schematicgo.EventBodyTrack,
+	opts []TrackOption,
+	updateMetrics bool,
+) {
 	o := &eventOptions{}
 	for _, apply := range opts {
 		apply(o)
@@ -786,7 +798,7 @@ func (c *SchematicClient) Track(
 		}
 	}
 
-	if body.Company != nil && c.useDataStream() && c.datastreamClient.IsConnected() {
+	if updateMetrics && body.Company != nil && c.useDataStream() && c.datastreamClient.IsConnected() {
 		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{

@@ -244,3 +244,30 @@ func TestWasmGatesExactlyAtTheBalanceBoundary(t *testing.T) {
 	assert.True(t, under.Value)
 	assert.False(t, over.Value)
 }
+
+// The engine reads usage and event_usage.quantity as i64, so a fraction cannot
+// reach it: Go's option types are integers, and the flow rounds up on the way
+// in. Rounding up rather than down is what keeps a check from passing on less
+// usage than the operation is about to record.
+func TestWasmPreflightRoundsAFractionalQuantityUp(t *testing.T) {
+	engine := newWasmEngine(t)
+	flag := wasmCreditFlag()
+	company := wasmCompany(1.5)
+	ctx := context.Background()
+
+	opts := preflightOptions(CheckRequest{Usage: 1.5, EventSubtype: testSubtype})
+	require.NotNil(t, opts)
+	require.NotNil(t, opts.EventUsage)
+	assert.Equal(t, int64(2), opts.EventUsage.Quantity)
+
+	// Two whole events at a rate of 1 cost more than the balance of 1.5.
+	rounded, err := engine.CheckFlag(ctx, company, nil, flag, EngineCheckFlagOptions(opts)...)
+	require.NoError(t, err)
+	assert.False(t, rounded.Value)
+
+	// The same usage truncated instead of rounded would have passed.
+	truncated, err := engine.CheckFlag(ctx, company, nil, flag,
+		EngineCheckFlagOptions(&EvalOptions{EventUsage: &EventUsage{EventSubtype: testSubtype, Quantity: 1}})...)
+	require.NoError(t, err)
+	assert.True(t, truncated.Value)
+}

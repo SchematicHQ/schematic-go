@@ -13,6 +13,7 @@ import (
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/datastream"
+	"github.com/schematichq/schematic-go/leases"
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -91,4 +92,48 @@ func TestCheckResolvesMissingClientPlumbingToServerMode(t *testing.T) {
 	require.NotNil(t, result.Reservation, "the check still gates, and still holds")
 	assert.Equal(t, core.CreditLeaseModeServer, result.Reservation.Mode)
 	assert.Equal(t, []string{"/flags/test-flag/check-and-reserve"}, recorder.recorded())
+}
+
+// A settle that moved no local state must say so, since that is what decides
+// whether the cached company metric moves with the event. The event itself still
+// goes out: the server is the source of truth for real consumption, and its
+// idempotency key is what keeps the retry from billing twice.
+func TestSettleClientReservationReportsARepeatSettleAsNotLocal(t *testing.T) {
+	leaseStore := leases.NewInMemoryLeaseStore(leases.InMemoryLeaseStoreOptions{})
+	_, err := leaseStore.Replace(context.Background(), leases.LeaseGrant{
+		LeaseID:       "lse_1",
+		CompanyID:     "comp_1",
+		CreditTypeID:  "ct_1",
+		GrantedAmount: 1000,
+		ExpiresAt:     time.Now().Add(5 * time.Minute),
+	})
+	require.NoError(t, err)
+	store := leases.NewInMemoryReservationStore(leaseStore, leases.InMemoryReservationStoreOptions{})
+
+	client := NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithOfflineMode())
+	t.Cleanup(client.Close)
+	client.reservations = store
+
+	reservation := &Reservation{
+		ID:               "res_1",
+		LeaseID:          "lse_1",
+		Mode:             core.CreditLeaseModeClient,
+		CompanyID:        "comp_1",
+		CreditTypeID:     "ct_1",
+		EventSubtype:     "inference_tokens",
+		QuantityReserved: 50,
+		CreditsReserved:  50,
+		ConsumptionRate:  1,
+		ExpiresAt:        time.Now().Add(time.Minute),
+		Company:          map[string]string{"id": "comp_1"},
+	}
+	require.NoError(t, store.Add(context.Background(), reservationRecord(reservation)))
+
+	body, settledLocally := client.settleClientReservation(context.Background(), reservation, 20)
+	require.NotNil(t, body)
+	assert.True(t, settledLocally)
+
+	body, settledLocally = client.settleClientReservation(context.Background(), reservation, 20)
+	require.NotNil(t, body, "the usage is still billed")
+	assert.False(t, settledLocally, "the hold was already consumed, so nothing moved locally")
 }

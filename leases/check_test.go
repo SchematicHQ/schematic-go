@@ -458,6 +458,51 @@ func TestSettleQuantityRoundsAPartialUnitUp(t *testing.T) {
 	assert.Equal(t, int64(0), SettleQuantity(0))
 }
 
+// The API rejects a non-integer quantity while processing the event, so a
+// fractional settle billed as-is would be dropped server-side while the local
+// ledger had already debited it. Rounded up, the direction the hold takes, so
+// the hold, the local debit and the billed quantity all agree.
+func TestSettleReservationBillsAPartialUnitAsAWholeOne(t *testing.T) {
+	leaseStore := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{})
+	_, err := leaseStore.Replace(context.Background(), LeaseGrant{
+		LeaseID:       "lse_1",
+		CompanyID:     "co_1",
+		CreditTypeID:  testCreditID,
+		GrantedAmount: 1000,
+		ExpiresAt:     time.Now().Add(5 * time.Minute),
+	})
+	require.NoError(t, err)
+	store := NewInMemoryReservationStore(leaseStore, InMemoryReservationStoreOptions{})
+	record := ReservationRecord{
+		ID:               "res_1",
+		LeaseID:          "lse_1",
+		CompanyID:        "co_1",
+		CreditTypeID:     testCreditID,
+		EventSubtype:     testSubtype,
+		QuantityReserved: 0.5,
+		CreditsReserved:  10,
+		ConsumptionRate:  10,
+		ExpiresAt:        time.Now().Add(time.Minute),
+		Company:          map[string]string{"id": "co_1"},
+	}
+	require.NoError(t, store.Add(context.Background(), record))
+	_, _, reserved, err := leaseStore.TryReserve(context.Background(), "co_1", testCreditID, 10)
+	require.NoError(t, err)
+	require.True(t, reserved)
+
+	settled := SettleReservation(context.Background(), store, record, 0.5)
+
+	require.NoError(t, settled.Err)
+	assert.True(t, settled.SettledLocally)
+	require.NotNil(t, settled.Track.Quantity)
+	assert.Equal(t, int64(1), *settled.Track.Quantity)
+
+	// The debit moved the lease by what the event bills: one whole unit.
+	entry, err := leaseStore.Get(context.Background(), "co_1", testCreditID)
+	require.NoError(t, err)
+	assert.Equal(t, 990.0, entry.LocalRemainingCredits)
+}
+
 // swapBeforeReserve replaces the slot's lease just before the debit lands,
 // which is the window a check's acquire and its reserve straddle.
 type swapBeforeReserve struct {

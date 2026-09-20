@@ -89,6 +89,12 @@ func grantFromResponse(data *schematicgo.CreditLeaseResponseData) (*LeaseGrant, 
 	}, nil
 }
 
+// maxExtendJoins is how many in-flight extends one caller will wait out before
+// issuing its own. Two covers the case the single-flight was written for: the
+// flight a caller joins, and the follow-up another caller registers while it was
+// waiting.
+const maxExtendJoins = 2
+
 // LeaseManager owns lease rows for one client: acquire on first use or after
 // expiry, extend when the local view dips below the water mark, release on
 // close.
@@ -285,12 +291,72 @@ func (m *LeaseManager) acquire(ctx context.Context, companyID, creditTypeID stri
 // is larger than what that extend asked for, it waits the flight out and then
 // issues exactly one follow-up extend for the remaining difference; otherwise it
 // would inherit a tranche-sized ask and fail its post-extend retry with credits
-// still sitting on the server.
+// still sitting on the server. A flight it finds on the way back is joined only
+// if that one covers the shortfall too; a smaller one is waited out, never
+// inherited.
 func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID string, requiredCredits *float64) *LeaseState {
-	return m.maybeExtend(ctx, companyID, creditTypeID, requiredCredits, true)
+	// Joins are budgeted, extends of our own are not: a caller may wait out
+	// flights that ask for too little, but once the budget runs out it issues its
+	// own single extend rather than joining again. Without the budget a caller
+	// could wait behind an unbounded run of other callers' follow-ups; without
+	// the extend of its own it would return a balance it already knows is short
+	// and fail its retry with the credits sitting on the server.
+	for joinsLeft := maxExtendJoins; ; joinsLeft-- {
+		entry := m.readLiveLease(ctx, companyID, creditTypeID)
+		if entry == nil {
+			return nil
+		}
+		resolved := m.ResolveConfig(creditTypeID)
+		if !m.needsExtend(entry, resolved, requiredCredits) {
+			return entry
+		}
+		// Size the extend to cover the request that triggered it: a single check
+		// needing more than remaining plus one tranche would otherwise fail its
+		// post-extend retry forever, however much balance the server has. The
+		// steady-state path keeps asking for the configured tranche. Sized here,
+		// one level above the wire call, so the flight registered below and the
+		// request body provably carry the same number for a joiner to compare
+		// against.
+		shortfall := 0.0
+		if requiredCredits != nil {
+			shortfall = *requiredCredits - entry.LocalRemainingCredits
+		}
+		additionalAmount := max(resolved.LeaseSize, shortfall)
+
+		result, flightAsk, joined := m.extendFlights.doSized(ctx, LeaseKey(companyID, creditTypeID), additionalAmount, joinsLeft > 0, func() *LeaseState {
+			// Detached for the same reason the acquire flight is: one caller's
+			// deadline must not decide what every waiter on the slot gets.
+			detached, cancel := detachedContext(ctx)
+			defer cancel()
+			return m.recheckAndExtend(detached, companyID, creditTypeID, resolved, requiredCredits, additionalAmount)
+		})
+		// A joiner waits on somebody else's wire call, which runs on whatever
+		// deadline ITS caller set, so the wait is capped at this caller's own
+		// context: a check with 200ms to spend must not sit behind a 30s extend.
+		// Giving up abandons only this wait. The flight runs on for the callers
+		// still on it, and whatever it installs is there for the next check to
+		// read.
+		if joined && ctx.Err() != nil {
+			m.logger.Debug(ctx, fmt.Sprintf("Extend in flight for %s/%s outlasted the caller's deadline; not waiting on it", companyID, creditTypeID))
+			return result
+		}
+		// The flight asked for at least what we need, which covers every
+		// watermark-driven joiner and any check the tranche fits. One wire call
+		// serves all of them, which is the point of single-flight.
+		if !joined || additionalAmount <= flightAsk {
+			return result
+		}
+		// Go round again to re-read the slot that flight just moved, so what we
+		// ask for next is sized against the balance it left rather than the one
+		// we started from.
+	}
 }
 
-func (m *LeaseManager) maybeExtend(ctx context.Context, companyID, creditTypeID string, requiredCredits *float64, allowFollowUp bool) *LeaseState {
+// readLiveLease reads the slot, reporting nothing when the read fails or the
+// lease is absent or expired. An expired lease is never extended: the server
+// treats it as released and has already refunded its remainder, so the only
+// correct move is a fresh acquire on the next check.
+func (m *LeaseManager) readLiveLease(ctx context.Context, companyID, creditTypeID string) *LeaseState {
 	entry, err := m.leases.Get(ctx, companyID, creditTypeID)
 	if err != nil {
 		m.logger.Warn(ctx, fmt.Sprintf("Failed to read lease store for %s/%s: %v", companyID, creditTypeID, err))
@@ -299,54 +365,41 @@ func (m *LeaseManager) maybeExtend(ctx context.Context, companyID, creditTypeID 
 	if entry == nil {
 		return nil
 	}
-	// Never extend an expired lease: the server treats it as released and has
-	// already refunded its remainder, so the only correct move is a fresh
-	// acquire on the next check.
 	if !entry.ExpiresAt.After(m.clock()) {
 		return nil
 	}
-	resolved := m.ResolveConfig(creditTypeID)
+	return entry
+}
+
+// needsExtend reports whether the slot sits low enough to warrant an extend.
+func (m *LeaseManager) needsExtend(entry *LeaseState, resolved ResolvedLeaseConfig, requiredCredits *float64) bool {
 	belowWatermark := entry.LocalRemainingCredits/max(entry.GrantedAmount, 1) <= resolved.LowWaterMark
 	belowRequired := requiredCredits != nil && entry.LocalRemainingCredits < *requiredCredits
-	if !belowWatermark && !belowRequired {
+	return belowWatermark || belowRequired
+}
+
+// recheckAndExtend re-reads the slot now that this flight owns it, and extends
+// only if the fresh row still warrants one. The row that decided this extend was
+// read before the flight was registered, so an extend that landed in that gap,
+// clearing its own flight on the way out, would otherwise be followed by a
+// second extend, under a new idempotency key, for a lease it already topped up.
+// The registered ask stands: a joiner compares its shortfall against that
+// figure, so the wire body has to carry it.
+func (m *LeaseManager) recheckAndExtend(
+	ctx context.Context,
+	companyID, creditTypeID string,
+	resolved ResolvedLeaseConfig,
+	requiredCredits *float64,
+	additionalAmount float64,
+) *LeaseState {
+	entry := m.readLiveLease(ctx, companyID, creditTypeID)
+	if entry == nil {
+		return nil
+	}
+	if !m.needsExtend(entry, resolved, requiredCredits) {
 		return entry
 	}
-	// Size the extend to cover the request that triggered it: a single check
-	// needing more than remaining plus one tranche would otherwise fail its
-	// post-extend retry forever, however much balance the server has. The
-	// steady-state path keeps asking for the configured tranche. Sized here, one
-	// level above the wire call, so the flight registered below and the request
-	// body provably carry the same number for a joiner to compare against.
-	shortfall := 0.0
-	if requiredCredits != nil {
-		shortfall = *requiredCredits - entry.LocalRemainingCredits
-	}
-	additionalAmount := max(resolved.LeaseSize, shortfall)
-
-	result, flightAsk, joined := m.extendFlights.doSized(ctx, LeaseKey(companyID, creditTypeID), additionalAmount, func() *LeaseState {
-		// Detached for the same reason the acquire flight is: one caller's
-		// deadline must not decide what every waiter on the slot gets.
-		detached, cancel := detachedContext(ctx)
-		defer cancel()
-		return m.extend(detached, *entry, resolved, additionalAmount)
-	})
-	// The flight already asked for at least what we need, which covers every
-	// watermark-driven joiner and any check the tranche fits. One wire call
-	// serves all of them, which is the point of single-flight.
-	if !joined || additionalAmount <= flightAsk {
-		return result
-	}
-	// Our shortfall outran the flight's ask. We waited it out rather than racing
-	// a second extend onto the same lease, and now top up the difference with
-	// exactly one more, re-read against the slot that flight just moved. The
-	// follow-up is not allowed one of its own: a company whose balance simply
-	// cannot reach the request would otherwise spin. A caller whose own context
-	// has already ended has stopped waiting for the answer, so a follow-up would
-	// buy it nothing.
-	if !allowFollowUp || ctx.Err() != nil {
-		return result
-	}
-	return m.maybeExtend(ctx, companyID, creditTypeID, requiredCredits, false)
+	return m.extend(ctx, *entry, resolved, additionalAmount)
 }
 
 // ExtendInBackground kicks off a water-mark extend without waiting for it: a
@@ -400,6 +453,9 @@ func (m *LeaseManager) extend(ctx context.Context, entry LeaseState, resolved Re
 // since sibling pods still draw on those leases. Expired leases are skipped
 // too: the server already swept them. Best-effort, with failures falling back
 // to server-side expiry.
+//
+// Bounded by ctx, so a store or a wire call that never lands cannot hold a
+// closing client open; whatever is left unreleased expires server-side.
 func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 	lister, ok := m.leases.(LeaseLister)
 	if !ok {
@@ -415,6 +471,9 @@ func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 		if !entry.ExpiresAt.After(now) {
 			continue
 		}
+		if ctx.Err() != nil {
+			break
+		}
 		if err := m.wire.Release(ctx, entry.LeaseID); err != nil {
 			m.logger.Warn(ctx, fmt.Sprintf("Failed to release credit lease %s on close (it will expire server-side): %v", entry.LeaseID, err))
 			continue
@@ -424,6 +483,9 @@ func (m *LeaseManager) ReleaseAllLocalLeases(ctx context.Context) {
 			continue
 		}
 		m.logger.Debug(ctx, fmt.Sprintf("Released credit lease %s on close", entry.LeaseID))
+	}
+	if ctx.Err() != nil {
+		m.logger.Warn(ctx, "Ran out of budget releasing credit leases on close; any still held will be released by server-side expiry")
 	}
 }
 
@@ -570,7 +632,7 @@ type flight struct {
 }
 
 func (g *flightGroup) do(ctx context.Context, key string, fn func() *LeaseState) *LeaseState {
-	result, _, _ := g.doSized(ctx, key, 0, fn)
+	result, _, _ := g.doSized(ctx, key, 0, true, fn)
 	return result
 }
 
@@ -578,9 +640,14 @@ func (g *flightGroup) do(ctx context.Context, key string, fn func() *LeaseState)
 // is what this call will ask the server for. It reports the figure the flight it
 // joined asked for, and whether it joined one rather than starting its own, so a
 // caller the flight does not cover can follow up.
-func (g *flightGroup) doSized(ctx context.Context, key string, requestedAdditional float64, fn func() *LeaseState) (*LeaseState, float64, bool) {
+//
+// A caller out of joins passes join false and starts its own call, registering
+// it over whatever is in flight: the flight already running is one it has
+// established does not cover it, and the cleanup below is identity-guarded, so
+// the older call cannot evict the newer registration on its way out.
+func (g *flightGroup) doSized(ctx context.Context, key string, requestedAdditional float64, join bool, fn func() *LeaseState) (*LeaseState, float64, bool) {
 	g.mu.Lock()
-	if existing, ok := g.inFlight[key]; ok {
+	if existing, ok := g.inFlight[key]; ok && join {
 		g.mu.Unlock()
 		return existing.wait(ctx), existing.requestedAdditional, true
 	}

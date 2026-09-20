@@ -227,7 +227,11 @@ func CheckWithLease(
 		return fallback(ctx)
 	}
 
-	creditCost := req.Usage * consumptionRate
+	// Whole event units: a fraction of an event is not something the server
+	// bills, so the hold rounds up to what the settle will charge. Sizing it on
+	// the raw quantity would move the local ledger by less than the track event
+	// does, and the two would drift apart over a session.
+	creditCost := math.Ceil(req.Usage) * consumptionRate
 	ids := flagCheckIDs{companyID: &company.ID, userID: userID(user)}
 
 	// Every can't-gate outcome funnels through here, so the fail-open and

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -68,11 +69,12 @@ type checkOptions struct {
 type CheckOption func(*checkOptions)
 
 // WithUsage declares how many units of the feature the operation is about to
-// consume. The check holds quantity times the entitlement's consumption rate
-// from the company's credit balance, and returns a Reservation to settle with
-// TrackWithReservation. Fractional quantities are allowed, since a credit cost
-// need not fall on a whole unit. Without it, Check is a plain flag check that
-// holds nothing.
+// consume. The check holds that quantity, rounded up to a whole event unit,
+// times the entitlement's consumption rate from the company's credit balance,
+// and returns a Reservation to settle with TrackWithReservation. A fractional
+// quantity is allowed and is what the hold records; the credits it costs round
+// up, since the server bills whole events. Without it, Check is a plain flag
+// check that holds nothing.
 func WithUsage(quantity float64) CheckOption {
 	return func(o *checkOptions) { o.usage = &quantity }
 }
@@ -118,7 +120,8 @@ type Reservation struct {
 	EventSubtype string
 	// QuantityReserved is the units of usage the hold covers, as requested.
 	QuantityReserved float64
-	// CreditsReserved is QuantityReserved times ConsumptionRate.
+	// CreditsReserved is QuantityReserved, rounded up to a whole event unit,
+	// times ConsumptionRate.
 	CreditsReserved float64
 	// ConsumptionRate is the credits per unit of usage the hold was priced at.
 	ConsumptionRate float64
@@ -352,20 +355,58 @@ func (c *SchematicClient) Prewarm(
 	return nil
 }
 
+// companyIDPrefix is the prefix a Schematic company id carries, whatever key
+// name it is passed under.
+const companyIDPrefix = "comp_"
+
+// schematicCompanyID is the Schematic id hiding among a set of entity keys,
+// recognized by its prefix. The server reads keys this way once its own key
+// lookup has come up empty, so {"account_id": "comp_1"} resolves and
+// {"id": "acme"} does not: the prefix decides, not the name of the key the value
+// sits under.
+//
+// Key names are walked in order, since a Go map has none of its own and an
+// arbitrary winner among several prefixed values would make a prewarm answer
+// differently run to run.
+func schematicCompanyID(keys map[string]string) string {
+	names := make([]string, 0, len(keys))
+	for name := range keys {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	for _, name := range names {
+		if strings.HasPrefix(keys[name], companyIDPrefix) {
+			return keys[name]
+		}
+	}
+	return ""
+}
+
 // resolveCompanyIDForPrewarm turns company keys into the ID a lease is keyed by,
-// waiting for the company to surface over DataStream when only secondary keys
-// were given.
+// waiting for the company to surface over DataStream when the cache does not
+// already hold it.
+//
+// Resolved in the server's order: every supplied pair is an ordinary entity key
+// and gets looked up first, since an account is free to define a key called `id`
+// holding its own identifier. Only when nothing matches is a value read as the
+// company's own id, by its `comp_` prefix.
 //
 // An identify does not push a company into the DataStream cache, since companies
 // are only streamed on request, so this fetches rather than watching an empty
 // cache. A PrewarmResolveTimeout of zero keeps the cache lookup and skips the
 // wait, so an already-seen company still warms.
 func (c *SchematicClient) resolveCompanyIDForPrewarm(ctx context.Context, keys map[string]string) (string, error) {
-	if id := keys["id"]; id != "" {
-		return id, nil
+	// The keys resolved nothing, so fall back to a `comp_` value the way the
+	// server does once its own lookup comes up empty.
+	unresolved := func(reason error) (string, error) {
+		if id := schematicCompanyID(keys); id != "" {
+			return id, nil
+		}
+		return "", reason
 	}
+
 	if c.datastreamClient == nil {
-		return "", errors.New("prewarm needs DataStream to resolve company keys to an ID")
+		return unresolved(errors.New("prewarm needs DataStream to resolve company keys to an ID"))
 	}
 	// An earlier check or prewarm may already have cached this company, and that
 	// answer costs nothing.
@@ -373,7 +414,7 @@ func (c *SchematicClient) resolveCompanyIDForPrewarm(ctx context.Context, keys m
 		return cached.ID, nil
 	}
 	if c.prewarmResolveTimeout <= 0 {
-		return "", fmt.Errorf("prewarm: company %v is not cached and the resolve wait is off", keys)
+		return unresolved(fmt.Errorf("prewarm: company %v is not cached and the resolve wait is off", keys))
 	}
 
 	deadline := time.Now().Add(c.prewarmResolveTimeout)
@@ -386,7 +427,7 @@ func (c *SchematicClient) resolveCompanyIDForPrewarm(ctx context.Context, keys m
 		// has yet to ingest a preceding identify.
 		c.logger.Debug(ctx, fmt.Sprintf("Prewarm: DataStream company fetch failed (%v)", err))
 		if !time.Now().Before(deadline) {
-			return "", fmt.Errorf("prewarm: company %v did not resolve within %s; the first check acquires instead", keys, c.prewarmResolveTimeout)
+			return unresolved(fmt.Errorf("prewarm: company %v did not resolve within %s; the first check acquires instead", keys, c.prewarmResolveTimeout))
 		}
 		select {
 		case <-ctx.Done():
@@ -870,6 +911,11 @@ func (c *SchematicClient) TrackWithReservation(
 	// lease's sub-ledger instead; never send both, since the server prefers the
 	// lease ID.
 	var body *schematicgo.EventBodyTrack
+	// A settle that moved no local state must not move the cached company metric
+	// either: the server drops the duplicate event on its idempotency key, so
+	// bumping the metric would have the caller's retry deny its own next
+	// numeric-limit check on usage nobody recorded.
+	settledLocally := true
 	if reservation.Mode == core.CreditLeaseModeServer {
 		body = &schematicgo.EventBodyTrack{
 			Company:       reservation.Company,
@@ -879,7 +925,7 @@ func (c *SchematicClient) TrackWithReservation(
 			User:          reservation.User,
 		}
 	} else {
-		body = c.settleClientReservation(ctx, reservation, actualQuantity)
+		body, settledLocally = c.settleClientReservation(ctx, reservation, actualQuantity)
 	}
 
 	// The caller's options come last so an explicit idempotency key still wins.
@@ -887,11 +933,11 @@ func (c *SchematicClient) TrackWithReservation(
 		[]TrackOption{WithTrackIdempotencyKey(reservationTrackIdempotencyPrefix + reservation.ID)},
 		opts...,
 	)
-	c.Track(ctx, body, trackOpts...)
+	c.emitTrack(ctx, body, trackOpts, settledLocally)
 }
 
 // settleClientReservation consumes a client-mode hold against its lease and
-// hands back the event that bills it.
+// hands back the event that bills it, and whether the settle landed locally.
 //
 // The server is the source of truth for real consumption, so a settle that
 // cannot run locally still emits: the event's idempotency key is what keeps the
@@ -900,14 +946,14 @@ func (c *SchematicClient) settleClientReservation(
 	ctx context.Context,
 	reservation *Reservation,
 	actualQuantity int64,
-) *schematicgo.EventBodyTrack {
+) (*schematicgo.EventBodyTrack, bool) {
 	record := reservationRecord(reservation)
 	if c.reservations == nil {
 		// The handle came from a lease-configured client, so the event still
 		// needs its lease ID and its dedupe key even though this client holds
-		// nothing to settle.
+		// nothing to settle. It is the first emit of this usage all the same.
 		c.logger.Warn(ctx, "TrackWithReservation: client-mode credit leases are not configured here; emitting an unsettled track")
-		return leases.BuildTrackEvent(record, actualQuantity)
+		return leases.BuildTrackEvent(record, actualQuantity), true
 	}
 
 	outcome := leases.SettleReservation(ctx, c.reservations, record, float64(actualQuantity))
@@ -917,7 +963,7 @@ func (c *SchematicClient) settleClientReservation(
 	case !outcome.SettledLocally:
 		c.logger.Debug(ctx, fmt.Sprintf("TrackWithReservation: reservation %s was not settled locally (swept at its TTL, already settled, or the store is unreachable); the track is keyed for server-side dedupe", reservation.ID))
 	}
-	return outcome.Track
+	return outcome.Track, outcome.SettledLocally
 }
 
 // checkFailureResult resolves a check that could not gate. Fail-closed denies;
@@ -969,8 +1015,13 @@ func (o *checkOptions) withTimeout(ctx context.Context) (context.Context, contex
 // it to that subtype's condition; without one it goes out as the generic usage
 // knob. A usage no hold could be sized from is dropped rather than threaded,
 // since the server rejects it and it would only turn a check into an error.
+//
+// A zero simulates nothing, and it is not free to send: a preflighted check
+// asks a hypothetical, so it neither reads nor writes the flag-check cache.
+// Threading a zero would cost every such check its cache entry to ask the plain
+// question twice.
 func (o *checkOptions) preflight() *schematicgo.PreflightRequestBody {
-	if o.usage == nil || !leases.IsValidQuantity(*o.usage) {
+	if o.usage == nil || *o.usage == 0 || !leases.IsValidQuantity(*o.usage) {
 		return nil
 	}
 

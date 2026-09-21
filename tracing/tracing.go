@@ -11,6 +11,8 @@
 package tracing
 
 import (
+	"runtime/debug"
+
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -20,9 +22,42 @@ import (
 // can tell Schematic's spans from their own.
 const instrumentationName = "github.com/schematichq/schematic-go"
 
-// version is the instrumentation version reported alongside instrumentationName.
-// It tracks the SDK version in core.RequestOptions.cloneHeader.
-const version = "v1.1.1"
+// tracerOptions carries the instrumentation version, when one can be
+// determined. Built once: a tracer is resolved per call on the path that reads
+// the provider off the caller's span.
+var tracerOptions = buildTracerOptions()
+
+func buildTracerOptions() []trace.TracerOption {
+	if version := moduleVersion(); version != "" {
+		return []trace.TracerOption{trace.WithInstrumentationVersion(version)}
+	}
+	return nil
+}
+
+// moduleVersion reports the version of this module that the running binary was
+// built against, read from the build info the Go toolchain embeds.
+//
+// Reading it rather than holding a constant keeps the reported version correct
+// with nothing to update at release time. It returns the empty string when the
+// version cannot be determined — a binary built from a local checkout, or with
+// module information stripped — and the instrumentation scope then carries no
+// version, which is better than carrying a stale one.
+func moduleVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return ""
+	}
+	// Set when the SDK is a dependency, which is every case but its own tests.
+	for _, dep := range info.Deps {
+		if dep.Path == instrumentationName {
+			return dep.Version
+		}
+	}
+	if info.Main.Path == instrumentationName && info.Main.Version != "(devel)" {
+		return info.Main.Version
+	}
+	return ""
+}
 
 // tracer returns the tracer the SDK records spans on. A nil provider falls back
 // to the global one, which is what an application that has configured
@@ -31,5 +66,5 @@ func tracer(provider trace.TracerProvider) trace.Tracer {
 	if provider == nil {
 		provider = otel.GetTracerProvider()
 	}
-	return provider.Tracer(instrumentationName, trace.WithInstrumentationVersion(version))
+	return provider.Tracer(instrumentationName, tracerOptions...)
 }

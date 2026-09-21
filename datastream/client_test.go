@@ -1161,3 +1161,96 @@ func TestCheckFlagThreadsPreflight(t *testing.T) {
 	require.NoError(t, err)
 	assert.True(t, result.Value, "Preflighted usage inside the balance should allow")
 }
+
+// setupRepeatingFlagsWebSocketServer greets each connection with the flags
+// payload several times over, which is what a datastream under load looks like
+// to the client: more than one flags reply queued behind the one getAllFlags
+// is waiting on.
+func setupRepeatingFlagsWebSocketServer(repeats int) (*httptest.Server, chan string, chan string) {
+	upgrader := websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool { return true },
+	}
+
+	incomingMessages := make(chan string, 100)
+	outgoingMessages := make(chan string, 100)
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			return
+		}
+		defer func() { _ = conn.Close() }()
+
+		flagsData := createMockFlagsData()
+		for i := 0; i < repeats; i++ {
+			_ = conn.WriteMessage(websocket.TextMessage, []byte(flagsData))
+		}
+
+		go func() {
+			for {
+				_, message, err := conn.ReadMessage()
+				if err != nil {
+					return
+				}
+				incomingMessages <- string(message)
+			}
+		}()
+
+		for msg := range outgoingMessages {
+			_ = conn.WriteMessage(websocket.TextMessage, []byte(msg))
+		}
+	}))
+
+	return server, incomingMessages, outgoingMessages
+}
+
+// TestFlagsReplyOutlivingItsWaiter covers a flags reply the message worker
+// handles after getAllFlags has stopped waiting. getAllFlags closes its channel
+// on the way out, and the worker used to send into it without holding the lock
+// that close is taken under: the first reply fills the one-slot buffer, the
+// next blocks on a send, and the close underneath it panics the worker. The
+// worker is not restarted, so the client stops applying flag updates entirely.
+func TestFlagsReplyOutlivingItsWaiter(t *testing.T) {
+	server, incomingMessages, outgoingMessages := setupRepeatingFlagsWebSocketServer(8)
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	logger := NewMockLogger()
+
+	clientOptions := createTestClientOptions(server.URL, logger, "test-api-key")
+	clientOptions.FlagCache = cache.NewLocalCache[*rulesengine.Flag](100, time.Minute)
+
+	client := datastream.NewDataStreamClient(clientOptions, &core.DatastreamOptions{CacheTTL: 5 * time.Minute})
+	client.Start()
+	defer client.Close()
+
+	// Answer company lookups so the CheckFlag below is not waiting on the wire.
+	go func() {
+		for msg := range incomingMessages {
+			var req schematicdatastreamws.DataStreamBaseReq
+			_ = json.Unmarshal([]byte(msg), &req)
+			if req.Data.EntityType == schematicdatastreamws.EntityTypeCompany {
+				outgoingMessages <- createMockCompanyData(req.Data.Keys["company_id"], schematicdatastreamws.MessageTypeFull)
+			}
+		}
+	}()
+
+	time.Sleep(500 * time.Millisecond)
+
+	// A flag update after those replies is the proof the worker survived them.
+	outgoingMessages <- createMockSingleFlagData("test-flag-2", true, schematicdatastreamws.MessageTypeFull)
+	time.Sleep(500 * time.Millisecond)
+
+	ctx := context.Background()
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"company_id": "123"}}
+
+	result, err := client.CheckFlag(ctx, evalCtx, "test-flag-2")
+	require.NoError(t, err)
+	assert.True(t, result.Value, "a flag update after the flags replies should still be applied")
+
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
+	for _, msg := range logger.errorMessages {
+		assert.NotContains(t, msg, "panic", "the message worker should not have panicked")
+	}
+}

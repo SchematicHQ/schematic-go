@@ -41,6 +41,11 @@ const (
 	// prewarmPollInterval is how often a prewarm retries the company fetch while
 	// waiting for the entity to surface over DataStream.
 	prewarmPollInterval = 100 * time.Millisecond
+	// cacheFillTimeout bounds the write-back of a fresh flag check, which runs
+	// off the caller's context so an HTTP handler returning cannot cancel it.
+	// Nobody is waiting on the write, so a cache that is slow to take it must
+	// not hold a Close open either.
+	cacheFillTimeout = 5 * time.Second
 )
 
 // clientOnlyLeaseFields are the config knobs that steer the local lease

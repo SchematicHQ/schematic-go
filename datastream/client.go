@@ -241,14 +241,29 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys, c.flagCacheScanPattern())
 	c.flagsMu.Unlock()
 
-	c.pendingFlagReqMu.Lock()
-	ch := c.pendingFlagRequest
-	c.pendingFlagReqMu.Unlock()
-	if ch != nil {
-		ch <- true
-	}
+	c.notifyPendingFlagRequest()
 
 	return nil
+}
+
+// notifyPendingFlagRequest wakes the goroutine waiting on a flags fetch, if one
+// is still waiting. The send happens under pendingFlagReqMu, which is also what
+// getAllFlags closes its channel under: a waiter that has already given up has
+// cleared the field before closing, so a handler that gets the lock afterwards
+// sees nil rather than sending on a closed channel. The send is non-blocking
+// for the same reason the company and user paths' are — a waiter that timed out
+// between the two is nobody's reason to stall the message worker.
+func (c *DataStreamClient) notifyPendingFlagRequest() {
+	c.pendingFlagReqMu.Lock()
+	defer c.pendingFlagReqMu.Unlock()
+
+	if c.pendingFlagRequest == nil {
+		return
+	}
+	select {
+	case c.pendingFlagRequest <- true:
+	default:
+	}
 }
 
 func (c *DataStreamClient) handleFlagMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
@@ -262,13 +277,7 @@ func (c *DataStreamClient) handleFlagMessage(ctx context.Context, resp *schemati
 	c.flagsMu.Lock()
 	defer func() {
 		c.flagsMu.Unlock()
-
-		c.pendingFlagReqMu.Lock()
-		ch := c.pendingFlagRequest
-		c.pendingFlagReqMu.Unlock()
-		if ch != nil {
-			ch <- true
-		}
+		c.notifyPendingFlagRequest()
 	}()
 
 	cacheKey := c.flagCacheKey(flag.Key)
@@ -632,9 +641,13 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 	c.pendingFlagRequest = waitCh
 	c.pendingFlagReqMu.Unlock()
 	defer func() {
+		// Clear and close under the same lock the handlers send under, so a
+		// flags reply that lands just after resourceTimeout cannot send into a
+		// channel this waiter has already closed. That panic took down the one
+		// message worker the pool runs, and every later flag update with it.
 		c.pendingFlagReqMu.Lock()
+		defer c.pendingFlagReqMu.Unlock()
 		c.pendingFlagRequest = nil
-		c.pendingFlagReqMu.Unlock()
 		close(waitCh)
 	}()
 

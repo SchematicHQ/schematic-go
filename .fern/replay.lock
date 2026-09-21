@@ -120,14 +120,20 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-go-sdk: 1.58.1
-current_generation: be752d34be169dcb82a49a3571206571427f1a2f
+  - commit_sha: 82fa2dc8541ee8d2cabf6b414c8d385c4db83b65
+    tree_hash: 59f6009e69075ad0972d173918e0ec27a0e1462d
+    timestamp: 2026-09-21T10:02:54.328Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-go-sdk: 1.58.1
+current_generation: 82fa2dc8541ee8d2cabf6b414c8d385c4db83b65
 patches:
   - id: patch-c1dec125
     content_hash: sha256:3602badfd6867857bc1f9fc1eddae9cba4a3e8016e6f7211a1339d67bb73c8d2
     original_commit: c1dec12524ae4d861b313c6edb5d4c61b2b2b3a7
     original_message: "chore(deps): bump actions/setup-go from 4 to 6 (#165)"
     original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    base_generation: be752d34be169dcb82a49a3571206571427f1a2f
+    base_generation: 82fa2dc8541ee8d2cabf6b414c8d385c4db83b65
     files:
       - .github/workflows/ci.yml
     patch_content: |

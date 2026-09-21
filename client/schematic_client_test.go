@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	http "net/http"
+	"sync"
 	"testing"
 	"time"
 
@@ -1050,4 +1051,122 @@ func TestCheckFlagWithEntitlement_ReasonStrings(t *testing.T) {
 	assert.Equal(t, "rule-789", *resp.RuleID)
 	assert.Equal(t, rulesengine.RuleType("company_override"), *resp.RuleType)
 	assert.Nil(t, resp.Entitlement)
+}
+
+// cancelAwareCacheProvider stands in for the Redis provider, which hands its
+// context to go-redis and so loses any write made on a context that is already
+// cancelled. The local cache ignores context entirely, which is why only the
+// redis e2e mode ever caught this.
+type cancelAwareCacheProvider struct {
+	mu   sync.Mutex
+	sets map[string]*core.CheckFlagResponse
+}
+
+func newCancelAwareCacheProvider() *cancelAwareCacheProvider {
+	return &cancelAwareCacheProvider{sets: map[string]*core.CheckFlagResponse{}}
+}
+
+func (p *cancelAwareCacheProvider) Get(ctx context.Context, key string) (*core.CheckFlagResponse, bool) {
+	return nil, false
+}
+
+func (p *cancelAwareCacheProvider) Set(ctx context.Context, key string, val *core.CheckFlagResponse, ttlOverride *time.Duration) error {
+	// A cache over the network takes a moment to answer, and the handler that
+	// called CheckFlag has long returned by then.
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-time.After(20 * time.Millisecond):
+	}
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.sets[key] = val
+	return nil
+}
+
+func (p *cancelAwareCacheProvider) Delete(ctx context.Context, key string) error { return nil }
+
+func (p *cancelAwareCacheProvider) DeleteMissing(ctx context.Context, keysToKeep []string, scanPattern string) {
+}
+
+func (p *cancelAwareCacheProvider) count() int {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return len(p.sets)
+}
+
+// TestCheckFlagCachesAfterRequestContextCancelled covers the ordinary shape for
+// a Go HTTP server, CheckFlag(r.Context(), …): net/http cancels that context
+// the moment the handler returns, and the cache write-back used to run on it.
+func TestCheckFlagCachesAfterRequestContextCancelled(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	provider := newCancelAwareCacheProvider()
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithFlagCheckCacheProvider(provider),
+	)
+	defer client.Close()
+
+	responseBody := &schematicgo.CheckFlagResponse{
+		Data: &schematicgo.CheckFlagResponseData{Value: true, Reason: "match"},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil).Times(1)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"id": "comp-1"}}
+	assert.True(t, client.CheckFlag(ctx, evalCtx, "flag-a"))
+	// net/http does this the instant the handler returns.
+	cancel()
+
+	assert.Eventually(t, func() bool { return provider.count() == 1 }, time.Second, 5*time.Millisecond,
+		"the fresh check should reach the cache even though the caller's context is gone")
+}
+
+// TestCheckFlagsCachesAfterRequestContextCancelled is the bulk path's version of
+// the same thing.
+func TestCheckFlagsCachesAfterRequestContextCancelled(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	provider := newCancelAwareCacheProvider()
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithFlagCheckCacheProvider(provider),
+	)
+	defer client.Close()
+
+	responseBody := &schematicgo.CheckFlagsResponse{
+		Data: &schematicgo.CheckFlagsResponseData{
+			Flags: []*schematicgo.CheckFlagResponseData{
+				{Flag: "flag-a", Value: true, Reason: "match"},
+				{Flag: "flag-b", Value: false, Reason: "no match"},
+			},
+		},
+	}
+	data, err := json.Marshal(responseBody)
+	assert.Nil(t, err)
+
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(&http.Response{
+		Status:     "200",
+		StatusCode: 200,
+		Body:       io.NopCloser(bytes.NewReader(data)),
+	}, nil).Times(1)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: map[string]string{"id": "comp-1"}}
+	resp := client.CheckFlags(ctx, evalCtx, []string{"flag-a", "flag-b"})
+	assert.Len(t, resp, 2)
+	cancel()
+
+	assert.Eventually(t, func() bool { return provider.count() == 2 }, time.Second, 5*time.Millisecond,
+		"both fresh checks should reach the cache even though the caller's context is gone")
 }

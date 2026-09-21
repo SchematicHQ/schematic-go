@@ -37,6 +37,8 @@ client/event_options.go
 client/schematic_client.go
 client/schematic_client_test.go
 client/logger_config_test.go
+client/tracing.go
+client/tracing_test.go
 datastream/cache.go
 datastream/cache_test.go
 datastream/cache_tls_test.go
@@ -48,6 +50,7 @@ datastream/preflight_test.go
 datastream/types.go
 datastream/version_test.go
 datastream/version.go
+datastream/tracing_test.go
 flags/flags.go
 flags/flags_test.go
 datastream/merge.go
@@ -71,3 +74,4 @@ scripts/
 rulesengine/
 conformance/
 leases/
+tracing/

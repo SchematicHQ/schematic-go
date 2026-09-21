@@ -18,6 +18,8 @@ import (
 	"github.com/schematichq/schematic-go/logger"
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/schematichq/schematic-go/rulesengine"
+	"github.com/schematichq/schematic-go/tracing"
+	"go.opentelemetry.io/otel/codes"
 )
 
 type SchematicClient struct {
@@ -42,6 +44,9 @@ type SchematicClient struct {
 	serverReservationTTL    time.Duration
 	stopWorker              chan struct{}
 	workerInterval          time.Duration
+
+	// tracers picks which tracer each span is recorded on; see tracing.Resolver.
+	tracers *tracing.Resolver
 
 	// background tracks the goroutines the client spawns on a caller's behalf,
 	// so Close can wait them out instead of letting them call into plumbing it
@@ -104,6 +109,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		options:                 options,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
+		tracers:                 tracing.NewResolver(options.TracerProvider),
 	}
 
 	// Start background worker which handles async error logging and event buffering
@@ -111,9 +117,10 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 
 	if options.UseDataStream {
 		datastreamOptions := datastream.DataStreamClientOptions{
-			ApiKey:  options.APIKey,
-			BaseURL: options.BaseURL,
-			Logger:  options.Logger,
+			ApiKey:         options.APIKey,
+			BaseURL:        options.BaseURL,
+			Logger:         options.Logger,
+			TracerProvider: options.TracerProvider,
 		}
 
 		client.datastreamClient = datastream.NewDataStreamClient(datastreamOptions, options.DatastreamOptions)
@@ -132,9 +139,27 @@ func (c *SchematicClient) useDataStream() bool {
 }
 
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
-	resp, _ := c.CheckFlagWithEntitlement(ctx, evalCtx, flagKey)
+	ctx, span := c.startSpan(ctx, "Schematic.CheckFlag")
+	defer span.End()
+	if span.IsRecording() {
+		span.SetAttributes(tracing.AttrFlagKey.String(flagKey))
+		recordEvalContext(span, evalCtx)
+	}
+
+	// The unexported variant, so that this call records one span rather than
+	// nesting a redundant CheckFlagWithEntitlement span beneath it. The
+	// exported one differs only in discarding the error, which this does not
+	// use.
+	resp, _ := c.checkFlagWithEntitlement(ctx, evalCtx, flagKey)
 	if resp == nil {
-		return c.getFlagDefault(flagKey)
+		value := c.getFlagDefault(flagKey)
+		if span.IsRecording() {
+			span.SetAttributes(tracing.AttrFlagValue.Bool(value))
+		}
+		return value
+	}
+	if span.IsRecording() {
+		recordFlagResponse(span, resp)
 	}
 	return resp.Value
 }
@@ -142,10 +167,20 @@ func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.Ch
 // CheckFlagWithEntitlement checks a flag and returns the full response including entitlement information.
 // Note: The deprecated FeatureAllocation and FeatureUsage* fields are not included in the response.
 func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
+	ctx, span := c.startSpan(ctx, "Schematic.CheckFlagWithEntitlement")
+	defer span.End()
+	if span.IsRecording() {
+		span.SetAttributes(tracing.AttrFlagKey.String(flagKey))
+		recordEvalContext(span, evalCtx)
+	}
+
 	// This method has always answered an unreachable API with the flag default
 	// and a nil error, and callers rely on that. checkFlagWithEntitlement is
 	// the variant that keeps the failure.
 	resp, _ := c.checkFlagWithEntitlement(ctx, evalCtx, flagKey)
+	if span.IsRecording() {
+		recordFlagResponse(span, resp)
+	}
 	return resp, nil
 }
 
@@ -155,6 +190,7 @@ func (c *SchematicClient) CheckFlagWithEntitlement(ctx context.Context, evalCtx 
 // and the caller's fail-open choice.
 func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*CheckFlagResponse, error) {
 	if c.isOffline {
+		recordSource(ctx, tracing.SourceOffline)
 		return &CheckFlagResponse{
 			FlagKey: flagKey,
 			Value:   c.getFlagDefault(flagKey),
@@ -192,6 +228,7 @@ func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx 
 			c.logger.Error(ctx, fmt.Sprintf("Failed to enqueue flag_check event: %v", err))
 		}
 
+		recordSource(ctx, tracing.SourceDataStream)
 		return checkFlagResp, nil
 	}
 
@@ -223,10 +260,23 @@ func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx 
 // Results are returned in the same order as keys; entries for keys missing
 // from the API response use the configured default.
 func (c *SchematicClient) CheckFlags(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, keys []string) (results []*CheckFlagResponse) {
+	ctx, span := c.startSpan(ctx, "Schematic.CheckFlags")
+	// Registered before the recover below, so it runs after it: a panic is
+	// recorded against the defaulted results the recover leaves behind.
+	defer func() {
+		if span.IsRecording() {
+			span.SetAttributes(tracing.AttrFlagKeys.StringSlice(keys))
+			recordEvalContext(span, evalCtx)
+		}
+		span.End()
+	}()
+
 	results = c.flagDefaultsFor(keys, "error")
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while checking flags %v", r))
+			span.SetStatus(codes.Error, fmt.Sprintf("panic while checking flags: %v", r))
+			recordSource(ctx, tracing.SourceDefault)
 		}
 	}()
 
@@ -235,17 +285,20 @@ func (c *SchematicClient) CheckFlags(ctx context.Context, evalCtx *schematicgo.C
 	}
 
 	if c.isOffline {
+		recordSource(ctx, tracing.SourceOffline)
 		return c.flagDefaultsFor(keys, "offline mode")
 	}
 
 	// Datastream path: evaluate all keys locally if possible.
 	if c.useDataStream() && len(keys) > 0 {
 		if dsResults, ok := c.checkFlagsViaDataStream(ctx, evalCtx, keys); ok {
+			recordSource(ctx, tracing.SourceDataStream)
 			return dsResults
 		}
 		c.logger.Debug(ctx, "Datastream check_flags failed for one or more keys, falling back to API")
 	}
 
+	recordSource(ctx, tracing.SourceAPI)
 	return c.checkFlagsAPI(ctx, evalCtx, keys)
 }
 
@@ -295,7 +348,7 @@ func (c *SchematicClient) checkFlagsViaDataStream(ctx context.Context, evalCtx *
 func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, keys []string) []*CheckFlagResponse {
 	// No keys: return the full set of flags for the context directly from the API.
 	if len(keys) == 0 {
-		resp, err := c.Features.CheckFlags(ctx, evalCtx)
+		resp, err := c.callCheckFlagsAPI(ctx, evalCtx)
 		if err != nil {
 			c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
 			return []*CheckFlagResponse{}
@@ -345,7 +398,7 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 	}
 
 	// Any cache miss — refresh all keys from the API for a consistent snapshot.
-	resp, err := c.Features.CheckFlags(ctx, evalCtx)
+	resp, err := c.callCheckFlagsAPI(ctx, evalCtx)
 	if err != nil {
 		c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
 		return c.flagDefaultsFor(keys, "error")
@@ -411,6 +464,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, "Panic occurred while checking flag %v", r)
+			recordSource(ctx, tracing.SourceDefault)
 			result = &CheckFlagResponse{
 				FlagKey: flagKey,
 				Value:   c.getFlagDefault(flagKey),
@@ -436,18 +490,20 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		for _, provider := range c.flagCheckCacheProviders {
 			if cached, ok := provider.Get(ctx, cacheKey); ok && cached != nil {
 				result := *cached
+				recordSource(ctx, tracing.SourceCache)
 				return &result, nil
 			}
 		}
 	}
 
-	resp, err := c.Features.CheckFlag(ctx, flagKey, evalCtx)
+	resp, err := c.callCheckFlagAPI(ctx, flagKey, evalCtx)
 	if err != nil {
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
 			Err: err,
 		}
 
+		recordSource(ctx, tracing.SourceDefault)
 		return &CheckFlagResponse{
 			FlagKey: flagKey,
 			Value:   c.getFlagDefault(flagKey),
@@ -457,6 +513,7 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 
 	if resp == nil {
 		// if the client was not initialized with an API key, we'll have a no-op here which returns an empty response
+		recordSource(ctx, tracing.SourceDefault)
 		return &CheckFlagResponse{
 			FlagKey: flagKey,
 			Value:   c.getFlagDefault(flagKey),
@@ -475,6 +532,8 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 		UserID:      resp.Data.UserID,
 		Value:       resp.Data.Value,
 	}
+
+	recordSource(ctx, tracing.SourceAPI)
 
 	if useCache {
 		cachedCopy := *checkFlagResp
@@ -721,6 +780,9 @@ func (c *SchematicClient) Identify(
 	opts ...IdentifyOption,
 ) {
 
+	ctx, span := c.startSpan(ctx, "Schematic.Identify")
+	defer span.End()
+
 	eventBody := schematicgo.EventBody{
 		EventBodyIdentify: body,
 	}
@@ -730,7 +792,26 @@ func (c *SchematicClient) Identify(
 		apply(o)
 	}
 
+	if span.IsRecording() {
+		span.SetAttributes(tracing.AttrEventType.String("identify"))
+		if body != nil {
+			if names := tracing.KeyNames(body.Keys); names != "" {
+				span.SetAttributes(tracing.AttrUserKeyNames.String(names))
+			}
+			if body.Company != nil {
+				if names := tracing.KeyNames(body.Company.Keys); names != "" {
+					span.SetAttributes(tracing.AttrCompanyKeyNames.String(names))
+				}
+			}
+		}
+		if len(o.prewarm) > 0 {
+			span.SetAttributes(tracing.AttrCreditTypeIDs.StringSlice(o.prewarm))
+		}
+	}
+
 	if err := c.enqueueEvent("identify", eventBody, o); err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
 			Err: err,
@@ -797,6 +878,15 @@ func (c *SchematicClient) Track(
 	body *schematicgo.EventBodyTrack,
 	opts ...TrackOption,
 ) {
+	// The span belongs here rather than in emitTrack, which
+	// TrackWithReservation also calls: recording it there would nest a
+	// Schematic.Track span inside every Schematic.TrackWithReservation.
+	ctx, span := c.startSpan(ctx, "Schematic.Track")
+	defer span.End()
+	if span.IsRecording() {
+		recordTrackEvent(span, body)
+	}
+
 	c.emitTrack(ctx, body, opts, true)
 }
 
@@ -821,6 +911,9 @@ func (c *SchematicClient) emitTrack(
 	}
 
 	if err := c.enqueueEvent("track", eventBody, o); err != nil {
+		// Recorded against whichever span the caller is under, since both Track
+		// and TrackWithReservation reach this.
+		recordError(ctx, err)
 		c.ctxErrors <- &core.CtxError{
 			Ctx: ctx,
 			Err: err,

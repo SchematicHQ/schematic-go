@@ -9,6 +9,8 @@ import (
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/rulesengine"
+	"github.com/schematichq/schematic-go/tracing"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type CompanyCacheProvider cache.CacheProvider[*rulesengine.Company]
@@ -22,9 +24,15 @@ type DataStreamClientOptions struct {
 	CompanyCache cache.CacheProvider[*rulesengine.Company]
 	UserCache    cache.CacheProvider[*rulesengine.User]
 	FlagCache    cache.CacheProvider[*rulesengine.Flag]
+	// TracerProvider is the provider option.WithTracerProvider named, or nil.
+	// It only sets the first of the three steps tracing.Resolver takes, so a
+	// DataStream built without one still records against the caller's span.
+	TracerProvider trace.TracerProvider
 }
 
 type DataStreamClient struct {
+	// tracers picks which tracer the rules-engine spans are recorded on.
+	tracers            *tracing.Resolver
 	cacheTTL           time.Duration
 	wsClient           *schematicdatastreamws.Client
 	logger             core.Logger

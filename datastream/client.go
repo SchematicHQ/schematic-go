@@ -15,6 +15,8 @@ import (
 	schematicgo "github.com/schematichq/schematic-go"
 	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/rulesengine"
+	"github.com/schematichq/schematic-go/tracing"
+	"go.opentelemetry.io/otel/codes"
 )
 
 func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *core.DatastreamOptions) *DataStreamClient {
@@ -55,6 +57,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	}
 
 	client := &DataStreamClient{
+		tracers:            tracing.NewResolver(options.TracerProvider),
 		engine:             engine,
 		apiKey:             options.ApiKey,
 		redisClient:        redisClient,
@@ -636,7 +639,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 
 	checkOpts := preflightCheckFlagOptions(evalCtx.Preflight)
 
-	resp, err := c.engine.CheckFlag(ctx, company, user, flag, checkOpts...)
+	resp, err := c.evaluate(ctx, company, user, flag, checkOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
@@ -681,7 +684,7 @@ func (c *DataStreamClient) CheckFlags(
 		return nil, err
 	}
 
-	results, err := c.engine.CheckFlags(ctx, company, user, flags)
+	results, err := c.evaluateBulk(ctx, company, user, flags)
 	if err != nil {
 		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
@@ -872,7 +875,77 @@ func (c *DataStreamClient) EvaluateFlag(
 	user *rulesengine.User,
 	opts ...rulesengine.CheckFlagOption,
 ) (*rulesengine.CheckFlagResult, error) {
-	return c.engine.CheckFlag(ctx, company, user, flag, opts...)
+	return c.evaluate(ctx, company, user, flag, opts...)
+}
+
+// evaluate runs one flag through the rules engine inside its own span.
+//
+// The evaluation is local, running in WebAssembly with no network involved, but
+// it still needs its own span: a DataStream-served check that took milliseconds
+// either waited on a Redis-backed cache or spent that time here, and nothing
+// else on the span distinguishes the two.
+func (c *DataStreamClient) evaluate(
+	ctx context.Context,
+	company *rulesengine.Company,
+	user *rulesengine.User,
+	flag *rulesengine.Flag,
+	opts ...rulesengine.CheckFlagOption,
+) (*rulesengine.CheckFlagResult, error) {
+	ctx, span := c.tracers.For(ctx).Start(ctx, "Schematic.RulesEngine.CheckFlag", tracing.InternalSpanOptions...)
+	defer span.End()
+
+	if span.IsRecording() && flag != nil {
+		span.SetAttributes(tracing.AttrFlagKey.String(flag.Key))
+	}
+
+	result, err := c.engine.CheckFlag(ctx, company, user, flag, opts...)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+	if span.IsRecording() && result != nil {
+		span.SetAttributes(
+			tracing.AttrFlagValue.Bool(result.Value),
+			tracing.AttrFlagReason.String(result.Reason),
+		)
+	}
+	return result, nil
+}
+
+// evaluateBulk runs a set of flags through the rules engine in one call, inside
+// a single span.
+//
+// One span for the set rather than one per flag: the whole point of the bulk
+// call is that the flags are evaluated together, so per-flag spans would report
+// the same interval several times over and multiply the cost of tracing a check
+// by the number of flags in it.
+func (c *DataStreamClient) evaluateBulk(
+	ctx context.Context,
+	company *rulesengine.Company,
+	user *rulesengine.User,
+	flags []*rulesengine.Flag,
+) ([]*rulesengine.CheckFlagResult, error) {
+	ctx, span := c.tracers.For(ctx).Start(ctx, "Schematic.RulesEngine.CheckFlags", tracing.InternalSpanOptions...)
+	defer span.End()
+
+	if span.IsRecording() {
+		keys := make([]string, 0, len(flags))
+		for _, flag := range flags {
+			if flag != nil {
+				keys = append(keys, flag.Key)
+			}
+		}
+		span.SetAttributes(tracing.AttrFlagKeys.StringSlice(keys))
+	}
+
+	results, err := c.engine.CheckFlags(ctx, company, user, flags)
+	if err != nil {
+		span.RecordError(err)
+		span.SetStatus(codes.Error, err.Error())
+		return nil, err
+	}
+	return results, nil
 }
 
 // GetCachedCompany answers from the local cache alone, never over the wire.

@@ -7,6 +7,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/schematichq/schematic-go/cache"
 	"github.com/schematichq/schematic-go/http"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // Specify default flag values
@@ -450,4 +451,32 @@ func (c ClientOptCreditLeases) applyRequestOptions(opts *RequestOptions) {
 // WithCreditLeases enables credit-gated checks. See CreditLeaseConfig.
 func WithCreditLeases(config CreditLeaseConfig) RequestOption {
 	return ClientOptCreditLeases{config: config}
+}
+
+// OpenTelemetry tracing
+
+type ClientOptTracerProvider struct {
+	provider trace.TracerProvider
+}
+
+func (c ClientOptTracerProvider) applyRequestOptions(opts *RequestOptions) {
+	opts.TracerProvider = c.provider
+}
+
+// WithTracerProvider records the SDK's spans on the given TracerProvider.
+//
+// It is rarely needed. Without it the SDK records on the provider behind the
+// span in the caller's context, and on the global provider for a call whose
+// context carries no span. Reach for this to send the SDK's spans somewhere
+// other than where the surrounding application sends its own; an explicit
+// provider always takes precedence over both of the above.
+//
+// An application that has not configured OpenTelemetry at all gets the API's
+// default no-op provider, which starts no spans and builds no attributes.
+//
+// Spans are children of whatever span the context passed to a client method
+// already carries. Trace context is not propagated to the Schematic API, so a
+// trace ends at the SDK boundary.
+func WithTracerProvider(provider trace.TracerProvider) RequestOption {
+	return ClientOptTracerProvider{provider: provider}
 }

@@ -351,15 +351,7 @@ func (c *SchematicClient) checkFlagsAPI(ctx context.Context, evalCtx *schematicg
 			resultCopy := *result
 			toCache[cacheKey] = &resultCopy
 		}
-		go func() {
-			for cacheKey, value := range toCache {
-				for _, provider := range c.flagCheckCacheProviders {
-					if err := provider.Set(ctx, cacheKey, value, nil); err != nil {
-						c.ctxErrors <- &core.CtxError{Ctx: ctx, Err: err}
-					}
-				}
-			}
-		}()
+		c.fillFlagCheckCache(ctx, toCache)
 	}
 
 	results := make([]*CheckFlagResponse, 0, len(keys))
@@ -471,19 +463,41 @@ func (c *SchematicClient) checkFlagAPI(ctx context.Context, evalCtx *schematicgo
 
 	if useCache {
 		cachedCopy := *checkFlagResp
-		go func() {
-			for _, provider := range c.flagCheckCacheProviders {
-				if err := provider.Set(ctx, cacheKey, &cachedCopy, nil); err != nil {
-					c.ctxErrors <- &core.CtxError{
-						Ctx: ctx,
-						Err: err,
-					}
-				}
-			}
-		}()
+		c.fillFlagCheckCache(ctx, map[string]*CheckFlagResponse{cacheKey: &cachedCopy})
 	}
 
 	return checkFlagResp, nil
+}
+
+// fillFlagCheckCache writes fresh check results back to the configured cache
+// providers, off the caller's cancellation. The usual shape for a Go server is
+// CheckFlag(r.Context(), …), and net/http cancels that the moment the handler
+// returns — a provider that honours its context, as the Redis one does, then
+// drops the write and the next check goes back to the API. Close still cuts the
+// write short, and waits for it.
+func (c *SchematicClient) fillFlagCheckCache(ctx context.Context, entries map[string]*CheckFlagResponse) {
+	if len(entries) == 0 || len(c.flagCheckCacheProviders) == 0 {
+		return
+	}
+
+	cacheCtx, releaseCacheCtx := c.backgroundContext(ctx)
+	spawned := c.spawnBackground(func() {
+		defer releaseCacheCtx()
+
+		writeCtx, cancelWrite := context.WithTimeout(cacheCtx, cacheFillTimeout)
+		defer cancelWrite()
+
+		for cacheKey, value := range entries {
+			for _, provider := range c.flagCheckCacheProviders {
+				if err := provider.Set(writeCtx, cacheKey, value, nil); err != nil {
+					c.ctxErrors <- &core.CtxError{Ctx: writeCtx, Err: err}
+				}
+			}
+		}
+	})
+	if !spawned {
+		releaseCacheCtx()
+	}
 }
 
 // toCheckFlagResponse converts a rulesengine.CheckFlagResult to CheckFlagResponse,

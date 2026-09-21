@@ -2881,6 +2881,166 @@ func (b *BillingLinkedResourceResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
+type BillingPlanCreditGrantBillingMode string
+
+const (
+	BillingPlanCreditGrantBillingModeGranted BillingPlanCreditGrantBillingMode = "granted"
+	BillingPlanCreditGrantBillingModeBilled  BillingPlanCreditGrantBillingMode = "billed"
+)
+
+func NewBillingPlanCreditGrantBillingModeFromString(s string) (BillingPlanCreditGrantBillingMode, error) {
+	switch s {
+	case "granted":
+		return BillingPlanCreditGrantBillingModeGranted, nil
+	case "billed":
+		return BillingPlanCreditGrantBillingModeBilled, nil
+	}
+	var t BillingPlanCreditGrantBillingMode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BillingPlanCreditGrantBillingMode) Ptr() *BillingPlanCreditGrantBillingMode {
+	return &b
+}
+
+var (
+	billingPlanCreditGrantPriceTierResponseDataFieldFrom                = big.NewInt(1 << 0)
+	billingPlanCreditGrantPriceTierResponseDataFieldPerUnitPrice        = big.NewInt(1 << 1)
+	billingPlanCreditGrantPriceTierResponseDataFieldPerUnitPriceDecimal = big.NewInt(1 << 2)
+	billingPlanCreditGrantPriceTierResponseDataFieldTo                  = big.NewInt(1 << 3)
+)
+
+type BillingPlanCreditGrantPriceTierResponseData struct {
+	// Lower bound of the tier, in credits per invoice (inclusive).
+	From int64 `json:"from" url:"from"`
+	// Price per credit in this tier, in the plan currency's smallest unit.
+	PerUnitPrice *int64 `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	// Price per credit in this tier as a decimal, for rates below one cent.
+	PerUnitPriceDecimal *string `json:"per_unit_price_decimal,omitempty" url:"per_unit_price_decimal,omitempty"`
+	// Upper bound of the tier, in credits per invoice (inclusive). Null marks the final, unbounded tier.
+	To *int64 `json:"to,omitempty" url:"to,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) GetFrom() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.From
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) GetPerUnitPrice() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.PerUnitPrice
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) GetPerUnitPriceDecimal() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PerUnitPriceDecimal
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) GetTo() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.To
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetFrom sets the From field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantPriceTierResponseData) SetFrom(from int64) {
+	b.From = from
+	b.require(billingPlanCreditGrantPriceTierResponseDataFieldFrom)
+}
+
+// SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantPriceTierResponseData) SetPerUnitPrice(perUnitPrice *int64) {
+	b.PerUnitPrice = perUnitPrice
+	b.require(billingPlanCreditGrantPriceTierResponseDataFieldPerUnitPrice)
+}
+
+// SetPerUnitPriceDecimal sets the PerUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantPriceTierResponseData) SetPerUnitPriceDecimal(perUnitPriceDecimal *string) {
+	b.PerUnitPriceDecimal = perUnitPriceDecimal
+	b.require(billingPlanCreditGrantPriceTierResponseDataFieldPerUnitPriceDecimal)
+}
+
+// SetTo sets the To field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantPriceTierResponseData) SetTo(to *int64) {
+	b.To = to
+	b.require(billingPlanCreditGrantPriceTierResponseDataFieldTo)
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingPlanCreditGrantPriceTierResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingPlanCreditGrantPriceTierResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingPlanCreditGrantPriceTierResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingPlanCreditGrantPriceTierResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
 type BillingPlanCreditGrantResetCadence string
 
 const (
@@ -2972,34 +3132,40 @@ var (
 	billingPlanCreditGrantResponseDataFieldAutoTopupSelfService       = big.NewInt(1 << 9)
 	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdCredits  = big.NewInt(1 << 10)
 	billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent  = big.NewInt(1 << 11)
-	billingPlanCreditGrantResponseDataFieldCanBuyBundles              = big.NewInt(1 << 12)
-	billingPlanCreditGrantResponseDataFieldCompanyCreditAmount        = big.NewInt(1 << 13)
-	billingPlanCreditGrantResponseDataFieldCreatedAt                  = big.NewInt(1 << 14)
-	billingPlanCreditGrantResponseDataFieldCredit                     = big.NewInt(1 << 15)
-	billingPlanCreditGrantResponseDataFieldCreditAmount               = big.NewInt(1 << 16)
-	billingPlanCreditGrantResponseDataFieldCreditID                   = big.NewInt(1 << 17)
-	billingPlanCreditGrantResponseDataFieldCreditName                 = big.NewInt(1 << 18)
-	billingPlanCreditGrantResponseDataFieldCreditPluralName           = big.NewInt(1 << 19)
-	billingPlanCreditGrantResponseDataFieldCreditSingularName         = big.NewInt(1 << 20)
-	billingPlanCreditGrantResponseDataFieldExpiryType                 = big.NewInt(1 << 21)
-	billingPlanCreditGrantResponseDataFieldExpiryUnit                 = big.NewInt(1 << 22)
-	billingPlanCreditGrantResponseDataFieldExpiryUnitCount            = big.NewInt(1 << 23)
-	billingPlanCreditGrantResponseDataFieldID                         = big.NewInt(1 << 24)
-	billingPlanCreditGrantResponseDataFieldLicenseID                  = big.NewInt(1 << 25)
-	billingPlanCreditGrantResponseDataFieldOverdraftLimit             = big.NewInt(1 << 26)
-	billingPlanCreditGrantResponseDataFieldPlan                       = big.NewInt(1 << 27)
-	billingPlanCreditGrantResponseDataFieldPlanID                     = big.NewInt(1 << 28)
-	billingPlanCreditGrantResponseDataFieldPlanName                   = big.NewInt(1 << 29)
-	billingPlanCreditGrantResponseDataFieldPlanVersionID              = big.NewInt(1 << 30)
-	billingPlanCreditGrantResponseDataFieldPostpaidEnabled            = big.NewInt(1 << 31)
-	billingPlanCreditGrantResponseDataFieldPostpaidRatePerUnit        = big.NewInt(1 << 32)
-	billingPlanCreditGrantResponseDataFieldPostpaidRatePerUnitDecimal = big.NewInt(1 << 33)
-	billingPlanCreditGrantResponseDataFieldResetCadence               = big.NewInt(1 << 34)
-	billingPlanCreditGrantResponseDataFieldResetStart                 = big.NewInt(1 << 35)
-	billingPlanCreditGrantResponseDataFieldResetType                  = big.NewInt(1 << 36)
-	billingPlanCreditGrantResponseDataFieldRolloverPercentage         = big.NewInt(1 << 37)
-	billingPlanCreditGrantResponseDataFieldScaling                    = big.NewInt(1 << 38)
-	billingPlanCreditGrantResponseDataFieldUpdatedAt                  = big.NewInt(1 << 39)
+	billingPlanCreditGrantResponseDataFieldBillingMode                = big.NewInt(1 << 12)
+	billingPlanCreditGrantResponseDataFieldCanBuyBundles              = big.NewInt(1 << 13)
+	billingPlanCreditGrantResponseDataFieldCompanyCreditAmount        = big.NewInt(1 << 14)
+	billingPlanCreditGrantResponseDataFieldCreatedAt                  = big.NewInt(1 << 15)
+	billingPlanCreditGrantResponseDataFieldCredit                     = big.NewInt(1 << 16)
+	billingPlanCreditGrantResponseDataFieldCreditAmount               = big.NewInt(1 << 17)
+	billingPlanCreditGrantResponseDataFieldCreditID                   = big.NewInt(1 << 18)
+	billingPlanCreditGrantResponseDataFieldCreditName                 = big.NewInt(1 << 19)
+	billingPlanCreditGrantResponseDataFieldCreditPluralName           = big.NewInt(1 << 20)
+	billingPlanCreditGrantResponseDataFieldCreditSingularName         = big.NewInt(1 << 21)
+	billingPlanCreditGrantResponseDataFieldExpiryType                 = big.NewInt(1 << 22)
+	billingPlanCreditGrantResponseDataFieldExpiryUnit                 = big.NewInt(1 << 23)
+	billingPlanCreditGrantResponseDataFieldExpiryUnitCount            = big.NewInt(1 << 24)
+	billingPlanCreditGrantResponseDataFieldID                         = big.NewInt(1 << 25)
+	billingPlanCreditGrantResponseDataFieldLicenseID                  = big.NewInt(1 << 26)
+	billingPlanCreditGrantResponseDataFieldOverdraftLimit             = big.NewInt(1 << 27)
+	billingPlanCreditGrantResponseDataFieldPlan                       = big.NewInt(1 << 28)
+	billingPlanCreditGrantResponseDataFieldPlanID                     = big.NewInt(1 << 29)
+	billingPlanCreditGrantResponseDataFieldPlanName                   = big.NewInt(1 << 30)
+	billingPlanCreditGrantResponseDataFieldPlanVersionID              = big.NewInt(1 << 31)
+	billingPlanCreditGrantResponseDataFieldPostpaidEnabled            = big.NewInt(1 << 32)
+	billingPlanCreditGrantResponseDataFieldPostpaidRatePerUnit        = big.NewInt(1 << 33)
+	billingPlanCreditGrantResponseDataFieldPostpaidRatePerUnitDecimal = big.NewInt(1 << 34)
+	billingPlanCreditGrantResponseDataFieldPrice                      = big.NewInt(1 << 35)
+	billingPlanCreditGrantResponseDataFieldPriceTiers                 = big.NewInt(1 << 36)
+	billingPlanCreditGrantResponseDataFieldResetCadence               = big.NewInt(1 << 37)
+	billingPlanCreditGrantResponseDataFieldResetStart                 = big.NewInt(1 << 38)
+	billingPlanCreditGrantResponseDataFieldResetType                  = big.NewInt(1 << 39)
+	billingPlanCreditGrantResponseDataFieldRolloverPercentage         = big.NewInt(1 << 40)
+	billingPlanCreditGrantResponseDataFieldScaling                    = big.NewInt(1 << 41)
+	billingPlanCreditGrantResponseDataFieldTierMode                   = big.NewInt(1 << 42)
+	billingPlanCreditGrantResponseDataFieldUnitPrice                  = big.NewInt(1 << 43)
+	billingPlanCreditGrantResponseDataFieldUnitPriceDecimal           = big.NewInt(1 << 44)
+	billingPlanCreditGrantResponseDataFieldUpdatedAt                  = big.NewInt(1 << 45)
 )
 
 type BillingPlanCreditGrantResponseData struct {
@@ -3019,6 +3185,8 @@ type BillingPlanCreditGrantResponseData struct {
 	AutoTopupSelfService      bool   `json:"auto_topup_self_service" url:"auto_topup_self_service"`
 	AutoTopupThresholdCredits *int64 `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64 `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	// Whether the credits are included in the plan price (granted) or billed as their own subscription line at a price per credit (billed).
+	BillingMode BillingPlanCreditGrantBillingMode `json:"billing_mode" url:"billing_mode"`
 	// Deprecated: bundle availability is a per-bundle plan compatibility set now; use compatible_plan_ids on credit bundles instead.
 	CanBuyBundles bool `json:"can_buy_bundles" url:"can_buy_bundles"`
 	// Credits granted once per company on top of the per-license amount. Always 0 when scaling is fixed.
@@ -3051,15 +3219,25 @@ type BillingPlanCreditGrantResponseData struct {
 	// Amount charged per credit consumed past zero, in the currency's minor unit. Defaults to the credit's own cost basis when postpaid is enabled without one.
 	PostpaidRatePerUnit *int64 `json:"postpaid_rate_per_unit,omitempty" url:"postpaid_rate_per_unit,omitempty"`
 	// Decimal form of postpaid_rate_per_unit, for rates finer than one minor unit.
-	PostpaidRatePerUnitDecimal *string                             `json:"postpaid_rate_per_unit_decimal,omitempty" url:"postpaid_rate_per_unit_decimal,omitempty"`
-	ResetCadence               *BillingPlanCreditGrantResetCadence `json:"reset_cadence,omitempty" url:"reset_cadence,omitempty"`
-	ResetStart                 *BillingPlanCreditGrantResetStart   `json:"reset_start,omitempty" url:"reset_start,omitempty"`
-	ResetType                  *BillingPlanCreditGrantResetType    `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	PostpaidRatePerUnitDecimal *string `json:"postpaid_rate_per_unit_decimal,omitempty" url:"postpaid_rate_per_unit_decimal,omitempty"`
+	// The Stripe price a billed grant bills through. Minted when the plan version is published.
+	Price *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
+	// Tier table pricing the credits, cheapest bound first. Empty unless billing_mode is billed and the credits are priced on tiers.
+	PriceTiers   []*BillingPlanCreditGrantPriceTierResponseData `json:"price_tiers" url:"price_tiers"`
+	ResetCadence *BillingPlanCreditGrantResetCadence            `json:"reset_cadence,omitempty" url:"reset_cadence,omitempty"`
+	ResetStart   *BillingPlanCreditGrantResetStart              `json:"reset_start,omitempty" url:"reset_start,omitempty"`
+	ResetType    *BillingPlanCreditGrantResetType               `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only meaningful when reset_type is plan_period.
 	RolloverPercentage int64 `json:"rollover_percentage" url:"rollover_percentage"`
 	// Whether the grant is a fixed amount per company, or issued once per license the company holds.
-	Scaling   PlanCreditGrantScaling `json:"scaling" url:"scaling"`
-	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
+	Scaling PlanCreditGrantScaling `json:"scaling" url:"scaling"`
+	// How price_tiers apply: volume prices every credit at the rate of the tier the total lands in, graduated prices each tier's own credits at its own rate. Set only when price_tiers is non-empty.
+	TierMode *BillingTiersMode `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
+	// Price per credit in the plan currency's smallest unit. Set only when billing_mode is billed and the credits are priced at one rate.
+	UnitPrice *int64 `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+	// Price per credit as a decimal in the plan currency's smallest unit. Set only when billing_mode is billed and the rate is below one cent.
+	UnitPriceDecimal *string   `json:"unit_price_decimal,omitempty" url:"unit_price_decimal,omitempty"`
+	UpdatedAt        time.Time `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3150,6 +3328,13 @@ func (b *BillingPlanCreditGrantResponseData) GetAutoTopupThresholdPercent() *int
 		return nil
 	}
 	return b.AutoTopupThresholdPercent
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetBillingMode() BillingPlanCreditGrantBillingMode {
+	if b == nil {
+		return ""
+	}
+	return b.BillingMode
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetCanBuyBundles() bool {
@@ -3306,6 +3491,20 @@ func (b *BillingPlanCreditGrantResponseData) GetPostpaidRatePerUnitDecimal() *st
 	return b.PostpaidRatePerUnitDecimal
 }
 
+func (b *BillingPlanCreditGrantResponseData) GetPrice() *BillingPriceResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Price
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetPriceTiers() []*BillingPlanCreditGrantPriceTierResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.PriceTiers
+}
+
 func (b *BillingPlanCreditGrantResponseData) GetResetCadence() *BillingPlanCreditGrantResetCadence {
 	if b == nil {
 		return nil
@@ -3339,6 +3538,27 @@ func (b *BillingPlanCreditGrantResponseData) GetScaling() PlanCreditGrantScaling
 		return ""
 	}
 	return b.Scaling
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetTierMode() *BillingTiersMode {
+	if b == nil {
+		return nil
+	}
+	return b.TierMode
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetUnitPrice() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.UnitPrice
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetUnitPriceDecimal() *string {
+	if b == nil {
+		return nil
+	}
+	return b.UnitPriceDecimal
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetUpdatedAt() time.Time {
@@ -3446,6 +3666,13 @@ func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdCredits(autoTo
 func (b *BillingPlanCreditGrantResponseData) SetAutoTopupThresholdPercent(autoTopupThresholdPercent *int64) {
 	b.AutoTopupThresholdPercent = autoTopupThresholdPercent
 	b.require(billingPlanCreditGrantResponseDataFieldAutoTopupThresholdPercent)
+}
+
+// SetBillingMode sets the BillingMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetBillingMode(billingMode BillingPlanCreditGrantBillingMode) {
+	b.BillingMode = billingMode
+	b.require(billingPlanCreditGrantResponseDataFieldBillingMode)
 }
 
 // SetCanBuyBundles sets the CanBuyBundles field and marks it as non-optional;
@@ -3602,6 +3829,20 @@ func (b *BillingPlanCreditGrantResponseData) SetPostpaidRatePerUnitDecimal(postp
 	b.require(billingPlanCreditGrantResponseDataFieldPostpaidRatePerUnitDecimal)
 }
 
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetPrice(price *BillingPriceResponseData) {
+	b.Price = price
+	b.require(billingPlanCreditGrantResponseDataFieldPrice)
+}
+
+// SetPriceTiers sets the PriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetPriceTiers(priceTiers []*BillingPlanCreditGrantPriceTierResponseData) {
+	b.PriceTiers = priceTiers
+	b.require(billingPlanCreditGrantResponseDataFieldPriceTiers)
+}
+
 // SetResetCadence sets the ResetCadence field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingPlanCreditGrantResponseData) SetResetCadence(resetCadence *BillingPlanCreditGrantResetCadence) {
@@ -3635,6 +3876,27 @@ func (b *BillingPlanCreditGrantResponseData) SetRolloverPercentage(rolloverPerce
 func (b *BillingPlanCreditGrantResponseData) SetScaling(scaling PlanCreditGrantScaling) {
 	b.Scaling = scaling
 	b.require(billingPlanCreditGrantResponseDataFieldScaling)
+}
+
+// SetTierMode sets the TierMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetTierMode(tierMode *BillingTiersMode) {
+	b.TierMode = tierMode
+	b.require(billingPlanCreditGrantResponseDataFieldTierMode)
+}
+
+// SetUnitPrice sets the UnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetUnitPrice(unitPrice *int64) {
+	b.UnitPrice = unitPrice
+	b.require(billingPlanCreditGrantResponseDataFieldUnitPrice)
+}
+
+// SetUnitPriceDecimal sets the UnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetUnitPriceDecimal(unitPriceDecimal *string) {
+	b.UnitPriceDecimal = unitPriceDecimal
+	b.require(billingPlanCreditGrantResponseDataFieldUnitPriceDecimal)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -9930,33 +10192,36 @@ var (
 	companyPlanCreditGrantViewFieldBillingCreditPostpaidEnabled            = big.NewInt(1 << 14)
 	companyPlanCreditGrantViewFieldBillingCreditPostpaidRatePerUnit        = big.NewInt(1 << 15)
 	companyPlanCreditGrantViewFieldBillingCreditPostpaidRatePerUnitDecimal = big.NewInt(1 << 16)
-	companyPlanCreditGrantViewFieldCompanyAutoTopupAmount                  = big.NewInt(1 << 17)
-	companyPlanCreditGrantViewFieldCompanyAutoTopupEnabled                 = big.NewInt(1 << 18)
-	companyPlanCreditGrantViewFieldCompanyAutoTopupThresholdCredits        = big.NewInt(1 << 19)
-	companyPlanCreditGrantViewFieldCompanyCreditAmount                     = big.NewInt(1 << 20)
-	companyPlanCreditGrantViewFieldCreatedAt                               = big.NewInt(1 << 21)
-	companyPlanCreditGrantViewFieldCredit                                  = big.NewInt(1 << 22)
-	companyPlanCreditGrantViewFieldCreditAmount                            = big.NewInt(1 << 23)
-	companyPlanCreditGrantViewFieldCreditDescription                       = big.NewInt(1 << 24)
-	companyPlanCreditGrantViewFieldCreditIcon                              = big.NewInt(1 << 25)
-	companyPlanCreditGrantViewFieldCreditID                                = big.NewInt(1 << 26)
-	companyPlanCreditGrantViewFieldCreditName                              = big.NewInt(1 << 27)
-	companyPlanCreditGrantViewFieldExpiryType                              = big.NewInt(1 << 28)
-	companyPlanCreditGrantViewFieldExpiryUnit                              = big.NewInt(1 << 29)
-	companyPlanCreditGrantViewFieldExpiryUnitCount                         = big.NewInt(1 << 30)
-	companyPlanCreditGrantViewFieldID                                      = big.NewInt(1 << 31)
-	companyPlanCreditGrantViewFieldLicenseID                               = big.NewInt(1 << 32)
-	companyPlanCreditGrantViewFieldPlan                                    = big.NewInt(1 << 33)
-	companyPlanCreditGrantViewFieldPlanID                                  = big.NewInt(1 << 34)
-	companyPlanCreditGrantViewFieldPlanVersionID                           = big.NewInt(1 << 35)
-	companyPlanCreditGrantViewFieldPluralName                              = big.NewInt(1 << 36)
-	companyPlanCreditGrantViewFieldResetCadence                            = big.NewInt(1 << 37)
-	companyPlanCreditGrantViewFieldResetStart                              = big.NewInt(1 << 38)
-	companyPlanCreditGrantViewFieldResetType                               = big.NewInt(1 << 39)
-	companyPlanCreditGrantViewFieldRolloverPercentage                      = big.NewInt(1 << 40)
-	companyPlanCreditGrantViewFieldScaling                                 = big.NewInt(1 << 41)
-	companyPlanCreditGrantViewFieldSingularName                            = big.NewInt(1 << 42)
-	companyPlanCreditGrantViewFieldUpdatedAt                               = big.NewInt(1 << 43)
+	companyPlanCreditGrantViewFieldBillingMode                             = big.NewInt(1 << 17)
+	companyPlanCreditGrantViewFieldBillingProductPriceID                   = big.NewInt(1 << 18)
+	companyPlanCreditGrantViewFieldCompanyAutoTopupAmount                  = big.NewInt(1 << 19)
+	companyPlanCreditGrantViewFieldCompanyAutoTopupEnabled                 = big.NewInt(1 << 20)
+	companyPlanCreditGrantViewFieldCompanyAutoTopupThresholdCredits        = big.NewInt(1 << 21)
+	companyPlanCreditGrantViewFieldCompanyCreditAmount                     = big.NewInt(1 << 22)
+	companyPlanCreditGrantViewFieldCreatedAt                               = big.NewInt(1 << 23)
+	companyPlanCreditGrantViewFieldCredit                                  = big.NewInt(1 << 24)
+	companyPlanCreditGrantViewFieldCreditAmount                            = big.NewInt(1 << 25)
+	companyPlanCreditGrantViewFieldCreditDescription                       = big.NewInt(1 << 26)
+	companyPlanCreditGrantViewFieldCreditIcon                              = big.NewInt(1 << 27)
+	companyPlanCreditGrantViewFieldCreditID                                = big.NewInt(1 << 28)
+	companyPlanCreditGrantViewFieldCreditName                              = big.NewInt(1 << 29)
+	companyPlanCreditGrantViewFieldExpiryType                              = big.NewInt(1 << 30)
+	companyPlanCreditGrantViewFieldExpiryUnit                              = big.NewInt(1 << 31)
+	companyPlanCreditGrantViewFieldExpiryUnitCount                         = big.NewInt(1 << 32)
+	companyPlanCreditGrantViewFieldID                                      = big.NewInt(1 << 33)
+	companyPlanCreditGrantViewFieldLicenseID                               = big.NewInt(1 << 34)
+	companyPlanCreditGrantViewFieldPlan                                    = big.NewInt(1 << 35)
+	companyPlanCreditGrantViewFieldPlanID                                  = big.NewInt(1 << 36)
+	companyPlanCreditGrantViewFieldPlanVersionID                           = big.NewInt(1 << 37)
+	companyPlanCreditGrantViewFieldPluralName                              = big.NewInt(1 << 38)
+	companyPlanCreditGrantViewFieldPrice                                   = big.NewInt(1 << 39)
+	companyPlanCreditGrantViewFieldResetCadence                            = big.NewInt(1 << 40)
+	companyPlanCreditGrantViewFieldResetStart                              = big.NewInt(1 << 41)
+	companyPlanCreditGrantViewFieldResetType                               = big.NewInt(1 << 42)
+	companyPlanCreditGrantViewFieldRolloverPercentage                      = big.NewInt(1 << 43)
+	companyPlanCreditGrantViewFieldScaling                                 = big.NewInt(1 << 44)
+	companyPlanCreditGrantViewFieldSingularName                            = big.NewInt(1 << 45)
+	companyPlanCreditGrantViewFieldUpdatedAt                               = big.NewInt(1 << 46)
 )
 
 type CompanyPlanCreditGrantView struct {
@@ -9977,6 +10242,8 @@ type CompanyPlanCreditGrantView struct {
 	BillingCreditPostpaidEnabled            bool                                `json:"billing_credit_postpaid_enabled" url:"billing_credit_postpaid_enabled"`
 	BillingCreditPostpaidRatePerUnit        *int64                              `json:"billing_credit_postpaid_rate_per_unit,omitempty" url:"billing_credit_postpaid_rate_per_unit,omitempty"`
 	BillingCreditPostpaidRatePerUnitDecimal *string                             `json:"billing_credit_postpaid_rate_per_unit_decimal,omitempty" url:"billing_credit_postpaid_rate_per_unit_decimal,omitempty"`
+	BillingMode                             BillingPlanCreditGrantBillingMode   `json:"billing_mode" url:"billing_mode"`
+	BillingProductPriceID                   *string                             `json:"billing_product_price_id,omitempty" url:"billing_product_price_id,omitempty"`
 	CompanyAutoTopupAmount                  *int64                              `json:"company_auto_topup_amount,omitempty" url:"company_auto_topup_amount,omitempty"`
 	CompanyAutoTopupEnabled                 *bool                               `json:"company_auto_topup_enabled,omitempty" url:"company_auto_topup_enabled,omitempty"`
 	CompanyAutoTopupThresholdCredits        *int64                              `json:"company_auto_topup_threshold_credits,omitempty" url:"company_auto_topup_threshold_credits,omitempty"`
@@ -10001,6 +10268,7 @@ type CompanyPlanCreditGrantView struct {
 	PlanVersionID   *string                  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Deprecated field, will be removed in the future. Use Credit.PluralName instead.
 	PluralName         *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price              *BillingPriceView                   `json:"price,omitempty" url:"price,omitempty"`
 	ResetCadence       *BillingPlanCreditGrantResetCadence `json:"reset_cadence,omitempty" url:"reset_cadence,omitempty"`
 	ResetStart         *BillingPlanCreditGrantResetStart   `json:"reset_start,omitempty" url:"reset_start,omitempty"`
 	ResetType          BillingPlanCreditGrantResetType     `json:"reset_type" url:"reset_type"`
@@ -10134,6 +10402,20 @@ func (c *CompanyPlanCreditGrantView) GetBillingCreditPostpaidRatePerUnitDecimal(
 		return nil
 	}
 	return c.BillingCreditPostpaidRatePerUnitDecimal
+}
+
+func (c *CompanyPlanCreditGrantView) GetBillingMode() BillingPlanCreditGrantBillingMode {
+	if c == nil {
+		return ""
+	}
+	return c.BillingMode
+}
+
+func (c *CompanyPlanCreditGrantView) GetBillingProductPriceID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingProductPriceID
 }
 
 func (c *CompanyPlanCreditGrantView) GetCompanyAutoTopupAmount() *int64 {
@@ -10274,6 +10556,13 @@ func (c *CompanyPlanCreditGrantView) GetPluralName() *string {
 		return nil
 	}
 	return c.PluralName
+}
+
+func (c *CompanyPlanCreditGrantView) GetPrice() *BillingPriceView {
+	if c == nil {
+		return nil
+	}
+	return c.Price
 }
 
 func (c *CompanyPlanCreditGrantView) GetResetCadence() *BillingPlanCreditGrantResetCadence {
@@ -10460,6 +10749,20 @@ func (c *CompanyPlanCreditGrantView) SetBillingCreditPostpaidRatePerUnitDecimal(
 	c.require(companyPlanCreditGrantViewFieldBillingCreditPostpaidRatePerUnitDecimal)
 }
 
+// SetBillingMode sets the BillingMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetBillingMode(billingMode BillingPlanCreditGrantBillingMode) {
+	c.BillingMode = billingMode
+	c.require(companyPlanCreditGrantViewFieldBillingMode)
+}
+
+// SetBillingProductPriceID sets the BillingProductPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetBillingProductPriceID(billingProductPriceID *string) {
+	c.BillingProductPriceID = billingProductPriceID
+	c.require(companyPlanCreditGrantViewFieldBillingProductPriceID)
+}
+
 // SetCompanyAutoTopupAmount sets the CompanyAutoTopupAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyPlanCreditGrantView) SetCompanyAutoTopupAmount(companyAutoTopupAmount *int64) {
@@ -10598,6 +10901,13 @@ func (c *CompanyPlanCreditGrantView) SetPlanVersionID(planVersionID *string) {
 func (c *CompanyPlanCreditGrantView) SetPluralName(pluralName *string) {
 	c.PluralName = pluralName
 	c.require(companyPlanCreditGrantViewFieldPluralName)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanCreditGrantView) SetPrice(price *BillingPriceView) {
+	c.Price = price
+	c.require(companyPlanCreditGrantViewFieldPrice)
 }
 
 // SetResetCadence sets the ResetCadence field and marks it as non-optional;
@@ -14405,25 +14715,30 @@ var (
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupSelfService       = big.NewInt(1 << 10)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits  = big.NewInt(1 << 11)
 	createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent  = big.NewInt(1 << 12)
-	createBillingPlanCreditGrantRequestBodyFieldCanBuyBundles              = big.NewInt(1 << 13)
-	createBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount        = big.NewInt(1 << 14)
-	createBillingPlanCreditGrantRequestBodyFieldCreditAmount               = big.NewInt(1 << 15)
-	createBillingPlanCreditGrantRequestBodyFieldCreditID                   = big.NewInt(1 << 16)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryType                 = big.NewInt(1 << 17)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                 = big.NewInt(1 << 18)
-	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount            = big.NewInt(1 << 19)
-	createBillingPlanCreditGrantRequestBodyFieldLicenseID                  = big.NewInt(1 << 20)
-	createBillingPlanCreditGrantRequestBodyFieldOverdraftLimit             = big.NewInt(1 << 21)
-	createBillingPlanCreditGrantRequestBodyFieldPlanID                     = big.NewInt(1 << 22)
-	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID              = big.NewInt(1 << 23)
-	createBillingPlanCreditGrantRequestBodyFieldPostpaidEnabled            = big.NewInt(1 << 24)
-	createBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnit        = big.NewInt(1 << 25)
-	createBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnitDecimal = big.NewInt(1 << 26)
-	createBillingPlanCreditGrantRequestBodyFieldResetCadence               = big.NewInt(1 << 27)
-	createBillingPlanCreditGrantRequestBodyFieldResetStart                 = big.NewInt(1 << 28)
-	createBillingPlanCreditGrantRequestBodyFieldResetType                  = big.NewInt(1 << 29)
-	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage         = big.NewInt(1 << 30)
-	createBillingPlanCreditGrantRequestBodyFieldScaling                    = big.NewInt(1 << 31)
+	createBillingPlanCreditGrantRequestBodyFieldBillingMode                = big.NewInt(1 << 13)
+	createBillingPlanCreditGrantRequestBodyFieldCanBuyBundles              = big.NewInt(1 << 14)
+	createBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount        = big.NewInt(1 << 15)
+	createBillingPlanCreditGrantRequestBodyFieldCreditAmount               = big.NewInt(1 << 16)
+	createBillingPlanCreditGrantRequestBodyFieldCreditID                   = big.NewInt(1 << 17)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryType                 = big.NewInt(1 << 18)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnit                 = big.NewInt(1 << 19)
+	createBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount            = big.NewInt(1 << 20)
+	createBillingPlanCreditGrantRequestBodyFieldLicenseID                  = big.NewInt(1 << 21)
+	createBillingPlanCreditGrantRequestBodyFieldOverdraftLimit             = big.NewInt(1 << 22)
+	createBillingPlanCreditGrantRequestBodyFieldPlanID                     = big.NewInt(1 << 23)
+	createBillingPlanCreditGrantRequestBodyFieldPlanVersionID              = big.NewInt(1 << 24)
+	createBillingPlanCreditGrantRequestBodyFieldPostpaidEnabled            = big.NewInt(1 << 25)
+	createBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnit        = big.NewInt(1 << 26)
+	createBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnitDecimal = big.NewInt(1 << 27)
+	createBillingPlanCreditGrantRequestBodyFieldPriceTiers                 = big.NewInt(1 << 28)
+	createBillingPlanCreditGrantRequestBodyFieldResetCadence               = big.NewInt(1 << 29)
+	createBillingPlanCreditGrantRequestBodyFieldResetStart                 = big.NewInt(1 << 30)
+	createBillingPlanCreditGrantRequestBodyFieldResetType                  = big.NewInt(1 << 31)
+	createBillingPlanCreditGrantRequestBodyFieldRolloverPercentage         = big.NewInt(1 << 32)
+	createBillingPlanCreditGrantRequestBodyFieldScaling                    = big.NewInt(1 << 33)
+	createBillingPlanCreditGrantRequestBodyFieldTierMode                   = big.NewInt(1 << 34)
+	createBillingPlanCreditGrantRequestBodyFieldUnitPrice                  = big.NewInt(1 << 35)
+	createBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal           = big.NewInt(1 << 36)
 )
 
 type CreateBillingPlanCreditGrantRequestBody struct {
@@ -14442,6 +14757,8 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupSelfService      *bool                               `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
 	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	// Whether the credits are included in the plan price (granted) or billed as their own subscription line at a price per credit (billed). Billed is only available on custom plans. Defaults to granted.
+	BillingMode *BillingPlanCreditGrantBillingMode `json:"billing_mode,omitempty" url:"billing_mode,omitempty"`
 	// Deprecated: use compatible_plan_ids on credit bundles instead. Still accepted; writes through to the credit's bundle compatibility.
 	CanBuyBundles *bool `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
 	// Credits granted once per company on top of the per-license amount. Only valid when scaling is per_license. Defaults to 0.
@@ -14462,14 +14779,22 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	// Amount charged per credit consumed past a zero balance, in the currency's minor unit. Optional: defaults to the credit's own cost basis (price_per_unit) when postpaid_enabled is true.
 	PostpaidRatePerUnit *int64 `json:"postpaid_rate_per_unit,omitempty" url:"postpaid_rate_per_unit,omitempty"`
 	// Decimal string form of postpaid_rate_per_unit, for rates finer than one minor unit (for example 0.0002). Takes precedence over postpaid_rate_per_unit when both are set, matching how the credit's own price_per_unit_decimal behaves.
-	PostpaidRatePerUnitDecimal *string                            `json:"postpaid_rate_per_unit_decimal,omitempty" url:"postpaid_rate_per_unit_decimal,omitempty"`
-	ResetCadence               BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart                 BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
-	ResetType                  *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	PostpaidRatePerUnitDecimal *string `json:"postpaid_rate_per_unit_decimal,omitempty" url:"postpaid_rate_per_unit_decimal,omitempty"`
+	// Tier table pricing the credits on this grant, cheapest bound first, the last tier unbounded. Give this instead of unit_price to charge a rate that changes with the number of credits on the invoice. Requires tier_mode.
+	PriceTiers   []*CreditGrantPriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	ResetCadence BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
+	ResetStart   BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
+	ResetType    *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again. Defaults to 0.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
 	// Whether the grant is a fixed amount per company, or issued once per license the company holds. Defaults to fixed.
 	Scaling *PlanCreditGrantScaling `json:"scaling,omitempty" url:"scaling,omitempty"`
+	// How price_tiers apply: volume prices every credit at the rate of the tier the total lands in, graduated prices each tier's own credits at its own rate. Required with price_tiers.
+	TierMode *BillingTiersMode `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
+	// Price per credit in the plan currency's smallest unit. Required when billing_mode is billed, unless unit_price_decimal or price_tiers is set.
+	UnitPrice *int64 `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+	// Price per credit as a decimal in the plan currency's smallest unit, for prices below one cent.
+	UnitPriceDecimal *string `json:"unit_price_decimal,omitempty" url:"unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -14560,6 +14885,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent()
 		return nil
 	}
 	return c.AutoTopupThresholdPercent
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetBillingMode() *BillingPlanCreditGrantBillingMode {
+	if c == nil {
+		return nil
+	}
+	return c.BillingMode
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetCanBuyBundles() *bool {
@@ -14660,6 +14992,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetPostpaidRatePerUnitDecimal(
 	return c.PostpaidRatePerUnitDecimal
 }
 
+func (c *CreateBillingPlanCreditGrantRequestBody) GetPriceTiers() []*CreditGrantPriceTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.PriceTiers
+}
+
 func (c *CreateBillingPlanCreditGrantRequestBody) GetResetCadence() BillingPlanCreditGrantResetCadence {
 	if c == nil {
 		return ""
@@ -14693,6 +15032,27 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetScaling() *PlanCreditGrantS
 		return nil
 	}
 	return c.Scaling
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetTierMode() *BillingTiersMode {
+	if c == nil {
+		return nil
+	}
+	return c.TierMode
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.UnitPrice
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UnitPriceDecimal
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
@@ -14802,6 +15162,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(a
 	c.require(createBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent)
 }
 
+// SetBillingMode sets the BillingMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetBillingMode(billingMode *BillingPlanCreditGrantBillingMode) {
+	c.BillingMode = billingMode
+	c.require(createBillingPlanCreditGrantRequestBodyFieldBillingMode)
+}
+
 // SetCanBuyBundles sets the CanBuyBundles field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateBillingPlanCreditGrantRequestBody) SetCanBuyBundles(canBuyBundles *bool) {
@@ -14900,6 +15267,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetPostpaidRatePerUnitDecimal(
 	c.require(createBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnitDecimal)
 }
 
+// SetPriceTiers sets the PriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetPriceTiers(priceTiers []*CreditGrantPriceTierRequestBody) {
+	c.PriceTiers = priceTiers
+	c.require(createBillingPlanCreditGrantRequestBodyFieldPriceTiers)
+}
+
 // SetResetCadence sets the ResetCadence field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateBillingPlanCreditGrantRequestBody) SetResetCadence(resetCadence BillingPlanCreditGrantResetCadence) {
@@ -14933,6 +15307,27 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetRolloverPercentage(rollover
 func (c *CreateBillingPlanCreditGrantRequestBody) SetScaling(scaling *PlanCreditGrantScaling) {
 	c.Scaling = scaling
 	c.require(createBillingPlanCreditGrantRequestBodyFieldScaling)
+}
+
+// SetTierMode sets the TierMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetTierMode(tierMode *BillingTiersMode) {
+	c.TierMode = tierMode
+	c.require(createBillingPlanCreditGrantRequestBodyFieldTierMode)
+}
+
+// SetUnitPrice sets the UnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetUnitPrice(unitPrice *int64) {
+	c.UnitPrice = unitPrice
+	c.require(createBillingPlanCreditGrantRequestBodyFieldUnitPrice)
+}
+
+// SetUnitPriceDecimal sets the UnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetUnitPriceDecimal(unitPriceDecimal *string) {
+	c.UnitPriceDecimal = unitPriceDecimal
+	c.require(createBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal)
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) UnmarshalJSON(data []byte) error {
@@ -16061,6 +16456,127 @@ func (c *CreditGrantExpiryRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreditGrantExpiryRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditGrantPriceTierRequestBodyFieldPerUnitPrice        = big.NewInt(1 << 0)
+	creditGrantPriceTierRequestBodyFieldPerUnitPriceDecimal = big.NewInt(1 << 1)
+	creditGrantPriceTierRequestBodyFieldUpTo                = big.NewInt(1 << 2)
+)
+
+type CreditGrantPriceTierRequestBody struct {
+	// Price per credit in this tier, in the plan currency's smallest unit.
+	PerUnitPrice *int64 `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	// Price per credit in this tier as a decimal in the plan currency's smallest unit, for prices below one cent.
+	PerUnitPriceDecimal *string `json:"per_unit_price_decimal,omitempty" url:"per_unit_price_decimal,omitempty"`
+	// Inclusive upper bound of this tier, counted in credits per invoice. Null marks the final, unbounded tier.
+	UpTo *int64 `json:"up_to,omitempty" url:"up_to,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditGrantPriceTierRequestBody) GetPerUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitPrice
+}
+
+func (c *CreditGrantPriceTierRequestBody) GetPerUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitPriceDecimal
+}
+
+func (c *CreditGrantPriceTierRequestBody) GetUpTo() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.UpTo
+}
+
+func (c *CreditGrantPriceTierRequestBody) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditGrantPriceTierRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditGrantPriceTierRequestBody) SetPerUnitPrice(perUnitPrice *int64) {
+	c.PerUnitPrice = perUnitPrice
+	c.require(creditGrantPriceTierRequestBodyFieldPerUnitPrice)
+}
+
+// SetPerUnitPriceDecimal sets the PerUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditGrantPriceTierRequestBody) SetPerUnitPriceDecimal(perUnitPriceDecimal *string) {
+	c.PerUnitPriceDecimal = perUnitPriceDecimal
+	c.require(creditGrantPriceTierRequestBodyFieldPerUnitPriceDecimal)
+}
+
+// SetUpTo sets the UpTo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditGrantPriceTierRequestBody) SetUpTo(upTo *int64) {
+	c.UpTo = upTo
+	c.require(creditGrantPriceTierRequestBodyFieldUpTo)
+}
+
+func (c *CreditGrantPriceTierRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditGrantPriceTierRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditGrantPriceTierRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditGrantPriceTierRequestBody) MarshalJSON() ([]byte, error) {
+	type embed CreditGrantPriceTierRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditGrantPriceTierRequestBody) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -26883,30 +27399,33 @@ var (
 	planCreditGrantViewFieldBillingCreditPostpaidEnabled            = big.NewInt(1 << 14)
 	planCreditGrantViewFieldBillingCreditPostpaidRatePerUnit        = big.NewInt(1 << 15)
 	planCreditGrantViewFieldBillingCreditPostpaidRatePerUnitDecimal = big.NewInt(1 << 16)
-	planCreditGrantViewFieldCompanyCreditAmount                     = big.NewInt(1 << 17)
-	planCreditGrantViewFieldCreatedAt                               = big.NewInt(1 << 18)
-	planCreditGrantViewFieldCredit                                  = big.NewInt(1 << 19)
-	planCreditGrantViewFieldCreditAmount                            = big.NewInt(1 << 20)
-	planCreditGrantViewFieldCreditDescription                       = big.NewInt(1 << 21)
-	planCreditGrantViewFieldCreditIcon                              = big.NewInt(1 << 22)
-	planCreditGrantViewFieldCreditID                                = big.NewInt(1 << 23)
-	planCreditGrantViewFieldCreditName                              = big.NewInt(1 << 24)
-	planCreditGrantViewFieldExpiryType                              = big.NewInt(1 << 25)
-	planCreditGrantViewFieldExpiryUnit                              = big.NewInt(1 << 26)
-	planCreditGrantViewFieldExpiryUnitCount                         = big.NewInt(1 << 27)
-	planCreditGrantViewFieldID                                      = big.NewInt(1 << 28)
-	planCreditGrantViewFieldLicenseID                               = big.NewInt(1 << 29)
-	planCreditGrantViewFieldPlan                                    = big.NewInt(1 << 30)
-	planCreditGrantViewFieldPlanID                                  = big.NewInt(1 << 31)
-	planCreditGrantViewFieldPlanVersionID                           = big.NewInt(1 << 32)
-	planCreditGrantViewFieldPluralName                              = big.NewInt(1 << 33)
-	planCreditGrantViewFieldResetCadence                            = big.NewInt(1 << 34)
-	planCreditGrantViewFieldResetStart                              = big.NewInt(1 << 35)
-	planCreditGrantViewFieldResetType                               = big.NewInt(1 << 36)
-	planCreditGrantViewFieldRolloverPercentage                      = big.NewInt(1 << 37)
-	planCreditGrantViewFieldScaling                                 = big.NewInt(1 << 38)
-	planCreditGrantViewFieldSingularName                            = big.NewInt(1 << 39)
-	planCreditGrantViewFieldUpdatedAt                               = big.NewInt(1 << 40)
+	planCreditGrantViewFieldBillingMode                             = big.NewInt(1 << 17)
+	planCreditGrantViewFieldBillingProductPriceID                   = big.NewInt(1 << 18)
+	planCreditGrantViewFieldCompanyCreditAmount                     = big.NewInt(1 << 19)
+	planCreditGrantViewFieldCreatedAt                               = big.NewInt(1 << 20)
+	planCreditGrantViewFieldCredit                                  = big.NewInt(1 << 21)
+	planCreditGrantViewFieldCreditAmount                            = big.NewInt(1 << 22)
+	planCreditGrantViewFieldCreditDescription                       = big.NewInt(1 << 23)
+	planCreditGrantViewFieldCreditIcon                              = big.NewInt(1 << 24)
+	planCreditGrantViewFieldCreditID                                = big.NewInt(1 << 25)
+	planCreditGrantViewFieldCreditName                              = big.NewInt(1 << 26)
+	planCreditGrantViewFieldExpiryType                              = big.NewInt(1 << 27)
+	planCreditGrantViewFieldExpiryUnit                              = big.NewInt(1 << 28)
+	planCreditGrantViewFieldExpiryUnitCount                         = big.NewInt(1 << 29)
+	planCreditGrantViewFieldID                                      = big.NewInt(1 << 30)
+	planCreditGrantViewFieldLicenseID                               = big.NewInt(1 << 31)
+	planCreditGrantViewFieldPlan                                    = big.NewInt(1 << 32)
+	planCreditGrantViewFieldPlanID                                  = big.NewInt(1 << 33)
+	planCreditGrantViewFieldPlanVersionID                           = big.NewInt(1 << 34)
+	planCreditGrantViewFieldPluralName                              = big.NewInt(1 << 35)
+	planCreditGrantViewFieldPrice                                   = big.NewInt(1 << 36)
+	planCreditGrantViewFieldResetCadence                            = big.NewInt(1 << 37)
+	planCreditGrantViewFieldResetStart                              = big.NewInt(1 << 38)
+	planCreditGrantViewFieldResetType                               = big.NewInt(1 << 39)
+	planCreditGrantViewFieldRolloverPercentage                      = big.NewInt(1 << 40)
+	planCreditGrantViewFieldScaling                                 = big.NewInt(1 << 41)
+	planCreditGrantViewFieldSingularName                            = big.NewInt(1 << 42)
+	planCreditGrantViewFieldUpdatedAt                               = big.NewInt(1 << 43)
 )
 
 type PlanCreditGrantView struct {
@@ -26927,6 +27446,8 @@ type PlanCreditGrantView struct {
 	BillingCreditPostpaidEnabled            bool                                `json:"billing_credit_postpaid_enabled" url:"billing_credit_postpaid_enabled"`
 	BillingCreditPostpaidRatePerUnit        *int64                              `json:"billing_credit_postpaid_rate_per_unit,omitempty" url:"billing_credit_postpaid_rate_per_unit,omitempty"`
 	BillingCreditPostpaidRatePerUnitDecimal *string                             `json:"billing_credit_postpaid_rate_per_unit_decimal,omitempty" url:"billing_credit_postpaid_rate_per_unit_decimal,omitempty"`
+	BillingMode                             BillingPlanCreditGrantBillingMode   `json:"billing_mode" url:"billing_mode"`
+	BillingProductPriceID                   *string                             `json:"billing_product_price_id,omitempty" url:"billing_product_price_id,omitempty"`
 	CompanyCreditAmount                     int64                               `json:"company_credit_amount" url:"company_credit_amount"`
 	CreatedAt                               time.Time                           `json:"created_at" url:"created_at"`
 	Credit                                  *BillingCreditView                  `json:"credit,omitempty" url:"credit,omitempty"`
@@ -26948,6 +27469,7 @@ type PlanCreditGrantView struct {
 	PlanVersionID   *string                  `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Deprecated field, will be removed in the future. Use Credit.PluralName instead.
 	PluralName         *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
+	Price              *BillingPriceView                   `json:"price,omitempty" url:"price,omitempty"`
 	ResetCadence       *BillingPlanCreditGrantResetCadence `json:"reset_cadence,omitempty" url:"reset_cadence,omitempty"`
 	ResetStart         *BillingPlanCreditGrantResetStart   `json:"reset_start,omitempty" url:"reset_start,omitempty"`
 	ResetType          BillingPlanCreditGrantResetType     `json:"reset_type" url:"reset_type"`
@@ -27083,6 +27605,20 @@ func (p *PlanCreditGrantView) GetBillingCreditPostpaidRatePerUnitDecimal() *stri
 	return p.BillingCreditPostpaidRatePerUnitDecimal
 }
 
+func (p *PlanCreditGrantView) GetBillingMode() BillingPlanCreditGrantBillingMode {
+	if p == nil {
+		return ""
+	}
+	return p.BillingMode
+}
+
+func (p *PlanCreditGrantView) GetBillingProductPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BillingProductPriceID
+}
+
 func (p *PlanCreditGrantView) GetCompanyCreditAmount() int64 {
 	if p == nil {
 		return 0
@@ -27200,6 +27736,13 @@ func (p *PlanCreditGrantView) GetPluralName() *string {
 		return nil
 	}
 	return p.PluralName
+}
+
+func (p *PlanCreditGrantView) GetPrice() *BillingPriceView {
+	if p == nil {
+		return nil
+	}
+	return p.Price
 }
 
 func (p *PlanCreditGrantView) GetResetCadence() *BillingPlanCreditGrantResetCadence {
@@ -27386,6 +27929,20 @@ func (p *PlanCreditGrantView) SetBillingCreditPostpaidRatePerUnitDecimal(billing
 	p.require(planCreditGrantViewFieldBillingCreditPostpaidRatePerUnitDecimal)
 }
 
+// SetBillingMode sets the BillingMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetBillingMode(billingMode BillingPlanCreditGrantBillingMode) {
+	p.BillingMode = billingMode
+	p.require(planCreditGrantViewFieldBillingMode)
+}
+
+// SetBillingProductPriceID sets the BillingProductPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetBillingProductPriceID(billingProductPriceID *string) {
+	p.BillingProductPriceID = billingProductPriceID
+	p.require(planCreditGrantViewFieldBillingProductPriceID)
+}
+
 // SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanCreditGrantView) SetCompanyCreditAmount(companyCreditAmount int64) {
@@ -27503,6 +28060,13 @@ func (p *PlanCreditGrantView) SetPlanVersionID(planVersionID *string) {
 func (p *PlanCreditGrantView) SetPluralName(pluralName *string) {
 	p.PluralName = pluralName
 	p.require(planCreditGrantViewFieldPluralName)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantView) SetPrice(price *BillingPriceView) {
+	p.Price = price
+	p.require(planCreditGrantViewFieldPrice)
 }
 
 // SetResetCadence sets the ResetCadence field and marks it as non-optional;
@@ -37254,22 +37818,27 @@ var (
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupSelfService       = big.NewInt(1 << 10)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdCredits  = big.NewInt(1 << 11)
 	updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent  = big.NewInt(1 << 12)
-	updateBillingPlanCreditGrantRequestBodyFieldCanBuyBundles              = big.NewInt(1 << 13)
-	updateBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount        = big.NewInt(1 << 14)
-	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount               = big.NewInt(1 << 15)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                 = big.NewInt(1 << 16)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                 = big.NewInt(1 << 17)
-	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount            = big.NewInt(1 << 18)
-	updateBillingPlanCreditGrantRequestBodyFieldLicenseID                  = big.NewInt(1 << 19)
-	updateBillingPlanCreditGrantRequestBodyFieldOverdraftLimit             = big.NewInt(1 << 20)
-	updateBillingPlanCreditGrantRequestBodyFieldPostpaidEnabled            = big.NewInt(1 << 21)
-	updateBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnit        = big.NewInt(1 << 22)
-	updateBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnitDecimal = big.NewInt(1 << 23)
-	updateBillingPlanCreditGrantRequestBodyFieldResetCadence               = big.NewInt(1 << 24)
-	updateBillingPlanCreditGrantRequestBodyFieldResetStart                 = big.NewInt(1 << 25)
-	updateBillingPlanCreditGrantRequestBodyFieldResetType                  = big.NewInt(1 << 26)
-	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage         = big.NewInt(1 << 27)
-	updateBillingPlanCreditGrantRequestBodyFieldScaling                    = big.NewInt(1 << 28)
+	updateBillingPlanCreditGrantRequestBodyFieldBillingMode                = big.NewInt(1 << 13)
+	updateBillingPlanCreditGrantRequestBodyFieldCanBuyBundles              = big.NewInt(1 << 14)
+	updateBillingPlanCreditGrantRequestBodyFieldCompanyCreditAmount        = big.NewInt(1 << 15)
+	updateBillingPlanCreditGrantRequestBodyFieldCreditAmount               = big.NewInt(1 << 16)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryType                 = big.NewInt(1 << 17)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnit                 = big.NewInt(1 << 18)
+	updateBillingPlanCreditGrantRequestBodyFieldExpiryUnitCount            = big.NewInt(1 << 19)
+	updateBillingPlanCreditGrantRequestBodyFieldLicenseID                  = big.NewInt(1 << 20)
+	updateBillingPlanCreditGrantRequestBodyFieldOverdraftLimit             = big.NewInt(1 << 21)
+	updateBillingPlanCreditGrantRequestBodyFieldPostpaidEnabled            = big.NewInt(1 << 22)
+	updateBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnit        = big.NewInt(1 << 23)
+	updateBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnitDecimal = big.NewInt(1 << 24)
+	updateBillingPlanCreditGrantRequestBodyFieldPriceTiers                 = big.NewInt(1 << 25)
+	updateBillingPlanCreditGrantRequestBodyFieldResetCadence               = big.NewInt(1 << 26)
+	updateBillingPlanCreditGrantRequestBodyFieldResetStart                 = big.NewInt(1 << 27)
+	updateBillingPlanCreditGrantRequestBodyFieldResetType                  = big.NewInt(1 << 28)
+	updateBillingPlanCreditGrantRequestBodyFieldRolloverPercentage         = big.NewInt(1 << 29)
+	updateBillingPlanCreditGrantRequestBodyFieldScaling                    = big.NewInt(1 << 30)
+	updateBillingPlanCreditGrantRequestBodyFieldTierMode                   = big.NewInt(1 << 31)
+	updateBillingPlanCreditGrantRequestBodyFieldUnitPrice                  = big.NewInt(1 << 32)
+	updateBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal           = big.NewInt(1 << 33)
 )
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
@@ -37288,6 +37857,8 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	AutoTopupSelfService      *bool                               `json:"auto_topup_self_service,omitempty" url:"auto_topup_self_service,omitempty"`
 	AutoTopupThresholdCredits *int64                              `json:"auto_topup_threshold_credits,omitempty" url:"auto_topup_threshold_credits,omitempty"`
 	AutoTopupThresholdPercent *int64                              `json:"auto_topup_threshold_percent,omitempty" url:"auto_topup_threshold_percent,omitempty"`
+	// Whether the credits are included in the plan price (granted) or billed as their own subscription line at a price per credit (billed). Billed is only available on custom plans.
+	BillingMode *BillingPlanCreditGrantBillingMode `json:"billing_mode,omitempty" url:"billing_mode,omitempty"`
 	// Deprecated: use compatible_plan_ids on credit bundles instead. Still accepted; writes through to the credit's bundle compatibility.
 	CanBuyBundles *bool `json:"can_buy_bundles,omitempty" url:"can_buy_bundles,omitempty"`
 	// Credits granted once per company on top of the per-license amount. Only valid when the grant scales per license.
@@ -37305,14 +37876,22 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	// Amount charged per credit consumed past a zero balance, in the currency's minor unit. Send null to clear it, in which case an enabled grant falls back to the credit's own cost basis (price_per_unit).
 	PostpaidRatePerUnit *int64 `json:"postpaid_rate_per_unit,omitempty" url:"postpaid_rate_per_unit,omitempty"`
 	// Decimal string form of postpaid_rate_per_unit, for rates finer than one minor unit (for example 0.0002). Takes precedence over postpaid_rate_per_unit when both are set, matching how the credit's own price_per_unit_decimal behaves. Send null to clear it.
-	PostpaidRatePerUnitDecimal *string                            `json:"postpaid_rate_per_unit_decimal,omitempty" url:"postpaid_rate_per_unit_decimal,omitempty"`
-	ResetCadence               BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
-	ResetStart                 BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
-	ResetType                  *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
+	PostpaidRatePerUnitDecimal *string `json:"postpaid_rate_per_unit_decimal,omitempty" url:"postpaid_rate_per_unit_decimal,omitempty"`
+	// Tier table pricing the credits on this grant, cheapest bound first, the last tier unbounded. Sending it moves the grant off one rate per credit. Requires tier_mode.
+	PriceTiers   []*CreditGrantPriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	ResetCadence BillingPlanCreditGrantResetCadence `json:"reset_cadence" url:"reset_cadence"`
+	ResetStart   BillingPlanCreditGrantResetStart   `json:"reset_start" url:"reset_start"`
+	ResetType    *BillingPlanCreditGrantResetType   `json:"reset_type,omitempty" url:"reset_type,omitempty"`
 	// Percentage of unused credits that carry over when this grant resets. Only applies when reset_type is plan_period. Rolled-over credits expire at the next reset and are not rolled again.
 	RolloverPercentage *int64 `json:"rollover_percentage,omitempty" url:"rollover_percentage,omitempty"`
 	// Whether the grant is a fixed amount per company, or issued once per license the company holds. Changing this re-issues the credits companies already hold for this grant.
 	Scaling *PlanCreditGrantScaling `json:"scaling,omitempty" url:"scaling,omitempty"`
+	// How price_tiers apply: volume prices every credit at the rate of the tier the total lands in, graduated prices each tier's own credits at its own rate. Required with price_tiers.
+	TierMode *BillingTiersMode `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
+	// Price per credit in the plan currency's smallest unit. Required when billing_mode is billed, unless unit_price_decimal or price_tiers is set. Sending it moves a tiered grant back to one rate per credit.
+	UnitPrice *int64 `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+	// Price per credit as a decimal in the plan currency's smallest unit, for prices below one cent.
+	UnitPriceDecimal *string `json:"unit_price_decimal,omitempty" url:"unit_price_decimal,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -37405,6 +37984,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetAutoTopupThresholdPercent()
 	return u.AutoTopupThresholdPercent
 }
 
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetBillingMode() *BillingPlanCreditGrantBillingMode {
+	if u == nil {
+		return nil
+	}
+	return u.BillingMode
+}
+
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetCanBuyBundles() *bool {
 	if u == nil {
 		return nil
@@ -37482,6 +38068,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetPostpaidRatePerUnitDecimal(
 	return u.PostpaidRatePerUnitDecimal
 }
 
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetPriceTiers() []*CreditGrantPriceTierRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.PriceTiers
+}
+
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetResetCadence() BillingPlanCreditGrantResetCadence {
 	if u == nil {
 		return ""
@@ -37515,6 +38108,27 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetScaling() *PlanCreditGrantS
 		return nil
 	}
 	return u.Scaling
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetTierMode() *BillingTiersMode {
+	if u == nil {
+		return nil
+	}
+	return u.TierMode
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetUnitPrice() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.UnitPrice
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetUnitPriceDecimal() *string {
+	if u == nil {
+		return nil
+	}
+	return u.UnitPriceDecimal
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
@@ -37624,6 +38238,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetAutoTopupThresholdPercent(a
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldAutoTopupThresholdPercent)
 }
 
+// SetBillingMode sets the BillingMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetBillingMode(billingMode *BillingPlanCreditGrantBillingMode) {
+	u.BillingMode = billingMode
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldBillingMode)
+}
+
 // SetCanBuyBundles sets the CanBuyBundles field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetCanBuyBundles(canBuyBundles *bool) {
@@ -37701,6 +38322,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetPostpaidRatePerUnitDecimal(
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldPostpaidRatePerUnitDecimal)
 }
 
+// SetPriceTiers sets the PriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetPriceTiers(priceTiers []*CreditGrantPriceTierRequestBody) {
+	u.PriceTiers = priceTiers
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldPriceTiers)
+}
+
 // SetResetCadence sets the ResetCadence field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetResetCadence(resetCadence BillingPlanCreditGrantResetCadence) {
@@ -37734,6 +38362,27 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetRolloverPercentage(rollover
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetScaling(scaling *PlanCreditGrantScaling) {
 	u.Scaling = scaling
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldScaling)
+}
+
+// SetTierMode sets the TierMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetTierMode(tierMode *BillingTiersMode) {
+	u.TierMode = tierMode
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldTierMode)
+}
+
+// SetUnitPrice sets the UnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetUnitPrice(unitPrice *int64) {
+	u.UnitPrice = unitPrice
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldUnitPrice)
+}
+
+// SetUnitPriceDecimal sets the UnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetUnitPriceDecimal(unitPriceDecimal *string) {
+	u.UnitPriceDecimal = unitPriceDecimal
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal)
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) UnmarshalJSON(data []byte) error {

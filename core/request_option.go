@@ -44,6 +44,7 @@ type RequestOptions struct {
 	FlagDefaults            map[string]bool
 	OfflineMode             bool
 	TracerProvider          trace.TracerProvider
+	TracingEnabled          bool
 }
 
 // NewRequestOptions returns a new *RequestOptions value.

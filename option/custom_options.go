@@ -24,6 +24,7 @@ var WithReplicatorMode = core.WithReplicatorMode
 var WithReplicatorHealthURL = core.WithReplicatorHealthURL
 var WithReplicatorHealthInterval = core.WithReplicatorHealthInterval
 var WithTracerProvider = core.WithTracerProvider
+var WithTracing = core.WithTracing
 
 type RedisCacheConfig = core.RedisCacheConfig
 type RedisCacheClusterConfig = core.RedisCacheClusterConfig

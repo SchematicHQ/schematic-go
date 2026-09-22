@@ -914,12 +914,15 @@ All fields live on `core.CreditLeaseConfig`. Everything below `DefaultReservatio
 
 ## OpenTelemetry
 
-The SDK emits OpenTelemetry spans for its own operations — flag checks, identifies, tracks and credit holds. Spans are children of whatever span is already on the `context.Context` you pass, so Schematic's work appears inline in your traces rather than as a gap.
+The SDK can emit OpenTelemetry spans for its own operations — flag checks, identifies, tracks and credit holds. Spans are children of whatever span is already on the `context.Context` you pass, so Schematic's work appears inline in your traces rather than as a gap.
 
-There is nothing to turn on. If your application has configured a global `TracerProvider` in the usual way, the SDK uses it:
+**Tracing is off by default.** Spans cost money at most vendors, so the SDK does not start emitting them just because you upgraded it. Turn it on with `option.WithTracing()`:
 
 ```go
-client := schematicclient.NewSchematicClient(option.WithAPIKey(apiKey))
+client := schematicclient.NewSchematicClient(
+  option.WithAPIKey(apiKey),
+  option.WithTracing(),
+)
 
 ctx, span := tracer.Start(ctx, "handle-request")
 defer span.End()
@@ -934,7 +937,9 @@ handle-request
 └─ Schematic.CheckFlag   flag.key=my-flag  flag.value=true  check.source=datastream
 ```
 
-Pass a specific provider with `option.WithTracerProvider` if you do not want the global one:
+That is all most applications need. The SDK records on the OpenTelemetry provider your application already configured, so there is nothing further to wire up.
+
+To send Schematic's spans to a provider other than the one the rest of your application uses, name it with `option.WithTracerProvider`. It implies `WithTracing`, so the two are not needed together:
 
 ```go
 client := schematicclient.NewSchematicClient(
@@ -943,17 +948,23 @@ client := schematicclient.NewSchematicClient(
 )
 ```
 
-If your application has not configured OpenTelemetry at all, the SDK resolves the global provider, whose default is a no-op: no spans are started, and the attributes below are never even built.
+If your application has not configured OpenTelemetry at all, `WithTracing()` still starts no spans: the SDK resolves the global provider, whose default is a no-op, and the attributes below are never even built.
 
 ### Where the SDK records
 
-You should not need `option.WithTracerProvider`. The SDK looks in three places, in order:
+With tracing on, the SDK looks in three places, in order:
 
 1. **The provider you passed** to `option.WithTracerProvider`, if you passed one. An explicit instruction always wins, so routing Schematic's spans somewhere specific is never overridden by your ambient tracing.
 2. **The provider behind the span in your `context.Context`.** If you built a `TracerProvider` but never installed it with `otel.SetTracerProvider`, the SDK still records alongside your spans — the span you passed knows which provider made it.
 3. **The global provider.** The ordinary case, and the only one that can serve a call whose context carries no span, such as a cron job or worker calling in on `context.Background()`.
 
-Only step 2 is resolved per call, since only it depends on the context. The other two are resolved once when the client is built, which keeps the lookup off the path of a client that is not tracing.
+Steps 2 and 3 are what `WithTracing()` enables; a provider passed to `WithTracerProvider` is used whether or not you also call it. Only step 2 is resolved per call, since only it depends on the context — the other two are resolved once when the client is built.
+
+### Cost
+
+Each traced operation records one span. A flag check served from cache or DataStream is fast enough that the span is most of its cost, so a hot path can produce a lot of them: a request making five checks records five spans, plus one more for each API call underneath them.
+
+Two things keep that in hand. Tracing is off unless you ask for it, and under the usual `ParentBased` sampler a check made inside a span your sampler dropped records nothing at all — Schematic's spans inherit your sampling decision rather than adding to it.
 
 ### Spans
 
@@ -971,7 +982,7 @@ Only step 2 is resolved per call, since only it depends on the context. The othe
 | `Schematic.RulesEngine.CheckFlag` | local flag evaluation, DataStream paths |
 | `Schematic.Lease.Acquire` / `.Extend` / `.Release` | credit lease calls |
 
-Spans that cross the network are `SpanKindClient`; the SDK's own wrappers around them are `SpanKindInternal`. That is what lets you tell a check that spent 47ms on the wire from one that spent it evaluating locally.
+Spans that cross the network are `SpanKindClient`; the SDK's own wrappers around them are `SpanKindInternal`. That is what lets you tell a slow check caused by the API from one caused by local evaluation.
 
 ### Attributes
 
@@ -999,7 +1010,7 @@ The values of your company and user lookup keys. Those are your own identifiers 
 
 ### Scope
 
-This covers the SDK's own operations. Two things are not traced yet:
+This covers the SDK's own operations. These are not traced:
 
 - **The generated API clients.** A call like `client.Features.GetFeature(ctx, id)` records no span of its own; it appears as time inside whichever Schematic span is above it, or not at all if you call it directly. The API calls the SDK's own methods make *are* traced, as the `Schematic.API.*` spans above.
 - **The event buffer's flush.** `Track` and `Identify` enqueue to a buffer that a background goroutine drains on a fresh context, so their spans cover the enqueue, not the eventual delivery.

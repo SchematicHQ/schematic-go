@@ -109,7 +109,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 		options:                 options,
 		stopWorker:              make(chan struct{}),
 		workerInterval:          5 * time.Second,
-		tracers:                 tracing.NewResolver(options.TracerProvider),
+		tracers:                 tracing.NewResolver(options.TracerProvider, options.TracingEnabled),
 	}
 
 	// Start background worker which handles async error logging and event buffering
@@ -121,6 +121,7 @@ func NewSchematicClient(opts ...option.RequestOption) *SchematicClient {
 			BaseURL:        options.BaseURL,
 			Logger:         options.Logger,
 			TracerProvider: options.TracerProvider,
+			TracingEnabled: options.TracingEnabled,
 		}
 
 		client.datastreamClient = datastream.NewDataStreamClient(datastreamOptions, options.DatastreamOptions)

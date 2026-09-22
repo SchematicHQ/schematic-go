@@ -24,10 +24,11 @@ type DataStreamClientOptions struct {
 	CompanyCache cache.CacheProvider[*rulesengine.Company]
 	UserCache    cache.CacheProvider[*rulesengine.User]
 	FlagCache    cache.CacheProvider[*rulesengine.Flag]
-	// TracerProvider is the provider option.WithTracerProvider named, or nil.
-	// It only sets the first of the three steps tracing.Resolver takes, so a
-	// DataStream built without one still records against the caller's span.
+	// TracerProvider is the provider option.WithTracerProvider named, or nil,
+	// and TracingEnabled is whether option.WithTracing opted in. Together they
+	// build the tracing.Resolver the rules-engine spans are recorded on.
 	TracerProvider trace.TracerProvider
+	TracingEnabled bool
 }
 
 type DataStreamClient struct {

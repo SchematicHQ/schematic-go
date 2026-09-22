@@ -289,9 +289,11 @@ func TestClientWithoutTracerProviderStillWorks(t *testing.T) {
 // configuration at all.
 func TestTracesOnProviderNeverInstalledGlobally(t *testing.T) {
 	provider, spans := newTestTracerProvider(t)
-	// Deliberately no otel.SetTracerProvider, and no option.WithTracerProvider.
+	// Deliberately no otel.SetTracerProvider, and no option.WithTracerProvider:
+	// WithTracing alone, with the provider coming off the caller's span.
 	client := schematicclient.NewSchematicClient(
 		option.WithOfflineMode(),
+		option.WithTracing(),
 	)
 	defer client.Close()
 
@@ -341,7 +343,7 @@ func TestFallsBackToGlobalWithoutCallerSpan(t *testing.T) {
 	// leaving it set cannot affect them.
 	otel.SetTracerProvider(provider)
 
-	client := schematicclient.NewSchematicClient(option.WithOfflineMode())
+	client := schematicclient.NewSchematicClient(option.WithOfflineMode(), option.WithTracing())
 	defer client.Close()
 
 	client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "my-flag")
@@ -388,4 +390,53 @@ func TestTrackWithReservationRecordsNoNestedTrackSpan(t *testing.T) {
 	assert.Equal(t, 1, counts["Schematic.TrackWithReservation"])
 	assert.Zero(t, counts["Schematic.Track"],
 		"settling a reservation must not nest a Track span for the same event")
+}
+
+// Tracing is off unless asked for. Spans cost money at most vendors, so
+// upgrading the SDK must not start emitting them in an application that already
+// uses OpenTelemetry.
+func TestTracingIsOffByDefault(t *testing.T) {
+	provider, spans := newTestTracerProvider(t)
+	client := schematicclient.NewSchematicClient(option.WithOfflineMode())
+	defer client.Close()
+
+	// A caller span in the context is exactly the case that would otherwise
+	// hand the SDK a provider to record on.
+	ctx, caller := provider.Tracer("app").Start(context.Background(), "handle-request")
+	client.CheckFlag(ctx, &schematicgo.CheckFlagRequestBody{}, "my-flag")
+	client.Track(ctx, &schematicgo.EventBodyTrack{Event: "api-request"})
+	caller.End()
+
+	for _, span := range spans() {
+		assert.NotContains(t, span.Name(), "Schematic.",
+			"tracing must stay off until WithTracing or WithTracerProvider asks for it")
+	}
+}
+
+// The global provider is the other way tracing could start on its own.
+func TestTracingIsOffByDefaultWithGlobalProvider(t *testing.T) {
+	provider, spans := newTestTracerProvider(t)
+	otel.SetTracerProvider(provider)
+
+	client := schematicclient.NewSchematicClient(option.WithOfflineMode())
+	defer client.Close()
+
+	client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "my-flag")
+
+	assert.Empty(t, spans(), "a configured global provider does not by itself turn tracing on")
+}
+
+// Passing a provider is unambiguously a request to trace, so it must work
+// without also passing WithTracing.
+func TestTracerProviderAloneEnablesTracing(t *testing.T) {
+	provider, spans := newTestTracerProvider(t)
+	client := schematicclient.NewSchematicClient(
+		option.WithOfflineMode(),
+		option.WithTracerProvider(provider),
+	)
+	defer client.Close()
+
+	client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "my-flag")
+
+	spanNamed(t, spans(), "Schematic.CheckFlag")
 }

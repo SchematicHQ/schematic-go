@@ -463,20 +463,42 @@ func (c ClientOptTracerProvider) applyRequestOptions(opts *RequestOptions) {
 	opts.TracerProvider = c.provider
 }
 
-// WithTracerProvider records the SDK's spans on the given TracerProvider.
+// WithTracerProvider turns on tracing and records the SDK's spans on the given
+// TracerProvider.
 //
-// It is rarely needed. Without it the SDK records on the provider behind the
-// span in the caller's context, and on the global provider for a call whose
-// context carries no span. Reach for this to send the SDK's spans somewhere
-// other than where the surrounding application sends its own; an explicit
-// provider always takes precedence over both of the above.
-//
-// An application that has not configured OpenTelemetry at all gets the API's
-// default no-op provider, which starts no spans and builds no attributes.
+// It implies WithTracing: passing a provider is unambiguously a request to
+// trace, so the two are not needed together. Use this rather than WithTracing
+// to send the SDK's spans somewhere other than where the surrounding
+// application sends its own; a provider given here always takes precedence over
+// the context and global providers WithTracing enables.
 //
 // Spans are children of whatever span the context passed to a client method
 // already carries. Trace context is not propagated to the Schematic API, so a
 // trace ends at the SDK boundary.
 func WithTracerProvider(provider trace.TracerProvider) RequestOption {
 	return ClientOptTracerProvider{provider: provider}
+}
+
+type ClientOptTracing struct{}
+
+func (c ClientOptTracing) applyRequestOptions(opts *RequestOptions) {
+	opts.TracingEnabled = true
+}
+
+// WithTracing turns on OpenTelemetry tracing for the SDK's own operations —
+// flag checks, identifies, tracks and credit holds. Spans are children of
+// whatever span the context passed to a client method already carries, so
+// Schematic's work appears inline in the surrounding trace.
+//
+// Tracing is off by default because spans cost money at most vendors, and a
+// library that started emitting them on upgrade would raise an application's
+// observability bill with no change to its code.
+//
+// With this set the SDK records on the OpenTelemetry provider behind the span
+// in the caller's context, and on the global provider for a call whose context
+// carries no span. An application that has not configured OpenTelemetry at all
+// gets the API's default no-op provider, so this option alone still starts no
+// spans. Use WithTracerProvider instead to name a provider explicitly.
+func WithTracing() RequestOption {
+	return ClientOptTracing{}
 }

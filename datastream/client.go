@@ -57,7 +57,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 	}
 
 	client := &DataStreamClient{
-		tracers:            tracing.NewResolver(options.TracerProvider),
+		tracers:            tracing.NewResolver(options.TracerProvider, options.TracingEnabled),
 		engine:             engine,
 		apiKey:             options.ApiKey,
 		redisClient:        redisClient,

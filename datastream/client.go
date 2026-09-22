@@ -544,15 +544,24 @@ func preflightCheckFlagOptions(preflight *schematicgo.PreflightRequestBody) []ru
 	return opts
 }
 
-func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*rulesengine.CheckFlagResult, error) {
-	// Get flag first - return error if not found
-	flag, found := c.getFlag(ctx, flagKey)
-	if !found {
-		return nil, fmt.Errorf("flag not found: %s", flagKey)
-	}
+// ErrPreflightMultipleFlags is returned when a multi-flag check carries a
+// preflight. A preflight asks whether one action would be allowed; applied to
+// every flag in a set, the simulated quantity lands on every numeric condition
+// and flips flags that have nothing to do with the action. The API answers a
+// preflight on its multi-flag routes with a 400 for the same reason.
+var ErrPreflightMultipleFlags = errors.New("preflight is only supported when checking a single flag")
 
-	checkOpts := preflightCheckFlagOptions(evalCtx.Preflight)
-
+// resolveEntities resolves the company and user an eval context names. This is
+// the same work whatever flags are being checked, so CheckFlags does it once
+// for a whole set rather than once per flag.
+//
+// A nil company or user is a valid answer: the eval context may name neither,
+// and in replicator mode an uncached entity evaluates as absent rather than
+// being fetched, since the external replicator owns populating the cache.
+func (c *DataStreamClient) resolveEntities(
+	ctx context.Context,
+	evalCtx *schematicgo.CheckFlagRequestBody,
+) (*rulesengine.Company, *rulesengine.User, error) {
 	needsCompany := len(evalCtx.Company) > 0
 	needsUser := len(evalCtx.User) > 0
 
@@ -569,28 +578,18 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 
 	// If we have all cached data we need, use it
 	if (!needsCompany || cachedCompany != nil) && (!needsUser || cachedUser != nil) {
-		// Evaluate against the rules engine with cached data
-		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag, checkOpts...)
-		if err != nil {
-			return nil, fmt.Errorf("rules engine error: %w", err)
-		}
-		return resp, nil
+		return cachedCompany, cachedUser, nil
 	}
 
-	// Handle replicator mode behavior
+	// In replicator mode, evaluate with what the cache holds instead of
+	// fetching: the external replicator should have populated it already.
 	if c.replicatorMode {
-		// In replicator mode, if we don't have all cached data, evaluate with nil values instead of fetching
-		// The external replicator should have populated the cache with all necessary data
-		resp, err := c.engine.CheckFlag(ctx, cachedCompany, cachedUser, flag, checkOpts...)
-		if err != nil {
-			return nil, fmt.Errorf("rules engine error: %w", err)
-		}
-		return resp, nil
+		return cachedCompany, cachedUser, nil
 	}
 
 	// Otherwise, check if we're connected to datastream
 	if !c.IsConnected() {
-		return nil, fmt.Errorf("datastream not connected")
+		return nil, nil, fmt.Errorf("datastream not connected")
 	}
 
 	// Fetch missing data from datastream
@@ -604,7 +603,7 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 		} else {
 			company, err = c.getCompany(ctx, evalCtx.Company)
 			if err != nil {
-				return nil, fmt.Errorf("failed to get company data: %w", err)
+				return nil, nil, fmt.Errorf("failed to get company data: %w", err)
 			}
 		}
 	}
@@ -615,18 +614,79 @@ func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.C
 		} else {
 			user, err = c.getUser(ctx, evalCtx.User)
 			if err != nil {
-				return nil, fmt.Errorf("failed to get user data: %w", err)
+				return nil, nil, fmt.Errorf("failed to get user data: %w", err)
 			}
 		}
 	}
 
-	// Evaluate against the rules engine
+	return company, user, nil
+}
+
+func (c *DataStreamClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) (*rulesengine.CheckFlagResult, error) {
+	// Get flag first - return error if not found
+	flag, found := c.getFlag(ctx, flagKey)
+	if !found {
+		return nil, fmt.Errorf("flag not found: %s", flagKey)
+	}
+
+	company, user, err := c.resolveEntities(ctx, evalCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	checkOpts := preflightCheckFlagOptions(evalCtx.Preflight)
+
 	resp, err := c.engine.CheckFlag(ctx, company, user, flag, checkOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("rules engine error: %w", err)
 	}
 
 	return resp, nil
+}
+
+// CheckFlags evaluates many flags against one company and user in a single
+// crossing into the rules engine, rather than one per flag.
+//
+// The company is what makes that worth doing: its traits, rules, entitlements
+// and metrics are marshaled, copied into the engine's linear memory and parsed
+// there, and checking N flags one at a time pays for all of it N times. Here
+// the company and user are resolved once and cross once.
+//
+// Results come back in the order the keys were given. A key whose flag is not
+// in the cache fails the whole call, so a caller cannot mistake a short result
+// list for a set of negative verdicts; the SDK falls back to the API for the
+// whole set.
+//
+// A preflight in the eval context is refused -- see ErrPreflightMultipleFlags.
+func (c *DataStreamClient) CheckFlags(
+	ctx context.Context,
+	evalCtx *schematicgo.CheckFlagRequestBody,
+	flagKeys []string,
+) ([]*rulesengine.CheckFlagResult, error) {
+	if evalCtx.Preflight != nil {
+		return nil, ErrPreflightMultipleFlags
+	}
+
+	flags := make([]*rulesengine.Flag, 0, len(flagKeys))
+	for _, flagKey := range flagKeys {
+		flag, found := c.getFlag(ctx, flagKey)
+		if !found {
+			return nil, fmt.Errorf("flag not found: %s", flagKey)
+		}
+		flags = append(flags, flag)
+	}
+
+	company, user, err := c.resolveEntities(ctx, evalCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := c.engine.CheckFlags(ctx, company, user, flags)
+	if err != nil {
+		return nil, fmt.Errorf("rules engine error: %w", err)
+	}
+
+	return results, nil
 }
 
 func (c *DataStreamClient) getAllFlags(ctx context.Context) error {

@@ -1,13 +1,12 @@
 // Package tracing instruments the SDK with OpenTelemetry.
 //
-// Nothing here needs configuring. The SDK records on the provider
-// option.WithTracerProvider named, or failing that the one behind the caller's
-// own span, or failing that the global one. An application that has set
-// OpenTelemetry up in any of the usual ways is therefore already covered, and
-// one that has not gets the API's default no-op provider, which starts no spans
-// and builds no attributes.
+// Tracing is off until option.WithTracing or option.WithTracerProvider asks for
+// it, because spans cost money at most vendors and upgrading a library should
+// not raise an application's observability bill on its own.
 //
-// See Resolver.For for why the order is what it is.
+// Once on, the SDK records on the provider option.WithTracerProvider named, or
+// failing that the one behind the caller's own span, or failing that the global
+// one. See Resolver.For for why the order is what it is.
 package tracing
 
 import (

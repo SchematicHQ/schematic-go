@@ -39,6 +39,7 @@ client/schematic_client_test.go
 client/logger_config_test.go
 client/tracing.go
 client/tracing_test.go
+client/tracing_http_test.go
 datastream/cache.go
 datastream/cache_test.go
 datastream/cache_tls_test.go

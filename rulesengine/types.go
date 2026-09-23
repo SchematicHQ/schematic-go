@@ -99,6 +99,16 @@ type checkFlagEnvelope struct {
 	Options *checkFlagOptions `json:"options,omitempty"`
 }
 
+// checkFlagsEnvelope is the input to the engine's checkFlagsCombined export.
+// The company and user cross once for the whole set, which is the point of the
+// bulk check; there is no options member, since the engine's options are all
+// preflight and a preflight describes one action against one flag.
+type checkFlagsEnvelope struct {
+	Flags   JSONSlice[*Flag] `json:"flags"`
+	Company *Company         `json:"company,omitempty"`
+	User    *User            `json:"user,omitempty"`
+}
+
 // wasmFeatureEntitlement mirrors the engine's FeatureEntitlement wire shape.
 // It exists because FeatureEntitlement is bidirectional: snake_case when
 // received from the datastream (as Company.Entitlements) and camelCase when
@@ -173,6 +183,17 @@ func marshalEnvelope(env *checkFlagEnvelope) ([]byte, error) {
 	out, err := json.Marshal(env)
 	if err != nil {
 		return nil, fmt.Errorf("marshal envelope: %w", err)
+	}
+	return out, nil
+}
+
+// marshalFlagsEnvelope serializes the bulk envelope. Flags is a JSONSlice for
+// the same reason every other collection here is: it marshals nil as [], and
+// the engine's Vec<Flag> will not deserialize from null.
+func marshalFlagsEnvelope(env *checkFlagsEnvelope) ([]byte, error) {
+	out, err := json.Marshal(env)
+	if err != nil {
+		return nil, fmt.Errorf("marshal flags envelope: %w", err)
 	}
 	return out, nil
 }

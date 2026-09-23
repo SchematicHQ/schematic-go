@@ -63,14 +63,15 @@ func WithPoolSize(n int) EngineOption {
 // must only ever serve one check at a time; the pool enforces that by handing
 // each out to a single caller.
 type instance struct {
-	mod     api.Module
-	mem     api.Memory
-	alloc   api.Function
-	dealloc api.Function
-	check   api.Function
-	getRes  api.Function
-	getLen  api.Function
-	setTime api.Function // optional; absent on modules predating the export
+	mod        api.Module
+	mem        api.Memory
+	alloc      api.Function
+	dealloc    api.Function
+	check      api.Function
+	getRes     api.Function
+	getLen     api.Function
+	setTime    api.Function // optional; absent on modules predating the export
+	checkFlags api.Function
 
 	// Metric-period boundary exports. Optional for the same reason as setTime:
 	// a module predating them still serves checks, callers just get nil.
@@ -154,6 +155,8 @@ func newInstance(ctx context.Context, rt wazero.Runtime, compiled wazero.Compile
 		getLen:  mod.ExportedFunction("getResultJsonLength"),
 		setTime: mod.ExportedFunction("setCurrentTimeMillis"),
 
+		checkFlags: mod.ExportedFunction("checkFlagsCombined"),
+
 		curPeriodCalendar:   mod.ExportedFunction("getCurrentMetricPeriodStartForCalendarMetricPeriod"),
 		curPeriodSubscript:  mod.ExportedFunction("getCurrentMetricPeriodStartForCompanyBillingSubscription"),
 		nextPeriodCalendar:  mod.ExportedFunction("getNextMetricPeriodStartForCalendarMetricPeriod"),
@@ -167,6 +170,7 @@ func newInstance(ctx context.Context, rt wazero.Runtime, compiled wazero.Compile
 		"alloc":               inst.alloc,
 		"dealloc":             inst.dealloc,
 		"checkFlagCombined":   inst.check,
+		"checkFlagsCombined":  inst.checkFlags,
 		"getResultJson":       inst.getRes,
 		"getResultJsonLength": inst.getLen,
 	} {
@@ -292,8 +296,122 @@ func (e *Engine) CheckFlagJSON(ctx context.Context, envelope []byte) (*CheckFlag
 	return &result, nil
 }
 
+// CheckFlags evaluates many flags against one company and user, either of
+// which may be nil, and returns a result per flag in the order they were given.
+//
+// The saving over calling CheckFlag in a loop is at the wasm boundary, not in
+// evaluation, which is identical either way: the company is marshaled, copied
+// into the module's linear memory and parsed once for the whole set rather than
+// once per flag. A company's traits, rules, entitlements and metrics dwarf a
+// flag, so that copying is most of what a multi-flag check costs.
+//
+// There are no options, unlike CheckFlag. The engine's options are all
+// preflight, and a preflight describes one action against one flag.
+//
+// A nil flag in the slice yields a flag-not-found result in its position, as
+// CheckFlag does.
+func (e *Engine) CheckFlags(
+	ctx context.Context,
+	company *Company,
+	user *User,
+	flags []*Flag,
+) ([]*CheckFlagResult, error) {
+	if len(flags) == 0 {
+		return []*CheckFlagResult{}, nil
+	}
+
+	// The engine reports a missing flag only by its empty id, so nils are held
+	// back here and their results slotted in afterwards, keeping the answer
+	// aligned with the flags the caller passed.
+	present := make([]*Flag, 0, len(flags))
+	for _, flag := range flags {
+		if flag != nil {
+			present = append(present, flag)
+		}
+	}
+
+	var evaluated []*CheckFlagResult
+	if len(present) > 0 {
+		input, err := marshalFlagsEnvelope(&checkFlagsEnvelope{
+			Flags:   NewJSONSlice(present),
+			Company: company,
+			User:    user,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		evaluated, err = e.CheckFlagsJSON(ctx, input)
+		if err != nil {
+			return nil, err
+		}
+
+		// The engine answers one result per flag, in order. Checked rather than
+		// assumed: the alternative to an error here is indexing past the end of
+		// the slice below, which panics in the caller's goroutine.
+		if len(evaluated) != len(present) {
+			return nil, fmt.Errorf(
+				"rules engine returned %d results for %d flags", len(evaluated), len(present),
+			)
+		}
+	}
+
+	results := make([]*CheckFlagResult, 0, len(flags))
+	next := 0
+	for _, flag := range flags {
+		if flag == nil {
+			results = append(results, &CheckFlagResult{Reason: ReasonFlagNotFound, Err: ErrorFlagNotFound})
+			continue
+		}
+		results = append(results, evaluated[next])
+		next++
+	}
+
+	return results, nil
+}
+
+// CheckFlagsJSON evaluates a pre-marshaled bulk envelope, for the same callers
+// CheckFlagJSON exists for: those that own the wire types in their own package
+// and would otherwise pay a per-check conversion.
+//
+// The envelope is the object CheckFlags builds: {"flags":[...], "company":...,
+// "user":...}, where absent members are omitted. Collection fields must
+// serialize as [] / {} rather than null; see marshalEnvelope.
+func (e *Engine) CheckFlagsJSON(ctx context.Context, envelope []byte) ([]*CheckFlagResult, error) {
+	var inst *instance
+	select {
+	case inst = <-e.pool:
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	}
+	defer func() { e.pool <- inst }()
+
+	out, err := inst.checkFlagsBulk(ctx, envelope)
+	if err != nil {
+		return nil, err
+	}
+
+	var results []*CheckFlagResult
+	if err := json.Unmarshal(out, &results); err != nil {
+		return nil, fmt.Errorf("decode rules engine results: %w", err)
+	}
+
+	return results, nil
+}
+
 // checkFlag runs one evaluation. The caller must hold exclusive use of inst.
 func (i *instance) checkFlag(ctx context.Context, input []byte) ([]byte, error) {
+	return i.call(ctx, i.check, "checkFlagCombined", input)
+}
+
+// checkFlagsBulk evaluates a whole envelope of flags in one crossing.
+func (i *instance) checkFlagsBulk(ctx context.Context, input []byte) ([]byte, error) {
+	return i.call(ctx, i.checkFlags, "checkFlagsCombined", input)
+}
+
+// call writes input into the module's linear memory, invokes fn, and copies the
+// result back out. name only labels errors.
+func (i *instance) call(ctx context.Context, fn api.Function, name string, input []byte) ([]byte, error) {
 	res, err := i.alloc.Call(ctx, uint64(len(input)))
 	if err != nil {
 		return nil, fmt.Errorf("rules engine alloc: %w", err)
@@ -317,9 +435,9 @@ func (i *instance) checkFlag(ctx context.Context, input []byte) ([]byte, error) 
 		}
 	}
 
-	checked, err := i.check.Call(ctx, uint64(ptr), uint64(len(input)))
+	checked, err := fn.Call(ctx, uint64(ptr), uint64(len(input)))
 	if err != nil {
-		return nil, fmt.Errorf("rules engine checkFlagCombined: %w", err)
+		return nil, fmt.Errorf("rules engine %s: %w", name, err)
 	}
 	if api.DecodeI32(checked[0]) < 0 {
 		return nil, ErrorUnexpected

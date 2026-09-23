@@ -205,11 +205,19 @@ func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx 
 //
 // When keys are provided:
 //   - In offline mode, each key resolves to its configured default.
-//   - If datastream is enabled and connected, all keys are evaluated locally;
-//     any failure causes a fallback to the API for the entire batch.
+//   - If datastream is enabled and connected, all keys are evaluated locally
+//     in one crossing into the rules engine; any failure causes a fallback to
+//     the API for the entire batch.
 //   - Otherwise, cached values are returned only when every requested key is
 //     present in the cache. Any miss triggers a single API call to refresh all
 //     keys, guaranteeing the returned values come from a consistent evaluation.
+//
+// A preflight on the eval context is not honored here. It asks whether one
+// action would be allowed, and applied to a set it lands on every numeric
+// condition and flips flags unrelated to the action, so the datastream path
+// refuses it and the API answers it with a 400. Either way the caller gets
+// defaults with Reason set, never a silently preflighted verdict. Use
+// CheckFlagWithEntitlement, or Check, to preflight one flag.
 //
 // On error, defaults are returned for each requested key with Reason set.
 // Results are returned in the same order as keys; entries for keys missing
@@ -260,13 +268,20 @@ func (c *SchematicClient) flagDefaultsFor(keys []string, reason string) []*Check
 // Returns (results, true) if every key was evaluated successfully; otherwise
 // (nil, false) to signal the caller should fall back to the API.
 func (c *SchematicClient) checkFlagsViaDataStream(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, keys []string) ([]*CheckFlagResponse, bool) {
+	// One crossing into the rules engine for the whole set, so the company is
+	// marshaled and parsed once rather than once per key.
+	resps, err := c.datastreamClient.CheckFlags(ctx, evalCtx, keys)
+	if err != nil {
+		c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed for %v (%v), falling back to API", keys, err))
+		return nil, false
+	}
+	if len(resps) != len(keys) {
+		c.logger.Debug(ctx, fmt.Sprintf("Datastream returned %d results for %d flags, falling back to API", len(resps), len(keys)))
+		return nil, false
+	}
+
 	results := make([]*CheckFlagResponse, 0, len(keys))
-	for _, key := range keys {
-		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, key)
-		if err != nil {
-			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed for '%s' (%v), falling back to API", key, err))
-			return nil, false
-		}
+	for _, resp := range resps {
 		checkFlagResp := toCheckFlagResponse(resp)
 		if checkFlagResp == nil {
 			return nil, false

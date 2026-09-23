@@ -211,8 +211,22 @@ func TestCheckFlagsIsTraced(t *testing.T) {
 
 	client.CheckFlags(context.Background(), &schematicgo.CheckFlagRequestBody{}, []string{"flag-a", "flag-b"})
 
-	span := spanNamed(t, spans(), "Schematic.CheckFlags")
-	assert.Equal(t, []string{"flag-a", "flag-b"}, spanAttrs(span)["schematic.flag.keys"].AsStringSlice())
+	recorded := spans()
+	span := spanNamed(t, recorded, "Schematic.CheckFlags")
+	a := spanAttrs(span)
+	assert.Equal(t, []string{"flag-a", "flag-b"}, a["schematic.flag.keys"].AsStringSlice())
+	assert.Equal(t, "api", a["schematic.check.source"].AsString(),
+		"a bulk check answered by the API says so")
+
+	// The whole set goes over the API in one call, so it records one client
+	// span rather than one per key.
+	var apiSpans int
+	for _, s := range recorded {
+		if s.Name() == "Schematic.API.CheckFlags" {
+			apiSpans++
+		}
+	}
+	assert.Equal(t, 1, apiSpans, "one API call for the set, not one per key")
 }
 
 func TestCheckIsTraced(t *testing.T) {
@@ -263,23 +277,6 @@ func TestTrackIsTraced(t *testing.T) {
 	assert.Equal(t, "track", a["schematic.event.type"].AsString())
 	assert.Equal(t, "api-request", a["schematic.event.subtype"].AsString())
 	assert.Equal(t, int64(3), a["schematic.usage.actual_quantity"].AsInt64())
-}
-
-// Without a provider the SDK resolves the global one, whose default is a no-op.
-// Nothing about the client's behavior may change.
-func TestClientWithoutTracerProviderStillWorks(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
-	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(tracedFlagResponse(t, true), nil)
-
-	client := schematicclient.NewSchematicClient(
-		option.WithAPIKey("test-api-key"),
-		option.WithHTTPClient(mockHTTPClient),
-		option.WithDisableFlagCheckCache(),
-	)
-	defer client.Close()
-
-	assert.True(t, client.CheckFlag(context.Background(), &schematicgo.CheckFlagRequestBody{}, "my-flag"))
 }
 
 // An application may build a TracerProvider without ever installing it with

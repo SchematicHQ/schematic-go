@@ -7,6 +7,7 @@ import (
 	"time"
 
 	cache "github.com/schematichq/schematic-go/cache"
+	trace "go.opentelemetry.io/otel/trace"
 )
 
 // RequestOption adapts the behavior of the client or an individual request.
@@ -42,6 +43,8 @@ type RequestOptions struct {
 	FlagCheckCacheProviders []cache.CacheProvider[*CheckFlagResponse]
 	FlagDefaults            map[string]bool
 	OfflineMode             bool
+	TracerProvider          trace.TracerProvider
+	TracingEnabled          bool
 }
 
 // NewRequestOptions returns a new *RequestOptions value.

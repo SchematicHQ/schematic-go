@@ -17,6 +17,8 @@ import (
 	"github.com/schematichq/schematic-go/leases"
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/schematichq/schematic-go/rulesengine"
+	"github.com/schematichq/schematic-go/tracing"
+	"go.opentelemetry.io/otel/codes"
 )
 
 const (
@@ -256,7 +258,7 @@ func (c *SchematicClient) buildClientLeasePlumbing(ctx context.Context, cfg *cor
 		c.reservations = leases.NewInMemoryReservationStore(store, leases.InMemoryReservationStoreOptions{})
 	}
 
-	c.leaseManager = leases.NewLeaseManager(leases.NewAPIWireClient(c.Credits), c.leaseStore, leases.LeaseManagerOptions{
+	c.leaseManager = leases.NewLeaseManager(c.tracedWire(leases.NewAPIWireClient(c.Credits)), c.leaseStore, leases.LeaseManagerOptions{
 		Reservations: c.reservations,
 		Config: leases.ResolvedLeaseConfig{
 			LeaseDuration:  cfg.DefaultLeaseDuration,
@@ -307,6 +309,25 @@ func (c *SchematicClient) Prewarm(
 	evalCtx *schematicgo.CheckFlagRequestBody,
 	creditTypeIDs []string,
 ) (err error) {
+	// Identify starts its prewarm on a background goroutine off a context that
+	// keeps the caller's values, so this span stays attached to the identify
+	// that asked for it. The identify's own span has already ended by then, so
+	// in a waterfall this child outlives its parent.
+	ctx, span := c.startSpan(ctx, "Schematic.Prewarm")
+	// Registered first so it runs last, after the recover below has turned a
+	// panic into err.
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+			span.SetStatus(codes.Error, err.Error())
+		}
+		span.End()
+	}()
+	if span.IsRecording() {
+		span.SetAttributes(tracing.AttrCreditTypeIDs.StringSlice(creditTypeIDs))
+		recordEvalContext(span, evalCtx)
+	}
+
 	defer func() {
 		if r := recover(); r != nil {
 			err = fmt.Errorf("panic while prewarming credit leases: %v", r)
@@ -542,9 +563,33 @@ func (c *SchematicClient) Check(
 		apply(o)
 	}
 
+	ctx, span := c.startSpan(ctx, "Schematic.Check")
+	// Registered before the recover below, so it runs after it and records the
+	// verdict the recover leaves behind rather than a nil result.
+	defer func() {
+		if span.IsRecording() {
+			recordCheckResult(span, result)
+		}
+		span.End()
+	}()
+	if span.IsRecording() {
+		span.SetAttributes(
+			tracing.AttrFlagKey.String(flagKey),
+			tracing.AttrCheckFailOpen.Bool(o.failOpen),
+		)
+		if o.usage != nil {
+			span.SetAttributes(tracing.AttrUsageQuantity.Float64(*o.usage))
+		}
+		if o.eventSubtype != nil {
+			span.SetAttributes(tracing.AttrEventSubtype.String(*o.eventSubtype))
+		}
+		recordEvalContext(span, evalCtx)
+	}
+
 	defer func() {
 		if r := recover(); r != nil {
 			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while checking flag %v", r))
+			span.SetStatus(codes.Error, fmt.Sprintf("panic while checking flag: %v", r))
 			result = c.checkFailureResult(flagKey, o, "error")
 		}
 	}()
@@ -554,6 +599,9 @@ func (c *SchematicClient) Check(
 	}
 
 	mode := c.effectiveLeaseMode()
+	if span.IsRecording() && mode != "" {
+		span.SetAttributes(tracing.AttrLeaseMode.String(string(mode)))
+	}
 	if o.usage == nil || mode == "" {
 		return c.checkFallback(ctx, evalCtx, flagKey, o)
 	}
@@ -893,7 +941,29 @@ func (c *SchematicClient) TrackWithReservation(
 	actualQuantity int64,
 	opts ...TrackOption,
 ) {
+	ctx, span := c.startSpan(ctx, "Schematic.TrackWithReservation")
+	defer span.End()
+	if span.IsRecording() {
+		span.SetAttributes(
+			tracing.AttrEventType.String("track"),
+			tracing.AttrActualQuantity.Int64(actualQuantity),
+		)
+		if reservation != nil {
+			span.SetAttributes(
+				tracing.AttrReservationID.String(reservation.ID),
+				tracing.AttrCreditTypeID.String(reservation.CreditTypeID),
+				tracing.AttrLeaseMode.String(string(reservation.Mode)),
+			)
+			if reservation.CompanyID != "" {
+				span.SetAttributes(tracing.AttrCompanyID.String(reservation.CompanyID))
+			}
+		}
+	}
+
 	if c.isOffline {
+		if span.IsRecording() {
+			span.SetAttributes(tracing.AttrOffline.Bool(true))
+		}
 		return
 	}
 	// A check can allow without taking a hold, for instance when the feature is

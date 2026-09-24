@@ -75,14 +75,16 @@ func (e *Engine) acquire(ctx context.Context) (*instance, func(), error) {
 	}
 }
 
-// syncClock hands the module the current time. The raw wasm32-unknown-unknown
-// build has no system clock, and every metric-period boundary is computed
-// relative to now, so skipping this yields boundaries measured from the epoch.
+// syncClock hands the module the current time from the engine's time source
+// (see WithNow). The raw wasm32-unknown-unknown build has no system clock, and
+// every metric-period boundary is computed relative to now, so skipping this
+// yields boundaries measured from the epoch. It reads the source on every call
+// so an advanced test clock takes effect on the next evaluation.
 func (i *instance) syncClock(ctx context.Context) error {
 	if i.setTime == nil {
 		return nil
 	}
-	if _, err := i.setTime.Call(ctx, api.EncodeI64(time.Now().UnixMilli())); err != nil {
+	if _, err := i.setTime.Call(ctx, api.EncodeI64(i.now().UnixMilli())); err != nil {
 		return fmt.Errorf("rules engine setCurrentTimeMillis: %w", err)
 	}
 	return nil

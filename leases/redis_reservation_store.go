@@ -200,7 +200,7 @@ func (s *RedisReservationStore) Consume(ctx context.Context, id string, creditsC
 	_ = s.client.ZRem(ctx, s.indexKey(), member).Err()
 
 	consumed := clampConsumption(creditsConsumed, reserved)
-	if refund := reserved - consumed; refund > 0 {
+	if refund := reserved - consumed; refund > 0 && refundable(raw["leaseId"]) {
 		// The lease store owns the lease hash, which keeps this cross-key write
 		// out of a single Lua script. Pinned to the reservation's lease so a
 		// hold carved out of an expired lease cannot inflate a successor's

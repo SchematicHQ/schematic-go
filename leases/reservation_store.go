@@ -24,8 +24,9 @@ type ReservationStore interface {
 	// The claim is atomic and comes first: a racing settle or sweep finds
 	// nothing to claim, reports claimed=false, and refunds nothing. On a
 	// successful claim creditsConsumed is clamped to [0, CreditsReserved], the
-	// remainder is refunded to the lease (pinned to the reservation's lease),
-	// and the clamped figure is returned. A crash between the claim and the
+	// remainder is refunded to the lease (pinned to the reservation's lease;
+	// a reservation with no lease id refunds nothing), and the clamped figure
+	// is returned. A crash between the claim and the
 	// refund loses the refund; it never double-refunds. An error means the
 	// caller must treat the settle as not landed even though the claim may
 	// already have.
@@ -103,7 +104,7 @@ func (s *InMemoryReservationStore) Consume(ctx context.Context, id string, credi
 	}
 	consumed := clampConsumption(creditsConsumed, reservation.CreditsReserved)
 	refund := reservation.CreditsReserved - consumed
-	if refund > 0 {
+	if refund > 0 && refundable(reservation.LeaseID) {
 		// Pinned to the originating lease: if that lease has expired and a
 		// successor holds the slot, the refund is dropped, because the expired
 		// lease's remainder already went back to the company balance
@@ -169,6 +170,15 @@ func (s *InMemoryReservationStore) claim(id string) (ReservationRecord, bool) {
 	}
 	delete(s.reservations, id)
 	return reservation, true
+}
+
+// refundable reports whether a hold can name the lease its refund belongs to.
+// An empty lease id would disable the store's lease pin and credit whichever
+// lease holds the slot now, possibly a successor, so such a hold is not
+// refunded: its slice comes back when its lease expires. Every SDK skips it the
+// same way, since fleets mixing SDKs share one Redis.
+func refundable(leaseID string) bool {
+	return leaseID != ""
 }
 
 // clampConsumption keeps local bookkeeping from ever debiting a lease past the

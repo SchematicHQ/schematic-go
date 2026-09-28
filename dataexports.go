@@ -790,6 +790,7 @@ const (
 	CompanyFeatureUsageExportMetadataVisibleColumnsItemSubscription CompanyFeatureUsageExportMetadataVisibleColumnsItem = "subscription"
 	CompanyFeatureUsageExportMetadataVisibleColumnsItemUsers        CompanyFeatureUsageExportMetadataVisibleColumnsItem = "users"
 	CompanyFeatureUsageExportMetadataVisibleColumnsItemLastSeenAt   CompanyFeatureUsageExportMetadataVisibleColumnsItem = "last_seen_at"
+	CompanyFeatureUsageExportMetadataVisibleColumnsItemCreatedAt    CompanyFeatureUsageExportMetadataVisibleColumnsItem = "created_at"
 )
 
 func NewCompanyFeatureUsageExportMetadataVisibleColumnsItemFromString(s string) (CompanyFeatureUsageExportMetadataVisibleColumnsItem, error) {
@@ -802,6 +803,8 @@ func NewCompanyFeatureUsageExportMetadataVisibleColumnsItemFromString(s string) 
 		return CompanyFeatureUsageExportMetadataVisibleColumnsItemUsers, nil
 	case "last_seen_at":
 		return CompanyFeatureUsageExportMetadataVisibleColumnsItemLastSeenAt, nil
+	case "created_at":
+		return CompanyFeatureUsageExportMetadataVisibleColumnsItemCreatedAt, nil
 	}
 	var t CompanyFeatureUsageExportMetadataVisibleColumnsItem
 	return "", fmt.Errorf("%s is not a valid %T", s, t)

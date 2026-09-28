@@ -3242,7 +3242,8 @@ var (
 	creditEventLedgerResponseDataFieldTransferReason             = big.NewInt(1 << 29)
 	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 30)
 	creditEventLedgerResponseDataFieldUsageReason                = big.NewInt(1 << 31)
-	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 32)
+	creditEventLedgerResponseDataFieldUserID                     = big.NewInt(1 << 32)
+	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 33)
 )
 
 type CreditEventLedgerResponseData struct {
@@ -3278,6 +3279,7 @@ type CreditEventLedgerResponseData struct {
 	TransferReason             *CreditTransferReason              `json:"transfer_reason,omitempty" url:"transfer_reason,omitempty"`
 	UsageEventID               *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
 	UsageReason                *CreditUsageReason                 `json:"usage_reason,omitempty" url:"usage_reason,omitempty"`
+	UserID                     *string                            `json:"user_id,omitempty" url:"user_id,omitempty"`
 	ZeroedOutReason            *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3509,6 +3511,13 @@ func (c *CreditEventLedgerResponseData) GetUsageReason() *CreditUsageReason {
 		return nil
 	}
 	return c.UsageReason
+}
+
+func (c *CreditEventLedgerResponseData) GetUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UserID
 }
 
 func (c *CreditEventLedgerResponseData) GetZeroedOutReason() *BillingCreditGrantZeroedOutReason {
@@ -3756,6 +3765,13 @@ func (c *CreditEventLedgerResponseData) SetUsageEventID(usageEventID *string) {
 func (c *CreditEventLedgerResponseData) SetUsageReason(usageReason *CreditUsageReason) {
 	c.UsageReason = usageReason
 	c.require(creditEventLedgerResponseDataFieldUsageReason)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(creditEventLedgerResponseDataFieldUserID)
 }
 
 // SetZeroedOutReason sets the ZeroedOutReason field and marks it as non-optional;

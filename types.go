@@ -7533,14 +7533,15 @@ var (
 	changeSubscriptionRequestBodyFieldBillingEntityID    = big.NewInt(1 << 2)
 	changeSubscriptionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 3)
 	changeSubscriptionRequestBodyFieldCreditBundles      = big.NewInt(1 << 4)
-	changeSubscriptionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 5)
-	changeSubscriptionRequestBodyFieldNewPlanID          = big.NewInt(1 << 6)
-	changeSubscriptionRequestBodyFieldNewPriceID         = big.NewInt(1 << 7)
-	changeSubscriptionRequestBodyFieldOptInAccepted      = big.NewInt(1 << 8)
-	changeSubscriptionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 9)
-	changeSubscriptionRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 10)
-	changeSubscriptionRequestBodyFieldPromoCode          = big.NewInt(1 << 11)
-	changeSubscriptionRequestBodyFieldSkipTrial          = big.NewInt(1 << 12)
+	changeSubscriptionRequestBodyFieldCurrency           = big.NewInt(1 << 5)
+	changeSubscriptionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
+	changeSubscriptionRequestBodyFieldNewPlanID          = big.NewInt(1 << 7)
+	changeSubscriptionRequestBodyFieldNewPriceID         = big.NewInt(1 << 8)
+	changeSubscriptionRequestBodyFieldOptInAccepted      = big.NewInt(1 << 9)
+	changeSubscriptionRequestBodyFieldPayInAdvance       = big.NewInt(1 << 10)
+	changeSubscriptionRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 11)
+	changeSubscriptionRequestBodyFieldPromoCode          = big.NewInt(1 << 12)
+	changeSubscriptionRequestBodyFieldSkipTrial          = big.NewInt(1 << 13)
 )
 
 type ChangeSubscriptionRequestBody struct {
@@ -7549,14 +7550,16 @@ type ChangeSubscriptionRequestBody struct {
 	BillingEntityID    *string                               `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
-	CustomFieldValues  []*CheckoutFieldValue                 `json:"custom_field_values" url:"custom_field_values"`
-	NewPlanID          string                                `json:"new_plan_id" url:"new_plan_id"`
-	NewPriceID         string                                `json:"new_price_id" url:"new_price_id"`
-	OptInAccepted      *bool                                 `json:"opt_in_accepted,omitempty" url:"opt_in_accepted,omitempty"`
-	PayInAdvance       []*UpdatePayInAdvanceRequestBody      `json:"pay_in_advance" url:"pay_in_advance"`
-	PaymentMethodID    *string                               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
-	PromoCode          *string                               `json:"promo_code,omitempty" url:"promo_code,omitempty"`
-	SkipTrial          bool                                  `json:"skip_trial" url:"skip_trial"`
+	// ISO 4217 currency this cart is being built in. Prices are still selected by id; this records the intent, and a cart that prices in another currency is reported as a problem.
+	Currency          *string                          `json:"currency,omitempty" url:"currency,omitempty"`
+	CustomFieldValues []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
+	NewPlanID         string                           `json:"new_plan_id" url:"new_plan_id"`
+	NewPriceID        string                           `json:"new_price_id" url:"new_price_id"`
+	OptInAccepted     *bool                            `json:"opt_in_accepted,omitempty" url:"opt_in_accepted,omitempty"`
+	PayInAdvance      []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance" url:"pay_in_advance"`
+	PaymentMethodID   *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PromoCode         *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	SkipTrial         bool                             `json:"skip_trial" url:"skip_trial"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7598,6 +7601,13 @@ func (c *ChangeSubscriptionRequestBody) GetCreditBundles() []*UpdateCreditBundle
 		return nil
 	}
 	return c.CreditBundles
+}
+
+func (c *ChangeSubscriptionRequestBody) GetCurrency() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Currency
 }
 
 func (c *ChangeSubscriptionRequestBody) GetCustomFieldValues() []*CheckoutFieldValue {
@@ -7705,6 +7715,13 @@ func (c *ChangeSubscriptionRequestBody) SetCouponExternalID(couponExternalID *st
 func (c *ChangeSubscriptionRequestBody) SetCreditBundles(creditBundles []*UpdateCreditBundleRequestBody) {
 	c.CreditBundles = creditBundles
 	c.require(changeSubscriptionRequestBodyFieldCreditBundles)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionRequestBody) SetCurrency(currency *string) {
+	c.Currency = currency
+	c.require(changeSubscriptionRequestBodyFieldCurrency)
 }
 
 // SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
@@ -25511,7 +25528,8 @@ var (
 	invoiceRequestBodyFieldStatus                  = big.NewInt(1 << 10)
 	invoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 11)
 	invoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 12)
-	invoiceRequestBodyFieldURL                     = big.NewInt(1 << 13)
+	invoiceRequestBodyFieldTotal                   = big.NewInt(1 << 13)
+	invoiceRequestBodyFieldURL                     = big.NewInt(1 << 14)
 )
 
 type InvoiceRequestBody struct {
@@ -25528,6 +25546,7 @@ type InvoiceRequestBody struct {
 	Status                  *InvoiceStatus `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	Subtotal                int64          `json:"subtotal" url:"subtotal"`
+	Total                   *int64         `json:"total,omitempty" url:"total,omitempty"`
 	URL                     *string        `json:"url,omitempty" url:"url,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -25626,6 +25645,13 @@ func (i *InvoiceRequestBody) GetSubtotal() int64 {
 		return 0
 	}
 	return i.Subtotal
+}
+
+func (i *InvoiceRequestBody) GetTotal() *int64 {
+	if i == nil {
+		return nil
+	}
+	return i.Total
 }
 
 func (i *InvoiceRequestBody) GetURL() *string {
@@ -25742,6 +25768,13 @@ func (i *InvoiceRequestBody) SetSubtotal(subtotal int64) {
 	i.require(invoiceRequestBodyFieldSubtotal)
 }
 
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InvoiceRequestBody) SetTotal(total *int64) {
+	i.Total = total
+	i.require(invoiceRequestBodyFieldTotal)
+}
+
 // SetURL sets the URL field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (i *InvoiceRequestBody) SetURL(url *string) {
@@ -25819,8 +25852,9 @@ var (
 	invoiceResponseDataFieldStatus                  = big.NewInt(1 << 16)
 	invoiceResponseDataFieldSubscriptionExternalID  = big.NewInt(1 << 17)
 	invoiceResponseDataFieldSubtotal                = big.NewInt(1 << 18)
-	invoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 19)
-	invoiceResponseDataFieldURL                     = big.NewInt(1 << 20)
+	invoiceResponseDataFieldTotal                   = big.NewInt(1 << 19)
+	invoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 20)
+	invoiceResponseDataFieldURL                     = big.NewInt(1 << 21)
 )
 
 type InvoiceResponseData struct {
@@ -25843,8 +25877,10 @@ type InvoiceResponseData struct {
 	Status                  *InvoiceStatus      `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string             `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	Subtotal                int64               `json:"subtotal" url:"subtotal"`
-	UpdatedAt               time.Time           `json:"updated_at" url:"updated_at"`
-	URL                     *string             `json:"url,omitempty" url:"url,omitempty"`
+	// Amount after discounts and tax, before applying the customer balance. Null when the provider has not reported it: rows synced before the column existed, or pushed without one.
+	Total     *int64    `json:"total,omitempty" url:"total,omitempty"`
+	UpdatedAt time.Time `json:"updated_at" url:"updated_at"`
+	URL       *string   `json:"url,omitempty" url:"url,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -25984,6 +26020,13 @@ func (i *InvoiceResponseData) GetSubtotal() int64 {
 		return 0
 	}
 	return i.Subtotal
+}
+
+func (i *InvoiceResponseData) GetTotal() *int64 {
+	if i == nil {
+		return nil
+	}
+	return i.Total
 }
 
 func (i *InvoiceResponseData) GetUpdatedAt() time.Time {
@@ -26147,6 +26190,13 @@ func (i *InvoiceResponseData) SetSubscriptionExternalID(subscriptionExternalID *
 func (i *InvoiceResponseData) SetSubtotal(subtotal int64) {
 	i.Subtotal = subtotal
 	i.require(invoiceResponseDataFieldSubtotal)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InvoiceResponseData) SetTotal(total *int64) {
+	i.Total = total
+	i.require(invoiceResponseDataFieldTotal)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -29177,7 +29227,7 @@ type PlanEntitlementResponseData struct {
 	SoftLimit            *int64                      `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	UpdatedAt            time.Time                   `json:"updated_at" url:"updated_at"`
 	UsageBasedProduct    *BillingProductResponseData `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
-	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity *int64                             `json:"usage_quantity,omitempty" url:"usage_quantity,omitempty"`
 	ValueBool     *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
 	ValueCredit   *BillingCreditResponseData         `json:"value_credit,omitempty" url:"value_credit,omitempty"`
@@ -34743,6 +34793,46 @@ func (r *RulesengineCompanyMetric) String() string {
 	return fmt.Sprintf("%#v", r)
 }
 
+type RulesengineComparableOperator string
+
+const (
+	RulesengineComparableOperatorEq       RulesengineComparableOperator = "eq"
+	RulesengineComparableOperatorGt       RulesengineComparableOperator = "gt"
+	RulesengineComparableOperatorGte      RulesengineComparableOperator = "gte"
+	RulesengineComparableOperatorIsEmpty  RulesengineComparableOperator = "is_empty"
+	RulesengineComparableOperatorLt       RulesengineComparableOperator = "lt"
+	RulesengineComparableOperatorLte      RulesengineComparableOperator = "lte"
+	RulesengineComparableOperatorNotEmpty RulesengineComparableOperator = "not_empty"
+	RulesengineComparableOperatorNe       RulesengineComparableOperator = "ne"
+)
+
+func NewRulesengineComparableOperatorFromString(s string) (RulesengineComparableOperator, error) {
+	switch s {
+	case "eq":
+		return RulesengineComparableOperatorEq, nil
+	case "gt":
+		return RulesengineComparableOperatorGt, nil
+	case "gte":
+		return RulesengineComparableOperatorGte, nil
+	case "is_empty":
+		return RulesengineComparableOperatorIsEmpty, nil
+	case "lt":
+		return RulesengineComparableOperatorLt, nil
+	case "lte":
+		return RulesengineComparableOperatorLte, nil
+	case "not_empty":
+		return RulesengineComparableOperatorNotEmpty, nil
+	case "ne":
+		return RulesengineComparableOperatorNe, nil
+	}
+	var t RulesengineComparableOperator
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RulesengineComparableOperator) Ptr() *RulesengineComparableOperator {
+	return &r
+}
+
 var (
 	rulesengineConditionFieldAccountID                 = big.NewInt(1 << 0)
 	rulesengineConditionFieldComparisonTraitDefinition = big.NewInt(1 << 1)
@@ -34773,7 +34863,7 @@ type RulesengineCondition struct {
 	MetricPeriod              *RulesengineMetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset    *RulesengineMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MetricValue               *int64                             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
-	Operator                  ComparableOperator                 `json:"operator" url:"operator"`
+	Operator                  RulesengineComparableOperator      `json:"operator" url:"operator"`
 	ResourceIDs               []string                           `json:"resource_ids" url:"resource_ids"`
 	TraitDefinition           *RulesengineTraitDefinition        `json:"trait_definition,omitempty" url:"trait_definition,omitempty"`
 	TraitValue                string                             `json:"trait_value" url:"trait_value"`
@@ -34862,7 +34952,7 @@ func (r *RulesengineCondition) GetMetricValue() *int64 {
 	return r.MetricValue
 }
 
-func (r *RulesengineCondition) GetOperator() ComparableOperator {
+func (r *RulesengineCondition) GetOperator() RulesengineComparableOperator {
 	if r == nil {
 		return ""
 	}
@@ -34985,7 +35075,7 @@ func (r *RulesengineCondition) SetMetricValue(metricValue *int64) {
 
 // SetOperator sets the Operator field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (r *RulesengineCondition) SetOperator(operator ComparableOperator) {
+func (r *RulesengineCondition) SetOperator(operator RulesengineComparableOperator) {
 	r.Operator = operator
 	r.require(rulesengineConditionFieldOperator)
 }
@@ -39481,7 +39571,7 @@ type UsageBasedEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"quarterly_unit_price_decimal,omitempty"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"tier_mode,omitempty"`
-	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"usage_quantity,omitempty"`
 	YearlyMeteredPriceID   *string                       `json:"yearly_metered_price_id,omitempty" url:"yearly_metered_price_id,omitempty"`
 	YearlyPriceTiers       []*CreatePriceTierRequestBody `json:"yearly_price_tiers,omitempty" url:"yearly_price_tiers,omitempty"`
@@ -39916,7 +40006,7 @@ type UsageBasedEntitlementResponseData struct {
 	MonthlyUsageBasedPrice   *BillingPriceView         `json:"monthly_usage_based_price,omitempty" url:"monthly_usage_based_price,omitempty"`
 	PriceBehavior            *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	QuarterlyUsageBasedPrice *BillingPriceView         `json:"quarterly_usage_based_price,omitempty" url:"quarterly_usage_based_price,omitempty"`
-	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity         *int64               `json:"usage_quantity,omitempty" url:"usage_quantity,omitempty"`
 	ValueBool             *bool                `json:"value_bool,omitempty" url:"value_bool,omitempty"`
 	ValueNumeric          *int64               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`

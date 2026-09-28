@@ -2189,6 +2189,14 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
+**total:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **url:** `*string` 
     
 </dd>
@@ -13864,7 +13872,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
     
 </dd>
 </dl>
@@ -14218,7 +14226,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
     
 </dd>
 </dl>
@@ -14607,7 +14615,7 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dl>
 <dd>
 
-**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+**usageQuantity:** `*int64` — The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
     
 </dd>
 </dl>

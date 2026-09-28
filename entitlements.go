@@ -678,7 +678,7 @@ type CreatePlanEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"-"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
-	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"-"`
 	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
@@ -10387,7 +10387,7 @@ type UpdatePlanEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"-"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
-	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"-"`
 	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`
@@ -10737,7 +10737,7 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 	QuarterlyUnitPriceDecimal *string                       `json:"quarterly_unit_price_decimal,omitempty" url:"-"`
 	SoftLimit                 *int64                        `json:"soft_limit,omitempty" url:"-"`
 	TierMode                  *BillingTiersMode             `json:"tier_mode,omitempty" url:"-"`
-	// The committed unit quantity for this entitlement. For custom plans this is the quantity the company is contractually committed to; for standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements. Note: this is not yet enforced/auto-provisioned as a true default — it is currently stored for downstream billing use.
+	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity          *int64                        `json:"usage_quantity,omitempty" url:"-"`
 	ValueBool              *bool                         `json:"value_bool,omitempty" url:"-"`
 	ValueCreditID          *string                       `json:"value_credit_id,omitempty" url:"-"`

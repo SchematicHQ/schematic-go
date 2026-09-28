@@ -4049,8 +4049,9 @@ var (
 	upcomingInvoiceResponseDataFieldStatus                  = big.NewInt(1 << 15)
 	upcomingInvoiceResponseDataFieldSubscriptionExternalID  = big.NewInt(1 << 16)
 	upcomingInvoiceResponseDataFieldSubtotal                = big.NewInt(1 << 17)
-	upcomingInvoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 18)
-	upcomingInvoiceResponseDataFieldURL                     = big.NewInt(1 << 19)
+	upcomingInvoiceResponseDataFieldTotal                   = big.NewInt(1 << 18)
+	upcomingInvoiceResponseDataFieldUpdatedAt               = big.NewInt(1 << 19)
+	upcomingInvoiceResponseDataFieldURL                     = big.NewInt(1 << 20)
 )
 
 type UpcomingInvoiceResponseData struct {
@@ -4072,8 +4073,10 @@ type UpcomingInvoiceResponseData struct {
 	Status                  *InvoiceStatus      `json:"status,omitempty" url:"status,omitempty"`
 	SubscriptionExternalID  *string             `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	Subtotal                int64               `json:"subtotal" url:"subtotal"`
-	UpdatedAt               time.Time           `json:"updated_at" url:"updated_at"`
-	URL                     *string             `json:"url,omitempty" url:"url,omitempty"`
+	// Amount after discounts and tax, before applying the customer balance. Null when the provider has not reported it.
+	Total     *int64    `json:"total,omitempty" url:"total,omitempty"`
+	UpdatedAt time.Time `json:"updated_at" url:"updated_at"`
+	URL       *string   `json:"url,omitempty" url:"url,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4206,6 +4209,13 @@ func (u *UpcomingInvoiceResponseData) GetSubtotal() int64 {
 		return 0
 	}
 	return u.Subtotal
+}
+
+func (u *UpcomingInvoiceResponseData) GetTotal() *int64 {
+	if u == nil {
+		return nil
+	}
+	return u.Total
 }
 
 func (u *UpcomingInvoiceResponseData) GetUpdatedAt() time.Time {
@@ -4362,6 +4372,13 @@ func (u *UpcomingInvoiceResponseData) SetSubscriptionExternalID(subscriptionExte
 func (u *UpcomingInvoiceResponseData) SetSubtotal(subtotal int64) {
 	u.Subtotal = subtotal
 	u.require(upcomingInvoiceResponseDataFieldSubtotal)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpcomingInvoiceResponseData) SetTotal(total *int64) {
+	u.Total = total
+	u.require(upcomingInvoiceResponseDataFieldTotal)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;

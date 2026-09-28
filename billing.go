@@ -9223,7 +9223,8 @@ var (
 	createInvoiceRequestBodyFieldStatus                  = big.NewInt(1 << 11)
 	createInvoiceRequestBodyFieldSubscriptionExternalID  = big.NewInt(1 << 12)
 	createInvoiceRequestBodyFieldSubtotal                = big.NewInt(1 << 13)
-	createInvoiceRequestBodyFieldURL                     = big.NewInt(1 << 14)
+	createInvoiceRequestBodyFieldTotal                   = big.NewInt(1 << 14)
+	createInvoiceRequestBodyFieldURL                     = big.NewInt(1 << 15)
 )
 
 type CreateInvoiceRequestBody struct {
@@ -9241,6 +9242,7 @@ type CreateInvoiceRequestBody struct {
 	Status                  *InvoiceStatus `json:"status,omitempty" url:"-"`
 	SubscriptionExternalID  *string        `json:"subscription_external_id,omitempty" url:"-"`
 	Subtotal                int64          `json:"subtotal" url:"-"`
+	Total                   *int64         `json:"total,omitempty" url:"-"`
 	URL                     *string        `json:"url,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -9352,6 +9354,13 @@ func (c *CreateInvoiceRequestBody) SetSubscriptionExternalID(subscriptionExterna
 func (c *CreateInvoiceRequestBody) SetSubtotal(subtotal int64) {
 	c.Subtotal = subtotal
 	c.require(createInvoiceRequestBodyFieldSubtotal)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateInvoiceRequestBody) SetTotal(total *int64) {
+	c.Total = total
+	c.require(createInvoiceRequestBodyFieldTotal)
 }
 
 // SetURL sets the URL field and marks it as non-optional;

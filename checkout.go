@@ -151,14 +151,15 @@ var (
 	changeSubscriptionInternalRequestBodyFieldCompanyID          = big.NewInt(1 << 3)
 	changeSubscriptionInternalRequestBodyFieldCouponExternalID   = big.NewInt(1 << 4)
 	changeSubscriptionInternalRequestBodyFieldCreditBundles      = big.NewInt(1 << 5)
-	changeSubscriptionInternalRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
-	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 7)
-	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 8)
-	changeSubscriptionInternalRequestBodyFieldOptInAccepted      = big.NewInt(1 << 9)
-	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 10)
-	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 11)
-	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 12)
-	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 13)
+	changeSubscriptionInternalRequestBodyFieldCurrency           = big.NewInt(1 << 6)
+	changeSubscriptionInternalRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 7)
+	changeSubscriptionInternalRequestBodyFieldNewPlanID          = big.NewInt(1 << 8)
+	changeSubscriptionInternalRequestBodyFieldNewPriceID         = big.NewInt(1 << 9)
+	changeSubscriptionInternalRequestBodyFieldOptInAccepted      = big.NewInt(1 << 10)
+	changeSubscriptionInternalRequestBodyFieldPayInAdvance       = big.NewInt(1 << 11)
+	changeSubscriptionInternalRequestBodyFieldPaymentMethodID    = big.NewInt(1 << 12)
+	changeSubscriptionInternalRequestBodyFieldPromoCode          = big.NewInt(1 << 13)
+	changeSubscriptionInternalRequestBodyFieldSkipTrial          = big.NewInt(1 << 14)
 )
 
 type ChangeSubscriptionInternalRequestBody struct {
@@ -168,14 +169,16 @@ type ChangeSubscriptionInternalRequestBody struct {
 	CompanyID          string                                `json:"company_id" url:"company_id"`
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
-	CustomFieldValues  []*CheckoutFieldValue                 `json:"custom_field_values" url:"custom_field_values"`
-	NewPlanID          string                                `json:"new_plan_id" url:"new_plan_id"`
-	NewPriceID         string                                `json:"new_price_id" url:"new_price_id"`
-	OptInAccepted      *bool                                 `json:"opt_in_accepted,omitempty" url:"opt_in_accepted,omitempty"`
-	PayInAdvance       []*UpdatePayInAdvanceRequestBody      `json:"pay_in_advance" url:"pay_in_advance"`
-	PaymentMethodID    *string                               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
-	PromoCode          *string                               `json:"promo_code,omitempty" url:"promo_code,omitempty"`
-	SkipTrial          bool                                  `json:"skip_trial" url:"skip_trial"`
+	// ISO 4217 currency this cart is being built in. Prices are still selected by id; this records the intent, and a cart that prices in another currency is reported as a problem.
+	Currency          *string                          `json:"currency,omitempty" url:"currency,omitempty"`
+	CustomFieldValues []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
+	NewPlanID         string                           `json:"new_plan_id" url:"new_plan_id"`
+	NewPriceID        string                           `json:"new_price_id" url:"new_price_id"`
+	OptInAccepted     *bool                            `json:"opt_in_accepted,omitempty" url:"opt_in_accepted,omitempty"`
+	PayInAdvance      []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance" url:"pay_in_advance"`
+	PaymentMethodID   *string                          `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PromoCode         *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
+	SkipTrial         bool                             `json:"skip_trial" url:"skip_trial"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -224,6 +227,13 @@ func (c *ChangeSubscriptionInternalRequestBody) GetCreditBundles() []*UpdateCred
 		return nil
 	}
 	return c.CreditBundles
+}
+
+func (c *ChangeSubscriptionInternalRequestBody) GetCurrency() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Currency
 }
 
 func (c *ChangeSubscriptionInternalRequestBody) GetCustomFieldValues() []*CheckoutFieldValue {
@@ -338,6 +348,13 @@ func (c *ChangeSubscriptionInternalRequestBody) SetCouponExternalID(couponExtern
 func (c *ChangeSubscriptionInternalRequestBody) SetCreditBundles(creditBundles []*UpdateCreditBundleRequestBody) {
 	c.CreditBundles = creditBundles
 	c.require(changeSubscriptionInternalRequestBodyFieldCreditBundles)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ChangeSubscriptionInternalRequestBody) SetCurrency(currency *string) {
+	c.Currency = currency
+	c.require(changeSubscriptionInternalRequestBodyFieldCurrency)
 }
 
 // SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
@@ -2016,15 +2033,16 @@ var (
 	managePlanRequestFieldCompanyID                = big.NewInt(1 << 10)
 	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 11)
 	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 12)
-	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 13)
-	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 14)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 15)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 16)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 17)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 18)
-	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 19)
-	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 20)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 21)
+	managePlanRequestFieldCurrency                 = big.NewInt(1 << 13)
+	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 14)
+	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 15)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 16)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 17)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 18)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 19)
+	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 20)
+	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 21)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 22)
 )
 
 type ManagePlanRequest struct {
@@ -2043,11 +2061,13 @@ type ManagePlanRequest struct {
 	// If false, subscription cancels at period end. Only applies when removing all plans. Defaults to true.
 	CancelImmediately *bool `json:"cancel_immediately,omitempty" url:"cancel_immediately,omitempty"`
 	// How the subscription is paid: charged to a payment method on file, or invoiced with payment terms. Invoicing is only available when starting a new subscription. Defaults to charge_automatically.
-	CollectionMethod  *BillingCollectionMethod         `json:"collection_method,omitempty" url:"collection_method,omitempty"`
-	CompanyID         string                           `json:"company_id" url:"company_id"`
-	CouponExternalID  *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
-	CreditBundles     []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
-	CustomFieldValues []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
+	CollectionMethod *BillingCollectionMethod         `json:"collection_method,omitempty" url:"collection_method,omitempty"`
+	CompanyID        string                           `json:"company_id" url:"company_id"`
+	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	CreditBundles    []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
+	// ISO 4217 currency this change is being built in. Prices are still selected by id; this records the intent.
+	Currency          *string               `json:"currency,omitempty" url:"currency,omitempty"`
+	CustomFieldValues []*CheckoutFieldValue `json:"custom_field_values" url:"custom_field_values"`
 	// Payment terms in days for an invoiced subscription. Defaults to 30.
 	DaysUntilDue             *int64                           `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
 	PayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance_entitlements" url:"pay_in_advance_entitlements"`
@@ -2157,6 +2177,13 @@ func (m *ManagePlanRequest) GetCreditBundles() []*UpdateCreditBundleRequestBody 
 		return nil
 	}
 	return m.CreditBundles
+}
+
+func (m *ManagePlanRequest) GetCurrency() *string {
+	if m == nil {
+		return nil
+	}
+	return m.Currency
 }
 
 func (m *ManagePlanRequest) GetCustomFieldValues() []*CheckoutFieldValue {
@@ -2327,6 +2354,13 @@ func (m *ManagePlanRequest) SetCouponExternalID(couponExternalID *string) {
 func (m *ManagePlanRequest) SetCreditBundles(creditBundles []*UpdateCreditBundleRequestBody) {
 	m.CreditBundles = creditBundles
 	m.require(managePlanRequestFieldCreditBundles)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetCurrency(currency *string) {
+	m.Currency = currency
+	m.require(managePlanRequestFieldCurrency)
 }
 
 // SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
@@ -3268,26 +3302,29 @@ func (p *PreviewSubscriptionDiscountResponseData) String() string {
 
 var (
 	previewSubscriptionFinanceResponseDataFieldAmountOff                = big.NewInt(1 << 0)
-	previewSubscriptionFinanceResponseDataFieldDiscountAmount           = big.NewInt(1 << 1)
-	previewSubscriptionFinanceResponseDataFieldDiscounts                = big.NewInt(1 << 2)
-	previewSubscriptionFinanceResponseDataFieldDueNow                   = big.NewInt(1 << 3)
-	previewSubscriptionFinanceResponseDataFieldNewCharges               = big.NewInt(1 << 4)
-	previewSubscriptionFinanceResponseDataFieldPercentOff               = big.NewInt(1 << 5)
-	previewSubscriptionFinanceResponseDataFieldPeriodEnd                = big.NewInt(1 << 6)
-	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 7)
-	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 8)
-	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 9)
-	previewSubscriptionFinanceResponseDataFieldProrationBilledAt        = big.NewInt(1 << 10)
-	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 11)
-	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 12)
-	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 13)
-	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 14)
-	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 15)
-	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 16)
+	previewSubscriptionFinanceResponseDataFieldCurrency                 = big.NewInt(1 << 1)
+	previewSubscriptionFinanceResponseDataFieldDiscountAmount           = big.NewInt(1 << 2)
+	previewSubscriptionFinanceResponseDataFieldDiscounts                = big.NewInt(1 << 3)
+	previewSubscriptionFinanceResponseDataFieldDueNow                   = big.NewInt(1 << 4)
+	previewSubscriptionFinanceResponseDataFieldNewCharges               = big.NewInt(1 << 5)
+	previewSubscriptionFinanceResponseDataFieldPercentOff               = big.NewInt(1 << 6)
+	previewSubscriptionFinanceResponseDataFieldPeriodEnd                = big.NewInt(1 << 7)
+	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 8)
+	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 9)
+	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 10)
+	previewSubscriptionFinanceResponseDataFieldProrationBilledAt        = big.NewInt(1 << 11)
+	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 12)
+	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 13)
+	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 14)
+	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 15)
+	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 16)
+	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 17)
 )
 
 type PreviewSubscriptionFinanceResponseData struct {
-	AmountOff                int64                                          `json:"amount_off" url:"amount_off"`
+	AmountOff int64 `json:"amount_off" url:"amount_off"`
+	// ISO 4217 currency every amount in this block is denominated in.
+	Currency                 string                                         `json:"currency" url:"currency"`
 	DiscountAmount           int64                                          `json:"discount_amount" url:"discount_amount"`
 	Discounts                []*PreviewSubscriptionDiscountResponseData     `json:"discounts" url:"discounts"`
 	DueNow                   int64                                          `json:"due_now" url:"due_now"`
@@ -3317,6 +3354,13 @@ func (p *PreviewSubscriptionFinanceResponseData) GetAmountOff() int64 {
 		return 0
 	}
 	return p.AmountOff
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetCurrency() string {
+	if p == nil {
+		return ""
+	}
+	return p.Currency
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) GetDiscountAmount() int64 {
@@ -3452,6 +3496,13 @@ func (p *PreviewSubscriptionFinanceResponseData) require(field *big.Int) {
 func (p *PreviewSubscriptionFinanceResponseData) SetAmountOff(amountOff int64) {
 	p.AmountOff = amountOff
 	p.require(previewSubscriptionFinanceResponseDataFieldAmountOff)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionFinanceResponseData) SetCurrency(currency string) {
+	p.Currency = currency
+	p.require(previewSubscriptionFinanceResponseDataFieldCurrency)
 }
 
 // SetDiscountAmount sets the DiscountAmount field and marks it as non-optional;

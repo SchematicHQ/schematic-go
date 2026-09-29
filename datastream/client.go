@@ -232,7 +232,13 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 	}
 
 	c.flagsMu.Lock()
-	var cacheKeys []string
+	// A snapshot's first page starts the set over, so an interrupted snapshot
+	// leaves nothing behind for the next one to count as present.
+	if resp.Pagination != nil && resp.Pagination.Page <= 1 {
+		c.snapshotFlagKeys = nil
+	}
+
+	cacheKeys := c.snapshotFlagKeys
 	for _, flag := range flagsData {
 		cacheKey := c.flagCacheKey(flag.Key)
 		if err := c.flagsCacheProvider.Set(ctx, cacheKey, flag, nil); err != nil {
@@ -241,6 +247,17 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 		cacheKeys = append(cacheKeys, cacheKey)
 	}
 
+	// Mid-snapshot: the pages still to come carry flags this one has not seen,
+	// so deleting what is absent now would delete them, and releasing the
+	// waiter now would hand it a partial set. Hold both until the last page.
+	if resp.Pagination != nil && resp.Pagination.HasMore {
+		c.snapshotFlagKeys = cacheKeys
+		c.flagsMu.Unlock()
+
+		return nil
+	}
+
+	c.snapshotFlagKeys = nil
 	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys, c.flagCacheScanPattern())
 	c.flagsMu.Unlock()
 
@@ -716,6 +733,7 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 
 	req := &schematicdatastreamws.DataStreamReq{
 		EntityType: schematicdatastreamws.EntityTypeFlags,
+		PageSize:   schematicgo.Int(flagSnapshotPageSize),
 	}
 	err := c.sendWebSocketMessage(ctx, req)
 	if err != nil {

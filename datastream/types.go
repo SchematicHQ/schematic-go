@@ -54,6 +54,13 @@ type DataStreamClient struct {
 	pendingUserRequests    map[string][]chan *rulesengine.User
 	pendingFlagRequest     chan bool
 
+	// snapshotFlagKeys collects the cache keys a paginated flags snapshot has
+	// written so far, so the delete of everything absent from the snapshot runs
+	// against the whole set rather than the last page. Guarded by flagsMu, and
+	// reset when a snapshot's first page arrives -- an interrupted snapshot
+	// therefore leaves nothing for the next one to inherit.
+	snapshotFlagKeys []string
+
 	// Replicator mode configuration
 	replicatorMode         bool
 	replicatorHealthURL    string

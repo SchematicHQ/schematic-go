@@ -25,6 +25,8 @@ github.com/redis/go-redis/v9 v9.22.0 h1:laDvpYXTJtZLloinw1fA5Kqd6HAEH2XKxOkG/PDq
 github.com/redis/go-redis/v9 v9.22.0/go.mod h1:y2g0Wj8rQvuK0ELM+oxSudcLtC09JScs98I/X9gRWY4=
 github.com/schematichq/schematic-datastream-ws v0.2.10 h1:mXyrG+xrHXmH0z0n1S49C/COC0Brs6rl+jdsE1NvuFk=
 github.com/schematichq/schematic-datastream-ws v0.2.10/go.mod h1:NKrg326C9YfCDOI84On5GZhvrovzDpFCzW8wdBwPZ3g=
+github.com/schematichq/schematic-datastream-ws v0.2.11-0.20260929181033-7e16dd1f1304 h1:upl/WikNWun6WP0YybBtZaLCbTB0TV/rTbYKgLreuck=
+github.com/schematichq/schematic-datastream-ws v0.2.11-0.20260929181033-7e16dd1f1304/go.mod h1:NKrg326C9YfCDOI84On5GZhvrovzDpFCzW8wdBwPZ3g=
 github.com/stretchr/testify v1.12.1 h1:EuwCh5fleGS7H32xRwO3wRGT7DxrDhLAT6FF8MpWDWE=
 github.com/stretchr/testify v1.12.1/go.mod h1:MDEgiDPPsNp5cuIrHPPCyornHKgEVbtFUmoNlxoYthg=
 github.com/tetratelabs/wazero v1.12.0 h1:DuWcpNu/FzgEXgGBDp8J1Spc+CWOvvtvVyjKlaZopYU=

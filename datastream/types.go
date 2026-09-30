@@ -60,6 +60,13 @@ type DataStreamClient struct {
 	// reset when a snapshot's first page arrives -- an interrupted snapshot
 	// therefore leaves nothing for the next one to inherit.
 	snapshotFlagKeys []string
+	// snapshotNextPage is the page number the snapshot in progress expects
+	// next, so a gap is caught rather than applied. The transport drops a
+	// message when its queue is full, and a snapshot is now many messages: a
+	// lost middle page would otherwise let the last page complete a snapshot
+	// missing flags, and the delete below would remove them. Guarded by
+	// flagsMu.
+	snapshotNextPage int
 
 	// Replicator mode configuration
 	replicatorMode         bool

@@ -232,10 +232,30 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 	}
 
 	c.flagsMu.Lock()
-	// A snapshot's first page starts the set over, so an interrupted snapshot
-	// leaves nothing behind for the next one to count as present.
-	if resp.Pagination != nil && resp.Pagination.Page <= 1 {
-		c.snapshotFlagKeys = nil
+	if resp.Pagination != nil {
+		// A snapshot's first page starts the set over, so an interrupted
+		// snapshot leaves nothing behind for the next one to count as present.
+		if resp.Pagination.Page <= 1 {
+			c.snapshotFlagKeys = nil
+			c.snapshotNextPage = 1
+		}
+
+		// A page out of sequence means one went missing -- the transport drops
+		// a message when its queue is full, and a snapshot is many messages.
+		// Abandon the snapshot rather than complete one with a hole in it: the
+		// delete below would take the missing page's flags out of the cache,
+		// and nothing downstream could tell. Dropping the accumulation instead
+		// leaves the cache a superset of the truth, and the caller waiting on
+		// the snapshot times out and falls back to the API.
+		if resp.Pagination.Page != c.snapshotNextPage {
+			expected := c.snapshotNextPage
+			c.snapshotFlagKeys = nil
+			c.snapshotNextPage = 0
+			c.flagsMu.Unlock()
+
+			return fmt.Errorf("flags snapshot page %d arrived, expected %d: abandoning the snapshot", resp.Pagination.Page, expected)
+		}
+		c.snapshotNextPage = resp.Pagination.Page + 1
 	}
 
 	cacheKeys := c.snapshotFlagKeys
@@ -257,7 +277,20 @@ func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schemat
 		return nil
 	}
 
+	// The last page completes the snapshot only if it carries the flag count
+	// the server said it would. A page the transport dropped and replaced with
+	// nothing would otherwise pass every check above.
+	if resp.Pagination != nil && len(cacheKeys) != resp.Pagination.Total {
+		got := len(cacheKeys)
+		c.snapshotFlagKeys = nil
+		c.snapshotNextPage = 0
+		c.flagsMu.Unlock()
+
+		return fmt.Errorf("flags snapshot carried %d flags, expected %d: abandoning the snapshot", got, resp.Pagination.Total)
+	}
+
 	c.snapshotFlagKeys = nil
+	c.snapshotNextPage = 0
 	c.flagsCacheProvider.DeleteMissing(ctx, cacheKeys, c.flagCacheScanPattern())
 	c.flagsMu.Unlock()
 

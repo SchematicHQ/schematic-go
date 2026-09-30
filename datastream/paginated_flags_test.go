@@ -271,3 +271,26 @@ func TestHandleFlagsMessage_SnapshotRecoversAfterAnAbandonedOne(t *testing.T) {
 	assert.ElementsMatch(t, []string{client.flagCacheKey("x"), client.flagCacheKey("y")}, cache.cachedKeys(),
 		"the abandoned snapshot's flag is gone, since the recovered one did not carry it")
 }
+
+// TestHandleFlagsMessage_OrphanPageIsRefused pins the zero value of
+// snapshotNextPage: no snapshot in progress accepts page 1 and nothing else. A
+// page arriving without its snapshot's beginning means the pages before it were
+// dropped -- the server sends a whole snapshot before any update, so they are
+// not still coming -- and applying it would complete a snapshot from one page.
+func TestHandleFlagsMessage_OrphanPageIsRefused(t *testing.T) {
+	cache := newRecordingFlagCache()
+	client := newFlagCacheClient(cache)
+	ctx := context.Background()
+
+	// A fresh client, and the first thing it sees is page 3 of 3.
+	err := client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"c"}, page(false, 3, 3)))
+	require.Error(t, err, "a page with no snapshot in progress must be refused")
+	assert.Contains(t, err.Error(), "expected 0")
+
+	assert.Zero(t, cache.deleteMissingCount())
+	assert.Empty(t, cache.cachedKeys(), "an orphan page must not seed the cache")
+
+	// And the client is still able to take a snapshot that starts properly.
+	require.NoError(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"a"}, page(false, 1, 1))))
+	assert.Equal(t, []string{client.flagCacheKey("a")}, cache.cachedKeys())
+}

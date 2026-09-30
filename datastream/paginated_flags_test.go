@@ -215,3 +215,59 @@ func TestHandleFlagsMessage_UnpaginatedSnapshotAppliesWhole(t *testing.T) {
 	assert.Equal(t, 1, cache.deleteMissingCount())
 	assert.ElementsMatch(t, []string{client.flagCacheKey("a"), client.flagCacheKey("b")}, cache.cachedKeys())
 }
+
+// The transport drops a message when its queue is full (default 100, and a
+// snapshot is now many messages), so a page can go missing. These cover the
+// two ways that shows up, and both must fail the snapshot rather than complete
+// one with a hole: the delete would take the missing page's flags out of the
+// cache, and no error would reach the caller.
+
+func TestHandleFlagsMessage_MissingPageAbandonsTheSnapshot(t *testing.T) {
+	cache := newRecordingFlagCache()
+	client := newFlagCacheClient(cache)
+	ctx := context.Background()
+
+	require.NoError(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"a"}, page(true, 1, 3))))
+
+	// Page 2 never arrives.
+	err := client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"c"}, page(false, 3, 3)))
+	require.Error(t, err, "a gap in the pages must be reported")
+	assert.Contains(t, err.Error(), "expected 2")
+
+	assert.Zero(t, cache.deleteMissingCount(), "an incomplete snapshot must not delete anything")
+	assert.Equal(t, []string{client.flagCacheKey("a")}, cache.cachedKeys(),
+		"what arrived stays; the cache is left a superset rather than missing flags")
+}
+
+func TestHandleFlagsMessage_ShortSnapshotAbandonsTheSnapshot(t *testing.T) {
+	cache := newRecordingFlagCache()
+	client := newFlagCacheClient(cache)
+	ctx := context.Background()
+
+	// One page, in sequence, but carrying fewer flags than the server said the
+	// snapshot holds.
+	err := client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"only"}, page(false, 1, 5)))
+	require.Error(t, err, "a snapshot short of its own total must be reported")
+	assert.Contains(t, err.Error(), "expected 5")
+
+	assert.Zero(t, cache.deleteMissingCount())
+}
+
+// A snapshot that starts over after an abandoned one must still work: page 1
+// resets the sequence, so a reconnect recovers without a restart.
+func TestHandleFlagsMessage_SnapshotRecoversAfterAnAbandonedOne(t *testing.T) {
+	cache := newRecordingFlagCache()
+	client := newFlagCacheClient(cache)
+	ctx := context.Background()
+
+	require.NoError(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"a"}, page(true, 1, 3))))
+	require.Error(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"c"}, page(false, 3, 3))))
+
+	// A fresh snapshot, complete this time.
+	require.NoError(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"x"}, page(true, 1, 2))))
+	require.NoError(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"y"}, page(false, 2, 2))))
+
+	assert.Equal(t, 1, cache.deleteMissingCount(), "the recovered snapshot applies once")
+	assert.ElementsMatch(t, []string{client.flagCacheKey("x"), client.flagCacheKey("y")}, cache.cachedKeys(),
+		"the abandoned snapshot's flag is gone, since the recovered one did not carry it")
+}

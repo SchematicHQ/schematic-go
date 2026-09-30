@@ -798,6 +798,8 @@ When running in Replicator Mode, the client will:
 
 The client serves flag checks from the replicator's cache only once the replicator reports that the cache is ready. The replicator's health endpoint answers `ready: true` once its cache is complete for the current cache version. Until then, and whenever a health check fails or the replicator cannot be reached, `CheckFlag`, `CheckFlagWithEntitlement` and `CheckFlags` all skip the cache and ask the Schematic API instead, falling back to the flag's default value if the API call fails. Once the cache is ready, all three evaluate locally from the cache, and any flag the cache cannot answer (for example, one that is not in it yet) still falls back to the API.
 
+The same gate applies to `Check` with `WithUsage` in client credit-lease mode: while the cache is not ready, it runs as a plain check through the API and holds no credits, rather than gating on a local lease. Prewarming leases is not a flag check and still resolves companies without waiting for readiness.
+
 The datastream client's `IsCacheReady()` reports the same readiness the flag checks use.
 
 ## Credit Leases and Reservations

@@ -17,6 +17,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	schematicgo "github.com/schematichq/schematic-go"
 	schematicclient "github.com/schematichq/schematic-go/client"
+	"github.com/schematichq/schematic-go/core"
 	"github.com/schematichq/schematic-go/mocks"
 	option "github.com/schematichq/schematic-go/option"
 	"github.com/schematichq/schematic-go/rulesengine"
@@ -264,4 +265,103 @@ func TestReplicatorReadySingleAndBulkEvaluateFromTheCache(t *testing.T) {
 	}
 
 	assert.Zero(t, flagChecks.Load(), "a ready cache answers without the API")
+}
+
+// A credit check in client lease mode reads the flag and company from the same
+// cache, so it waits on the same readiness: before the replicator is ready it
+// runs as a plain API check and takes no lease, and once ready it gates on a
+// local lease.
+func TestReplicatorClientModeCheckWaitsForTheCacheToBeReady(t *testing.T) {
+	mr := miniredis.RunT(t)
+	cacheKey := func(parts ...string) string {
+		return "schematic:" + parts[0] + ":" + replicatorCacheVersion + ":" + strings.Join(parts[1:], ":")
+	}
+	set := func(key string, value any) {
+		data, err := json.Marshal(value)
+		require.NoError(t, err)
+		require.NoError(t, mr.Set(key, string(data)))
+	}
+	companyKeys := map[string]string{"id": testCompanyID}
+	set(cacheKey("flags", testFlagKey), creditFlag())
+	set(cacheKey("company", testCompanyID), creditCompany(companyKeys))
+	set(cacheKey("company", "id", testCompanyID), testCompanyID)
+	rdb := redis.NewClient(&redis.Options{Addr: mr.Addr()})
+	t.Cleanup(func() { _ = rdb.Close() })
+
+	var ready atomic.Bool
+	var polls atomic.Int32
+	health := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		defer polls.Add(1)
+		w.Header().Set("Content-Type", "application/json")
+		if !ready.Load() {
+			w.WriteHeader(http.StatusServiceUnavailable)
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"ready":         ready.Load(),
+			"cache_version": replicatorCacheVersion,
+		})
+	}))
+	t.Cleanup(health.Close)
+	// Polls run one after another, so two more polls than now means one that
+	// started after this call has been applied.
+	waitForPoll := func() {
+		seen := polls.Load()
+		require.Eventually(t, func() bool { return polls.Load() >= seen+2 }, 2*time.Second, 5*time.Millisecond)
+	}
+
+	rec := &requestRecorder{}
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(serveStubs(t, rec, map[string]stub{
+		leaseAcquirePath: {body: leaseResponse("lse_1", 10000)},
+		"/flags/" + testFlagKey + "/check": {body: &schematicgo.CheckFlagResponse{
+			Data: &schematicgo.CheckFlagResponseData{Flag: testFlagKey, Value: true, Reason: apiReason},
+		}},
+		eventBatchPath: {body: map[string]any{"data": map[string]any{"events": []any{}}}},
+	})).AnyTimes()
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithoutRetries(),
+		option.WithDisableFlagCheckCache(),
+		option.WithEventBufferPeriod(10*time.Millisecond),
+		option.WithDatastream(
+			option.WithReplicatorMode(),
+			option.WithReplicatorHealthURL(health.URL),
+			option.WithReplicatorHealthInterval(10*time.Millisecond),
+			option.WithRedisClient(rdb),
+			option.WithCacheTTL(0),
+		),
+		option.WithCreditLeases(core.CreditLeaseConfig{Mode: core.CreditLeaseModeClient}),
+	)
+	t.Cleanup(client.Close)
+	waitForPoll()
+
+	evalCtx := &schematicgo.CheckFlagRequestBody{Company: companyKeys}
+	check := func() *schematicclient.CheckResult {
+		return client.Check(t.Context(), evalCtx, testFlagKey,
+			schematicclient.WithUsage(50),
+			schematicclient.WithEventSubtype(testEventSubtype),
+		)
+	}
+
+	notReady := check()
+	assert.True(t, notReady.Allowed, "reason: %s, error: %s", notReady.Reason, notReady.Error)
+	assert.Equal(t, apiReason, notReady.Reason, "the API answered")
+	assert.Nil(t, notReady.Reservation, "a plain check holds nothing")
+	assert.Equal(t, 1, countPaths(rec, "/flags/"+testFlagKey+"/check"))
+	assert.Zero(t, countPaths(rec, leaseAcquirePath), "no lease before the cache is ready")
+
+	ready.Store(true)
+	waitForPoll()
+
+	result := check()
+	require.True(t, result.Allowed, "reason: %s, error: %s", result.Reason, result.Error)
+	require.NotNil(t, result.Reservation)
+	assert.Equal(t, core.CreditLeaseModeClient, result.Reservation.Mode)
+	assert.Equal(t, "lse_1", result.Reservation.LeaseID)
+	assert.Equal(t, 50.0, result.Reservation.CreditsReserved)
+	assert.Equal(t, 1, countPaths(rec, leaseAcquirePath), "a ready cache gates on a lease")
+	assert.Equal(t, 1, countPaths(rec, "/flags/"+testFlagKey+"/check"), "and evaluates without the API")
 }

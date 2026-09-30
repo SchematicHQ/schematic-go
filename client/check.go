@@ -632,6 +632,14 @@ func (c *SchematicClient) checkWithClientLease(
 	flagKey string,
 	o *checkOptions,
 ) *CheckResult {
+	// The flow reads the flag, company and user from the DataStream cache. In
+	// replicator mode that cache is read only once the replicator reports it
+	// ready, so until then the check runs as the plain check the flow falls
+	// back to on a cache miss, and holds nothing.
+	if !c.datastreamClient.IsCacheReady() {
+		return c.checkFallback(ctx, evalCtx, flagKey, o)
+	}
+
 	// The caller's per-check timeout governs the lease wire calls the same way
 	// it governs the plain check's.
 	callCtx, cancel := o.withTimeout(ctx)

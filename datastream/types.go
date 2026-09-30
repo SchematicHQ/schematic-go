@@ -64,8 +64,17 @@ type DataStreamClient struct {
 	// next, so a gap is caught rather than applied. The transport drops a
 	// message when its queue is full, and a snapshot is now many messages: a
 	// lost middle page would otherwise let the last page complete a snapshot
-	// missing flags, and the delete below would remove them. Guarded by
-	// flagsMu.
+	// missing flags, and the delete of everything absent from it would remove
+	// them. Guarded by flagsMu.
+	//
+	// Zero means no snapshot is in progress, which is the value a client holds
+	// before its first snapshot and the one it returns to after a snapshot
+	// completes or is abandoned. Only page 1 is accepted in that state -- it
+	// sets the field to 2 and starts the set over -- so a page arriving without
+	// its snapshot's beginning is out of sequence and abandoned like any other
+	// gap. That matters because the server sends the whole snapshot before any
+	// update: a stray page means the pages that preceded it were dropped, not
+	// that they are still coming.
 	snapshotNextPage int
 
 	// Replicator mode configuration

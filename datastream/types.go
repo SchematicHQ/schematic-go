@@ -60,6 +60,9 @@ type DataStreamClient struct {
 	// reset when a snapshot's first page arrives -- an interrupted snapshot
 	// therefore leaves nothing for the next one to inherit.
 	snapshotFlagKeys []string
+	// flagPageSize is how many flags the server is asked to put in one message
+	// of the flags snapshot, from core.WithFlagPageSize or the SDK default.
+	flagPageSize int
 	// snapshotNextPage is the page number the snapshot in progress expects
 	// next, so a gap is caught rather than applied. The transport drops a
 	// message when its queue is full, and a snapshot is now many messages: a

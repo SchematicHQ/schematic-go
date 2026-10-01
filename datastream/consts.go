@@ -7,15 +7,15 @@ const (
 	resourceTimeout = 2 * time.Second
 )
 
-// flagSnapshotPageSize is how many flags we ask the server to put in one
+// defaultFlagSnapshotPageSize is how many flags we ask the server to put in one
 // message of the flags snapshot. The snapshot used to arrive whole, and for an
 // ordinary set of flags and rules that ran past a megabyte -- over the frame
 // limit for some hosts, and compressible only by a constant factor.
 //
 // Counted in flags rather than bytes, so it bounds a page's flag count and not
 // its size; one flag carrying enough rules can still overflow a frame on its
-// own.
-const flagSnapshotPageSize = 100
+// own. core.WithFlagPageSize overrides it per client.
+const defaultFlagSnapshotPageSize = 100
 
 // Cache constants
 const (

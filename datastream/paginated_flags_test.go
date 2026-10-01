@@ -294,3 +294,26 @@ func TestHandleFlagsMessage_OrphanPageIsRefused(t *testing.T) {
 	require.NoError(t, client.handleFlagsMessage(ctx, flagsPageMessage(t, []string{"a"}, page(false, 1, 1))))
 	assert.Equal(t, []string{client.flagCacheKey("a")}, cache.cachedKeys())
 }
+
+// TestFlagPageSize covers what a client ends up asking the server for. A size
+// that is not a page -- zero from a caller that set nothing, or a negative --
+// takes the default rather than travelling to the server, which would clamp it
+// anyway but only after the request had said something it did not mean.
+func TestFlagPageSize(t *testing.T) {
+	tests := []struct {
+		name       string
+		configured int
+		want       int
+	}{
+		{name: "unset takes the default", configured: 0, want: defaultFlagSnapshotPageSize},
+		{name: "negative takes the default", configured: -10, want: defaultFlagSnapshotPageSize},
+		{name: "one is a legitimate page", configured: 1, want: 1},
+		{name: "a configured size is used", configured: 25, want: 25},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			assert.Equal(t, test.want, flagPageSize(test.configured))
+		})
+	}
+}

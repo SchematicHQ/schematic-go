@@ -64,6 +64,7 @@ func NewDataStreamClient(options DataStreamClientOptions, configurationOptions *
 		cacheTTL:           configurationOptions.CacheTTL,
 		logger:             options.Logger,
 		flagsCacheProvider: flagCacheProvider,
+		flagPageSize:       flagPageSize(configurationOptions.FlagPageSize),
 
 		pendingCompanyRequests: make(map[string][]chan *rulesengine.Company),
 		pendingUserRequests:    make(map[string][]chan *rulesengine.User),
@@ -220,6 +221,15 @@ func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *s
 	default:
 		return fmt.Errorf("received unknown entity type: %s", message.EntityType)
 	}
+}
+
+// flagPageSize resolves the configured page size, falling back to the default
+// when a caller left it unset or asked for a size that is not a page.
+func flagPageSize(configured int) int {
+	if configured < 1 {
+		return defaultFlagSnapshotPageSize
+	}
+	return configured
 }
 
 func (c *DataStreamClient) handleFlagsMessage(ctx context.Context, resp *schematicdatastreamws.DataStreamResp) error {
@@ -766,7 +776,7 @@ func (c *DataStreamClient) getAllFlags(ctx context.Context) error {
 
 	req := &schematicdatastreamws.DataStreamReq{
 		EntityType: schematicdatastreamws.EntityTypeFlags,
-		PageSize:   schematicgo.Int(flagSnapshotPageSize),
+		PageSize:   schematicgo.Int(c.flagPageSize),
 	}
 	err := c.sendWebSocketMessage(ctx, req)
 	if err != nil {

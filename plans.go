@@ -832,25 +832,29 @@ var (
 	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
 	publishPlanVersionRequestBodyFieldAddress            = big.NewInt(1 << 1)
 	publishPlanVersionRequestBodyFieldBillingCycleAnchor = big.NewInt(1 << 2)
-	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 3)
-	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 4)
-	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 5)
-	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 6)
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 7)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 8)
-	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 9)
-	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 10)
-	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 11)
-	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 12)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 13)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 14)
+	publishPlanVersionRequestBodyFieldBillingStartDate   = big.NewInt(1 << 3)
+	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 5)
+	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 6)
+	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 7)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 8)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 9)
+	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 12)
+	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 13)
+	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 14)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 15)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 16)
 )
 
 type PublishPlanVersionRequestBody struct {
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
 	Address            *CustomerBillingAddress       `json:"address,omitempty" url:"-"`
 	// The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
-	BillingCycleAnchor *time.Time                   `json:"billing_cycle_anchor,omitempty" url:"-"`
+	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"-"`
+	// The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
+	BillingStartDate   *time.Time                   `json:"billing_start_date,omitempty" url:"-"`
 	CouponExternalID   *string                      `json:"coupon_external_id,omitempty" url:"-"`
 	CustomFieldValues  []*CheckoutFieldValue        `json:"custom_field_values,omitempty" url:"-"`
 	CustomerEmail      *string                      `json:"customer_email,omitempty" url:"-"`
@@ -859,10 +863,13 @@ type PublishPlanVersionRequestBody struct {
 	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"-"`
 	Phone              *string                      `json:"phone,omitempty" url:"-"`
 	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
-	ProrateFirstPeriod *bool                       `json:"prorate_first_period,omitempty" url:"-"`
-	ProrationBehavior  *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"-"`
+	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"-"`
+	// How Stripe handles the price difference when companies are migrated. With migration_strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none. Not accepted with leave.
+	ProrationBehavior *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"-"`
 	// Refuse the publish if any company would be migrated onto the new version
 	RequireNoMigration *bool `json:"require_no_migration,omitempty" url:"-"`
+	// When every company moves, for migration_strategy scheduled. Must be in the future; the migration runs within about a minute of this time. Not accepted with other strategies.
+	ScheduledAt *time.Time `json:"scheduled_at,omitempty" url:"-"`
 	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
 	SendInvoice *bool       `json:"send_invoice,omitempty" url:"-"`
 	TaxID       *TaxIDInput `json:"tax_id,omitempty" url:"-"`
@@ -899,6 +906,13 @@ func (p *PublishPlanVersionRequestBody) SetAddress(address *CustomerBillingAddre
 func (p *PublishPlanVersionRequestBody) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
 	p.BillingCycleAnchor = billingCycleAnchor
 	p.require(publishPlanVersionRequestBodyFieldBillingCycleAnchor)
+}
+
+// SetBillingStartDate sets the BillingStartDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetBillingStartDate(billingStartDate *time.Time) {
+	p.BillingStartDate = billingStartDate
+	p.require(publishPlanVersionRequestBodyFieldBillingStartDate)
 }
 
 // SetCouponExternalID sets the CouponExternalID field and marks it as non-optional;
@@ -971,6 +985,13 @@ func (p *PublishPlanVersionRequestBody) SetRequireNoMigration(requireNoMigration
 	p.require(publishPlanVersionRequestBodyFieldRequireNoMigration)
 }
 
+// SetScheduledAt sets the ScheduledAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetScheduledAt(scheduledAt *time.Time) {
+	p.ScheduledAt = scheduledAt
+	p.require(publishPlanVersionRequestBodyFieldScheduledAt)
+}
+
 // SetSendInvoice sets the SendInvoice field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PublishPlanVersionRequestBody) SetSendInvoice(sendInvoice *bool) {
@@ -1000,9 +1021,13 @@ func (p *PublishPlanVersionRequestBody) MarshalJSON() ([]byte, error) {
 	var marshaler = struct {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
 	}{
 		embed:              embed(*p),
 		BillingCycleAnchor: internal.NewOptionalDateTime(p.BillingCycleAnchor),
+		BillingStartDate:   internal.NewOptionalDateTime(p.BillingStartDate),
+		ScheduledAt:        internal.NewOptionalDateTime(p.ScheduledAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -1011,18 +1036,21 @@ func (p *PublishPlanVersionRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	retryCustomPlanBillingRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
 	retryCustomPlanBillingRequestBodyFieldBillingCycleAnchor = big.NewInt(1 << 1)
-	retryCustomPlanBillingRequestBodyFieldCustomerEmail      = big.NewInt(1 << 2)
-	retryCustomPlanBillingRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 3)
-	retryCustomPlanBillingRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 4)
-	retryCustomPlanBillingRequestBodyFieldSendInvoice        = big.NewInt(1 << 5)
+	retryCustomPlanBillingRequestBodyFieldBillingStartDate   = big.NewInt(1 << 2)
+	retryCustomPlanBillingRequestBodyFieldCustomerEmail      = big.NewInt(1 << 3)
+	retryCustomPlanBillingRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 4)
+	retryCustomPlanBillingRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 5)
+	retryCustomPlanBillingRequestBodyFieldSendInvoice        = big.NewInt(1 << 6)
 )
 
 type RetryCustomPlanBillingRequestBody struct {
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
 	// The date the subscription's billing period renews on. Only honored when the retry creates a subscription.
 	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"-"`
-	CustomerEmail      string     `json:"customer_email" url:"-"`
-	DaysUntilDue       *int64     `json:"days_until_due,omitempty" url:"-"`
+	// The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. When both are omitted, the term pinned at finalize is reissued. Only honored when the retry creates a subscription.
+	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"-"`
+	CustomerEmail    string     `json:"customer_email" url:"-"`
+	DaysUntilDue     *int64     `json:"days_until_due,omitempty" url:"-"`
 	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
 	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"-"`
 	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
@@ -1053,6 +1081,13 @@ func (r *RetryCustomPlanBillingRequestBody) SetActivationStrategy(activationStra
 func (r *RetryCustomPlanBillingRequestBody) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
 	r.BillingCycleAnchor = billingCycleAnchor
 	r.require(retryCustomPlanBillingRequestBodyFieldBillingCycleAnchor)
+}
+
+// SetBillingStartDate sets the BillingStartDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryCustomPlanBillingRequestBody) SetBillingStartDate(billingStartDate *time.Time) {
+	r.BillingStartDate = billingStartDate
+	r.require(retryCustomPlanBillingRequestBodyFieldBillingStartDate)
 }
 
 // SetCustomerEmail sets the CustomerEmail field and marks it as non-optional;
@@ -1098,9 +1133,11 @@ func (r *RetryCustomPlanBillingRequestBody) MarshalJSON() ([]byte, error) {
 	var marshaler = struct {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
 	}{
 		embed:              embed(*r),
 		BillingCycleAnchor: internal.NewOptionalDateTime(r.BillingCycleAnchor),
+		BillingStartDate:   internal.NewOptionalDateTime(r.BillingStartDate),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
 	return json.Marshal(explicitMarshaler)

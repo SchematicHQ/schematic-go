@@ -916,6 +916,131 @@ func (c *Client) GetUserUsageByCompany(
 
 // Example:
 //
+//	request := &schematichq.GetCompanyUserUsageMetricsRequest{
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	}
+//	client.Entitlements.GetCompanyUserUsageMetrics(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) GetCompanyUserUsageMetrics(
+	ctx context.Context,
+	request *schematichq.GetCompanyUserUsageMetricsRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyUserUsageMetricsResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyUserUsageMetrics(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.ListCompanyUserUsageRequest{
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    Metric: schematichq.UserUsageMetricCredits,
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	}
+//	client.Entitlements.ListCompanyUserUsage(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListCompanyUserUsage(
+	ctx context.Context,
+	request *schematichq.ListCompanyUserUsageRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListCompanyUserUsageResponse, error) {
+	response, err := c.WithRawResponse.ListCompanyUserUsage(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.CountCompanyUserUsageRequest{
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    FeatureID: schematichq.String(
+//	        "feature_id",
+//	    ),
+//	    Metric: schematichq.UserUsageMetricCredits,
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	}
+//	client.Entitlements.CountCompanyUserUsage(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) CountCompanyUserUsage(
+	ctx context.Context,
+	request *schematichq.CountCompanyUserUsageRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountCompanyUserUsageResponse, error) {
+	response, err := c.WithRawResponse.CountCompanyUserUsage(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.GetUserUsageDetailRequest{
 //	    CompanyID: "company_id",
 //	    EndTime: schematichq.Time(

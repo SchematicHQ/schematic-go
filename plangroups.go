@@ -40,16 +40,17 @@ var (
 	createPlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 26)
 	createPlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 27)
 	createPlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 28)
-	createPlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 29)
-	createPlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 30)
-	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 31)
-	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 32)
-	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 33)
-	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 34)
-	createPlanGroupRequestBodyFieldTrialEligibilityPerPlan                = big.NewInt(1 << 35)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 36)
-	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 37)
-	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 38)
+	createPlanGroupRequestBodyFieldShowEstimatedTotal                     = big.NewInt(1 << 29)
+	createPlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 30)
+	createPlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 31)
+	createPlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 32)
+	createPlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 33)
+	createPlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 34)
+	createPlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 35)
+	createPlanGroupRequestBodyFieldTrialEligibilityPerPlan                = big.NewInt(1 << 36)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 37)
+	createPlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 38)
+	createPlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 39)
 )
 
 type CreatePlanGroupRequestBody struct {
@@ -83,6 +84,7 @@ type CreatePlanGroupRequestBody struct {
 	ScheduledDowngradePreventWhenOverLimit *bool                             `json:"scheduled_downgrade_prevent_when_over_limit,omitempty" url:"-"`
 	ShowAsMonthlyPrices                    bool                              `json:"show_as_monthly_prices" url:"-"`
 	ShowCredits                            bool                              `json:"show_credits" url:"-"`
+	ShowEstimatedTotal                     bool                              `json:"show_estimated_total" url:"-"`
 	ShowFeatureDescription                 bool                              `json:"show_feature_description" url:"-"`
 	ShowHardLimit                          bool                              `json:"show_hard_limit" url:"-"`
 	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
@@ -308,6 +310,13 @@ func (c *CreatePlanGroupRequestBody) SetShowAsMonthlyPrices(showAsMonthlyPrices 
 func (c *CreatePlanGroupRequestBody) SetShowCredits(showCredits bool) {
 	c.ShowCredits = showCredits
 	c.require(createPlanGroupRequestBodyFieldShowCredits)
+}
+
+// SetShowEstimatedTotal sets the ShowEstimatedTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanGroupRequestBody) SetShowEstimatedTotal(showEstimatedTotal bool) {
+	c.ShowEstimatedTotal = showEstimatedTotal
+	c.require(createPlanGroupRequestBodyFieldShowEstimatedTotal)
 }
 
 // SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;
@@ -1139,15 +1148,17 @@ func (c *CompatiblePlansResponseData) String() string {
 var (
 	componentSettingsResponseDataFieldShowAsMonthlyPrices    = big.NewInt(1 << 0)
 	componentSettingsResponseDataFieldShowCredits            = big.NewInt(1 << 1)
-	componentSettingsResponseDataFieldShowFeatureDescription = big.NewInt(1 << 2)
-	componentSettingsResponseDataFieldShowHardLimit          = big.NewInt(1 << 3)
-	componentSettingsResponseDataFieldShowPeriodToggle       = big.NewInt(1 << 4)
-	componentSettingsResponseDataFieldShowZeroPriceAsFree    = big.NewInt(1 << 5)
+	componentSettingsResponseDataFieldShowEstimatedTotal     = big.NewInt(1 << 2)
+	componentSettingsResponseDataFieldShowFeatureDescription = big.NewInt(1 << 3)
+	componentSettingsResponseDataFieldShowHardLimit          = big.NewInt(1 << 4)
+	componentSettingsResponseDataFieldShowPeriodToggle       = big.NewInt(1 << 5)
+	componentSettingsResponseDataFieldShowZeroPriceAsFree    = big.NewInt(1 << 6)
 )
 
 type ComponentSettingsResponseData struct {
 	ShowAsMonthlyPrices    bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
 	ShowCredits            bool `json:"show_credits" url:"show_credits"`
+	ShowEstimatedTotal     bool `json:"show_estimated_total" url:"show_estimated_total"`
 	ShowFeatureDescription bool `json:"show_feature_description" url:"show_feature_description"`
 	ShowHardLimit          bool `json:"show_hard_limit" url:"show_hard_limit"`
 	ShowPeriodToggle       bool `json:"show_period_toggle" url:"show_period_toggle"`
@@ -1172,6 +1183,13 @@ func (c *ComponentSettingsResponseData) GetShowCredits() bool {
 		return false
 	}
 	return c.ShowCredits
+}
+
+func (c *ComponentSettingsResponseData) GetShowEstimatedTotal() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowEstimatedTotal
 }
 
 func (c *ComponentSettingsResponseData) GetShowFeatureDescription() bool {
@@ -1230,6 +1248,13 @@ func (c *ComponentSettingsResponseData) SetShowAsMonthlyPrices(showAsMonthlyPric
 func (c *ComponentSettingsResponseData) SetShowCredits(showCredits bool) {
 	c.ShowCredits = showCredits
 	c.require(componentSettingsResponseDataFieldShowCredits)
+}
+
+// SetShowEstimatedTotal sets the ShowEstimatedTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentSettingsResponseData) SetShowEstimatedTotal(showEstimatedTotal bool) {
+	c.ShowEstimatedTotal = showEstimatedTotal
+	c.require(componentSettingsResponseDataFieldShowEstimatedTotal)
 }
 
 // SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;
@@ -3472,16 +3497,17 @@ var (
 	updatePlanGroupRequestBodyFieldScheduledDowngradePreventWhenOverLimit = big.NewInt(1 << 26)
 	updatePlanGroupRequestBodyFieldShowAsMonthlyPrices                    = big.NewInt(1 << 27)
 	updatePlanGroupRequestBodyFieldShowCredits                            = big.NewInt(1 << 28)
-	updatePlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 29)
-	updatePlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 30)
-	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 31)
-	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 32)
-	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 33)
-	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 34)
-	updatePlanGroupRequestBodyFieldTrialEligibilityPerPlan                = big.NewInt(1 << 35)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 36)
-	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 37)
-	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 38)
+	updatePlanGroupRequestBodyFieldShowEstimatedTotal                     = big.NewInt(1 << 29)
+	updatePlanGroupRequestBodyFieldShowFeatureDescription                 = big.NewInt(1 << 30)
+	updatePlanGroupRequestBodyFieldShowHardLimit                          = big.NewInt(1 << 31)
+	updatePlanGroupRequestBodyFieldShowPeriodToggle                       = big.NewInt(1 << 32)
+	updatePlanGroupRequestBodyFieldShowZeroPriceAsFree                    = big.NewInt(1 << 33)
+	updatePlanGroupRequestBodyFieldSyncCustomerBillingDetails             = big.NewInt(1 << 34)
+	updatePlanGroupRequestBodyFieldTrialDays                              = big.NewInt(1 << 35)
+	updatePlanGroupRequestBodyFieldTrialEligibilityPerPlan                = big.NewInt(1 << 36)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanID                      = big.NewInt(1 << 37)
+	updatePlanGroupRequestBodyFieldTrialExpiryPlanPriceID                 = big.NewInt(1 << 38)
+	updatePlanGroupRequestBodyFieldTrialPaymentMethodRequired             = big.NewInt(1 << 39)
 )
 
 type UpdatePlanGroupRequestBody struct {
@@ -3515,6 +3541,7 @@ type UpdatePlanGroupRequestBody struct {
 	ScheduledDowngradePreventWhenOverLimit *bool                             `json:"scheduled_downgrade_prevent_when_over_limit,omitempty" url:"-"`
 	ShowAsMonthlyPrices                    bool                              `json:"show_as_monthly_prices" url:"-"`
 	ShowCredits                            bool                              `json:"show_credits" url:"-"`
+	ShowEstimatedTotal                     bool                              `json:"show_estimated_total" url:"-"`
 	ShowFeatureDescription                 bool                              `json:"show_feature_description" url:"-"`
 	ShowHardLimit                          bool                              `json:"show_hard_limit" url:"-"`
 	ShowPeriodToggle                       bool                              `json:"show_period_toggle" url:"-"`
@@ -3740,6 +3767,13 @@ func (u *UpdatePlanGroupRequestBody) SetShowAsMonthlyPrices(showAsMonthlyPrices 
 func (u *UpdatePlanGroupRequestBody) SetShowCredits(showCredits bool) {
 	u.ShowCredits = showCredits
 	u.require(updatePlanGroupRequestBodyFieldShowCredits)
+}
+
+// SetShowEstimatedTotal sets the ShowEstimatedTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanGroupRequestBody) SetShowEstimatedTotal(showEstimatedTotal bool) {
+	u.ShowEstimatedTotal = showEstimatedTotal
+	u.require(updatePlanGroupRequestBodyFieldShowEstimatedTotal)
 }
 
 // SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;

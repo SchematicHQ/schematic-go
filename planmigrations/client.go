@@ -133,6 +133,9 @@ func (c *Client) CountCompanyMigrations(
 //	    FeatureID: schematichq.String(
 //	        "feature_id",
 //	    ),
+//	    FeaturePlanRolloutID: schematichq.String(
+//	        "feature_plan_rollout_id",
+//	    ),
 //	    PlanVersionID: schematichq.String(
 //	        "plan_version_id",
 //	    ),
@@ -301,6 +304,9 @@ func (c *Client) RetryMigration(
 //	request := &schematichq.CountMigrationsRequest{
 //	    FeatureID: schematichq.String(
 //	        "feature_id",
+//	    ),
+//	    FeaturePlanRolloutID: schematichq.String(
+//	        "feature_plan_rollout_id",
 //	    ),
 //	    PlanVersionID: schematichq.String(
 //	        "plan_version_id",

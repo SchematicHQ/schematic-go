@@ -1323,21 +1323,23 @@ func (a *AuditLogResponseData) String() string {
 }
 
 var (
-	environmentDetailResponseDataFieldAPIKeys         = big.NewInt(1 << 0)
-	environmentDetailResponseDataFieldCreatedAt       = big.NewInt(1 << 1)
-	environmentDetailResponseDataFieldEnvironmentType = big.NewInt(1 << 2)
-	environmentDetailResponseDataFieldID              = big.NewInt(1 << 3)
-	environmentDetailResponseDataFieldName            = big.NewInt(1 << 4)
-	environmentDetailResponseDataFieldUpdatedAt       = big.NewInt(1 << 5)
+	environmentDetailResponseDataFieldAPIKeys                 = big.NewInt(1 << 0)
+	environmentDetailResponseDataFieldCreatedAt               = big.NewInt(1 << 1)
+	environmentDetailResponseDataFieldEnvironmentType         = big.NewInt(1 << 2)
+	environmentDetailResponseDataFieldID                      = big.NewInt(1 << 3)
+	environmentDetailResponseDataFieldName                    = big.NewInt(1 << 4)
+	environmentDetailResponseDataFieldRequireContextSignature = big.NewInt(1 << 5)
+	environmentDetailResponseDataFieldUpdatedAt               = big.NewInt(1 << 6)
 )
 
 type EnvironmentDetailResponseData struct {
-	APIKeys         []*APIKeyResponseData `json:"api_keys" url:"api_keys"`
-	CreatedAt       time.Time             `json:"created_at" url:"created_at"`
-	EnvironmentType EnvironmentType       `json:"environment_type" url:"environment_type"`
-	ID              string                `json:"id" url:"id"`
-	Name            string                `json:"name" url:"name"`
-	UpdatedAt       time.Time             `json:"updated_at" url:"updated_at"`
+	APIKeys                 []*APIKeyResponseData `json:"api_keys" url:"api_keys"`
+	CreatedAt               time.Time             `json:"created_at" url:"created_at"`
+	EnvironmentType         EnvironmentType       `json:"environment_type" url:"environment_type"`
+	ID                      string                `json:"id" url:"id"`
+	Name                    string                `json:"name" url:"name"`
+	RequireContextSignature bool                  `json:"require_context_signature" url:"require_context_signature"`
+	UpdatedAt               time.Time             `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1379,6 +1381,13 @@ func (e *EnvironmentDetailResponseData) GetName() string {
 		return ""
 	}
 	return e.Name
+}
+
+func (e *EnvironmentDetailResponseData) GetRequireContextSignature() bool {
+	if e == nil {
+		return false
+	}
+	return e.RequireContextSignature
 }
 
 func (e *EnvironmentDetailResponseData) GetUpdatedAt() time.Time {
@@ -1437,6 +1446,13 @@ func (e *EnvironmentDetailResponseData) SetID(id string) {
 func (e *EnvironmentDetailResponseData) SetName(name string) {
 	e.Name = name
 	e.require(environmentDetailResponseDataFieldName)
+}
+
+// SetRequireContextSignature sets the RequireContextSignature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EnvironmentDetailResponseData) SetRequireContextSignature(requireContextSignature bool) {
+	e.RequireContextSignature = requireContextSignature
+	e.require(environmentDetailResponseDataFieldRequireContextSignature)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -6194,13 +6210,15 @@ func (u *UpdateAPIKeyRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	updateEnvironmentRequestBodyFieldEnvironmentType = big.NewInt(1 << 0)
-	updateEnvironmentRequestBodyFieldName            = big.NewInt(1 << 1)
+	updateEnvironmentRequestBodyFieldEnvironmentType         = big.NewInt(1 << 0)
+	updateEnvironmentRequestBodyFieldName                    = big.NewInt(1 << 1)
+	updateEnvironmentRequestBodyFieldRequireContextSignature = big.NewInt(1 << 2)
 )
 
 type UpdateEnvironmentRequestBody struct {
-	EnvironmentType *EnvironmentType `json:"environment_type,omitempty" url:"-"`
-	Name            *string          `json:"name,omitempty" url:"-"`
+	EnvironmentType         *EnvironmentType `json:"environment_type,omitempty" url:"-"`
+	Name                    *string          `json:"name,omitempty" url:"-"`
+	RequireContextSignature *bool            `json:"require_context_signature,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -6227,6 +6245,13 @@ func (u *UpdateEnvironmentRequestBody) SetEnvironmentType(environmentType *Envir
 func (u *UpdateEnvironmentRequestBody) SetName(name *string) {
 	u.Name = name
 	u.require(updateEnvironmentRequestBodyFieldName)
+}
+
+// SetRequireContextSignature sets the RequireContextSignature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateEnvironmentRequestBody) SetRequireContextSignature(requireContextSignature *bool) {
+	u.RequireContextSignature = requireContextSignature
+	u.require(updateEnvironmentRequestBodyFieldRequireContextSignature)
 }
 
 func (u *UpdateEnvironmentRequestBody) UnmarshalJSON(data []byte) error {

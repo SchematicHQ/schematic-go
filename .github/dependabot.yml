@@ -13,6 +13,10 @@ updates:
     labels:
       - "gomod"
       - "Dependabot"
+    groups:
+      opentelemetry:
+        patterns:
+          - "go.opentelemetry.io/*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

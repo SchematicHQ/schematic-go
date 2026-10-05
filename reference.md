@@ -1143,6 +1143,14 @@ client.Accounts.UpdateEnvironment(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**requireContextSignature:** `*bool` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -6014,6 +6022,14 @@ client.Credits.AcquireCreditLease(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**userID:** `*string` — The user drawing the hold, so a user-scope spend policy applies to it
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -6082,6 +6098,14 @@ client.Credits.ExtendCreditLease(
 <dd>
 
 **idempotencyKey:** `*string` — A caller-chosen key for safe retries: a second request with the same key returns the lease as it stands instead of growing it again. Keys are unique per environment across every extend
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userID:** `*string` — The user drawing the top-up, so a user-scope spend policy applies to it
     
 </dd>
 </dl>
@@ -6856,7 +6880,6 @@ client.Credits.ListCreditSpendPolicies(
 ```go
 request := &schematichq.CreateCreditSpendPolicyRequestBody{
     BillingCreditID: "billing_credit_id",
-    MaxPerDraw: 1.1,
 }
 client.Credits.CreateCreditSpendPolicy(
     context.TODO(),
@@ -6900,7 +6923,7 @@ client.Credits.CreateCreditSpendPolicy(
 <dl>
 <dd>
 
-**maxPerDraw:** `float64` — The largest number of credits a single draw may spend.
+**maxPerDraw:** `*float64` — The largest number of credits a single draw may spend. Set either this or window_amount.
     
 </dd>
 </dl>
@@ -6909,6 +6932,22 @@ client.Credits.CreateCreditSpendPolicy(
 <dd>
 
 **userID:** `*string` — The user the cap applies to. Set exactly one of company_id and user_id.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**windowAmount:** `*float64` — The number of credits the company or user may spend in one window. Set either this or max_per_draw.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**windowUnit:** `*schematichq.CreditSpendWindowUnit` — The window that window_amount applies to: one UTC hour or one UTC day. Required with window_amount.
     
 </dd>
 </dl>
@@ -7013,6 +7052,22 @@ client.Credits.UpdateCreditSpendPolicy(
 <dd>
 
 **maxPerDraw:** `*float64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**windowAmount:** `*float64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**windowUnit:** `*schematichq.CreditSpendWindowUnit` 
     
 </dd>
 </dl>
@@ -7181,6 +7236,76 @@ client.Credits.CountCreditSpendPolicies(
 </dl>
 </details>
 
+<details><summary><code>client.Credits.GetCreditSpendPolicyUsage() -> *schematichq.GetCreditSpendPolicyUsageResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetCreditSpendPolicyUsageRequest{
+    BillingCreditID: schematichq.String(
+        "billing_credit_id",
+    ),
+    CompanyID: "company_id",
+    UserIDs: []*string{
+        schematichq.String(
+            "user_ids",
+        ),
+    },
+}
+client.Credits.GetCreditSpendPolicyUsage(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userIDs:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Credits.ListCreditEventLedger() -> *schematichq.ListCreditEventLedgerResponse</code></summary>
 <dl>
 <dd>
@@ -7202,7 +7327,7 @@ request := &schematichq.ListCreditEventLedgerRequest{
     EndTime: schematichq.String(
         "end_time",
     ),
-    EventType: schematichq.CreditEventTypeGrant.Ptr(),
+    EventType: schematichq.CreditEventTypeAdjustment.Ptr(),
     FeatureID: schematichq.String(
         "feature_id",
     ),
@@ -7323,7 +7448,7 @@ request := &schematichq.CountCreditEventLedgerRequest{
     EndTime: schematichq.String(
         "end_time",
     ),
-    EventType: schematichq.CreditEventTypeGrant.Ptr(),
+    EventType: schematichq.CreditEventTypeAdjustment.Ptr(),
     FeatureID: schematichq.String(
         "feature_id",
     ),
@@ -15059,6 +15184,306 @@ client.Entitlements.GetUserUsageByCompany(
 </dl>
 </details>
 
+<details><summary><code>client.Entitlements.GetCompanyUserUsageMetrics() -> *schematichq.GetCompanyUserUsageMetricsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetCompanyUserUsageMetricsRequest{
+    CompanyID: "company_id",
+    EndTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+    StartTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+}
+client.Entitlements.GetCompanyUserUsageMetrics(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — Company to list available metrics for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*time.Time` — End of the usage window (exclusive); defaults to now
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*time.Time` — Start of the usage window; defaults to 30 days before the end
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Entitlements.ListCompanyUserUsage() -> *schematichq.ListCompanyUserUsageResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListCompanyUserUsageRequest{
+    CompanyID: "company_id",
+    EndTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+    FeatureID: schematichq.String(
+        "feature_id",
+    ),
+    Metric: schematichq.UserUsageMetricCredits,
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+    StartTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+}
+client.Entitlements.ListCompanyUserUsage(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — Company to break usage down for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*time.Time` — End of the usage window (exclusive); defaults to now
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `*string` — The event-based feature to break down; required when metric is feature
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metric:** `*schematichq.UserUsageMetric` — Which metric to break usage down by
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*time.Time` — Start of the usage window; defaults to 30 days before the end
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Entitlements.CountCompanyUserUsage() -> *schematichq.CountCompanyUserUsageResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountCompanyUserUsageRequest{
+    CompanyID: "company_id",
+    EndTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+    FeatureID: schematichq.String(
+        "feature_id",
+    ),
+    Metric: schematichq.UserUsageMetricCredits,
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+    StartTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+}
+client.Entitlements.CountCompanyUserUsage(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — Company to break usage down for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `*time.Time` — End of the usage window (exclusive); defaults to now
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featureID:** `*string` — The event-based feature to break down; required when metric is feature
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**metric:** `*schematichq.UserUsageMetric` — Which metric to break usage down by
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*time.Time` — Start of the usage window; defaults to 30 days before the end
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Entitlements.GetUserUsageDetail() -> *schematichq.GetUserUsageDetailResponse</code></summary>
 <dl>
 <dd>
@@ -15423,6 +15848,14 @@ client.Plans.RetryCustomPlanBilling(
 <dd>
 
 **billingCycleAnchor:** `*time.Time` — The date the subscription's billing period renews on. Only honored when the retry creates a subscription.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**billingStartDate:** `*time.Time` — The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. When both are omitted, the term pinned at finalize is reissued. Only honored when the retry creates a subscription.
     
 </dd>
 </dl>
@@ -16764,6 +17197,14 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
+**billingStartDate:** `*time.Time` — The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **couponExternalID:** `*string` 
     
 </dd>
@@ -16828,7 +17269,7 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**prorationBehavior:** `*schematichq.MigrationProrationBehavior` 
+**prorationBehavior:** `*schematichq.MigrationProrationBehavior` — How Stripe handles the price difference when companies are migrated. With migration_strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none. Not accepted with leave.
     
 </dd>
 </dl>
@@ -16837,6 +17278,14 @@ client.Plans.PublishPlanVersion(
 <dd>
 
 **requireNoMigration:** `*bool` — Refuse the publish if any company would be migrated onto the new version
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scheduledAt:** `*time.Time` — When every company moves, for migration_strategy scheduled. Must be in the future; the migration runs within about a minute of this time. Not accepted with other strategies.
     
 </dd>
 </dl>
@@ -21170,6 +21619,7 @@ request := &schematichq.CreatePlanGroupRequestBody{
     ProrationBehavior: schematichq.ProrationBehaviorCreateProrations,
     ShowAsMonthlyPrices: true,
     ShowCredits: true,
+    ShowEstimatedTotal: true,
     ShowFeatureDescription: true,
     ShowHardLimit: true,
     ShowPeriodToggle: true,
@@ -21426,6 +21876,14 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
+**showEstimatedTotal:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **showFeatureDescription:** `bool` 
     
 </dd>
@@ -21553,6 +22011,7 @@ request := &schematichq.UpdatePlanGroupRequestBody{
     ProrationBehavior: schematichq.ProrationBehaviorCreateProrations,
     ShowAsMonthlyPrices: true,
     ShowCredits: true,
+    ShowEstimatedTotal: true,
     ShowFeatureDescription: true,
     ShowHardLimit: true,
     ShowPeriodToggle: true,
@@ -21811,6 +22270,14 @@ client.Plangroups.UpdatePlanGroup(
 <dd>
 
 **showCredits:** `bool` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**showEstimatedTotal:** `bool` 
     
 </dd>
 </dl>
@@ -22139,6 +22606,9 @@ request := &schematichq.ListMigrationsRequest{
     FeatureID: schematichq.String(
         "feature_id",
     ),
+    FeaturePlanRolloutID: schematichq.String(
+        "feature_plan_rollout_id",
+    ),
     PlanVersionID: schematichq.String(
         "plan_version_id",
     ),
@@ -22169,6 +22639,14 @@ client.Planmigrations.ListMigrations(
 <dd>
 
 **featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featurePlanRolloutID:** `*string` 
     
 </dd>
 </dl>
@@ -22289,7 +22767,15 @@ client.Planmigrations.CreateMigration(
 <dl>
 <dd>
 
-**prorationBehavior:** `*schematichq.MigrationProrationBehavior` 
+**prorationBehavior:** `*schematichq.MigrationProrationBehavior` — How Stripe handles the price difference when companies are migrated. With strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scheduledAt:** `*time.Time` — When every company moves, for strategy scheduled. Must be in the future; the migration runs within about a minute of this time. Not accepted with other strategies.
     
 </dd>
 </dl>
@@ -22530,6 +23016,9 @@ request := &schematichq.CountMigrationsRequest{
     FeatureID: schematichq.String(
         "feature_id",
     ),
+    FeaturePlanRolloutID: schematichq.String(
+        "feature_plan_rollout_id",
+    ),
     PlanVersionID: schematichq.String(
         "plan_version_id",
     ),
@@ -22560,6 +23049,14 @@ client.Planmigrations.CountMigrations(
 <dd>
 
 **featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**featurePlanRolloutID:** `*string` 
     
 </dd>
 </dl>

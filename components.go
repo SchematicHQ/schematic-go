@@ -1061,26 +1061,27 @@ var (
 	companyPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 22)
 	companyPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 23)
 	companyPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 24)
-	companyPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 25)
-	companyPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 26)
-	companyPlanDetailResponseDataFieldID                    = big.NewInt(1 << 27)
-	companyPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 28)
-	companyPlanDetailResponseDataFieldInvalidReason         = big.NewInt(1 << 29)
-	companyPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 30)
-	companyPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 31)
-	companyPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 32)
-	companyPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 33)
-	companyPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 34)
-	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 35)
-	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 36)
-	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 37)
-	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 38)
-	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 39)
-	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 40)
-	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 41)
-	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 42)
-	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 43)
-	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 44)
+	companyPlanDetailResponseDataFieldEstimatedTotals       = big.NewInt(1 << 25)
+	companyPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 26)
+	companyPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 27)
+	companyPlanDetailResponseDataFieldID                    = big.NewInt(1 << 28)
+	companyPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldInvalidReason         = big.NewInt(1 << 30)
+	companyPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 31)
+	companyPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 32)
+	companyPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 33)
+	companyPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 34)
+	companyPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 35)
+	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 36)
+	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 37)
+	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 38)
+	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 39)
+	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 40)
+	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 41)
+	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 42)
+	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 43)
+	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 44)
+	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 45)
 )
 
 type CompanyPlanDetailResponseData struct {
@@ -1109,6 +1110,7 @@ type CompanyPlanDetailResponseData struct {
 	Description           string                               `json:"description" url:"description"`
 	DraftVersion          *PlanVersionResponseData             `json:"draft_version,omitempty" url:"draft_version,omitempty"`
 	Entitlements          []*PlanEntitlementResponseData       `json:"entitlements,omitempty" url:"entitlements,omitempty"`
+	EstimatedTotals       []*EstimatedPlanTotal                `json:"estimated_totals,omitempty" url:"estimated_totals,omitempty"`
 	Features              []*FeatureInPlanResponseData         `json:"features" url:"features"`
 	Icon                  PlanIcon                             `json:"icon" url:"icon"`
 	ID                    string                               `json:"id" url:"id"`
@@ -1311,6 +1313,13 @@ func (c *CompanyPlanDetailResponseData) GetEntitlements() []*PlanEntitlementResp
 		return nil
 	}
 	return c.Entitlements
+}
+
+func (c *CompanyPlanDetailResponseData) GetEstimatedTotals() []*EstimatedPlanTotal {
+	if c == nil {
+		return nil
+	}
+	return c.EstimatedTotals
 }
 
 func (c *CompanyPlanDetailResponseData) GetFeatures() []*FeatureInPlanResponseData {
@@ -1642,6 +1651,13 @@ func (c *CompanyPlanDetailResponseData) SetDraftVersion(draftVersion *PlanVersio
 func (c *CompanyPlanDetailResponseData) SetEntitlements(entitlements []*PlanEntitlementResponseData) {
 	c.Entitlements = entitlements
 	c.require(companyPlanDetailResponseDataFieldEntitlements)
+}
+
+// SetEstimatedTotals sets the EstimatedTotals field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetEstimatedTotals(estimatedTotals []*EstimatedPlanTotal) {
+	c.EstimatedTotals = estimatedTotals
+	c.require(companyPlanDetailResponseDataFieldEstimatedTotals)
 }
 
 // SetFeatures sets the Features field and marks it as non-optional;
@@ -3894,6 +3910,124 @@ func (c *CreditTransferView) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	estimatedPlanTotalFieldAmount   = big.NewInt(1 << 0)
+	estimatedPlanTotalFieldCurrency = big.NewInt(1 << 1)
+	estimatedPlanTotalFieldPeriod   = big.NewInt(1 << 2)
+)
+
+type EstimatedPlanTotal struct {
+	Amount   int64            `json:"amount" url:"amount"`
+	Currency string           `json:"currency" url:"currency"`
+	Period   PlanPriceCadence `json:"period" url:"period"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EstimatedPlanTotal) GetAmount() int64 {
+	if e == nil {
+		return 0
+	}
+	return e.Amount
+}
+
+func (e *EstimatedPlanTotal) GetCurrency() string {
+	if e == nil {
+		return ""
+	}
+	return e.Currency
+}
+
+func (e *EstimatedPlanTotal) GetPeriod() PlanPriceCadence {
+	if e == nil {
+		return ""
+	}
+	return e.Period
+}
+
+func (e *EstimatedPlanTotal) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.extraProperties
+}
+
+func (e *EstimatedPlanTotal) require(field *big.Int) {
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
+	}
+	next.Or(next, field)
+	e.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EstimatedPlanTotal) SetAmount(amount int64) {
+	e.Amount = amount
+	e.require(estimatedPlanTotalFieldAmount)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EstimatedPlanTotal) SetCurrency(currency string) {
+	e.Currency = currency
+	e.require(estimatedPlanTotalFieldCurrency)
+}
+
+// SetPeriod sets the Period field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EstimatedPlanTotal) SetPeriod(period PlanPriceCadence) {
+	e.Period = period
+	e.require(estimatedPlanTotalFieldPeriod)
+}
+
+func (e *EstimatedPlanTotal) UnmarshalJSON(data []byte) error {
+	type unmarshaler EstimatedPlanTotal
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EstimatedPlanTotal(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EstimatedPlanTotal) MarshalJSON() ([]byte, error) {
+	type embed EstimatedPlanTotal
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*e),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (e *EstimatedPlanTotal) String() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
 }
 
 var (

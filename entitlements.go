@@ -119,6 +119,94 @@ func (c *CountCompanyOverridesRequest) SetOffset(offset *int64) {
 }
 
 var (
+	countCompanyUserUsageRequestFieldCompanyID = big.NewInt(1 << 0)
+	countCompanyUserUsageRequestFieldEndTime   = big.NewInt(1 << 1)
+	countCompanyUserUsageRequestFieldFeatureID = big.NewInt(1 << 2)
+	countCompanyUserUsageRequestFieldMetric    = big.NewInt(1 << 3)
+	countCompanyUserUsageRequestFieldLimit     = big.NewInt(1 << 4)
+	countCompanyUserUsageRequestFieldOffset    = big.NewInt(1 << 5)
+	countCompanyUserUsageRequestFieldStartTime = big.NewInt(1 << 6)
+)
+
+type CountCompanyUserUsageRequest struct {
+	// Company to break usage down for
+	CompanyID string `json:"-" url:"company_id"`
+	// End of the usage window (exclusive); defaults to now
+	EndTime *time.Time `json:"-" url:"end_time,omitempty"`
+	// The event-based feature to break down; required when metric is feature
+	FeatureID *string `json:"-" url:"feature_id,omitempty"`
+	// Which metric to break usage down by
+	Metric UserUsageMetric `json:"-" url:"metric"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+	// Start of the usage window; defaults to 30 days before the end
+	StartTime *time.Time `json:"-" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountCompanyUserUsageRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(countCompanyUserUsageRequestFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetEndTime(endTime *time.Time) {
+	c.EndTime = endTime
+	c.require(countCompanyUserUsageRequestFieldEndTime)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(countCompanyUserUsageRequestFieldFeatureID)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetMetric(metric UserUsageMetric) {
+	c.Metric = metric
+	c.require(countCompanyUserUsageRequestFieldMetric)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countCompanyUserUsageRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countCompanyUserUsageRequestFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageRequest) SetStartTime(startTime *time.Time) {
+	c.StartTime = startTime
+	c.require(countCompanyUserUsageRequestFieldStartTime)
+}
+
+var (
 	countFeatureCompaniesRequestFieldFeatureID = big.NewInt(1 << 0)
 	countFeatureCompaniesRequestFieldQ         = big.NewInt(1 << 1)
 	countFeatureCompaniesRequestFieldLimit     = big.NewInt(1 << 2)
@@ -1035,6 +1123,54 @@ func (d *DuplicatePlanEntitlementsRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
+	getCompanyUserUsageMetricsRequestFieldCompanyID = big.NewInt(1 << 0)
+	getCompanyUserUsageMetricsRequestFieldEndTime   = big.NewInt(1 << 1)
+	getCompanyUserUsageMetricsRequestFieldStartTime = big.NewInt(1 << 2)
+)
+
+type GetCompanyUserUsageMetricsRequest struct {
+	// Company to list available metrics for
+	CompanyID string `json:"-" url:"company_id"`
+	// End of the usage window (exclusive); defaults to now
+	EndTime *time.Time `json:"-" url:"end_time,omitempty"`
+	// Start of the usage window; defaults to 30 days before the end
+	StartTime *time.Time `json:"-" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (g *GetCompanyUserUsageMetricsRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsRequest) SetCompanyID(companyID string) {
+	g.CompanyID = companyID
+	g.require(getCompanyUserUsageMetricsRequestFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsRequest) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getCompanyUserUsageMetricsRequestFieldEndTime)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsRequest) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getCompanyUserUsageMetricsRequestFieldStartTime)
+}
+
+var (
 	getFeatureUsageByCompanyRequestFieldKeys = big.NewInt(1 << 0)
 )
 
@@ -1347,6 +1483,94 @@ func (l *ListCompanyOverridesRequest) SetLimit(limit *int64) {
 func (l *ListCompanyOverridesRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCompanyOverridesRequestFieldOffset)
+}
+
+var (
+	listCompanyUserUsageRequestFieldCompanyID = big.NewInt(1 << 0)
+	listCompanyUserUsageRequestFieldEndTime   = big.NewInt(1 << 1)
+	listCompanyUserUsageRequestFieldFeatureID = big.NewInt(1 << 2)
+	listCompanyUserUsageRequestFieldMetric    = big.NewInt(1 << 3)
+	listCompanyUserUsageRequestFieldLimit     = big.NewInt(1 << 4)
+	listCompanyUserUsageRequestFieldOffset    = big.NewInt(1 << 5)
+	listCompanyUserUsageRequestFieldStartTime = big.NewInt(1 << 6)
+)
+
+type ListCompanyUserUsageRequest struct {
+	// Company to break usage down for
+	CompanyID string `json:"-" url:"company_id"`
+	// End of the usage window (exclusive); defaults to now
+	EndTime *time.Time `json:"-" url:"end_time,omitempty"`
+	// The event-based feature to break down; required when metric is feature
+	FeatureID *string `json:"-" url:"feature_id,omitempty"`
+	// Which metric to break usage down by
+	Metric UserUsageMetric `json:"-" url:"metric"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+	// Start of the usage window; defaults to 30 days before the end
+	StartTime *time.Time `json:"-" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListCompanyUserUsageRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetCompanyID(companyID string) {
+	l.CompanyID = companyID
+	l.require(listCompanyUserUsageRequestFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetEndTime(endTime *time.Time) {
+	l.EndTime = endTime
+	l.require(listCompanyUserUsageRequestFieldEndTime)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetFeatureID(featureID *string) {
+	l.FeatureID = featureID
+	l.require(listCompanyUserUsageRequestFieldFeatureID)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetMetric(metric UserUsageMetric) {
+	l.Metric = metric
+	l.require(listCompanyUserUsageRequestFieldMetric)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listCompanyUserUsageRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listCompanyUserUsageRequestFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageRequest) SetStartTime(startTime *time.Time) {
+	l.StartTime = startTime
+	l.require(listCompanyUserUsageRequestFieldStartTime)
 }
 
 var (
@@ -1778,6 +2002,503 @@ func (l *ListPlanEntitlementsRequest) SetLimit(limit *int64) {
 func (l *ListPlanEntitlementsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPlanEntitlementsRequestFieldOffset)
+}
+
+var (
+	companyUserUsageMetricsResponseDataFieldEndTime    = big.NewInt(1 << 0)
+	companyUserUsageMetricsResponseDataFieldFeatures   = big.NewInt(1 << 1)
+	companyUserUsageMetricsResponseDataFieldHasCredits = big.NewInt(1 << 2)
+	companyUserUsageMetricsResponseDataFieldStartTime  = big.NewInt(1 << 3)
+)
+
+type CompanyUserUsageMetricsResponseData struct {
+	// End of the usage window (exclusive)
+	EndTime time.Time `json:"end_time" url:"end_time"`
+	// Event-based features the company has user-attributed usage for in the window; a feature with usage but no entitlement is still listed
+	Features []*FeatureResponseData `json:"features" url:"features"`
+	// Whether the company consumed any credits in the window
+	HasCredits bool `json:"has_credits" url:"has_credits"`
+	// Start of the usage window
+	StartTime time.Time `json:"start_time" url:"start_time"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyUserUsageMetricsResponseData) GetEndTime() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.EndTime
+}
+
+func (c *CompanyUserUsageMetricsResponseData) GetFeatures() []*FeatureResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Features
+}
+
+func (c *CompanyUserUsageMetricsResponseData) GetHasCredits() bool {
+	if c == nil {
+		return false
+	}
+	return c.HasCredits
+}
+
+func (c *CompanyUserUsageMetricsResponseData) GetStartTime() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.StartTime
+}
+
+func (c *CompanyUserUsageMetricsResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyUserUsageMetricsResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageMetricsResponseData) SetEndTime(endTime time.Time) {
+	c.EndTime = endTime
+	c.require(companyUserUsageMetricsResponseDataFieldEndTime)
+}
+
+// SetFeatures sets the Features field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageMetricsResponseData) SetFeatures(features []*FeatureResponseData) {
+	c.Features = features
+	c.require(companyUserUsageMetricsResponseDataFieldFeatures)
+}
+
+// SetHasCredits sets the HasCredits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageMetricsResponseData) SetHasCredits(hasCredits bool) {
+	c.HasCredits = hasCredits
+	c.require(companyUserUsageMetricsResponseDataFieldHasCredits)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageMetricsResponseData) SetStartTime(startTime time.Time) {
+	c.StartTime = startTime
+	c.require(companyUserUsageMetricsResponseDataFieldStartTime)
+}
+
+func (c *CompanyUserUsageMetricsResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyUserUsageMetricsResponseData
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyUserUsageMetricsResponseData(unmarshaler.embed)
+	c.EndTime = unmarshaler.EndTime.Time()
+	c.StartTime = unmarshaler.StartTime.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyUserUsageMetricsResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyUserUsageMetricsResponseData
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed:     embed(*c),
+		EndTime:   internal.NewDateTime(c.EndTime),
+		StartTime: internal.NewDateTime(c.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyUserUsageMetricsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	companyUserUsageResponseDataFieldEndTime      = big.NewInt(1 << 0)
+	companyUserUsageResponseDataFieldRows         = big.NewInt(1 << 1)
+	companyUserUsageResponseDataFieldStartTime    = big.NewInt(1 << 2)
+	companyUserUsageResponseDataFieldTopUserShare = big.NewInt(1 << 3)
+	companyUserUsageResponseDataFieldTotal        = big.NewInt(1 << 4)
+	companyUserUsageResponseDataFieldUnattributed = big.NewInt(1 << 5)
+)
+
+type CompanyUserUsageResponseData struct {
+	// End of the usage window (exclusive)
+	EndTime time.Time `json:"end_time" url:"end_time"`
+	// This page of per-user consumption within the window, heaviest first
+	Rows []*CompanyUserUsageRowResponseData `json:"rows" url:"rows"`
+	// Start of the usage window
+	StartTime time.Time `json:"start_time" url:"start_time"`
+	// The heaviest user's fraction (0-1) of consumption, measured across every user in the window and not just this page
+	TopUserShare float64 `json:"top_user_share" url:"top_user_share"`
+	// Consumption across every user in the window including unattributed, not just this page
+	Total float64 `json:"total" url:"total"`
+	// Consumption from events sent without a user; not a user, so it is excluded from rows and from the count, and returned on every page. Null when the window has none
+	Unattributed *CompanyUserUsageRowResponseData `json:"unattributed,omitempty" url:"unattributed,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyUserUsageResponseData) GetEndTime() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.EndTime
+}
+
+func (c *CompanyUserUsageResponseData) GetRows() []*CompanyUserUsageRowResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Rows
+}
+
+func (c *CompanyUserUsageResponseData) GetStartTime() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.StartTime
+}
+
+func (c *CompanyUserUsageResponseData) GetTopUserShare() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.TopUserShare
+}
+
+func (c *CompanyUserUsageResponseData) GetTotal() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Total
+}
+
+func (c *CompanyUserUsageResponseData) GetUnattributed() *CompanyUserUsageRowResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Unattributed
+}
+
+func (c *CompanyUserUsageResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyUserUsageResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageResponseData) SetEndTime(endTime time.Time) {
+	c.EndTime = endTime
+	c.require(companyUserUsageResponseDataFieldEndTime)
+}
+
+// SetRows sets the Rows field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageResponseData) SetRows(rows []*CompanyUserUsageRowResponseData) {
+	c.Rows = rows
+	c.require(companyUserUsageResponseDataFieldRows)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageResponseData) SetStartTime(startTime time.Time) {
+	c.StartTime = startTime
+	c.require(companyUserUsageResponseDataFieldStartTime)
+}
+
+// SetTopUserShare sets the TopUserShare field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageResponseData) SetTopUserShare(topUserShare float64) {
+	c.TopUserShare = topUserShare
+	c.require(companyUserUsageResponseDataFieldTopUserShare)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageResponseData) SetTotal(total float64) {
+	c.Total = total
+	c.require(companyUserUsageResponseDataFieldTotal)
+}
+
+// SetUnattributed sets the Unattributed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageResponseData) SetUnattributed(unattributed *CompanyUserUsageRowResponseData) {
+	c.Unattributed = unattributed
+	c.require(companyUserUsageResponseDataFieldUnattributed)
+}
+
+func (c *CompanyUserUsageResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyUserUsageResponseData
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyUserUsageResponseData(unmarshaler.embed)
+	c.EndTime = unmarshaler.EndTime.Time()
+	c.StartTime = unmarshaler.StartTime.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyUserUsageResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyUserUsageResponseData
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed:     embed(*c),
+		EndTime:   internal.NewDateTime(c.EndTime),
+		StartTime: internal.NewDateTime(c.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyUserUsageResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	companyUserUsageRowResponseDataFieldLastSeen = big.NewInt(1 << 0)
+	companyUserUsageRowResponseDataFieldShare    = big.NewInt(1 << 1)
+	companyUserUsageRowResponseDataFieldUser     = big.NewInt(1 << 2)
+	companyUserUsageRowResponseDataFieldUserID   = big.NewInt(1 << 3)
+	companyUserUsageRowResponseDataFieldValue    = big.NewInt(1 << 4)
+)
+
+type CompanyUserUsageRowResponseData struct {
+	// When the user last used the feature within the window; null for the credits metric, which aggregates balances rather than timestamped events
+	LastSeen *time.Time `json:"last_seen,omitempty" url:"last_seen,omitempty"`
+	// This row's fraction (0-1) of consumption within the window, including unattributed consumption
+	Share float64 `json:"share" url:"share"`
+	// The user the consumption is attributed to; null for consumption from events sent without a user
+	User *UserResponseData `json:"user,omitempty" url:"user,omitempty"`
+	// The user the consumption is attributed to; null for unattributed consumption
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
+	// The user's consumption of the metric within the window
+	Value float64 `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyUserUsageRowResponseData) GetLastSeen() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.LastSeen
+}
+
+func (c *CompanyUserUsageRowResponseData) GetShare() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Share
+}
+
+func (c *CompanyUserUsageRowResponseData) GetUser() *UserResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.User
+}
+
+func (c *CompanyUserUsageRowResponseData) GetUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.UserID
+}
+
+func (c *CompanyUserUsageRowResponseData) GetValue() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Value
+}
+
+func (c *CompanyUserUsageRowResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyUserUsageRowResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetLastSeen sets the LastSeen field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageRowResponseData) SetLastSeen(lastSeen *time.Time) {
+	c.LastSeen = lastSeen
+	c.require(companyUserUsageRowResponseDataFieldLastSeen)
+}
+
+// SetShare sets the Share field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageRowResponseData) SetShare(share float64) {
+	c.Share = share
+	c.require(companyUserUsageRowResponseDataFieldShare)
+}
+
+// SetUser sets the User field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageRowResponseData) SetUser(user *UserResponseData) {
+	c.User = user
+	c.require(companyUserUsageRowResponseDataFieldUser)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageRowResponseData) SetUserID(userID *string) {
+	c.UserID = userID
+	c.require(companyUserUsageRowResponseDataFieldUserID)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyUserUsageRowResponseData) SetValue(value float64) {
+	c.Value = value
+	c.require(companyUserUsageRowResponseDataFieldValue)
+}
+
+func (c *CompanyUserUsageRowResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyUserUsageRowResponseData
+	var unmarshaler = struct {
+		embed
+		LastSeen *internal.DateTime `json:"last_seen,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyUserUsageRowResponseData(unmarshaler.embed)
+	c.LastSeen = unmarshaler.LastSeen.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyUserUsageRowResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyUserUsageRowResponseData
+	var marshaler = struct {
+		embed
+		LastSeen *internal.DateTime `json:"last_seen,omitempty"`
+	}{
+		embed:    embed(*c),
+		LastSeen: internal.NewOptionalDateTime(c.LastSeen),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyUserUsageRowResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
 }
 
 var (
@@ -4915,6 +5636,28 @@ func (u *UserUsageDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
+type UserUsageMetric string
+
+const (
+	UserUsageMetricCredits UserUsageMetric = "credits"
+	UserUsageMetricFeature UserUsageMetric = "feature"
+)
+
+func NewUserUsageMetricFromString(s string) (UserUsageMetric, error) {
+	switch s {
+	case "credits":
+		return UserUsageMetricCredits, nil
+	case "feature":
+		return UserUsageMetricFeature, nil
+	}
+	var t UserUsageMetric
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UserUsageMetric) Ptr() *UserUsageMetric {
+	return &u
+}
+
 // Input parameters
 var (
 	countCompanyOverridesParamsFieldCompanyID      = big.NewInt(1 << 0)
@@ -5228,6 +5971,311 @@ func (c *CountCompanyOverridesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CountCompanyOverridesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Input parameters
+var (
+	countCompanyUserUsageParamsFieldCompanyID = big.NewInt(1 << 0)
+	countCompanyUserUsageParamsFieldEndTime   = big.NewInt(1 << 1)
+	countCompanyUserUsageParamsFieldFeatureID = big.NewInt(1 << 2)
+	countCompanyUserUsageParamsFieldLimit     = big.NewInt(1 << 3)
+	countCompanyUserUsageParamsFieldMetric    = big.NewInt(1 << 4)
+	countCompanyUserUsageParamsFieldOffset    = big.NewInt(1 << 5)
+	countCompanyUserUsageParamsFieldStartTime = big.NewInt(1 << 6)
+)
+
+type CountCompanyUserUsageParams struct {
+	// Company to break usage down for
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// End of the usage window (exclusive); defaults to now
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// The event-based feature to break down; required when metric is feature
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Which metric to break usage down by
+	Metric *UserUsageMetric `json:"metric,omitempty" url:"metric,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Start of the usage window; defaults to 30 days before the end
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompanyUserUsageParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountCompanyUserUsageParams) GetEndTime() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.EndTime
+}
+
+func (c *CountCompanyUserUsageParams) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CountCompanyUserUsageParams) GetLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountCompanyUserUsageParams) GetMetric() *UserUsageMetric {
+	if c == nil {
+		return nil
+	}
+	return c.Metric
+}
+
+func (c *CountCompanyUserUsageParams) GetOffset() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountCompanyUserUsageParams) GetStartTime() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.StartTime
+}
+
+func (c *CountCompanyUserUsageParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountCompanyUserUsageParams) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countCompanyUserUsageParamsFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetEndTime(endTime *time.Time) {
+	c.EndTime = endTime
+	c.require(countCompanyUserUsageParamsFieldEndTime)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(countCompanyUserUsageParamsFieldFeatureID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countCompanyUserUsageParamsFieldLimit)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetMetric(metric *UserUsageMetric) {
+	c.Metric = metric
+	c.require(countCompanyUserUsageParamsFieldMetric)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countCompanyUserUsageParamsFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageParams) SetStartTime(startTime *time.Time) {
+	c.StartTime = startTime
+	c.require(countCompanyUserUsageParamsFieldStartTime)
+}
+
+func (c *CountCompanyUserUsageParams) UnmarshalJSON(data []byte) error {
+	type embed CountCompanyUserUsageParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CountCompanyUserUsageParams(unmarshaler.embed)
+	c.EndTime = unmarshaler.EndTime.TimePtr()
+	c.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompanyUserUsageParams) MarshalJSON() ([]byte, error) {
+	type embed CountCompanyUserUsageParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*c),
+		EndTime:   internal.NewOptionalDateTime(c.EndTime),
+		StartTime: internal.NewOptionalDateTime(c.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCompanyUserUsageParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countCompanyUserUsageResponseFieldData   = big.NewInt(1 << 0)
+	countCompanyUserUsageResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountCompanyUserUsageResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountCompanyUserUsageParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountCompanyUserUsageResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountCompanyUserUsageResponse) GetParams() *CountCompanyUserUsageParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountCompanyUserUsageResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountCompanyUserUsageResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countCompanyUserUsageResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompanyUserUsageResponse) SetParams(params *CountCompanyUserUsageParams) {
+	c.Params = params
+	c.require(countCompanyUserUsageResponseFieldParams)
+}
+
+func (c *CountCompanyUserUsageResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountCompanyUserUsageResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountCompanyUserUsageResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountCompanyUserUsageResponse) MarshalJSON() ([]byte, error) {
+	type embed CountCompanyUserUsageResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountCompanyUserUsageResponse) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -7025,6 +8073,243 @@ func (g *GetCompanyOverrideResponse) String() string {
 
 // Input parameters
 var (
+	getCompanyUserUsageMetricsParamsFieldCompanyID = big.NewInt(1 << 0)
+	getCompanyUserUsageMetricsParamsFieldEndTime   = big.NewInt(1 << 1)
+	getCompanyUserUsageMetricsParamsFieldStartTime = big.NewInt(1 << 2)
+)
+
+type GetCompanyUserUsageMetricsParams struct {
+	// Company to list available metrics for
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// End of the usage window (exclusive); defaults to now
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Start of the usage window; defaults to 30 days before the end
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyUserUsageMetricsParams) GetCompanyID() *string {
+	if g == nil {
+		return nil
+	}
+	return g.CompanyID
+}
+
+func (g *GetCompanyUserUsageMetricsParams) GetEndTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.EndTime
+}
+
+func (g *GetCompanyUserUsageMetricsParams) GetStartTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.StartTime
+}
+
+func (g *GetCompanyUserUsageMetricsParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCompanyUserUsageMetricsParams) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsParams) SetCompanyID(companyID *string) {
+	g.CompanyID = companyID
+	g.require(getCompanyUserUsageMetricsParamsFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsParams) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getCompanyUserUsageMetricsParamsFieldEndTime)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsParams) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getCompanyUserUsageMetricsParamsFieldStartTime)
+}
+
+func (g *GetCompanyUserUsageMetricsParams) UnmarshalJSON(data []byte) error {
+	type embed GetCompanyUserUsageMetricsParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*g),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*g = GetCompanyUserUsageMetricsParams(unmarshaler.embed)
+	g.EndTime = unmarshaler.EndTime.TimePtr()
+	g.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCompanyUserUsageMetricsParams) MarshalJSON() ([]byte, error) {
+	type embed GetCompanyUserUsageMetricsParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*g),
+		EndTime:   internal.NewOptionalDateTime(g.EndTime),
+		StartTime: internal.NewOptionalDateTime(g.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCompanyUserUsageMetricsParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getCompanyUserUsageMetricsResponseFieldData   = big.NewInt(1 << 0)
+	getCompanyUserUsageMetricsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetCompanyUserUsageMetricsResponse struct {
+	Data *CompanyUserUsageMetricsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *GetCompanyUserUsageMetricsParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) GetData() *CompanyUserUsageMetricsResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) GetParams() *GetCompanyUserUsageMetricsParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsResponse) SetData(data *CompanyUserUsageMetricsResponseData) {
+	g.Data = data
+	g.require(getCompanyUserUsageMetricsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyUserUsageMetricsResponse) SetParams(params *GetCompanyUserUsageMetricsParams) {
+	g.Params = params
+	g.require(getCompanyUserUsageMetricsResponseFieldParams)
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetCompanyUserUsageMetricsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetCompanyUserUsageMetricsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) MarshalJSON() ([]byte, error) {
+	type embed GetCompanyUserUsageMetricsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCompanyUserUsageMetricsResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// Input parameters
+var (
 	getFeatureUsageByCompanyParamsFieldKeys = big.NewInt(1 << 0)
 )
 
@@ -8403,6 +9688,311 @@ func (l *ListCompanyOverridesResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListCompanyOverridesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Input parameters
+var (
+	listCompanyUserUsageParamsFieldCompanyID = big.NewInt(1 << 0)
+	listCompanyUserUsageParamsFieldEndTime   = big.NewInt(1 << 1)
+	listCompanyUserUsageParamsFieldFeatureID = big.NewInt(1 << 2)
+	listCompanyUserUsageParamsFieldLimit     = big.NewInt(1 << 3)
+	listCompanyUserUsageParamsFieldMetric    = big.NewInt(1 << 4)
+	listCompanyUserUsageParamsFieldOffset    = big.NewInt(1 << 5)
+	listCompanyUserUsageParamsFieldStartTime = big.NewInt(1 << 6)
+)
+
+type ListCompanyUserUsageParams struct {
+	// Company to break usage down for
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// End of the usage window (exclusive); defaults to now
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// The event-based feature to break down; required when metric is feature
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Which metric to break usage down by
+	Metric *UserUsageMetric `json:"metric,omitempty" url:"metric,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Start of the usage window; defaults to 30 days before the end
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyUserUsageParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListCompanyUserUsageParams) GetEndTime() *time.Time {
+	if l == nil {
+		return nil
+	}
+	return l.EndTime
+}
+
+func (l *ListCompanyUserUsageParams) GetFeatureID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.FeatureID
+}
+
+func (l *ListCompanyUserUsageParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListCompanyUserUsageParams) GetMetric() *UserUsageMetric {
+	if l == nil {
+		return nil
+	}
+	return l.Metric
+}
+
+func (l *ListCompanyUserUsageParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListCompanyUserUsageParams) GetStartTime() *time.Time {
+	if l == nil {
+		return nil
+	}
+	return l.StartTime
+}
+
+func (l *ListCompanyUserUsageParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCompanyUserUsageParams) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listCompanyUserUsageParamsFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetEndTime(endTime *time.Time) {
+	l.EndTime = endTime
+	l.require(listCompanyUserUsageParamsFieldEndTime)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetFeatureID(featureID *string) {
+	l.FeatureID = featureID
+	l.require(listCompanyUserUsageParamsFieldFeatureID)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listCompanyUserUsageParamsFieldLimit)
+}
+
+// SetMetric sets the Metric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetMetric(metric *UserUsageMetric) {
+	l.Metric = metric
+	l.require(listCompanyUserUsageParamsFieldMetric)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listCompanyUserUsageParamsFieldOffset)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageParams) SetStartTime(startTime *time.Time) {
+	l.StartTime = startTime
+	l.require(listCompanyUserUsageParamsFieldStartTime)
+}
+
+func (l *ListCompanyUserUsageParams) UnmarshalJSON(data []byte) error {
+	type embed ListCompanyUserUsageParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*l),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*l = ListCompanyUserUsageParams(unmarshaler.embed)
+	l.EndTime = unmarshaler.EndTime.TimePtr()
+	l.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyUserUsageParams) MarshalJSON() ([]byte, error) {
+	type embed ListCompanyUserUsageParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*l),
+		EndTime:   internal.NewOptionalDateTime(l.EndTime),
+		StartTime: internal.NewOptionalDateTime(l.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCompanyUserUsageParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listCompanyUserUsageResponseFieldData   = big.NewInt(1 << 0)
+	listCompanyUserUsageResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListCompanyUserUsageResponse struct {
+	Data *CompanyUserUsageResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListCompanyUserUsageParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListCompanyUserUsageResponse) GetData() *CompanyUserUsageResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListCompanyUserUsageResponse) GetParams() *ListCompanyUserUsageParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListCompanyUserUsageResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListCompanyUserUsageResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageResponse) SetData(data *CompanyUserUsageResponseData) {
+	l.Data = data
+	l.require(listCompanyUserUsageResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompanyUserUsageResponse) SetParams(params *ListCompanyUserUsageParams) {
+	l.Params = params
+	l.require(listCompanyUserUsageResponseFieldParams)
+}
+
+func (l *ListCompanyUserUsageResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListCompanyUserUsageResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListCompanyUserUsageResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListCompanyUserUsageResponse) MarshalJSON() ([]byte, error) {
+	type embed ListCompanyUserUsageResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListCompanyUserUsageResponse) String() string {
 	if l == nil {
 		return "<nil>"
 	}

@@ -243,6 +243,14 @@ func TestSettersCreatePlanGroupRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetShowEstimatedTotal", func(t *testing.T) {
+		obj := &CreatePlanGroupRequestBody{}
+		var fernTestValueShowEstimatedTotal bool
+		obj.SetShowEstimatedTotal(fernTestValueShowEstimatedTotal)
+		assert.Equal(t, fernTestValueShowEstimatedTotal, obj.ShowEstimatedTotal)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetShowFeatureDescription", func(t *testing.T) {
 		obj := &CreatePlanGroupRequestBody{}
 		var fernTestValueShowFeatureDescription bool
@@ -1202,6 +1210,37 @@ func TestSettersMarkExplicitCreatePlanGroupRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetShowCredits(fernTestValueShowCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetShowEstimatedTotal_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreatePlanGroupRequestBody{}
+		var fernTestValueShowEstimatedTotal bool
+
+		// Act
+		obj.SetShowEstimatedTotal(fernTestValueShowEstimatedTotal)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -3327,6 +3366,14 @@ func TestSettersComponentSettingsResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetShowEstimatedTotal", func(t *testing.T) {
+		obj := &ComponentSettingsResponseData{}
+		var fernTestValueShowEstimatedTotal bool
+		obj.SetShowEstimatedTotal(fernTestValueShowEstimatedTotal)
+		assert.Equal(t, fernTestValueShowEstimatedTotal, obj.ShowEstimatedTotal)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetShowFeatureDescription", func(t *testing.T) {
 		obj := &ComponentSettingsResponseData{}
 		var fernTestValueShowFeatureDescription bool
@@ -3406,6 +3453,29 @@ func TestGettersComponentSettingsResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetShowCredits() // Should return zero value
+	})
+
+	t.Run("GetShowEstimatedTotal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ComponentSettingsResponseData{}
+		var expected bool
+		obj.ShowEstimatedTotal = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetShowEstimatedTotal(), "getter should return the property value")
+	})
+
+	t.Run("GetShowEstimatedTotal_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ComponentSettingsResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetShowEstimatedTotal() // Should return zero value
 	})
 
 	t.Run("GetShowFeatureDescription", func(t *testing.T) {
@@ -3542,6 +3612,37 @@ func TestSettersMarkExplicitComponentSettingsResponseData(t *testing.T) {
 
 		// Act
 		obj.SetShowCredits(fernTestValueShowCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetShowEstimatedTotal_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ComponentSettingsResponseData{}
+		var fernTestValueShowEstimatedTotal bool
+
+		// Act
+		obj.SetShowEstimatedTotal(fernTestValueShowEstimatedTotal)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -9801,6 +9902,14 @@ func TestSettersUpdatePlanGroupRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetShowEstimatedTotal", func(t *testing.T) {
+		obj := &UpdatePlanGroupRequestBody{}
+		var fernTestValueShowEstimatedTotal bool
+		obj.SetShowEstimatedTotal(fernTestValueShowEstimatedTotal)
+		assert.Equal(t, fernTestValueShowEstimatedTotal, obj.ShowEstimatedTotal)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetShowFeatureDescription", func(t *testing.T) {
 		obj := &UpdatePlanGroupRequestBody{}
 		var fernTestValueShowFeatureDescription bool
@@ -10760,6 +10869,37 @@ func TestSettersMarkExplicitUpdatePlanGroupRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetShowCredits(fernTestValueShowCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetShowEstimatedTotal_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &UpdatePlanGroupRequestBody{}
+		var fernTestValueShowEstimatedTotal bool
+
+		// Act
+		obj.SetShowEstimatedTotal(fernTestValueShowEstimatedTotal)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

@@ -1022,7 +1022,6 @@ func (c *Client) ListCreditSpendPolicies(
 //
 //	request := &schematichq.CreateCreditSpendPolicyRequestBody{
 //	    BillingCreditID: "billing_credit_id",
-//	    MaxPerDraw: 1.1,
 //	}
 //	client.Credits.CreateCreditSpendPolicy(
 //	    context.TODO(),
@@ -1164,6 +1163,39 @@ func (c *Client) CountCreditSpendPolicies(
 
 // Example:
 //
+//	request := &schematichq.GetCreditSpendPolicyUsageRequest{
+//	    BillingCreditID: schematichq.String(
+//	        "billing_credit_id",
+//	    ),
+//	    CompanyID: "company_id",
+//	    UserIDs: []*string{
+//	        schematichq.String(
+//	            "user_ids",
+//	        ),
+//	    },
+//	}
+//	client.Credits.GetCreditSpendPolicyUsage(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) GetCreditSpendPolicyUsage(
+	ctx context.Context,
+	request *schematichq.GetCreditSpendPolicyUsageRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetCreditSpendPolicyUsageResponse, error) {
+	response, err := c.WithRawResponse.GetCreditSpendPolicyUsage(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListCreditEventLedgerRequest{
 //	    BillingCreditID: schematichq.String(
 //	        "billing_credit_id",
@@ -1172,7 +1204,7 @@ func (c *Client) CountCreditSpendPolicies(
 //	    EndTime: schematichq.String(
 //	        "end_time",
 //	    ),
-//	    EventType: schematichq.CreditEventTypeGrant.Ptr(),
+//	    EventType: schematichq.CreditEventTypeAdjustment.Ptr(),
 //	    FeatureID: schematichq.String(
 //	        "feature_id",
 //	    ),
@@ -1216,7 +1248,7 @@ func (c *Client) ListCreditEventLedger(
 //	    EndTime: schematichq.String(
 //	        "end_time",
 //	    ),
-//	    EventType: schematichq.CreditEventTypeGrant.Ptr(),
+//	    EventType: schematichq.CreditEventTypeAdjustment.Ptr(),
 //	    FeatureID: schematichq.String(
 //	        "feature_id",
 //	    ),

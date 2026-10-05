@@ -1550,16 +1550,19 @@ func (c *CheckFlagsBulkResponseData) String() string {
 }
 
 var (
-	checkFlagsResponseDataFieldCreditBalances = big.NewInt(1 << 0)
-	checkFlagsResponseDataFieldFlags          = big.NewInt(1 << 1)
-	checkFlagsResponseDataFieldPlan           = big.NewInt(1 << 2)
+	checkFlagsResponseDataFieldCreditBalances      = big.NewInt(1 << 0)
+	checkFlagsResponseDataFieldCreditSpendPolicies = big.NewInt(1 << 1)
+	checkFlagsResponseDataFieldFlags               = big.NewInt(1 << 2)
+	checkFlagsResponseDataFieldPlan                = big.NewInt(1 << 3)
 )
 
 type CheckFlagsResponseData struct {
 	// Lease-aware credit balances keyed by credit ID, covering every credit type the company holds a balance in
 	CreditBalances map[string]*CompanyCreditBalance `json:"credit_balances,omitempty" url:"credit_balances,omitempty"`
-	Flags          []*CheckFlagResponseData         `json:"flags" url:"flags"`
-	Plan           *DatastreamCompanyPlan           `json:"plan,omitempty" url:"plan,omitempty"`
+	// Credit spend policies binding the evaluated company and user; empty when none bind. Each response carries the whole set, so replace any previously received set with it. Advisory: the flag values do not reflect them, since a check names no draw amount
+	CreditSpendPolicies []*CreditSpendPolicy     `json:"credit_spend_policies" url:"credit_spend_policies"`
+	Flags               []*CheckFlagResponseData `json:"flags" url:"flags"`
+	Plan                *DatastreamCompanyPlan   `json:"plan,omitempty" url:"plan,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1573,6 +1576,13 @@ func (c *CheckFlagsResponseData) GetCreditBalances() map[string]*CompanyCreditBa
 		return nil
 	}
 	return c.CreditBalances
+}
+
+func (c *CheckFlagsResponseData) GetCreditSpendPolicies() []*CreditSpendPolicy {
+	if c == nil {
+		return nil
+	}
+	return c.CreditSpendPolicies
 }
 
 func (c *CheckFlagsResponseData) GetFlags() []*CheckFlagResponseData {
@@ -1610,6 +1620,13 @@ func (c *CheckFlagsResponseData) require(field *big.Int) {
 func (c *CheckFlagsResponseData) SetCreditBalances(creditBalances map[string]*CompanyCreditBalance) {
 	c.CreditBalances = creditBalances
 	c.require(checkFlagsResponseDataFieldCreditBalances)
+}
+
+// SetCreditSpendPolicies sets the CreditSpendPolicies field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckFlagsResponseData) SetCreditSpendPolicies(creditSpendPolicies []*CreditSpendPolicy) {
+	c.CreditSpendPolicies = creditSpendPolicies
+	c.require(checkFlagsResponseDataFieldCreditSpendPolicies)
 }
 
 // SetFlags sets the Flags field and marks it as non-optional;
@@ -2729,6 +2746,341 @@ func (c *CreateOrUpdateRuleRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CreateOrUpdateRuleRequestBody) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditSpendPolicyFieldConsumed = big.NewInt(1 << 0)
+	creditSpendPolicyFieldCreditID = big.NewInt(1 << 1)
+	creditSpendPolicyFieldID       = big.NewInt(1 << 2)
+	creditSpendPolicyFieldKind     = big.NewInt(1 << 3)
+	creditSpendPolicyFieldLabel    = big.NewInt(1 << 4)
+	creditSpendPolicyFieldLimit    = big.NewInt(1 << 5)
+	creditSpendPolicyFieldResetsAt = big.NewInt(1 << 6)
+	creditSpendPolicyFieldScope    = big.NewInt(1 << 7)
+	creditSpendPolicyFieldWindow   = big.NewInt(1 << 8)
+)
+
+type CreditSpendPolicy struct {
+	// How much of the limit is already spent in the current period
+	Consumed *float64 `json:"consumed,omitempty" url:"consumed,omitempty"`
+	// The credit the policy limits
+	CreditID string `json:"credit_id" url:"credit_id"`
+	// The ID of the policy
+	ID string `json:"id" url:"id"`
+	// How the limit is applied
+	Kind string `json:"kind" url:"kind"`
+	// The name the account gave the policy
+	Label *string `json:"label,omitempty" url:"label,omitempty"`
+	// The ceiling, in credits
+	Limit float64 `json:"limit" url:"limit"`
+	// For a windowed limit, when the current period ends and consumed no longer applies
+	ResetsAt *time.Time `json:"resets_at,omitempty" url:"resets_at,omitempty"`
+	// Whether the policy limits the company or one user
+	Scope CreditSpendPolicyScope `json:"scope" url:"scope"`
+	// For a windowed limit, the period it accumulates over
+	Window *CreditSpendWindow `json:"window,omitempty" url:"window,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditSpendPolicy) GetConsumed() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.Consumed
+}
+
+func (c *CreditSpendPolicy) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CreditSpendPolicy) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CreditSpendPolicy) GetKind() string {
+	if c == nil {
+		return ""
+	}
+	return c.Kind
+}
+
+func (c *CreditSpendPolicy) GetLabel() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Label
+}
+
+func (c *CreditSpendPolicy) GetLimit() float64 {
+	if c == nil {
+		return 0
+	}
+	return c.Limit
+}
+
+func (c *CreditSpendPolicy) GetResetsAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.ResetsAt
+}
+
+func (c *CreditSpendPolicy) GetScope() CreditSpendPolicyScope {
+	if c == nil {
+		return ""
+	}
+	return c.Scope
+}
+
+func (c *CreditSpendPolicy) GetWindow() *CreditSpendWindow {
+	if c == nil {
+		return nil
+	}
+	return c.Window
+}
+
+func (c *CreditSpendPolicy) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditSpendPolicy) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetConsumed sets the Consumed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetConsumed(consumed *float64) {
+	c.Consumed = consumed
+	c.require(creditSpendPolicyFieldConsumed)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(creditSpendPolicyFieldCreditID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetID(id string) {
+	c.ID = id
+	c.require(creditSpendPolicyFieldID)
+}
+
+// SetKind sets the Kind field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetKind(kind string) {
+	c.Kind = kind
+	c.require(creditSpendPolicyFieldKind)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetLabel(label *string) {
+	c.Label = label
+	c.require(creditSpendPolicyFieldLabel)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetLimit(limit float64) {
+	c.Limit = limit
+	c.require(creditSpendPolicyFieldLimit)
+}
+
+// SetResetsAt sets the ResetsAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetResetsAt(resetsAt *time.Time) {
+	c.ResetsAt = resetsAt
+	c.require(creditSpendPolicyFieldResetsAt)
+}
+
+// SetScope sets the Scope field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetScope(scope CreditSpendPolicyScope) {
+	c.Scope = scope
+	c.require(creditSpendPolicyFieldScope)
+}
+
+// SetWindow sets the Window field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetWindow(window *CreditSpendWindow) {
+	c.Window = window
+	c.require(creditSpendPolicyFieldWindow)
+}
+
+func (c *CreditSpendPolicy) UnmarshalJSON(data []byte) error {
+	type embed CreditSpendPolicy
+	var unmarshaler = struct {
+		embed
+		ResetsAt *internal.DateTime `json:"resets_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditSpendPolicy(unmarshaler.embed)
+	c.ResetsAt = unmarshaler.ResetsAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditSpendPolicy) MarshalJSON() ([]byte, error) {
+	type embed CreditSpendPolicy
+	var marshaler = struct {
+		embed
+		ResetsAt *internal.DateTime `json:"resets_at,omitempty"`
+	}{
+		embed:    embed(*c),
+		ResetsAt: internal.NewOptionalDateTime(c.ResetsAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditSpendPolicy) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	creditSpendWindowFieldCount = big.NewInt(1 << 0)
+	creditSpendWindowFieldUnit  = big.NewInt(1 << 1)
+)
+
+type CreditSpendWindow struct {
+	// How many units make up one period
+	Count int64 `json:"count" url:"count"`
+	// The period the limit accumulates over
+	Unit string `json:"unit" url:"unit"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditSpendWindow) GetCount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.Count
+}
+
+func (c *CreditSpendWindow) GetUnit() string {
+	if c == nil {
+		return ""
+	}
+	return c.Unit
+}
+
+func (c *CreditSpendWindow) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditSpendWindow) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCount sets the Count field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendWindow) SetCount(count int64) {
+	c.Count = count
+	c.require(creditSpendWindowFieldCount)
+}
+
+// SetUnit sets the Unit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendWindow) SetUnit(unit string) {
+	c.Unit = unit
+	c.require(creditSpendWindowFieldUnit)
+}
+
+func (c *CreditSpendWindow) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditSpendWindow
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditSpendWindow(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditSpendWindow) MarshalJSON() ([]byte, error) {
+	type embed CreditSpendWindow
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditSpendWindow) String() string {
 	if c == nil {
 		return "<nil>"
 	}

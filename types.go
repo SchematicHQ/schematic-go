@@ -7284,19 +7284,23 @@ func (b BillingTiersMode) Ptr() *BillingTiersMode {
 }
 
 var (
-	captureRawEventFieldCapturedAt = big.NewInt(1 << 0)
-	captureRawEventFieldEventID    = big.NewInt(1 << 1)
-	captureRawEventFieldRawBytes   = big.NewInt(1 << 2)
-	captureRawEventFieldRemoteIP   = big.NewInt(1 << 3)
-	captureRawEventFieldUserAgent  = big.NewInt(1 << 4)
+	captureRawEventFieldCapturedAt              = big.NewInt(1 << 0)
+	captureRawEventFieldContextSignature        = big.NewInt(1 << 1)
+	captureRawEventFieldContextSignatureChecked = big.NewInt(1 << 2)
+	captureRawEventFieldEventID                 = big.NewInt(1 << 3)
+	captureRawEventFieldRawBytes                = big.NewInt(1 << 4)
+	captureRawEventFieldRemoteIP                = big.NewInt(1 << 5)
+	captureRawEventFieldUserAgent               = big.NewInt(1 << 6)
 )
 
 type CaptureRawEvent struct {
-	CapturedAt time.Time `json:"captured_at" url:"captured_at"`
-	EventID    *string   `json:"event_id,omitempty" url:"event_id,omitempty"`
-	RawBytes   string    `json:"raw_bytes" url:"raw_bytes"`
-	RemoteIP   string    `json:"remote_ip" url:"remote_ip"`
-	UserAgent  string    `json:"user_agent" url:"user_agent"`
+	CapturedAt              time.Time `json:"captured_at" url:"captured_at"`
+	ContextSignature        *string   `json:"context_signature,omitempty" url:"context_signature,omitempty"`
+	ContextSignatureChecked *bool     `json:"context_signature_checked,omitempty" url:"context_signature_checked,omitempty"`
+	EventID                 *string   `json:"event_id,omitempty" url:"event_id,omitempty"`
+	RawBytes                string    `json:"raw_bytes" url:"raw_bytes"`
+	RemoteIP                string    `json:"remote_ip" url:"remote_ip"`
+	UserAgent               string    `json:"user_agent" url:"user_agent"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7310,6 +7314,20 @@ func (c *CaptureRawEvent) GetCapturedAt() time.Time {
 		return time.Time{}
 	}
 	return c.CapturedAt
+}
+
+func (c *CaptureRawEvent) GetContextSignature() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ContextSignature
+}
+
+func (c *CaptureRawEvent) GetContextSignatureChecked() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ContextSignatureChecked
 }
 
 func (c *CaptureRawEvent) GetEventID() *string {
@@ -7361,6 +7379,20 @@ func (c *CaptureRawEvent) require(field *big.Int) {
 func (c *CaptureRawEvent) SetCapturedAt(capturedAt time.Time) {
 	c.CapturedAt = capturedAt
 	c.require(captureRawEventFieldCapturedAt)
+}
+
+// SetContextSignature sets the ContextSignature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetContextSignature(contextSignature *string) {
+	c.ContextSignature = contextSignature
+	c.require(captureRawEventFieldContextSignature)
+}
+
+// SetContextSignatureChecked sets the ContextSignatureChecked field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CaptureRawEvent) SetContextSignatureChecked(contextSignatureChecked *bool) {
+	c.ContextSignatureChecked = contextSignatureChecked
+	c.require(captureRawEventFieldContextSignatureChecked)
 }
 
 // SetEventID sets the EventID field and marks it as non-optional;
@@ -8631,36 +8663,38 @@ func (c *CompanyBillingProfileResponseData) String() string {
 var (
 	companyDetailResponseDataFieldAddOns                = big.NewInt(1 << 0)
 	companyDetailResponseDataFieldBillingCreditBalances = big.NewInt(1 << 1)
-	companyDetailResponseDataFieldBillingProfile        = big.NewInt(1 << 2)
-	companyDetailResponseDataFieldBillingProfiles       = big.NewInt(1 << 3)
-	companyDetailResponseDataFieldBillingSubscription   = big.NewInt(1 << 4)
-	companyDetailResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 5)
-	companyDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 6)
-	companyDetailResponseDataFieldCustomPlanBillings    = big.NewInt(1 << 7)
-	companyDetailResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 8)
-	companyDetailResponseDataFieldEntitlements          = big.NewInt(1 << 9)
-	companyDetailResponseDataFieldEntityTraits          = big.NewInt(1 << 10)
-	companyDetailResponseDataFieldEnvironmentID         = big.NewInt(1 << 11)
-	companyDetailResponseDataFieldID                    = big.NewInt(1 << 12)
-	companyDetailResponseDataFieldKeys                  = big.NewInt(1 << 13)
-	companyDetailResponseDataFieldLastSeenAt            = big.NewInt(1 << 14)
-	companyDetailResponseDataFieldLogoURL               = big.NewInt(1 << 15)
-	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 16)
-	companyDetailResponseDataFieldName                  = big.NewInt(1 << 17)
-	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 18)
-	companyDetailResponseDataFieldPendingMigration      = big.NewInt(1 << 19)
-	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 20)
-	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 21)
-	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 22)
-	companyDetailResponseDataFieldScheduledDowngrade    = big.NewInt(1 << 23)
-	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 24)
-	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 25)
-	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 26)
+	companyDetailResponseDataFieldBillingEmail          = big.NewInt(1 << 2)
+	companyDetailResponseDataFieldBillingProfile        = big.NewInt(1 << 3)
+	companyDetailResponseDataFieldBillingProfiles       = big.NewInt(1 << 4)
+	companyDetailResponseDataFieldBillingSubscription   = big.NewInt(1 << 5)
+	companyDetailResponseDataFieldBillingSubscriptions  = big.NewInt(1 << 6)
+	companyDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 7)
+	companyDetailResponseDataFieldCustomPlanBillings    = big.NewInt(1 << 8)
+	companyDetailResponseDataFieldDefaultPaymentMethod  = big.NewInt(1 << 9)
+	companyDetailResponseDataFieldEntitlements          = big.NewInt(1 << 10)
+	companyDetailResponseDataFieldEntityTraits          = big.NewInt(1 << 11)
+	companyDetailResponseDataFieldEnvironmentID         = big.NewInt(1 << 12)
+	companyDetailResponseDataFieldID                    = big.NewInt(1 << 13)
+	companyDetailResponseDataFieldKeys                  = big.NewInt(1 << 14)
+	companyDetailResponseDataFieldLastSeenAt            = big.NewInt(1 << 15)
+	companyDetailResponseDataFieldLogoURL               = big.NewInt(1 << 16)
+	companyDetailResponseDataFieldMetrics               = big.NewInt(1 << 17)
+	companyDetailResponseDataFieldName                  = big.NewInt(1 << 18)
+	companyDetailResponseDataFieldPaymentMethods        = big.NewInt(1 << 19)
+	companyDetailResponseDataFieldPendingMigration      = big.NewInt(1 << 20)
+	companyDetailResponseDataFieldPlan                  = big.NewInt(1 << 21)
+	companyDetailResponseDataFieldPlans                 = big.NewInt(1 << 22)
+	companyDetailResponseDataFieldRules                 = big.NewInt(1 << 23)
+	companyDetailResponseDataFieldScheduledDowngrade    = big.NewInt(1 << 24)
+	companyDetailResponseDataFieldTraits                = big.NewInt(1 << 25)
+	companyDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 26)
+	companyDetailResponseDataFieldUserCount             = big.NewInt(1 << 27)
 )
 
 type CompanyDetailResponseData struct {
 	AddOns                []*CompanyPlanWithBillingSubView         `json:"add_ons" url:"add_ons"`
 	BillingCreditBalances map[string]float64                       `json:"billing_credit_balances,omitempty" url:"billing_credit_balances,omitempty"`
+	BillingEmail          *string                                  `json:"billing_email,omitempty" url:"billing_email,omitempty"`
 	BillingProfile        *CompanyBillingProfileResponseData       `json:"billing_profile,omitempty" url:"billing_profile,omitempty"`
 	BillingProfiles       []*CompanyBillingProfileResponseData     `json:"billing_profiles,omitempty" url:"billing_profiles,omitempty"`
 	BillingSubscription   *BillingSubscriptionView                 `json:"billing_subscription,omitempty" url:"billing_subscription,omitempty"`
@@ -8707,6 +8741,13 @@ func (c *CompanyDetailResponseData) GetBillingCreditBalances() map[string]float6
 		return nil
 	}
 	return c.BillingCreditBalances
+}
+
+func (c *CompanyDetailResponseData) GetBillingEmail() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingEmail
 }
 
 func (c *CompanyDetailResponseData) GetBillingProfile() *CompanyBillingProfileResponseData {
@@ -8912,6 +8953,13 @@ func (c *CompanyDetailResponseData) SetAddOns(addOns []*CompanyPlanWithBillingSu
 func (c *CompanyDetailResponseData) SetBillingCreditBalances(billingCreditBalances map[string]float64) {
 	c.BillingCreditBalances = billingCreditBalances
 	c.require(companyDetailResponseDataFieldBillingCreditBalances)
+}
+
+// SetBillingEmail sets the BillingEmail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyDetailResponseData) SetBillingEmail(billingEmail *string) {
+	c.BillingEmail = billingEmail
+	c.require(companyDetailResponseDataFieldBillingEmail)
 }
 
 // SetBillingProfile sets the BillingProfile field and marks it as non-optional;
@@ -11873,15 +11921,17 @@ func (c *ComponentCapabilities) String() string {
 var (
 	componentDisplaySettingsFieldShowAsMonthlyPrices    = big.NewInt(1 << 0)
 	componentDisplaySettingsFieldShowCredits            = big.NewInt(1 << 1)
-	componentDisplaySettingsFieldShowFeatureDescription = big.NewInt(1 << 2)
-	componentDisplaySettingsFieldShowHardLimit          = big.NewInt(1 << 3)
-	componentDisplaySettingsFieldShowPeriodToggle       = big.NewInt(1 << 4)
-	componentDisplaySettingsFieldShowZeroPriceAsFree    = big.NewInt(1 << 5)
+	componentDisplaySettingsFieldShowEstimatedTotal     = big.NewInt(1 << 2)
+	componentDisplaySettingsFieldShowFeatureDescription = big.NewInt(1 << 3)
+	componentDisplaySettingsFieldShowHardLimit          = big.NewInt(1 << 4)
+	componentDisplaySettingsFieldShowPeriodToggle       = big.NewInt(1 << 5)
+	componentDisplaySettingsFieldShowZeroPriceAsFree    = big.NewInt(1 << 6)
 )
 
 type ComponentDisplaySettings struct {
 	ShowAsMonthlyPrices    bool `json:"show_as_monthly_prices" url:"show_as_monthly_prices"`
 	ShowCredits            bool `json:"show_credits" url:"show_credits"`
+	ShowEstimatedTotal     bool `json:"show_estimated_total" url:"show_estimated_total"`
 	ShowFeatureDescription bool `json:"show_feature_description" url:"show_feature_description"`
 	ShowHardLimit          bool `json:"show_hard_limit" url:"show_hard_limit"`
 	ShowPeriodToggle       bool `json:"show_period_toggle" url:"show_period_toggle"`
@@ -11906,6 +11956,13 @@ func (c *ComponentDisplaySettings) GetShowCredits() bool {
 		return false
 	}
 	return c.ShowCredits
+}
+
+func (c *ComponentDisplaySettings) GetShowEstimatedTotal() bool {
+	if c == nil {
+		return false
+	}
+	return c.ShowEstimatedTotal
 }
 
 func (c *ComponentDisplaySettings) GetShowFeatureDescription() bool {
@@ -11964,6 +12021,13 @@ func (c *ComponentDisplaySettings) SetShowAsMonthlyPrices(showAsMonthlyPrices bo
 func (c *ComponentDisplaySettings) SetShowCredits(showCredits bool) {
 	c.ShowCredits = showCredits
 	c.require(componentDisplaySettingsFieldShowCredits)
+}
+
+// SetShowEstimatedTotal sets the ShowEstimatedTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ComponentDisplaySettings) SetShowEstimatedTotal(showEstimatedTotal bool) {
+	c.ShowEstimatedTotal = showEstimatedTotal
+	c.require(componentDisplaySettingsFieldShowEstimatedTotal)
 }
 
 // SetShowFeatureDescription sets the ShowFeatureDescription field and marks it as non-optional;
@@ -16608,6 +16672,31 @@ func (c *CreditGrantPriceTierRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CreditSpendPolicyScope string
+
+const (
+	CreditSpendPolicyScopeCompany CreditSpendPolicyScope = "company"
+	CreditSpendPolicyScopeUser    CreditSpendPolicyScope = "user"
+	CreditSpendPolicyScopeGroup   CreditSpendPolicyScope = "group"
+)
+
+func NewCreditSpendPolicyScopeFromString(s string) (CreditSpendPolicyScope, error) {
+	switch s {
+	case "company":
+		return CreditSpendPolicyScopeCompany, nil
+	case "user":
+		return CreditSpendPolicyScopeUser, nil
+	case "group":
+		return CreditSpendPolicyScopeGroup, nil
+	}
+	var t CreditSpendPolicyScope
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditSpendPolicyScope) Ptr() *CreditSpendPolicyScope {
+	return &c
+}
+
 var (
 	creditUsageAggregationFieldUsageThisBillingPeriod = big.NewInt(1 << 0)
 	creditUsageAggregationFieldUsageThisCalendarMonth = big.NewInt(1 << 1)
@@ -17993,32 +18082,35 @@ func (c CustomPlanActivationStrategy) Ptr() *CustomPlanActivationStrategy {
 var (
 	customPlanBillingResponseDataFieldActivationStrategy = big.NewInt(1 << 0)
 	customPlanBillingResponseDataFieldBillingCycleAnchor = big.NewInt(1 << 1)
-	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 2)
-	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 3)
-	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 4)
-	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 5)
-	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 6)
-	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 7)
-	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 8)
-	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 11)
-	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 12)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 13)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 14)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 15)
+	customPlanBillingResponseDataFieldBillingStartDate   = big.NewInt(1 << 2)
+	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 3)
+	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 4)
+	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 5)
+	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 6)
+	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 7)
+	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 8)
+	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 9)
+	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 13)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 14)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 15)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 16)
 )
 
 type CustomPlanBillingResponseData struct {
 	ActivationStrategy CustomPlanActivationStrategy `json:"activation_strategy" url:"activation_strategy"`
 	// The billing period renewal date pinned when the subscription started, when one was set. When no invoice exists yet, the first invoice is raised on this date.
 	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
-	CompanyID          string     `json:"company_id" url:"company_id"`
-	CreatedAt          time.Time  `json:"created_at" url:"created_at"`
-	DaysUntilDue       int64      `json:"days_until_due" url:"days_until_due"`
-	ExternalInvoiceID  *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
-	ID                 string     `json:"id" url:"id"`
-	PaidAt             *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
+	// The date the contract term starts, when the operator pinned one. A past date was backdated onto the subscription so the first period runs from the contract date rather than from finalization.
+	BillingStartDate  *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
+	CompanyID         string     `json:"company_id" url:"company_id"`
+	CreatedAt         time.Time  `json:"created_at" url:"created_at"`
+	DaysUntilDue      int64      `json:"days_until_due" url:"days_until_due"`
+	ExternalInvoiceID *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
+	ID                string     `json:"id" url:"id"`
+	PaidAt            *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
 	// The flow that created this billing record: a custom plan, or a standard plan assigned by invoice through Manage Plan.
 	PlanBillingSource PlanBillingSource `json:"plan_billing_source" url:"plan_billing_source"`
 	PlanID            string            `json:"plan_id" url:"plan_id"`
@@ -18049,6 +18141,13 @@ func (c *CustomPlanBillingResponseData) GetBillingCycleAnchor() *time.Time {
 		return nil
 	}
 	return c.BillingCycleAnchor
+}
+
+func (c *CustomPlanBillingResponseData) GetBillingStartDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.BillingStartDate
 }
 
 func (c *CustomPlanBillingResponseData) GetCompanyID() string {
@@ -18179,6 +18278,13 @@ func (c *CustomPlanBillingResponseData) SetBillingCycleAnchor(billingCycleAnchor
 	c.require(customPlanBillingResponseDataFieldBillingCycleAnchor)
 }
 
+// SetBillingStartDate sets the BillingStartDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetBillingStartDate(billingStartDate *time.Time) {
+	c.BillingStartDate = billingStartDate
+	c.require(customPlanBillingResponseDataFieldBillingStartDate)
+}
+
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CustomPlanBillingResponseData) SetCompanyID(companyID string) {
@@ -18282,6 +18388,7 @@ func (c *CustomPlanBillingResponseData) UnmarshalJSON(data []byte) error {
 	var unmarshaler = struct {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
 		CreatedAt          *internal.DateTime `json:"created_at"`
 		PaidAt             *internal.DateTime `json:"paid_at,omitempty"`
 		PublishedAt        *internal.DateTime `json:"published_at,omitempty"`
@@ -18294,6 +18401,7 @@ func (c *CustomPlanBillingResponseData) UnmarshalJSON(data []byte) error {
 	}
 	*c = CustomPlanBillingResponseData(unmarshaler.embed)
 	c.BillingCycleAnchor = unmarshaler.BillingCycleAnchor.TimePtr()
+	c.BillingStartDate = unmarshaler.BillingStartDate.TimePtr()
 	c.CreatedAt = unmarshaler.CreatedAt.Time()
 	c.PaidAt = unmarshaler.PaidAt.TimePtr()
 	c.PublishedAt = unmarshaler.PublishedAt.TimePtr()
@@ -18312,6 +18420,7 @@ func (c *CustomPlanBillingResponseData) MarshalJSON() ([]byte, error) {
 	var marshaler = struct {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
 		CreatedAt          *internal.DateTime `json:"created_at"`
 		PaidAt             *internal.DateTime `json:"paid_at,omitempty"`
 		PublishedAt        *internal.DateTime `json:"published_at,omitempty"`
@@ -18319,6 +18428,7 @@ func (c *CustomPlanBillingResponseData) MarshalJSON() ([]byte, error) {
 	}{
 		embed:              embed(*c),
 		BillingCycleAnchor: internal.NewOptionalDateTime(c.BillingCycleAnchor),
+		BillingStartDate:   internal.NewOptionalDateTime(c.BillingStartDate),
 		CreatedAt:          internal.NewDateTime(c.CreatedAt),
 		PaidAt:             internal.NewOptionalDateTime(c.PaidAt),
 		PublishedAt:        internal.NewOptionalDateTime(c.PublishedAt),
@@ -20493,19 +20603,21 @@ func (e EntityType) Ptr() *EntityType {
 }
 
 var (
-	environmentResponseDataFieldCreatedAt       = big.NewInt(1 << 0)
-	environmentResponseDataFieldEnvironmentType = big.NewInt(1 << 1)
-	environmentResponseDataFieldID              = big.NewInt(1 << 2)
-	environmentResponseDataFieldName            = big.NewInt(1 << 3)
-	environmentResponseDataFieldUpdatedAt       = big.NewInt(1 << 4)
+	environmentResponseDataFieldCreatedAt               = big.NewInt(1 << 0)
+	environmentResponseDataFieldEnvironmentType         = big.NewInt(1 << 1)
+	environmentResponseDataFieldID                      = big.NewInt(1 << 2)
+	environmentResponseDataFieldName                    = big.NewInt(1 << 3)
+	environmentResponseDataFieldRequireContextSignature = big.NewInt(1 << 4)
+	environmentResponseDataFieldUpdatedAt               = big.NewInt(1 << 5)
 )
 
 type EnvironmentResponseData struct {
-	CreatedAt       time.Time       `json:"created_at" url:"created_at"`
-	EnvironmentType EnvironmentType `json:"environment_type" url:"environment_type"`
-	ID              string          `json:"id" url:"id"`
-	Name            string          `json:"name" url:"name"`
-	UpdatedAt       time.Time       `json:"updated_at" url:"updated_at"`
+	CreatedAt               time.Time       `json:"created_at" url:"created_at"`
+	EnvironmentType         EnvironmentType `json:"environment_type" url:"environment_type"`
+	ID                      string          `json:"id" url:"id"`
+	Name                    string          `json:"name" url:"name"`
+	RequireContextSignature bool            `json:"require_context_signature" url:"require_context_signature"`
+	UpdatedAt               time.Time       `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -20540,6 +20652,13 @@ func (e *EnvironmentResponseData) GetName() string {
 		return ""
 	}
 	return e.Name
+}
+
+func (e *EnvironmentResponseData) GetRequireContextSignature() bool {
+	if e == nil {
+		return false
+	}
+	return e.RequireContextSignature
 }
 
 func (e *EnvironmentResponseData) GetUpdatedAt() time.Time {
@@ -20591,6 +20710,13 @@ func (e *EnvironmentResponseData) SetID(id string) {
 func (e *EnvironmentResponseData) SetName(name string) {
 	e.Name = name
 	e.require(environmentResponseDataFieldName)
+}
+
+// SetRequireContextSignature sets the RequireContextSignature field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EnvironmentResponseData) SetRequireContextSignature(requireContextSignature bool) {
+	e.RequireContextSignature = requireContextSignature
+	e.require(environmentResponseDataFieldRequireContextSignature)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -27112,27 +27238,44 @@ func (p *PaymentMethodResponseData) String() string {
 }
 
 var (
-	pendingMigrationResponseDataFieldMigrationID         = big.NewInt(1 << 0)
-	pendingMigrationResponseDataFieldScheduledFor        = big.NewInt(1 << 1)
-	pendingMigrationResponseDataFieldToPlanID            = big.NewInt(1 << 2)
-	pendingMigrationResponseDataFieldToPlanName          = big.NewInt(1 << 3)
-	pendingMigrationResponseDataFieldToPlanVersionID     = big.NewInt(1 << 4)
-	pendingMigrationResponseDataFieldToPlanVersionNumber = big.NewInt(1 << 5)
+	pendingMigrationResponseDataFieldEffectiveAt         = big.NewInt(1 << 0)
+	pendingMigrationResponseDataFieldMigrationID         = big.NewInt(1 << 1)
+	pendingMigrationResponseDataFieldProrationBehavior   = big.NewInt(1 << 2)
+	pendingMigrationResponseDataFieldScheduledFor        = big.NewInt(1 << 3)
+	pendingMigrationResponseDataFieldStrategy            = big.NewInt(1 << 4)
+	pendingMigrationResponseDataFieldToPlanID            = big.NewInt(1 << 5)
+	pendingMigrationResponseDataFieldToPlanName          = big.NewInt(1 << 6)
+	pendingMigrationResponseDataFieldToPlanVersionID     = big.NewInt(1 << 7)
+	pendingMigrationResponseDataFieldToPlanVersionNumber = big.NewInt(1 << 8)
 )
 
 type PendingMigrationResponseData struct {
-	MigrationID         string     `json:"migration_id" url:"migration_id"`
-	ScheduledFor        *time.Time `json:"scheduled_for,omitempty" url:"scheduled_for,omitempty"`
-	ToPlanID            string     `json:"to_plan_id" url:"to_plan_id"`
-	ToPlanName          string     `json:"to_plan_name" url:"to_plan_name"`
-	ToPlanVersionID     string     `json:"to_plan_version_id" url:"to_plan_version_id"`
-	ToPlanVersionNumber *int64     `json:"to_plan_version_number,omitempty" url:"to_plan_version_number,omitempty"`
+	// When the company moves to the new version: the migration's date for a scheduled migration, or the end of the company's current billing period. Null when no date can be named yet, for example when the company's only subscription is past due or set to cancel; the company then moves at the next opportunity.
+	EffectiveAt *time.Time `json:"effective_at,omitempty" url:"effective_at,omitempty"`
+	MigrationID string     `json:"migration_id" url:"migration_id"`
+	// How the price difference is billed when the company moves. Always none for an end-of-billing-period migration.
+	ProrationBehavior *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
+	// Deprecated; use effective_at, which carries the same value.
+	ScheduledFor *time.Time `json:"scheduled_for,omitempty" url:"scheduled_for,omitempty"`
+	// Whether the company moves at the end of its billing period (end_of_billing_period) or on a specific date (scheduled). The type is shared with plan version migrations, but only those two values appear here: an immediate migration never pends.
+	Strategy            PlanVersionMigrationStrategy `json:"strategy" url:"strategy"`
+	ToPlanID            string                       `json:"to_plan_id" url:"to_plan_id"`
+	ToPlanName          string                       `json:"to_plan_name" url:"to_plan_name"`
+	ToPlanVersionID     string                       `json:"to_plan_version_id" url:"to_plan_version_id"`
+	ToPlanVersionNumber *int64                       `json:"to_plan_version_number,omitempty" url:"to_plan_version_number,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (p *PendingMigrationResponseData) GetEffectiveAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.EffectiveAt
 }
 
 func (p *PendingMigrationResponseData) GetMigrationID() string {
@@ -27142,11 +27285,25 @@ func (p *PendingMigrationResponseData) GetMigrationID() string {
 	return p.MigrationID
 }
 
+func (p *PendingMigrationResponseData) GetProrationBehavior() *MigrationProrationBehavior {
+	if p == nil {
+		return nil
+	}
+	return p.ProrationBehavior
+}
+
 func (p *PendingMigrationResponseData) GetScheduledFor() *time.Time {
 	if p == nil {
 		return nil
 	}
 	return p.ScheduledFor
+}
+
+func (p *PendingMigrationResponseData) GetStrategy() PlanVersionMigrationStrategy {
+	if p == nil {
+		return ""
+	}
+	return p.Strategy
 }
 
 func (p *PendingMigrationResponseData) GetToPlanID() string {
@@ -27193,6 +27350,13 @@ func (p *PendingMigrationResponseData) require(field *big.Int) {
 	p.explicitFields = next
 }
 
+// SetEffectiveAt sets the EffectiveAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetEffectiveAt(effectiveAt *time.Time) {
+	p.EffectiveAt = effectiveAt
+	p.require(pendingMigrationResponseDataFieldEffectiveAt)
+}
+
 // SetMigrationID sets the MigrationID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PendingMigrationResponseData) SetMigrationID(migrationID string) {
@@ -27200,11 +27364,25 @@ func (p *PendingMigrationResponseData) SetMigrationID(migrationID string) {
 	p.require(pendingMigrationResponseDataFieldMigrationID)
 }
 
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
+	p.ProrationBehavior = prorationBehavior
+	p.require(pendingMigrationResponseDataFieldProrationBehavior)
+}
+
 // SetScheduledFor sets the ScheduledFor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PendingMigrationResponseData) SetScheduledFor(scheduledFor *time.Time) {
 	p.ScheduledFor = scheduledFor
 	p.require(pendingMigrationResponseDataFieldScheduledFor)
+}
+
+// SetStrategy sets the Strategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PendingMigrationResponseData) SetStrategy(strategy PlanVersionMigrationStrategy) {
+	p.Strategy = strategy
+	p.require(pendingMigrationResponseDataFieldStrategy)
 }
 
 // SetToPlanID sets the ToPlanID field and marks it as non-optional;
@@ -27239,6 +27417,7 @@ func (p *PendingMigrationResponseData) UnmarshalJSON(data []byte) error {
 	type embed PendingMigrationResponseData
 	var unmarshaler = struct {
 		embed
+		EffectiveAt  *internal.DateTime `json:"effective_at,omitempty"`
 		ScheduledFor *internal.DateTime `json:"scheduled_for,omitempty"`
 	}{
 		embed: embed(*p),
@@ -27247,6 +27426,7 @@ func (p *PendingMigrationResponseData) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*p = PendingMigrationResponseData(unmarshaler.embed)
+	p.EffectiveAt = unmarshaler.EffectiveAt.TimePtr()
 	p.ScheduledFor = unmarshaler.ScheduledFor.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
@@ -27261,9 +27441,11 @@ func (p *PendingMigrationResponseData) MarshalJSON() ([]byte, error) {
 	type embed PendingMigrationResponseData
 	var marshaler = struct {
 		embed
+		EffectiveAt  *internal.DateTime `json:"effective_at,omitempty"`
 		ScheduledFor *internal.DateTime `json:"scheduled_for,omitempty"`
 	}{
 		embed:        embed(*p),
+		EffectiveAt:  internal.NewOptionalDateTime(p.EffectiveAt),
 		ScheduledFor: internal.NewOptionalDateTime(p.ScheduledFor),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
@@ -30989,6 +31171,7 @@ const (
 	PlanVersionMigrationStrategyEndOfBillingPeriod PlanVersionMigrationStrategy = "end_of_billing_period"
 	PlanVersionMigrationStrategyImmediate          PlanVersionMigrationStrategy = "immediate"
 	PlanVersionMigrationStrategyLeave              PlanVersionMigrationStrategy = "leave"
+	PlanVersionMigrationStrategyScheduled          PlanVersionMigrationStrategy = "scheduled"
 )
 
 func NewPlanVersionMigrationStrategyFromString(s string) (PlanVersionMigrationStrategy, error) {
@@ -30999,6 +31182,8 @@ func NewPlanVersionMigrationStrategyFromString(s string) (PlanVersionMigrationSt
 		return PlanVersionMigrationStrategyImmediate, nil
 	case "leave":
 		return PlanVersionMigrationStrategyLeave, nil
+	case "scheduled":
+		return PlanVersionMigrationStrategyScheduled, nil
 	}
 	var t PlanVersionMigrationStrategy
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -33920,14 +34105,14 @@ func (r *RuleView) String() string {
 type RulesEngineSchemaVersion string
 
 const (
-	RulesEngineSchemaVersionV94B8F7A7                       RulesEngineSchemaVersion = "v94b8f7a7"
+	RulesEngineSchemaVersionVf4A06160                       RulesEngineSchemaVersion = "vf4a06160"
 	RulesEngineSchemaVersionPlaceholderForFernCompatibility RulesEngineSchemaVersion = "placeholder-for-fern-compatibility"
 )
 
 func NewRulesEngineSchemaVersionFromString(s string) (RulesEngineSchemaVersion, error) {
 	switch s {
-	case "v94b8f7a7":
-		return RulesEngineSchemaVersionV94B8F7A7, nil
+	case "vf4a06160":
+		return RulesEngineSchemaVersionVf4A06160, nil
 	case "placeholder-for-fern-compatibility":
 		return RulesEngineSchemaVersionPlaceholderForFernCompatibility, nil
 	}
@@ -34258,39 +34443,41 @@ func (r *RulesengineCheckFlagResult) String() string {
 }
 
 var (
-	rulesengineCompanyFieldAccountID         = big.NewInt(1 << 0)
-	rulesengineCompanyFieldBasePlanID        = big.NewInt(1 << 1)
-	rulesengineCompanyFieldBillingProductIDs = big.NewInt(1 << 2)
-	rulesengineCompanyFieldCreditBalances    = big.NewInt(1 << 3)
-	rulesengineCompanyFieldCreditPostpaid    = big.NewInt(1 << 4)
-	rulesengineCompanyFieldEntitlements      = big.NewInt(1 << 5)
-	rulesengineCompanyFieldEnvironmentID     = big.NewInt(1 << 6)
-	rulesengineCompanyFieldID                = big.NewInt(1 << 7)
-	rulesengineCompanyFieldKeys              = big.NewInt(1 << 8)
-	rulesengineCompanyFieldMetrics           = big.NewInt(1 << 9)
-	rulesengineCompanyFieldPlanIDs           = big.NewInt(1 << 10)
-	rulesengineCompanyFieldPlanVersionIDs    = big.NewInt(1 << 11)
-	rulesengineCompanyFieldRules             = big.NewInt(1 << 12)
-	rulesengineCompanyFieldSubscription      = big.NewInt(1 << 13)
-	rulesengineCompanyFieldTraits            = big.NewInt(1 << 14)
+	rulesengineCompanyFieldAccountID           = big.NewInt(1 << 0)
+	rulesengineCompanyFieldBasePlanID          = big.NewInt(1 << 1)
+	rulesengineCompanyFieldBillingProductIDs   = big.NewInt(1 << 2)
+	rulesengineCompanyFieldCreditBalances      = big.NewInt(1 << 3)
+	rulesengineCompanyFieldCreditPostpaid      = big.NewInt(1 << 4)
+	rulesengineCompanyFieldCreditSpendPolicies = big.NewInt(1 << 5)
+	rulesengineCompanyFieldEntitlements        = big.NewInt(1 << 6)
+	rulesengineCompanyFieldEnvironmentID       = big.NewInt(1 << 7)
+	rulesengineCompanyFieldID                  = big.NewInt(1 << 8)
+	rulesengineCompanyFieldKeys                = big.NewInt(1 << 9)
+	rulesengineCompanyFieldMetrics             = big.NewInt(1 << 10)
+	rulesengineCompanyFieldPlanIDs             = big.NewInt(1 << 11)
+	rulesengineCompanyFieldPlanVersionIDs      = big.NewInt(1 << 12)
+	rulesengineCompanyFieldRules               = big.NewInt(1 << 13)
+	rulesengineCompanyFieldSubscription        = big.NewInt(1 << 14)
+	rulesengineCompanyFieldTraits              = big.NewInt(1 << 15)
 )
 
 type RulesengineCompany struct {
-	AccountID         string                                      `json:"account_id" url:"account_id"`
-	BasePlanID        *string                                     `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
-	BillingProductIDs []string                                    `json:"billing_product_ids" url:"billing_product_ids"`
-	CreditBalances    map[string]float64                          `json:"credit_balances" url:"credit_balances"`
-	CreditPostpaid    map[string]*RulesengineCreditPostpaidConfig `json:"credit_postpaid,omitempty" url:"credit_postpaid,omitempty"`
-	Entitlements      []*RulesengineFeatureEntitlement            `json:"entitlements,omitempty" url:"entitlements,omitempty"`
-	EnvironmentID     string                                      `json:"environment_id" url:"environment_id"`
-	ID                string                                      `json:"id" url:"id"`
-	Keys              map[string]string                           `json:"keys" url:"keys"`
-	Metrics           []*RulesengineCompanyMetric                 `json:"metrics" url:"metrics"`
-	PlanIDs           []string                                    `json:"plan_ids" url:"plan_ids"`
-	PlanVersionIDs    []string                                    `json:"plan_version_ids" url:"plan_version_ids"`
-	Rules             []*RulesengineRule                          `json:"rules" url:"rules"`
-	Subscription      *RulesengineSubscription                    `json:"subscription,omitempty" url:"subscription,omitempty"`
-	Traits            []*RulesengineTrait                         `json:"traits" url:"traits"`
+	AccountID           string                                      `json:"account_id" url:"account_id"`
+	BasePlanID          *string                                     `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
+	BillingProductIDs   []string                                    `json:"billing_product_ids" url:"billing_product_ids"`
+	CreditBalances      map[string]float64                          `json:"credit_balances" url:"credit_balances"`
+	CreditPostpaid      map[string]*RulesengineCreditPostpaidConfig `json:"credit_postpaid,omitempty" url:"credit_postpaid,omitempty"`
+	CreditSpendPolicies []*RulesengineCreditSpendPolicy             `json:"credit_spend_policies,omitempty" url:"credit_spend_policies,omitempty"`
+	Entitlements        []*RulesengineFeatureEntitlement            `json:"entitlements,omitempty" url:"entitlements,omitempty"`
+	EnvironmentID       string                                      `json:"environment_id" url:"environment_id"`
+	ID                  string                                      `json:"id" url:"id"`
+	Keys                map[string]string                           `json:"keys" url:"keys"`
+	Metrics             []*RulesengineCompanyMetric                 `json:"metrics" url:"metrics"`
+	PlanIDs             []string                                    `json:"plan_ids" url:"plan_ids"`
+	PlanVersionIDs      []string                                    `json:"plan_version_ids" url:"plan_version_ids"`
+	Rules               []*RulesengineRule                          `json:"rules" url:"rules"`
+	Subscription        *RulesengineSubscription                    `json:"subscription,omitempty" url:"subscription,omitempty"`
+	Traits              []*RulesengineTrait                         `json:"traits" url:"traits"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -34332,6 +34519,13 @@ func (r *RulesengineCompany) GetCreditPostpaid() map[string]*RulesengineCreditPo
 		return nil
 	}
 	return r.CreditPostpaid
+}
+
+func (r *RulesengineCompany) GetCreditSpendPolicies() []*RulesengineCreditSpendPolicy {
+	if r == nil {
+		return nil
+	}
+	return r.CreditSpendPolicies
 }
 
 func (r *RulesengineCompany) GetEntitlements() []*RulesengineFeatureEntitlement {
@@ -34453,6 +34647,13 @@ func (r *RulesengineCompany) SetCreditBalances(creditBalances map[string]float64
 func (r *RulesengineCompany) SetCreditPostpaid(creditPostpaid map[string]*RulesengineCreditPostpaidConfig) {
 	r.CreditPostpaid = creditPostpaid
 	r.require(rulesengineCompanyFieldCreditPostpaid)
+}
+
+// SetCreditSpendPolicies sets the CreditSpendPolicies field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCompany) SetCreditSpendPolicies(creditSpendPolicies []*RulesengineCreditSpendPolicy) {
+	r.CreditSpendPolicies = creditSpendPolicies
+	r.require(rulesengineCompanyFieldCreditSpendPolicies)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -35344,6 +35545,366 @@ func (r *RulesengineCreditPostpaidConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (r *RulesengineCreditPostpaidConfig) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
+	rulesengineCreditSpendPolicyFieldConsumed = big.NewInt(1 << 0)
+	rulesengineCreditSpendPolicyFieldCreditID = big.NewInt(1 << 1)
+	rulesengineCreditSpendPolicyFieldID       = big.NewInt(1 << 2)
+	rulesengineCreditSpendPolicyFieldKind     = big.NewInt(1 << 3)
+	rulesengineCreditSpendPolicyFieldLabel    = big.NewInt(1 << 4)
+	rulesengineCreditSpendPolicyFieldLimit    = big.NewInt(1 << 5)
+	rulesengineCreditSpendPolicyFieldResetsAt = big.NewInt(1 << 6)
+	rulesengineCreditSpendPolicyFieldScope    = big.NewInt(1 << 7)
+	rulesengineCreditSpendPolicyFieldWindow   = big.NewInt(1 << 8)
+)
+
+type RulesengineCreditSpendPolicy struct {
+	// How much of the limit is already spent in the current period
+	Consumed *float64 `json:"consumed,omitempty" url:"consumed,omitempty"`
+	// The credit the policy limits
+	CreditID string `json:"credit_id" url:"credit_id"`
+	// The ID of the policy
+	ID string `json:"id" url:"id"`
+	// How the limit is applied
+	Kind string `json:"kind" url:"kind"`
+	// The name the account gave the policy
+	Label *string `json:"label,omitempty" url:"label,omitempty"`
+	// The ceiling, in credits
+	Limit float64 `json:"limit" url:"limit"`
+	// For a windowed limit, when the current period ends and consumed no longer applies
+	ResetsAt *time.Time `json:"resets_at,omitempty" url:"resets_at,omitempty"`
+	// Whether the policy limits the company or one user
+	Scope RulesengineCreditSpendPolicyScope `json:"scope" url:"scope"`
+	// For a windowed limit, the period it accumulates over
+	Window *RulesengineCreditSpendWindow `json:"window,omitempty" url:"window,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RulesengineCreditSpendPolicy) GetConsumed() *float64 {
+	if r == nil {
+		return nil
+	}
+	return r.Consumed
+}
+
+func (r *RulesengineCreditSpendPolicy) GetCreditID() string {
+	if r == nil {
+		return ""
+	}
+	return r.CreditID
+}
+
+func (r *RulesengineCreditSpendPolicy) GetID() string {
+	if r == nil {
+		return ""
+	}
+	return r.ID
+}
+
+func (r *RulesengineCreditSpendPolicy) GetKind() string {
+	if r == nil {
+		return ""
+	}
+	return r.Kind
+}
+
+func (r *RulesengineCreditSpendPolicy) GetLabel() *string {
+	if r == nil {
+		return nil
+	}
+	return r.Label
+}
+
+func (r *RulesengineCreditSpendPolicy) GetLimit() float64 {
+	if r == nil {
+		return 0
+	}
+	return r.Limit
+}
+
+func (r *RulesengineCreditSpendPolicy) GetResetsAt() *time.Time {
+	if r == nil {
+		return nil
+	}
+	return r.ResetsAt
+}
+
+func (r *RulesengineCreditSpendPolicy) GetScope() RulesengineCreditSpendPolicyScope {
+	if r == nil {
+		return ""
+	}
+	return r.Scope
+}
+
+func (r *RulesengineCreditSpendPolicy) GetWindow() *RulesengineCreditSpendWindow {
+	if r == nil {
+		return nil
+	}
+	return r.Window
+}
+
+func (r *RulesengineCreditSpendPolicy) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RulesengineCreditSpendPolicy) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetConsumed sets the Consumed field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetConsumed(consumed *float64) {
+	r.Consumed = consumed
+	r.require(rulesengineCreditSpendPolicyFieldConsumed)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetCreditID(creditID string) {
+	r.CreditID = creditID
+	r.require(rulesengineCreditSpendPolicyFieldCreditID)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetID(id string) {
+	r.ID = id
+	r.require(rulesengineCreditSpendPolicyFieldID)
+}
+
+// SetKind sets the Kind field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetKind(kind string) {
+	r.Kind = kind
+	r.require(rulesengineCreditSpendPolicyFieldKind)
+}
+
+// SetLabel sets the Label field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetLabel(label *string) {
+	r.Label = label
+	r.require(rulesengineCreditSpendPolicyFieldLabel)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetLimit(limit float64) {
+	r.Limit = limit
+	r.require(rulesengineCreditSpendPolicyFieldLimit)
+}
+
+// SetResetsAt sets the ResetsAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetResetsAt(resetsAt *time.Time) {
+	r.ResetsAt = resetsAt
+	r.require(rulesengineCreditSpendPolicyFieldResetsAt)
+}
+
+// SetScope sets the Scope field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetScope(scope RulesengineCreditSpendPolicyScope) {
+	r.Scope = scope
+	r.require(rulesengineCreditSpendPolicyFieldScope)
+}
+
+// SetWindow sets the Window field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetWindow(window *RulesengineCreditSpendWindow) {
+	r.Window = window
+	r.require(rulesengineCreditSpendPolicyFieldWindow)
+}
+
+func (r *RulesengineCreditSpendPolicy) UnmarshalJSON(data []byte) error {
+	type embed RulesengineCreditSpendPolicy
+	var unmarshaler = struct {
+		embed
+		ResetsAt *internal.DateTime `json:"resets_at,omitempty"`
+	}{
+		embed: embed(*r),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*r = RulesengineCreditSpendPolicy(unmarshaler.embed)
+	r.ResetsAt = unmarshaler.ResetsAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RulesengineCreditSpendPolicy) MarshalJSON() ([]byte, error) {
+	type embed RulesengineCreditSpendPolicy
+	var marshaler = struct {
+		embed
+		ResetsAt *internal.DateTime `json:"resets_at,omitempty"`
+	}{
+		embed:    embed(*r),
+		ResetsAt: internal.NewOptionalDateTime(r.ResetsAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RulesengineCreditSpendPolicy) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RulesengineCreditSpendPolicyScope string
+
+const (
+	RulesengineCreditSpendPolicyScopeCompany RulesengineCreditSpendPolicyScope = "company"
+	RulesengineCreditSpendPolicyScopeUser    RulesengineCreditSpendPolicyScope = "user"
+	RulesengineCreditSpendPolicyScopeGroup   RulesengineCreditSpendPolicyScope = "group"
+)
+
+func NewRulesengineCreditSpendPolicyScopeFromString(s string) (RulesengineCreditSpendPolicyScope, error) {
+	switch s {
+	case "company":
+		return RulesengineCreditSpendPolicyScopeCompany, nil
+	case "user":
+		return RulesengineCreditSpendPolicyScopeUser, nil
+	case "group":
+		return RulesengineCreditSpendPolicyScopeGroup, nil
+	}
+	var t RulesengineCreditSpendPolicyScope
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RulesengineCreditSpendPolicyScope) Ptr() *RulesengineCreditSpendPolicyScope {
+	return &r
+}
+
+var (
+	rulesengineCreditSpendWindowFieldCount = big.NewInt(1 << 0)
+	rulesengineCreditSpendWindowFieldUnit  = big.NewInt(1 << 1)
+)
+
+type RulesengineCreditSpendWindow struct {
+	// How many units make up one period
+	Count int64 `json:"count" url:"count"`
+	// The period the limit accumulates over
+	Unit string `json:"unit" url:"unit"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RulesengineCreditSpendWindow) GetCount() int64 {
+	if r == nil {
+		return 0
+	}
+	return r.Count
+}
+
+func (r *RulesengineCreditSpendWindow) GetUnit() string {
+	if r == nil {
+		return ""
+	}
+	return r.Unit
+}
+
+func (r *RulesengineCreditSpendWindow) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RulesengineCreditSpendWindow) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetCount sets the Count field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendWindow) SetCount(count int64) {
+	r.Count = count
+	r.require(rulesengineCreditSpendWindowFieldCount)
+}
+
+// SetUnit sets the Unit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendWindow) SetUnit(unit string) {
+	r.Unit = unit
+	r.require(rulesengineCreditSpendWindowFieldUnit)
+}
+
+func (r *RulesengineCreditSpendWindow) UnmarshalJSON(data []byte) error {
+	type unmarshaler RulesengineCreditSpendWindow
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RulesengineCreditSpendWindow(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RulesengineCreditSpendWindow) MarshalJSON() ([]byte, error) {
+	type embed RulesengineCreditSpendWindow
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RulesengineCreditSpendWindow) String() string {
 	if r == nil {
 		return "<nil>"
 	}
@@ -36677,21 +37238,23 @@ func (r RulesengineTraitDefinitionComparableType) Ptr() *RulesengineTraitDefinit
 }
 
 var (
-	rulesengineUserFieldAccountID     = big.NewInt(1 << 0)
-	rulesengineUserFieldEnvironmentID = big.NewInt(1 << 1)
-	rulesengineUserFieldID            = big.NewInt(1 << 2)
-	rulesengineUserFieldKeys          = big.NewInt(1 << 3)
-	rulesengineUserFieldRules         = big.NewInt(1 << 4)
-	rulesengineUserFieldTraits        = big.NewInt(1 << 5)
+	rulesengineUserFieldAccountID           = big.NewInt(1 << 0)
+	rulesengineUserFieldCreditSpendPolicies = big.NewInt(1 << 1)
+	rulesengineUserFieldEnvironmentID       = big.NewInt(1 << 2)
+	rulesengineUserFieldID                  = big.NewInt(1 << 3)
+	rulesengineUserFieldKeys                = big.NewInt(1 << 4)
+	rulesengineUserFieldRules               = big.NewInt(1 << 5)
+	rulesengineUserFieldTraits              = big.NewInt(1 << 6)
 )
 
 type RulesengineUser struct {
-	AccountID     string              `json:"account_id" url:"account_id"`
-	EnvironmentID string              `json:"environment_id" url:"environment_id"`
-	ID            string              `json:"id" url:"id"`
-	Keys          map[string]string   `json:"keys" url:"keys"`
-	Rules         []*RulesengineRule  `json:"rules" url:"rules"`
-	Traits        []*RulesengineTrait `json:"traits" url:"traits"`
+	AccountID           string                          `json:"account_id" url:"account_id"`
+	CreditSpendPolicies []*RulesengineCreditSpendPolicy `json:"credit_spend_policies,omitempty" url:"credit_spend_policies,omitempty"`
+	EnvironmentID       string                          `json:"environment_id" url:"environment_id"`
+	ID                  string                          `json:"id" url:"id"`
+	Keys                map[string]string               `json:"keys" url:"keys"`
+	Rules               []*RulesengineRule              `json:"rules" url:"rules"`
+	Traits              []*RulesengineTrait             `json:"traits" url:"traits"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -36705,6 +37268,13 @@ func (r *RulesengineUser) GetAccountID() string {
 		return ""
 	}
 	return r.AccountID
+}
+
+func (r *RulesengineUser) GetCreditSpendPolicies() []*RulesengineCreditSpendPolicy {
+	if r == nil {
+		return nil
+	}
+	return r.CreditSpendPolicies
 }
 
 func (r *RulesengineUser) GetEnvironmentID() string {
@@ -36763,6 +37333,13 @@ func (r *RulesengineUser) require(field *big.Int) {
 func (r *RulesengineUser) SetAccountID(accountID string) {
 	r.AccountID = accountID
 	r.require(rulesengineUserFieldAccountID)
+}
+
+// SetCreditSpendPolicies sets the CreditSpendPolicies field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineUser) SetCreditSpendPolicies(creditSpendPolicies []*RulesengineCreditSpendPolicy) {
+	r.CreditSpendPolicies = creditSpendPolicies
+	r.require(rulesengineUserFieldCreditSpendPolicies)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;

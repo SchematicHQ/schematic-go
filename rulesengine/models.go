@@ -157,6 +157,10 @@ type Condition struct {
 	// Relevant when ConditionType = Credit
 	CreditID        *string  `json:"credit_id"`
 	ConsumptionRate *float64 `json:"consumption_rate"`
+	// QuantityRates is the credits per unit of each quantity an event carries,
+	// keyed by quantity key. It prices a WithEventQuantities preflight
+	// alongside ConsumptionRate, which stays the per-request rate.
+	QuantityRates map[string]float64 `json:"quantity_rates,omitempty"`
 
 	// Relevant when ConditionType = Trait
 	TraitDefinition *TraitDefinition `json:"trait_definition"`
@@ -220,6 +224,7 @@ type FeatureEntitlement struct {
 	MetricPeriod    *MetricPeriod           `json:"metric_period"`
 	MetricResetAt   *time.Time              `json:"metric_reset_at"`
 	MonthReset      *MetricPeriodMonthReset `json:"month_reset"`
+	QuantityRates   map[string]float64      `json:"quantity_rates,omitempty"`
 	SoftLimit       *int64                  `json:"soft_limit"`
 	Usage           *int64                  `json:"usage"`
 	ValueType       EntitlementValueType    `json:"value_type"`

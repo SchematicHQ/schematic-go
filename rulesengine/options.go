@@ -12,12 +12,22 @@ type eventUsage struct {
 	Quantity     int64  `json:"quantity"`
 }
 
+// eventQuantities is an event described by its base quantity and named
+// quantities, mirroring the Rust engine's EventQuantities. A zero Quantity is
+// omitted, which the engine reads as one.
+type eventQuantities struct {
+	EventSubtype string             `json:"event_subtype"`
+	Quantity     float64            `json:"quantity,omitempty"`
+	Quantities   map[string]float64 `json:"quantities,omitempty"`
+}
+
 // checkFlagOptions is the preflight envelope passed to the engine. It mirrors
 // the Rust engine::CheckFlagOptions wire shape.
 type checkFlagOptions struct {
-	CreditCost map[string]float64 `json:"credit_cost,omitempty"`
-	Usage      *int64             `json:"usage,omitempty"`
-	EventUsage *eventUsage        `json:"event_usage,omitempty"`
+	CreditCost      map[string]float64 `json:"credit_cost,omitempty"`
+	Usage           *int64             `json:"usage,omitempty"`
+	EventUsage      *eventUsage        `json:"event_usage,omitempty"`
+	EventQuantities *eventQuantities   `json:"event_quantities,omitempty"`
 }
 
 func newCheckFlagOptions() *checkFlagOptions {
@@ -27,7 +37,7 @@ func newCheckFlagOptions() *checkFlagOptions {
 // isZero reports whether any preflight option was supplied. When none were, the
 // envelope omits "options" entirely and the engine uses its defaults.
 func (o *checkFlagOptions) isZero() bool {
-	return len(o.CreditCost) == 0 && o.Usage == nil && o.EventUsage == nil
+	return len(o.CreditCost) == 0 && o.Usage == nil && o.EventUsage == nil && o.EventQuantities == nil
 }
 
 // validate enforces the negative-quantity invariants.
@@ -42,6 +52,16 @@ func (o *checkFlagOptions) validate() error {
 	}
 	if o.EventUsage != nil && o.EventUsage.Quantity < 0 {
 		return ErrorNegativePreflightUsage
+	}
+	if eq := o.EventQuantities; eq != nil {
+		if eq.Quantity < 0 {
+			return ErrorNegativePreflightUsage
+		}
+		for _, q := range eq.Quantities {
+			if q < 0 {
+				return ErrorNegativePreflightUsage
+			}
+		}
 	}
 	for _, c := range o.CreditCost {
 		if c < 0 {
@@ -93,5 +113,31 @@ func WithUsage(quantity int64) CheckFlagOption {
 func WithEventUsage(eventSubtype string, quantity int64) CheckFlagOption {
 	return func(o *checkFlagOptions) {
 		o.EventUsage = &eventUsage{EventSubtype: eventSubtype, Quantity: quantity}
+	}
+}
+
+// WithEventQuantities prices an event against credit-balance conditions whose
+// event_subtype matches, the way the API burns it: quantity times the
+// condition's consumption_rate, plus each named quantity times its rate in the
+// condition's quantity_rates. For an inference call, quantity is the request
+// count and quantities the token counts as the event reports them (input
+// tokens including the cached and cache-creation subsets, which the engine
+// takes out of input). Keys without a rate cost nothing.
+//
+// A zero quantity means one. The option applies only to credit-balance
+// conditions; metric and trait conditions ignore it. On those conditions it
+// ranks below WithCreditCost and above WithEventUsage and WithUsage. Negative
+// values are rejected by CheckFlag with ErrorNegativePreflightUsage. Calling
+// this more than once replaces the previous event (last write wins).
+func WithEventQuantities(eventSubtype string, quantity float64, quantities map[string]float64) CheckFlagOption {
+	var copied map[string]float64
+	if len(quantities) > 0 {
+		copied = make(map[string]float64, len(quantities))
+		for key, q := range quantities {
+			copied[key] = q
+		}
+	}
+	return func(o *checkFlagOptions) {
+		o.EventQuantities = &eventQuantities{EventSubtype: eventSubtype, Quantity: quantity, Quantities: copied}
 	}
 }

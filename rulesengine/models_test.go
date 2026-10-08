@@ -169,3 +169,100 @@ func TestNestedRuleHasNoNulls(t *testing.T) {
 		}
 	}
 }
+
+// TestQuantityRatesRoundTrip pins quantity_rates through each leg it travels:
+// a credit condition and a company entitlement decoded from the datastream's
+// snake_case payload and re-marshaled for the engine, and the engine's
+// camelCase entitlement decoded onto the public snake_case result.
+func TestQuantityRatesRoundTrip(t *testing.T) {
+	const flagPayload = `{"id":"flag-1","account_id":"a","environment_id":"e","key":"k","rules":[{` +
+		`"id":"rule-1","account_id":"a","environment_id":"e","rule_type":"plan_entitlement","conditions":[{` +
+		`"id":"cond-1","account_id":"a","environment_id":"e","condition_type":"credit","operator":"lt",` +
+		`"credit_id":"credit-abc","consumption_rate":0.5,"quantity_rates":{"input_tokens":0.001,"output_tokens":0.01}}]}]}`
+
+	var flag Flag
+	if err := json.Unmarshal([]byte(flagPayload), &flag); err != nil {
+		t.Fatal(err)
+	}
+	rates := flag.Rules[0].Conditions[0].QuantityRates
+	if rates["input_tokens"] != 0.001 || rates["output_tokens"] != 0.01 || len(rates) != 2 {
+		t.Fatalf("condition quantity_rates = %v", rates)
+	}
+	out, err := json.Marshal(&flag)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), `"quantity_rates":{"input_tokens":0.001,"output_tokens":0.01}`) {
+		t.Errorf("condition did not re-marshal quantity_rates: %s", out)
+	}
+
+	const companyPayload = `{"id":"comp-1","account_id":"a","environment_id":"e","entitlements":[{` +
+		`"feature_id":"feat-1","feature_key":"chat","value_type":"credit","quantity_rates":{"input_tokens":0.001}}]}`
+
+	var company Company
+	if err := json.Unmarshal([]byte(companyPayload), &company); err != nil {
+		t.Fatal(err)
+	}
+	if got := company.Entitlements[0].QuantityRates["input_tokens"]; got != 0.001 {
+		t.Fatalf("entitlement quantity_rates = %v", company.Entitlements[0].QuantityRates)
+	}
+	out, err = json.Marshal(&company)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), `"quantity_rates":{"input_tokens":0.001}`) {
+		t.Errorf("entitlement did not re-marshal quantity_rates: %s", out)
+	}
+
+	// Empty schedules are omitted, as the API sends them.
+	out, err = json.Marshal(&Condition{ID: "cond-2"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(out), "quantity_rates") {
+		t.Errorf("empty quantity_rates should be omitted: %s", out)
+	}
+
+	const result = `{"value":true,"reason":"r","flagKey":"k","entitlement":{"featureId":"f","featureKey":"k",` +
+		`"valueType":"credit","quantityRates":{"output_tokens":0.01}}}`
+	var r CheckFlagResult
+	if err := json.Unmarshal([]byte(result), &r); err != nil {
+		t.Fatal(err)
+	}
+	if got := r.Entitlement.QuantityRates["output_tokens"]; got != 0.01 {
+		t.Fatalf("result entitlement quantity_rates = %v", r.Entitlement.QuantityRates)
+	}
+	out, err = json.Marshal(&r)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), `"quantity_rates":{"output_tokens":0.01}`) {
+		t.Errorf("result did not re-marshal quantity_rates as snake_case: %s", out)
+	}
+}
+
+// TestEventQuantitiesWireShape pins the options member the engine reads.
+func TestEventQuantitiesWireShape(t *testing.T) {
+	options := newCheckFlagOptions()
+	WithEventQuantities("chat", 0, map[string]float64{"input_tokens": 1000})(options)
+	out, err := json.Marshal(options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := `{"event_quantities":{"event_subtype":"chat","quantities":{"input_tokens":1000}}}`; string(out) != want {
+		t.Errorf("options = %s, want %s", out, want)
+	}
+	if options.isZero() {
+		t.Error("an event_quantities preflight must not read as no options")
+	}
+
+	options = newCheckFlagOptions()
+	WithEventQuantities("chat", 2, nil)(options)
+	out, err = json.Marshal(options)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := `{"event_quantities":{"event_subtype":"chat","quantity":2}}`; string(out) != want {
+		t.Errorf("options = %s, want %s", out, want)
+	}
+}

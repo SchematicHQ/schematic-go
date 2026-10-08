@@ -45,6 +45,7 @@ type EngineOption func(*engineConfig)
 
 type engineConfig struct {
 	poolSize int
+	now      func() time.Time
 }
 
 // WithPoolSize sets how many module instances the engine keeps. Each instance
@@ -54,6 +55,25 @@ func WithPoolSize(n int) EngineOption {
 	return func(c *engineConfig) {
 		if n > 0 {
 			c.poolSize = n
+		}
+	}
+}
+
+// WithNow sets the engine's time source, which decides what "now" means for
+// flag checks (metric-period reset times) and for the metric-period boundary
+// methods. Defaults to time.Now. A nil function is ignored.
+//
+// now is called on every evaluation, at the moment the time is handed to the
+// module, not once at construction, so a test clock advanced between calls is
+// seen by the next one. Instances are pooled and serve concurrent callers, so
+// now must be safe for concurrent use.
+//
+// The module takes Unix milliseconds: now is truncated to the millisecond, and
+// differences below that are invisible to the engine.
+func WithNow(now func() time.Time) EngineOption {
+	return func(c *engineConfig) {
+		if now != nil {
+			c.now = now
 		}
 	}
 }
@@ -72,6 +92,7 @@ type instance struct {
 	getLen     api.Function
 	setTime    api.Function // optional; absent on modules predating the export
 	checkFlags api.Function
+	now        func() time.Time
 
 	// Metric-period boundary exports. Optional for the same reason as setTime:
 	// a module predating them still serves checks, callers just get nil.
@@ -83,7 +104,7 @@ type instance struct {
 
 // NewEngine compiles the rules engine and prepares it for evaluation.
 func NewEngine(ctx context.Context, opts ...EngineOption) (*Engine, error) {
-	cfg := &engineConfig{poolSize: runtime.GOMAXPROCS(0)}
+	cfg := &engineConfig{poolSize: runtime.GOMAXPROCS(0), now: time.Now}
 	for _, opt := range opts {
 		opt(cfg)
 	}
@@ -116,7 +137,7 @@ func NewEngine(ctx context.Context, opts ...EngineOption) (*Engine, error) {
 	}
 
 	for i := 0; i < cfg.poolSize; i++ {
-		inst, err := newInstance(ctx, rt, compiled)
+		inst, err := newInstance(ctx, rt, compiled, cfg.now)
 		if err != nil {
 			_ = rt.Close(ctx)
 			return nil, err
@@ -133,7 +154,12 @@ func NewEngine(ctx context.Context, opts ...EngineOption) (*Engine, error) {
 	return e, nil
 }
 
-func newInstance(ctx context.Context, rt wazero.Runtime, compiled wazero.CompiledModule) (*instance, error) {
+func newInstance(
+	ctx context.Context,
+	rt wazero.Runtime,
+	compiled wazero.CompiledModule,
+	now func() time.Time,
+) (*instance, error) {
 	// An empty name instantiates anonymously, which is what lets one compiled
 	// module back many instances -- named modules must be unique per runtime.
 	// Stderr is discarded: the module writes to it only on Rust error paths,
@@ -156,6 +182,7 @@ func newInstance(ctx context.Context, rt wazero.Runtime, compiled wazero.Compile
 		setTime: mod.ExportedFunction("setCurrentTimeMillis"),
 
 		checkFlags: mod.ExportedFunction("checkFlagsCombined"),
+		now:        now,
 
 		curPeriodCalendar:   mod.ExportedFunction("getCurrentMetricPeriodStartForCalendarMetricPeriod"),
 		curPeriodSubscript:  mod.ExportedFunction("getCurrentMetricPeriodStartForCompanyBillingSubscription"),
@@ -426,13 +453,10 @@ func (i *instance) call(ctx context.Context, fn api.Function, name string, input
 		return nil, fmt.Errorf("rules engine: writing %d bytes at %d exceeds memory", len(input), ptr)
 	}
 
-	// The raw wasm32-unknown-unknown build has no system clock. Without this the
-	// engine still evaluates correctly, but metric-period reset timestamps are
-	// silently omitted from results.
-	if i.setTime != nil {
-		if _, err := i.setTime.Call(ctx, api.EncodeI64(time.Now().UnixMilli())); err != nil {
-			return nil, fmt.Errorf("rules engine setCurrentTimeMillis: %w", err)
-		}
+	// Without this the engine still evaluates correctly, but metric-period reset
+	// timestamps are silently omitted from results.
+	if err := i.syncClock(ctx); err != nil {
+		return nil, err
 	}
 
 	checked, err := fn.Call(ctx, uint64(ptr), uint64(len(input)))

@@ -1346,7 +1346,6 @@ func (w WebhookStatus) Ptr() *WebhookStatus {
 	return &w
 }
 
-// Input parameters
 var (
 	countWebhookEventsParamsFieldIDs       = big.NewInt(1 << 0)
 	countWebhookEventsParamsFieldLimit     = big.NewInt(1 << 1)
@@ -1355,6 +1354,7 @@ var (
 	countWebhookEventsParamsFieldWebhookID = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type CountWebhookEventsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -1602,13 +1602,13 @@ func (c *CountWebhookEventsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countWebhooksParamsFieldLimit  = big.NewInt(1 << 0)
 	countWebhooksParamsFieldOffset = big.NewInt(1 << 1)
 	countWebhooksParamsFieldQ      = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type CountWebhooksParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
@@ -2238,7 +2238,6 @@ func (g *GetWebhookResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listWebhookEventsParamsFieldIDs       = big.NewInt(1 << 0)
 	listWebhookEventsParamsFieldLimit     = big.NewInt(1 << 1)
@@ -2247,6 +2246,7 @@ var (
 	listWebhookEventsParamsFieldWebhookID = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type ListWebhookEventsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -2494,13 +2494,13 @@ func (l *ListWebhookEventsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listWebhooksParamsFieldLimit  = big.NewInt(1 << 0)
 	listWebhooksParamsFieldOffset = big.NewInt(1 << 1)
 	listWebhooksParamsFieldQ      = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type ListWebhooksParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`

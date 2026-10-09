@@ -1011,7 +1011,7 @@ func (c *Client) CountEntityTraits(
 // Example:
 //
 //	request := &schematichq.ListPlanChangesRequest{
-//	    Action: schematichq.PlanChangeActionCheckout.Ptr(),
+//	    Action: schematichq.PlanChangeActionAmendment.Ptr(),
 //	    BasePlanAction: schematichq.PlanChangeBasePlanActionFallback.Ptr(),
 //	    CompanyID: schematichq.String(
 //	        "company_id",

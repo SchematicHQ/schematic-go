@@ -423,6 +423,70 @@ func (e *EventBody) GetEventBodyInference() *EventBodyInference {
 }
 
 func (e *EventBody) UnmarshalJSON(data []byte) error {
+	if internal.MatchesObjectKeys(data, []string{"company", "event", "lease_id", "quantity", "reservation_id", "traits", "user"}, []string{"event"}) {
+		valueEventBodyTrack := new(EventBodyTrack)
+		if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
+			e.typ = "EventBodyTrack"
+			e.EventBodyTrack = valueEventBodyTrack
+			return nil
+		}
+	}
+	if internal.MatchesObjectKeys(data, []string{"company_id", "error", "flag_id", "flag_key", "preflight", "reason", "req_company", "req_user", "rule_id", "user_id", "value"}, []string{"flag_key", "reason", "value"}) {
+		valueEventBodyFlagCheck := new(EventBodyFlagCheck)
+		if err := json.Unmarshal(data, &valueEventBodyFlagCheck); err == nil {
+			e.typ = "EventBodyFlagCheck"
+			e.EventBodyFlagCheck = valueEventBodyFlagCheck
+			return nil
+		}
+	}
+	if internal.MatchesObjectKeys(data, []string{"company", "keys", "name", "traits"}, []string{"keys"}) {
+		valueEventBodyIdentify := new(EventBodyIdentify)
+		if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
+			e.typ = "EventBodyIdentify"
+			e.EventBodyIdentify = valueEventBodyIdentify
+			return nil
+		}
+	}
+	if internal.MatchesObjectKeys(data, []string{"cache_creation_input_tokens", "cached_input_tokens", "company", "cost", "currency", "event", "input_tokens", "operation", "output_tokens", "provider", "reasoning_tokens", "request_model", "requests", "response_model", "user"}, []string{"company", "input_tokens", "output_tokens", "provider", "response_model"}) {
+		valueEventBodyInference := new(EventBodyInference)
+		if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
+			e.typ = "EventBodyInference"
+			e.EventBodyInference = valueEventBodyInference
+			return nil
+		}
+	}
+	if internal.HasObjectKeys(data, []string{"event"}) {
+		valueEventBodyTrack := new(EventBodyTrack)
+		if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
+			e.typ = "EventBodyTrack"
+			e.EventBodyTrack = valueEventBodyTrack
+			return nil
+		}
+	}
+	if internal.HasObjectKeys(data, []string{"flag_key", "reason", "value"}) {
+		valueEventBodyFlagCheck := new(EventBodyFlagCheck)
+		if err := json.Unmarshal(data, &valueEventBodyFlagCheck); err == nil {
+			e.typ = "EventBodyFlagCheck"
+			e.EventBodyFlagCheck = valueEventBodyFlagCheck
+			return nil
+		}
+	}
+	if internal.HasObjectKeys(data, []string{"keys"}) {
+		valueEventBodyIdentify := new(EventBodyIdentify)
+		if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
+			e.typ = "EventBodyIdentify"
+			e.EventBodyIdentify = valueEventBodyIdentify
+			return nil
+		}
+	}
+	if internal.HasObjectKeys(data, []string{"company", "input_tokens", "output_tokens", "provider", "response_model"}) {
+		valueEventBodyInference := new(EventBodyInference)
+		if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
+			e.typ = "EventBodyInference"
+			e.EventBodyInference = valueEventBodyInference
+			return nil
+		}
+	}
 	valueEventBodyTrack := new(EventBodyTrack)
 	if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
 		e.typ = "EventBodyTrack"
@@ -884,13 +948,13 @@ func (e *EventBodyIdentify) String() string {
 	return fmt.Sprintf("%#v", e)
 }
 
-// Information about the company associated with the user; required only if it is a new user
 var (
 	eventBodyIdentifyCompanyFieldKeys   = big.NewInt(1 << 0)
 	eventBodyIdentifyCompanyFieldName   = big.NewInt(1 << 1)
 	eventBodyIdentifyCompanyFieldTraits = big.NewInt(1 << 2)
 )
 
+// Information about the company associated with the user; required only if it is a new user
 type EventBodyIdentifyCompany struct {
 	// Key-value pairs to identify the company
 	Keys map[string]string `json:"keys" url:"keys"`
@@ -3085,7 +3149,6 @@ func (g *GetEventResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getEventSummariesParamsFieldEventSubtypes = big.NewInt(1 << 0)
 	getEventSummariesParamsFieldLimit         = big.NewInt(1 << 1)
@@ -3093,6 +3156,7 @@ var (
 	getEventSummariesParamsFieldQ             = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetEventSummariesParams struct {
 	EventSubtypes []string `json:"event_subtypes,omitempty" url:"event_subtypes,omitempty"`
 	// Page limit (default 100)
@@ -3531,7 +3595,6 @@ func (g *GetSegmentIntegrationStatusResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listEventsParamsFieldCompanyID      = big.NewInt(1 << 0)
 	listEventsParamsFieldEventSubtype   = big.NewInt(1 << 1)
@@ -3543,6 +3606,7 @@ var (
 	listEventsParamsFieldUserID         = big.NewInt(1 << 7)
 )
 
+// Input parameters
 type ListEventsParams struct {
 	CompanyID      *string     `json:"company_id,omitempty" url:"company_id,omitempty"`
 	EventSubtype   *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`

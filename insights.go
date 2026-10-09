@@ -995,8 +995,8 @@ var (
 )
 
 type MrrResponseData struct {
-	Amount   int64  `json:"amount" url:"amount"`
-	Currency string `json:"currency" url:"currency"`
+	Amount   int64    `json:"amount" url:"amount"`
+	Currency Currency `json:"currency" url:"currency"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1012,7 +1012,7 @@ func (m *MrrResponseData) GetAmount() int64 {
 	return m.Amount
 }
 
-func (m *MrrResponseData) GetCurrency() string {
+func (m *MrrResponseData) GetCurrency() Currency {
 	if m == nil {
 		return ""
 	}
@@ -1044,7 +1044,7 @@ func (m *MrrResponseData) SetAmount(amount int64) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (m *MrrResponseData) SetCurrency(currency string) {
+func (m *MrrResponseData) SetCurrency(currency Currency) {
 	m.Currency = currency
 	m.require(mrrResponseDataFieldCurrency)
 }
@@ -1571,11 +1571,11 @@ func (t *TopFeaturesByUsageResponseData) String() string {
 	return fmt.Sprintf("%#v", t)
 }
 
-// Input parameters
 var (
 	getActivityParamsFieldLimit = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type GetActivityParams struct {
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 
@@ -1761,7 +1761,6 @@ func (g *GetActivityResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getEnvironmentFeatureUsageTimeSeriesParamsFieldEndTime     = big.NewInt(1 << 0)
 	getEnvironmentFeatureUsageTimeSeriesParamsFieldFeatureID   = big.NewInt(1 << 1)
@@ -1769,6 +1768,7 @@ var (
 	getEnvironmentFeatureUsageTimeSeriesParamsFieldStartTime   = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetEnvironmentFeatureUsageTimeSeriesParams struct {
 	EndTime     *time.Time             `json:"end_time,omitempty" url:"end_time,omitempty"`
 	FeatureID   *string                `json:"feature_id,omitempty" url:"feature_id,omitempty"`
@@ -2011,7 +2011,6 @@ func (g *GetEnvironmentFeatureUsageTimeSeriesResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getEnvironmentTraitUsageTimeSeriesParamsFieldEndTime     = big.NewInt(1 << 0)
 	getEnvironmentTraitUsageTimeSeriesParamsFieldFeatureID   = big.NewInt(1 << 1)
@@ -2019,6 +2018,7 @@ var (
 	getEnvironmentTraitUsageTimeSeriesParamsFieldStartTime   = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetEnvironmentTraitUsageTimeSeriesParams struct {
 	EndTime     *time.Time             `json:"end_time,omitempty" url:"end_time,omitempty"`
 	FeatureID   *string                `json:"feature_id,omitempty" url:"feature_id,omitempty"`
@@ -2261,11 +2261,11 @@ func (g *GetEnvironmentTraitUsageTimeSeriesResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getPlanGrowthParamsFieldMonths = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type GetPlanGrowthParams struct {
 	Months *int64 `json:"months,omitempty" url:"months,omitempty"`
 
@@ -2554,13 +2554,13 @@ func (g *GetSummaryResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getTopFeaturesByUsageParamsFieldEndTime   = big.NewInt(1 << 0)
 	getTopFeaturesByUsageParamsFieldLimit     = big.NewInt(1 << 1)
 	getTopFeaturesByUsageParamsFieldStartTime = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type GetTopFeaturesByUsageParams struct {
 	EndTime   *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
 	Limit     *int64     `json:"limit,omitempty" url:"limit,omitempty"`

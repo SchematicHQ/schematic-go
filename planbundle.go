@@ -313,30 +313,31 @@ var (
 	createEntitlementInBundleRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
 	createEntitlementInBundleRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
 	createEntitlementInBundleRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
-	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 19)
-	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 20)
-	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 21)
-	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 24)
-	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 25)
-	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 26)
-	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 27)
-	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
-	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
-	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 30)
-	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 31)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 32)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 33)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 34)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 35)
+	createEntitlementInBundleRequestBodyFieldQuantityRates             = big.NewInt(1 << 19)
+	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 20)
+	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 21)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 22)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 27)
+	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 28)
+	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 29)
+	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 30)
+	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 31)
+	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 32)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 33)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 34)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 35)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 36)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
 	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
 	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
-	Currency                *string                       `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency                *Currency                     `json:"currency,omitempty" url:"currency,omitempty"`
 	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
 	FeatureID               string                        `json:"feature_id" url:"feature_id"`
 	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"metric_period,omitempty"`
@@ -354,7 +355,9 @@ type CreateEntitlementInBundleRequestBody struct {
 	PlanVersionID        *string                   `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	PriceTiers []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"price_tiers,omitempty"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates             map[string]float64            `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"quarterly_metered_price_id,omitempty"`
 	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"quarterly_price_tiers,omitempty"`
 	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"quarterly_unit_price,omitempty"`
@@ -402,7 +405,7 @@ func (c *CreateEntitlementInBundleRequestBody) GetCreditConsumptionRate() *float
 	return c.CreditConsumptionRate
 }
 
-func (c *CreateEntitlementInBundleRequestBody) GetCurrency() *string {
+func (c *CreateEntitlementInBundleRequestBody) GetCurrency() *Currency {
 	if c == nil {
 		return nil
 	}
@@ -512,6 +515,13 @@ func (c *CreateEntitlementInBundleRequestBody) GetPriceTiers() []*CreatePriceTie
 		return nil
 	}
 	return c.PriceTiers
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetQuantityRates() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRates
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetQuarterlyMeteredPriceID() *string {
@@ -672,7 +682,7 @@ func (c *CreateEntitlementInBundleRequestBody) SetCreditConsumptionRate(creditCo
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateEntitlementInBundleRequestBody) SetCurrency(currency *string) {
+func (c *CreateEntitlementInBundleRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(createEntitlementInBundleRequestBodyFieldCurrency)
 }
@@ -780,6 +790,13 @@ func (c *CreateEntitlementInBundleRequestBody) SetPriceBehavior(priceBehavior *E
 func (c *CreateEntitlementInBundleRequestBody) SetPriceTiers(priceTiers []*CreatePriceTierRequestBody) {
 	c.PriceTiers = priceTiers
 	c.require(createEntitlementInBundleRequestBodyFieldPriceTiers)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(createEntitlementInBundleRequestBodyFieldQuantityRates)
 }
 
 // SetQuarterlyMeteredPriceID sets the QuarterlyMeteredPriceID field and marks it as non-optional;

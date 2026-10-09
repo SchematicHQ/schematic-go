@@ -2337,7 +2337,6 @@ func (g *GetPlansInCatalogResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listCatalogsParamsFieldIsDefault = big.NewInt(1 << 0)
 	listCatalogsParamsFieldLimit     = big.NewInt(1 << 1)
@@ -2345,6 +2344,7 @@ var (
 	listCatalogsParamsFieldQ         = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListCatalogsParams struct {
 	IsDefault *bool `json:"is_default,omitempty" url:"is_default,omitempty"`
 	// Page limit (default 100)

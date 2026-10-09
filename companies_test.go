@@ -5310,7 +5310,7 @@ func TestSettersCompanyBillingEntitySubscriptionResponseData(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &CompanyBillingEntitySubscriptionResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -5524,7 +5524,7 @@ func TestGettersCompanyBillingEntitySubscriptionResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CompanyBillingEntitySubscriptionResponseData{}
-		var expected string
+		var expected Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -6025,7 +6025,7 @@ func TestSettersMarkExplicitCompanyBillingEntitySubscriptionResponseData(t *test
 		t.Parallel()
 		// Arrange
 		obj := &CompanyBillingEntitySubscriptionResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
@@ -7970,6 +7970,14 @@ func TestSettersPlanChangeResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetAmendmentStatus", func(t *testing.T) {
+		obj := &PlanChangeResponseData{}
+		var fernTestValueAmendmentStatus *PlanChangeAmendmentStatus
+		obj.SetAmendmentStatus(fernTestValueAmendmentStatus)
+		assert.Equal(t, fernTestValueAmendmentStatus, obj.AmendmentStatus)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetAPIKey", func(t *testing.T) {
 		obj := &PlanChangeResponseData{}
 		var fernTestValueAPIKey *APIKeyResponseData
@@ -8063,6 +8071,14 @@ func TestSettersPlanChangeResponseData(t *testing.T) {
 		var fernTestValueIsVersionUpgrade bool
 		obj.SetIsVersionUpgrade(fernTestValueIsVersionUpgrade)
 		assert.Equal(t, fernTestValueIsVersionUpgrade, obj.IsVersionUpgrade)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetMigrationID", func(t *testing.T) {
+		obj := &PlanChangeResponseData{}
+		var fernTestValueMigrationID *string
+		obj.SetMigrationID(fernTestValueMigrationID)
+		assert.Equal(t, fernTestValueMigrationID, obj.MigrationID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -8267,6 +8283,39 @@ func TestGettersPlanChangeResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetAddOnsRemoved() // Should return zero value
+	})
+
+	t.Run("GetAmendmentStatus", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanChangeResponseData{}
+		var expected *PlanChangeAmendmentStatus
+		obj.AmendmentStatus = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAmendmentStatus(), "getter should return the property value")
+	})
+
+	t.Run("GetAmendmentStatus_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanChangeResponseData{}
+		obj.AmendmentStatus = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAmendmentStatus(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAmendmentStatus_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *PlanChangeResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAmendmentStatus() // Should return zero value
 	})
 
 	t.Run("GetAPIKey", func(t *testing.T) {
@@ -8613,6 +8662,39 @@ func TestGettersPlanChangeResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetIsVersionUpgrade() // Should return zero value
+	})
+
+	t.Run("GetMigrationID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanChangeResponseData{}
+		var expected *string
+		obj.MigrationID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetMigrationID(), "getter should return the property value")
+	})
+
+	t.Run("GetMigrationID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanChangeResponseData{}
+		obj.MigrationID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetMigrationID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetMigrationID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *PlanChangeResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetMigrationID() // Should return zero value
 	})
 
 	t.Run("GetPreviousBasePlan", func(t *testing.T) {
@@ -9095,6 +9177,37 @@ func TestSettersMarkExplicitPlanChangeResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetAmendmentStatus_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanChangeResponseData{}
+		var fernTestValueAmendmentStatus *PlanChangeAmendmentStatus
+
+		// Act
+		obj.SetAmendmentStatus(fernTestValueAmendmentStatus)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetAPIKey_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -9444,6 +9557,37 @@ func TestSettersMarkExplicitPlanChangeResponseData(t *testing.T) {
 
 		// Act
 		obj.SetIsVersionUpgrade(fernTestValueIsVersionUpgrade)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetMigrationID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanChangeResponseData{}
+		var fernTestValueMigrationID *string
+
+		// Act
+		obj.SetMigrationID(fernTestValueMigrationID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -33774,6 +33918,13 @@ func TestStringUserDetailResponseData(t *testing.T) {
 }
 
 func TestEnumPlanChangeAction(t *testing.T) {
+	t.Run("NewFromString_amendment", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewPlanChangeActionFromString("amendment")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, PlanChangeAction("amendment"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_checkout", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewPlanChangeActionFromString("checkout")
@@ -33857,7 +34008,57 @@ func TestEnumPlanChangeAction(t *testing.T) {
 	})
 
 	t.Run("Ptr", func(t *testing.T) {
-		val, err := NewPlanChangeActionFromString("checkout")
+		val, err := NewPlanChangeActionFromString("amendment")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
+func TestEnumPlanChangeAmendmentStatus(t *testing.T) {
+	t.Run("NewFromString_applied", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewPlanChangeAmendmentStatusFromString("applied")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, PlanChangeAmendmentStatus("applied"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_cancelled", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewPlanChangeAmendmentStatusFromString("cancelled")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, PlanChangeAmendmentStatus("cancelled"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_failed", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewPlanChangeAmendmentStatusFromString("failed")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, PlanChangeAmendmentStatus("failed"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_scheduled", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewPlanChangeAmendmentStatusFromString("scheduled")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, PlanChangeAmendmentStatus("scheduled"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_skipped", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewPlanChangeAmendmentStatusFromString("skipped")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, PlanChangeAmendmentStatus("skipped"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewPlanChangeAmendmentStatusFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewPlanChangeAmendmentStatusFromString("applied")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

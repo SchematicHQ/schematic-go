@@ -637,7 +637,7 @@ func TestSettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &CreateEntitlementInBundleRequestBody{}
-		var fernTestValueCurrency *string
+		var fernTestValueCurrency *Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -760,6 +760,14 @@ func TestSettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 		var fernTestValuePriceTiers []*CreatePriceTierRequestBody
 		obj.SetPriceTiers(fernTestValuePriceTiers)
 		assert.Equal(t, fernTestValuePriceTiers, obj.PriceTiers)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetQuantityRates", func(t *testing.T) {
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var fernTestValueQuantityRates map[string]float64
+		obj.SetQuantityRates(fernTestValueQuantityRates)
+		assert.Equal(t, fernTestValueQuantityRates, obj.QuantityRates)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -1005,7 +1013,7 @@ func TestGettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateEntitlementInBundleRequestBody{}
-		var expected *string
+		var expected *Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -1507,6 +1515,39 @@ func TestGettersCreateEntitlementInBundleRequestBody(t *testing.T) {
 			}
 		}()
 		_ = obj.GetPriceTiers() // Should return zero value
+	})
+
+	t.Run("GetQuantityRates", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var expected map[string]float64
+		obj.QuantityRates = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetQuantityRates(), "getter should return the property value")
+	})
+
+	t.Run("GetQuantityRates_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		obj.QuantityRates = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetQuantityRates(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetQuantityRates_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreateEntitlementInBundleRequestBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetQuantityRates() // Should return zero value
 	})
 
 	t.Run("GetQuarterlyMeteredPriceID", func(t *testing.T) {
@@ -2160,7 +2201,7 @@ func TestSettersMarkExplicitCreateEntitlementInBundleRequestBody(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreateEntitlementInBundleRequestBody{}
-		var fernTestValueCurrency *string
+		var fernTestValueCurrency *Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
@@ -2629,6 +2670,37 @@ func TestSettersMarkExplicitCreateEntitlementInBundleRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetPriceTiers(fernTestValuePriceTiers)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetQuantityRates_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreateEntitlementInBundleRequestBody{}
+		var fernTestValueQuantityRates map[string]float64
+
+		// Act
+		obj.SetQuantityRates(fernTestValueQuantityRates)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

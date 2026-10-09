@@ -1954,7 +1954,7 @@ func TestSettersMrrResponseData(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &MrrResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -1990,7 +1990,7 @@ func TestGettersMrrResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &MrrResponseData{}
-		var expected string
+		var expected Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -2047,7 +2047,7 @@ func TestSettersMarkExplicitMrrResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &MrrResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)

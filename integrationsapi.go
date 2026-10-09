@@ -3814,7 +3814,6 @@ func (i *InstallStripeResponse) String() string {
 	return fmt.Sprintf("%#v", i)
 }
 
-// Input parameters
 var (
 	listIntegrationsParamsFieldBillingOnly = big.NewInt(1 << 0)
 	listIntegrationsParamsFieldExcludeIDs  = big.NewInt(1 << 1)
@@ -3825,6 +3824,7 @@ var (
 	listIntegrationsParamsFieldType        = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type ListIntegrationsParams struct {
 	BillingOnly *bool    `json:"billing_only,omitempty" url:"billing_only,omitempty"`
 	ExcludeIDs  []string `json:"exclude_ids,omitempty" url:"exclude_ids,omitempty"`

@@ -54,6 +54,32 @@ type DataStreamClient struct {
 	pendingUserRequests    map[string][]chan *rulesengine.User
 	pendingFlagRequest     chan bool
 
+	// snapshotFlagKeys collects the cache keys a paginated flags snapshot has
+	// written so far, so the delete of everything absent from the snapshot runs
+	// against the whole set rather than the last page. Guarded by flagsMu, and
+	// reset when a snapshot's first page arrives -- an interrupted snapshot
+	// therefore leaves nothing for the next one to inherit.
+	snapshotFlagKeys []string
+	// flagPageSize is how many flags the server is asked to put in one message
+	// of the flags snapshot, from core.WithFlagPageSize or the SDK default.
+	flagPageSize int
+	// snapshotNextPage is the page number the snapshot in progress expects
+	// next, so a gap is caught rather than applied. The transport drops a
+	// message when its queue is full, and a snapshot is now many messages: a
+	// lost middle page would otherwise let the last page complete a snapshot
+	// missing flags, and the delete of everything absent from it would remove
+	// them. Guarded by flagsMu.
+	//
+	// Zero means no snapshot is in progress, which is the value a client holds
+	// before its first snapshot and the one it returns to after a snapshot
+	// completes or is abandoned. Only page 1 is accepted in that state -- it
+	// sets the field to 2 and starts the set over -- so a page arriving without
+	// its snapshot's beginning is out of sequence and abandoned like any other
+	// gap. That matters because the server sends the whole snapshot before any
+	// update: a stray page means the pages that preceded it were dropped, not
+	// that they are still coming.
+	snapshotNextPage int
+
 	// Replicator mode configuration
 	replicatorMode         bool
 	replicatorHealthURL    string

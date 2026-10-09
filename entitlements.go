@@ -557,11 +557,12 @@ var (
 	createCompanyOverrideRequestBodyFieldMetricPeriod           = big.NewInt(1 << 4)
 	createCompanyOverrideRequestBodyFieldMetricPeriodMonthReset = big.NewInt(1 << 5)
 	createCompanyOverrideRequestBodyFieldNote                   = big.NewInt(1 << 6)
-	createCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 7)
-	createCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 8)
-	createCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 9)
-	createCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 10)
-	createCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 11)
+	createCompanyOverrideRequestBodyFieldQuantityRates          = big.NewInt(1 << 7)
+	createCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 8)
+	createCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 9)
+	createCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 10)
+	createCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 11)
+	createCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 12)
 )
 
 type CreateCompanyOverrideRequestBody struct {
@@ -572,11 +573,13 @@ type CreateCompanyOverrideRequestBody struct {
 	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	Note                   *string                 `json:"note,omitempty" url:"-"`
-	ValueBool              *bool                   `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID          *string                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int64                  `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              EntitlementValueType    `json:"value_type" url:"-"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates map[string]float64   `json:"quantity_rates,omitempty" url:"-"`
+	ValueBool     *bool                `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID *string              `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric  *int64               `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID  *string              `json:"value_trait_id,omitempty" url:"-"`
+	ValueType     EntitlementValueType `json:"value_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -640,6 +643,13 @@ func (c *CreateCompanyOverrideRequestBody) SetNote(note *string) {
 	c.require(createCompanyOverrideRequestBodyFieldNote)
 }
 
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCompanyOverrideRequestBody) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(createCompanyOverrideRequestBodyFieldQuantityRates)
+}
+
 // SetValueBool sets the ValueBool field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CreateCompanyOverrideRequestBody) SetValueBool(valueBool *bool) {
@@ -676,12 +686,18 @@ func (c *CreateCompanyOverrideRequestBody) SetValueType(valueType EntitlementVal
 }
 
 func (c *CreateCompanyOverrideRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateCompanyOverrideRequestBody
-	var body unmarshaler
+	type embed CreateCompanyOverrideRequestBody
+	var body = struct {
+		embed
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+	}{
+		embed: embed(*c),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*c = CreateCompanyOverrideRequestBody(body)
+	*c = CreateCompanyOverrideRequestBody(body.embed)
+	c.ExpirationDate = body.ExpirationDate.TimePtr()
 	return nil
 }
 
@@ -718,30 +734,31 @@ var (
 	createPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
 	createPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
 	createPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
-	createPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 19)
-	createPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 20)
-	createPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 21)
-	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 22)
-	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 23)
-	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 24)
-	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 25)
-	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 26)
-	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 27)
-	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 28)
-	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 29)
-	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 30)
-	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 31)
-	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 32)
-	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 33)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 34)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 35)
+	createPlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 19)
+	createPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 20)
+	createPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 21)
+	createPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 22)
+	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 23)
+	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 24)
+	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 25)
+	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 26)
+	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 27)
+	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 28)
+	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 29)
+	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 30)
+	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 31)
+	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 32)
+	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 33)
+	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 34)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 35)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 36)
 )
 
 type CreatePlanEntitlementRequestBody struct {
 	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
 	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *string                       `json:"currency,omitempty" url:"-"`
+	Currency                *Currency                     `json:"currency,omitempty" url:"-"`
 	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
 	FeatureID               string                        `json:"feature_id" url:"-"`
 	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
@@ -759,7 +776,9 @@ type CreatePlanEntitlementRequestBody struct {
 	PlanVersionID        *string                   `json:"plan_version_id,omitempty" url:"-"`
 	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	PriceTiers []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates             map[string]float64            `json:"quantity_rates,omitempty" url:"-"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"-"`
 	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"-"`
 	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"-"`
@@ -815,7 +834,7 @@ func (c *CreatePlanEntitlementRequestBody) SetCreditConsumptionRate(creditConsum
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreatePlanEntitlementRequestBody) SetCurrency(currency *string) {
+func (c *CreatePlanEntitlementRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(createPlanEntitlementRequestBodyFieldCurrency)
 }
@@ -923,6 +942,13 @@ func (c *CreatePlanEntitlementRequestBody) SetPriceBehavior(priceBehavior *Entit
 func (c *CreatePlanEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePriceTierRequestBody) {
 	c.PriceTiers = priceTiers
 	c.require(createPlanEntitlementRequestBodyFieldPriceTiers)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(createPlanEntitlementRequestBodyFieldQuantityRates)
 }
 
 // SetQuarterlyMeteredPriceID sets the QuarterlyMeteredPriceID field and marks it as non-optional;
@@ -5658,7 +5684,6 @@ func (u UserUsageMetric) Ptr() *UserUsageMetric {
 	return &u
 }
 
-// Input parameters
 var (
 	countCompanyOverridesParamsFieldCompanyID      = big.NewInt(1 << 0)
 	countCompanyOverridesParamsFieldCompanyIDs     = big.NewInt(1 << 1)
@@ -5671,6 +5696,7 @@ var (
 	countCompanyOverridesParamsFieldWithoutExpired = big.NewInt(1 << 8)
 )
 
+// Input parameters
 type CountCompanyOverridesParams struct {
 	// Filter company overrides by a single company ID (starting with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -5985,7 +6011,6 @@ func (c *CountCompanyOverridesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countCompanyUserUsageParamsFieldCompanyID = big.NewInt(1 << 0)
 	countCompanyUserUsageParamsFieldEndTime   = big.NewInt(1 << 1)
@@ -5996,6 +6021,7 @@ var (
 	countCompanyUserUsageParamsFieldStartTime = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type CountCompanyUserUsageParams struct {
 	// Company to break usage down for
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -6290,7 +6316,6 @@ func (c *CountCompanyUserUsageResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countFeatureCompaniesParamsFieldFeatureID = big.NewInt(1 << 0)
 	countFeatureCompaniesParamsFieldLimit     = big.NewInt(1 << 1)
@@ -6298,6 +6323,7 @@ var (
 	countFeatureCompaniesParamsFieldQ         = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type CountFeatureCompaniesParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
@@ -6530,7 +6556,6 @@ func (c *CountFeatureCompaniesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countFeatureUsageParamsFieldCompanyID                   = big.NewInt(1 << 0)
 	countFeatureUsageParamsFieldCompanyKeys                 = big.NewInt(1 << 1)
@@ -6543,6 +6568,7 @@ var (
 	countFeatureUsageParamsFieldWithoutNegativeEntitlements = big.NewInt(1 << 8)
 )
 
+// Input parameters
 type CountFeatureUsageParams struct {
 	CompanyID   *string           `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyKeys map[string]string `json:"company_keys,omitempty" url:"company_keys,omitempty"`
@@ -6852,7 +6878,6 @@ func (c *CountFeatureUsageResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countFeatureUsersParamsFieldFeatureID = big.NewInt(1 << 0)
 	countFeatureUsersParamsFieldLimit     = big.NewInt(1 << 1)
@@ -6860,6 +6885,7 @@ var (
 	countFeatureUsersParamsFieldQ         = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type CountFeatureUsersParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
@@ -7092,7 +7118,6 @@ func (c *CountFeatureUsersResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countPlanEntitlementsParamsFieldFeatureID           = big.NewInt(1 << 0)
 	countPlanEntitlementsParamsFieldFeatureIDs          = big.NewInt(1 << 1)
@@ -7107,6 +7132,7 @@ var (
 	countPlanEntitlementsParamsFieldWithMeteredProducts = big.NewInt(1 << 10)
 )
 
+// Input parameters
 type CountPlanEntitlementsParams struct {
 	// Filter plan entitlements by a single feature ID (starting with feat_)
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
@@ -8071,13 +8097,13 @@ func (g *GetCompanyOverrideResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getCompanyUserUsageMetricsParamsFieldCompanyID = big.NewInt(1 << 0)
 	getCompanyUserUsageMetricsParamsFieldEndTime   = big.NewInt(1 << 1)
 	getCompanyUserUsageMetricsParamsFieldStartTime = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type GetCompanyUserUsageMetricsParams struct {
 	// Company to list available metrics for
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -8308,11 +8334,11 @@ func (g *GetCompanyUserUsageMetricsResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getFeatureUsageByCompanyParamsFieldKeys = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type GetFeatureUsageByCompanyParams struct {
 	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 
@@ -8498,7 +8524,6 @@ func (g *GetFeatureUsageByCompanyResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getFeatureUsageTimeSeriesParamsFieldCompanyID   = big.NewInt(1 << 0)
 	getFeatureUsageTimeSeriesParamsFieldEndTime     = big.NewInt(1 << 1)
@@ -8507,6 +8532,7 @@ var (
 	getFeatureUsageTimeSeriesParamsFieldStartTime   = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type GetFeatureUsageTimeSeriesParams struct {
 	CompanyID   *string                `json:"company_id,omitempty" url:"company_id,omitempty"`
 	EndTime     *time.Time             `json:"end_time,omitempty" url:"end_time,omitempty"`
@@ -8867,7 +8893,6 @@ func (g *GetPlanEntitlementResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getUserUsageByCompanyParamsFieldCompanyID = big.NewInt(1 << 0)
 	getUserUsageByCompanyParamsFieldEndTime   = big.NewInt(1 << 1)
@@ -8875,6 +8900,7 @@ var (
 	getUserUsageByCompanyParamsFieldStartTime = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetUserUsageByCompanyParams struct {
 	// Company to break usage down for
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -9121,7 +9147,6 @@ func (g *GetUserUsageByCompanyResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getUserUsageDetailParamsFieldCompanyID = big.NewInt(1 << 0)
 	getUserUsageDetailParamsFieldEndTime   = big.NewInt(1 << 1)
@@ -9129,6 +9154,7 @@ var (
 	getUserUsageDetailParamsFieldUserID    = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetUserUsageDetailParams struct {
 	// Company the user belongs to
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -9375,7 +9401,6 @@ func (g *GetUserUsageDetailResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listCompanyOverridesParamsFieldCompanyID      = big.NewInt(1 << 0)
 	listCompanyOverridesParamsFieldCompanyIDs     = big.NewInt(1 << 1)
@@ -9388,6 +9413,7 @@ var (
 	listCompanyOverridesParamsFieldWithoutExpired = big.NewInt(1 << 8)
 )
 
+// Input parameters
 type ListCompanyOverridesParams struct {
 	// Filter company overrides by a single company ID (starting with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -9702,7 +9728,6 @@ func (l *ListCompanyOverridesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listCompanyUserUsageParamsFieldCompanyID = big.NewInt(1 << 0)
 	listCompanyUserUsageParamsFieldEndTime   = big.NewInt(1 << 1)
@@ -9713,6 +9738,7 @@ var (
 	listCompanyUserUsageParamsFieldStartTime = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type ListCompanyUserUsageParams struct {
 	// Company to break usage down for
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -10007,7 +10033,6 @@ func (l *ListCompanyUserUsageResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listFeatureCompaniesParamsFieldFeatureID = big.NewInt(1 << 0)
 	listFeatureCompaniesParamsFieldLimit     = big.NewInt(1 << 1)
@@ -10015,6 +10040,7 @@ var (
 	listFeatureCompaniesParamsFieldQ         = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListFeatureCompaniesParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
@@ -10247,7 +10273,6 @@ func (l *ListFeatureCompaniesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listFeatureUsageHistoryParamsFieldCompanyIDs  = big.NewInt(1 << 0)
 	listFeatureUsageHistoryParamsFieldEndTime     = big.NewInt(1 << 1)
@@ -10258,6 +10283,7 @@ var (
 	listFeatureUsageHistoryParamsFieldStartTime   = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type ListFeatureUsageHistoryParams struct {
 	// Restrict to these company IDs; omit for every company in the environment
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
@@ -10552,7 +10578,6 @@ func (l *ListFeatureUsageHistoryResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listFeatureUsageParamsFieldCompanyID                   = big.NewInt(1 << 0)
 	listFeatureUsageParamsFieldCompanyKeys                 = big.NewInt(1 << 1)
@@ -10565,6 +10590,7 @@ var (
 	listFeatureUsageParamsFieldWithoutNegativeEntitlements = big.NewInt(1 << 8)
 )
 
+// Input parameters
 type ListFeatureUsageParams struct {
 	CompanyID   *string           `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyKeys map[string]string `json:"company_keys,omitempty" url:"company_keys,omitempty"`
@@ -10874,7 +10900,6 @@ func (l *ListFeatureUsageResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listFeatureUsersParamsFieldFeatureID = big.NewInt(1 << 0)
 	listFeatureUsersParamsFieldLimit     = big.NewInt(1 << 1)
@@ -10882,6 +10907,7 @@ var (
 	listFeatureUsersParamsFieldQ         = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListFeatureUsersParams struct {
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	// Page limit (default 100)
@@ -11114,7 +11140,6 @@ func (l *ListFeatureUsersResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listPlanEntitlementsParamsFieldFeatureID           = big.NewInt(1 << 0)
 	listPlanEntitlementsParamsFieldFeatureIDs          = big.NewInt(1 << 1)
@@ -11129,6 +11154,7 @@ var (
 	listPlanEntitlementsParamsFieldWithMeteredProducts = big.NewInt(1 << 10)
 )
 
+// Input parameters
 type ListPlanEntitlementsParams struct {
 	// Filter plan entitlements by a single feature ID (starting with feat_)
 	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
@@ -11790,11 +11816,12 @@ var (
 	updateCompanyOverrideRequestBodyFieldMetricPeriod           = big.NewInt(1 << 2)
 	updateCompanyOverrideRequestBodyFieldMetricPeriodMonthReset = big.NewInt(1 << 3)
 	updateCompanyOverrideRequestBodyFieldNote                   = big.NewInt(1 << 4)
-	updateCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 5)
-	updateCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 6)
-	updateCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 7)
-	updateCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 8)
-	updateCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 9)
+	updateCompanyOverrideRequestBodyFieldQuantityRates          = big.NewInt(1 << 5)
+	updateCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 6)
+	updateCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 7)
+	updateCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 8)
+	updateCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 9)
+	updateCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 10)
 )
 
 type UpdateCompanyOverrideRequestBody struct {
@@ -11803,11 +11830,13 @@ type UpdateCompanyOverrideRequestBody struct {
 	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
 	Note                   *string                 `json:"note,omitempty" url:"-"`
-	ValueBool              *bool                   `json:"value_bool,omitempty" url:"-"`
-	ValueCreditID          *string                 `json:"value_credit_id,omitempty" url:"-"`
-	ValueNumeric           *int64                  `json:"value_numeric,omitempty" url:"-"`
-	ValueTraitID           *string                 `json:"value_trait_id,omitempty" url:"-"`
-	ValueType              EntitlementValueType    `json:"value_type" url:"-"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates map[string]float64   `json:"quantity_rates,omitempty" url:"-"`
+	ValueBool     *bool                `json:"value_bool,omitempty" url:"-"`
+	ValueCreditID *string              `json:"value_credit_id,omitempty" url:"-"`
+	ValueNumeric  *int64               `json:"value_numeric,omitempty" url:"-"`
+	ValueTraitID  *string              `json:"value_trait_id,omitempty" url:"-"`
+	ValueType     EntitlementValueType `json:"value_type" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -11857,6 +11886,13 @@ func (u *UpdateCompanyOverrideRequestBody) SetNote(note *string) {
 	u.require(updateCompanyOverrideRequestBodyFieldNote)
 }
 
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyOverrideRequestBody) SetQuantityRates(quantityRates map[string]float64) {
+	u.QuantityRates = quantityRates
+	u.require(updateCompanyOverrideRequestBodyFieldQuantityRates)
+}
+
 // SetValueBool sets the ValueBool field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateCompanyOverrideRequestBody) SetValueBool(valueBool *bool) {
@@ -11893,12 +11929,18 @@ func (u *UpdateCompanyOverrideRequestBody) SetValueType(valueType EntitlementVal
 }
 
 func (u *UpdateCompanyOverrideRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdateCompanyOverrideRequestBody
-	var body unmarshaler
+	type embed UpdateCompanyOverrideRequestBody
+	var body = struct {
+		embed
+		ExpirationDate *internal.DateTime `json:"expiration_date,omitempty"`
+	}{
+		embed: embed(*u),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*u = UpdateCompanyOverrideRequestBody(body)
+	*u = UpdateCompanyOverrideRequestBody(body.embed)
+	u.ExpirationDate = body.ExpirationDate.TimePtr()
 	return nil
 }
 
@@ -11932,30 +11974,31 @@ var (
 	updatePlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 13)
 	updatePlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 14)
 	updatePlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 15)
-	updatePlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 16)
-	updatePlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 17)
-	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 18)
-	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 19)
-	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 20)
-	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 21)
-	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 22)
-	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 23)
-	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 24)
-	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 25)
-	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 26)
-	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 27)
-	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 28)
-	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 29)
-	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 30)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 31)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 32)
+	updatePlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 16)
+	updatePlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 17)
+	updatePlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 18)
+	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 19)
+	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
+	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
+	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
+	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 23)
+	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 24)
+	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 25)
+	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
+	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
+	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 28)
+	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 29)
+	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
+	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
 )
 
 type UpdatePlanEntitlementRequestBody struct {
 	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
 	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *string                       `json:"currency,omitempty" url:"-"`
+	Currency                *Currency                     `json:"currency,omitempty" url:"-"`
 	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
 	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
@@ -11970,7 +12013,9 @@ type UpdatePlanEntitlementRequestBody struct {
 	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"-"`
 	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	PriceTiers []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates             map[string]float64            `json:"quantity_rates,omitempty" url:"-"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"-"`
 	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"-"`
 	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"-"`
@@ -12026,7 +12071,7 @@ func (u *UpdatePlanEntitlementRequestBody) SetCreditConsumptionRate(creditConsum
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpdatePlanEntitlementRequestBody) SetCurrency(currency *string) {
+func (u *UpdatePlanEntitlementRequestBody) SetCurrency(currency *Currency) {
 	u.Currency = currency
 	u.require(updatePlanEntitlementRequestBodyFieldCurrency)
 }
@@ -12113,6 +12158,13 @@ func (u *UpdatePlanEntitlementRequestBody) SetPriceBehavior(priceBehavior *Entit
 func (u *UpdatePlanEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePriceTierRequestBody) {
 	u.PriceTiers = priceTiers
 	u.require(updatePlanEntitlementRequestBodyFieldPriceTiers)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanEntitlementRequestBody) SetQuantityRates(quantityRates map[string]float64) {
+	u.QuantityRates = quantityRates
+	u.require(updatePlanEntitlementRequestBodyFieldQuantityRates)
 }
 
 // SetQuarterlyMeteredPriceID sets the QuarterlyMeteredPriceID field and marks it as non-optional;
@@ -12277,23 +12329,24 @@ var (
 	createBillingLinkedPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 18)
 	createBillingLinkedPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 19)
 	createBillingLinkedPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 20)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 21)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 22)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 23)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 24)
-	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 25)
-	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 26)
-	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 27)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 28)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 29)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 30)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 31)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 32)
-	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 33)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 34)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 35)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 36)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 37)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 21)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 22)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 23)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 24)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 25)
+	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 26)
+	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 27)
+	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 28)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 29)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 30)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 31)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 32)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 33)
+	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 34)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 35)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 36)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 37)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 38)
 )
 
 type CreateBillingLinkedPlanEntitlementRequestBody struct {
@@ -12301,7 +12354,7 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 	BillingProvider         BillingProviderType           `json:"billing_provider" url:"-"`
 	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
 	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *string                       `json:"currency,omitempty" url:"-"`
+	Currency                *Currency                     `json:"currency,omitempty" url:"-"`
 	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
 	ExternalResourceID      string                        `json:"external_resource_id" url:"-"`
 	FeatureID               string                        `json:"feature_id" url:"-"`
@@ -12320,7 +12373,9 @@ type CreateBillingLinkedPlanEntitlementRequestBody struct {
 	PlanVersionID        *string                   `json:"plan_version_id,omitempty" url:"-"`
 	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"-"`
 	// Use MonthlyPriceTiers or YearlyPriceTiers instead
-	PriceTiers                []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	PriceTiers []*CreatePriceTierRequestBody `json:"price_tiers,omitempty" url:"-"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates             map[string]float64            `json:"quantity_rates,omitempty" url:"-"`
 	QuarterlyMeteredPriceID   *string                       `json:"quarterly_metered_price_id,omitempty" url:"-"`
 	QuarterlyPriceTiers       []*CreatePriceTierRequestBody `json:"quarterly_price_tiers,omitempty" url:"-"`
 	QuarterlyUnitPrice        *int64                        `json:"quarterly_unit_price,omitempty" url:"-"`
@@ -12383,7 +12438,7 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetCreditConsumptionRate
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetCurrency(currency *string) {
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldCurrency)
 }
@@ -12498,6 +12553,13 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetPriceBehavior(priceBe
 func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetPriceTiers(priceTiers []*CreatePriceTierRequestBody) {
 	c.PriceTiers = priceTiers
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldPriceTiers)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldQuantityRates)
 }
 
 // SetQuarterlyMeteredPriceID sets the QuarterlyMeteredPriceID field and marks it as non-optional;

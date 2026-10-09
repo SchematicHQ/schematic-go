@@ -3174,11 +3174,11 @@ func (c *CreatePlanGroupResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	getPlanGroupParamsFieldIncludeCompanyCounts = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type GetPlanGroupParams struct {
 	IncludeCompanyCounts *bool `json:"include_company_counts,omitempty" url:"include_company_counts,omitempty"`
 

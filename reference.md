@@ -1027,7 +1027,7 @@ client.Accounts.CreateEnvironment(
 <dl>
 <dd>
 
-**environmentType:** `*schematichq.EnvironmentType` 
+**environmentType:** `schematichq.EnvironmentType` 
     
 </dd>
 </dl>
@@ -1498,7 +1498,7 @@ client.Billing.UpsertBillingCoupon(
 <dl>
 <dd>
 
-**currency:** `*string` 
+**currency:** `*schematichq.Currency` 
     
 </dd>
 </dl>
@@ -2063,7 +2063,7 @@ request := &schematichq.CreateInvoiceRequestBody{
     AmountPaid: int64(1000000),
     AmountRemaining: int64(1000000),
     CollectionMethod: "collection_method",
-    Currency: "currency",
+    Currency: schematichq.CurrencyAed,
     CustomerExternalID: "customer_external_id",
     Subtotal: int64(1000000),
 }
@@ -2117,7 +2117,7 @@ client.Billing.UpsertInvoice(
 <dl>
 <dd>
 
-**currency:** `string` 
+**currency:** `schematichq.Currency` 
     
 </dd>
 </dl>
@@ -2683,9 +2683,7 @@ client.Billing.DeletePaymentMethodByExternalID(
 
 ```go
 request := &schematichq.ListBillingPricesRequest{
-    Currency: schematichq.String(
-        "currency",
-    ),
+    Currency: schematichq.CurrencyAed.Ptr(),
     ForInitialPlan: schematichq.Bool(
         true,
     ),
@@ -2754,7 +2752,7 @@ client.Billing.ListBillingPrices(
 <dl>
 <dd>
 
-**currency:** `*string` — Filter for prices in a specific currency (e.g. usd, eur)
+**currency:** `*schematichq.Currency` — Filter for prices in a specific currency (e.g. usd, eur)
     
 </dd>
 </dl>
@@ -2917,7 +2915,7 @@ client.Billing.ListBillingPrices(
 ```go
 request := &schematichq.CreateBillingPriceRequestBody{
     BillingScheme: schematichq.BillingPriceSchemePerUnit,
-    Currency: "currency",
+    Currency: schematichq.CurrencyAed,
     ExternalAccountID: "external_account_id",
     Interval: "interval",
     IsActive: true,
@@ -2949,7 +2947,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**billingScheme:** `*schematichq.BillingPriceScheme` 
+**billingScheme:** `schematichq.BillingPriceScheme` 
     
 </dd>
 </dl>
@@ -2957,7 +2955,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**currency:** `string` 
+**currency:** `schematichq.Currency` 
     
 </dd>
 </dl>
@@ -3077,7 +3075,7 @@ client.Billing.UpsertBillingPrice(
 <dl>
 <dd>
 
-**usageType:** `*schematichq.BillingPriceUsageType` 
+**usageType:** `schematichq.BillingPriceUsageType` 
     
 </dd>
 </dl>
@@ -3146,9 +3144,7 @@ client.Billing.DeleteBillingProduct(
 
 ```go
 request := &schematichq.ListBillingProductPricesRequest{
-    Currency: schematichq.String(
-        "currency",
-    ),
+    Currency: schematichq.CurrencyAed.Ptr(),
     ForInitialPlan: schematichq.Bool(
         true,
     ),
@@ -3217,7 +3213,7 @@ client.Billing.ListBillingProductPrices(
 <dl>
 <dd>
 
-**currency:** `*string` — Filter for prices in a specific currency (e.g. usd, eur)
+**currency:** `*schematichq.Currency` — Filter for prices in a specific currency (e.g. usd, eur)
     
 </dd>
 </dl>
@@ -3976,7 +3972,7 @@ client.Billing.UpdateCompanyBillingProfile(
 <dl>
 <dd>
 
-**collectionMethod:** `*schematichq.BillingCollectionMethod` 
+**collectionMethod:** `schematichq.BillingCollectionMethod` 
     
 </dd>
 </dl>
@@ -4028,6 +4024,77 @@ client.Billing.UpdateCompanyBillingProfile(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.GetBillingSettings() -> *schematichq.GetBillingSettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.GetBillingSettings(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.UpdateBillingSettings(request) -> *schematichq.UpdateBillingSettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateBillingSettingsRequestBody{}
+client.Billing.UpdateBillingSettings(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**defaultProviderType:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Billing.UpsertBillingSubscription(request) -> *schematichq.UpsertBillingSubscriptionResponse</code></summary>
 <dl>
 <dd>
@@ -4043,7 +4110,7 @@ client.Billing.UpdateCompanyBillingProfile(
 ```go
 request := &schematichq.CreateBillingSubscriptionRequestBody{
     CancelAtPeriodEnd: true,
-    Currency: "currency",
+    Currency: schematichq.CurrencyAed,
     CustomerExternalID: "customer_external_id",
     Discounts: []*schematichq.BillingSubscriptionDiscount{
         &schematichq.BillingSubscriptionDiscount{
@@ -4060,7 +4127,7 @@ request := &schematichq.CreateBillingSubscriptionRequestBody{
     ),
     ProductExternalIDs: []*schematichq.BillingProductPricing{
         &schematichq.BillingProductPricing{
-            Currency: "currency",
+            Currency: schematichq.CurrencyAed,
             Interval: "interval",
             Price: int64(1000000),
             PriceExternalID: "price_external_id",
@@ -4122,7 +4189,7 @@ client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
-**currency:** `string` 
+**currency:** `schematichq.Currency` 
     
 </dd>
 </dl>
@@ -4368,7 +4435,7 @@ client.Credits.ListBillingCredits(
 
 ```go
 request := &schematichq.CreateBillingCreditRequestBody{
-    Currency: "currency",
+    Currency: schematichq.CurrencyAed,
     Description: "description",
     Name: "name",
 }
@@ -4398,7 +4465,7 @@ client.Credits.CreateBillingCredit(
 <dl>
 <dd>
 
-**currency:** `string` 
+**currency:** `schematichq.Currency` 
     
 </dd>
 </dl>
@@ -4774,6 +4841,83 @@ client.Credits.ListCompanyCreditBalances(
 </dl>
 </details>
 
+<details><summary><code>client.Credits.GetCreditBalanceTimeSeries() -> *schematichq.GetCreditBalanceTimeSeriesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetCreditBalanceTimeSeriesRequest{
+    BillingCreditID: "billing_credit_id",
+    CompanyID: "company_id",
+    EndTime: schematichq.MustParseDateTime(
+        "2024-01-15T09:30:00Z",
+    ),
+    StartTime: schematichq.MustParseDateTime(
+        "2024-01-15T09:30:00Z",
+    ),
+}
+client.Credits.GetCreditBalanceTimeSeries(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingCreditID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endTime:** `time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `time.Time` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Credits.ListCreditBundles() -> *schematichq.ListCreditBundlesResponse</code></summary>
 <dl>
 <dd>
@@ -4893,7 +5037,7 @@ client.Credits.ListCreditBundles(
 request := &schematichq.CreateCreditBundleRequestBody{
     BundleName: "bundle_name",
     CreditID: "credit_id",
-    Currency: "currency",
+    Currency: schematichq.CurrencyAed,
     PricePerUnit: int64(1000000),
 }
 client.Credits.CreateCreditBundle(
@@ -4946,7 +5090,7 @@ client.Credits.CreateCreditBundle(
 <dl>
 <dd>
 
-**currency:** `string` 
+**currency:** `schematichq.Currency` 
     
 </dd>
 </dl>
@@ -5544,7 +5688,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**currency:** `*string` 
+**currency:** `*schematichq.Currency` 
     
 </dd>
 </dl>
@@ -5592,7 +5736,7 @@ client.Credits.GrantBillingCreditsToCompany(
 <dl>
 <dd>
 
-**reason:** `*schematichq.BillingCreditGrantReason` 
+**reason:** `schematichq.BillingCreditGrantReason` 
     
 </dd>
 </dl>
@@ -8457,7 +8601,7 @@ client.Checkout.GetCheckoutData(
 <dl>
 <dd>
 
-**currency:** `*string` 
+**currency:** `*schematichq.Currency` 
     
 </dd>
 </dl>
@@ -10680,7 +10824,7 @@ client.Companies.GetOrCreateEntityTraitDefinition(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.EntityType` 
+**entityType:** `schematichq.EntityType` 
     
 </dd>
 </dl>
@@ -10696,7 +10840,7 @@ client.Companies.GetOrCreateEntityTraitDefinition(
 <dl>
 <dd>
 
-**traitType:** `*schematichq.TraitType` 
+**traitType:** `schematichq.TraitType` 
     
 </dd>
 </dl>
@@ -10802,7 +10946,7 @@ client.Companies.UpdateEntityTraitDefinition(
 <dl>
 <dd>
 
-**traitType:** `*schematichq.TraitType` 
+**traitType:** `schematichq.TraitType` 
     
 </dd>
 </dl>
@@ -11184,7 +11328,7 @@ client.Companies.CountEntityTraits(
 
 ```go
 request := &schematichq.ListPlanChangesRequest{
-    Action: schematichq.PlanChangeActionCheckout.Ptr(),
+    Action: schematichq.PlanChangeActionAmendment.Ptr(),
     BasePlanAction: schematichq.PlanChangeBasePlanActionFallback.Ptr(),
     CompanyID: schematichq.String(
         "company_id",
@@ -12412,6 +12556,14 @@ client.Entitlements.CreateCompanyOverride(
 <dl>
 <dd>
 
+**quantityRates:** `map[string]float64` — Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **valueBool:** `*bool` 
     
 </dd>
@@ -12444,7 +12596,7 @@ client.Entitlements.CreateCompanyOverride(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.EntitlementValueType` 
+**valueType:** `schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -12582,6 +12734,14 @@ client.Entitlements.UpdateCompanyOverride(
 <dl>
 <dd>
 
+**quantityRates:** `map[string]float64` — Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **valueBool:** `*bool` 
     
 </dd>
@@ -12614,7 +12774,7 @@ client.Entitlements.UpdateCompanyOverride(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.EntitlementValueType` 
+**valueType:** `schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -13821,7 +13981,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**currency:** `*string` 
+**currency:** `*schematichq.Currency` 
     
 </dd>
 </dl>
@@ -13949,6 +14109,14 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**quantityRates:** `map[string]float64` — Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **quarterlyMeteredPriceID:** `*string` 
     
 </dd>
@@ -14037,7 +14205,7 @@ client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.EntitlementValueType` 
+**valueType:** `schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -14199,7 +14367,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**currency:** `*string` 
+**currency:** `*schematichq.Currency` 
     
 </dd>
 </dl>
@@ -14303,6 +14471,14 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
+**quantityRates:** `map[string]float64` — Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **quarterlyMeteredPriceID:** `*string` 
     
 </dd>
@@ -14391,7 +14567,7 @@ client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.EntitlementValueType` 
+**valueType:** `schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -14532,7 +14708,7 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dl>
 <dd>
 
-**billingProvider:** `*schematichq.BillingProviderType` 
+**billingProvider:** `schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -14556,7 +14732,7 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dl>
 <dd>
 
-**currency:** `*string` 
+**currency:** `*schematichq.Currency` 
     
 </dd>
 </dl>
@@ -14692,6 +14868,14 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dl>
 <dd>
 
+**quantityRates:** `map[string]float64` — Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **quarterlyMeteredPriceID:** `*string` 
     
 </dd>
@@ -14780,7 +14964,7 @@ client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dl>
 <dd>
 
-**valueType:** `*schematichq.EntitlementValueType` 
+**valueType:** `schematichq.EntitlementValueType` 
     
 </dd>
 </dl>
@@ -15334,7 +15518,7 @@ client.Entitlements.ListCompanyUserUsage(
 <dl>
 <dd>
 
-**metric:** `*schematichq.UserUsageMetric` — Which metric to break usage down by
+**metric:** `schematichq.UserUsageMetric` — Which metric to break usage down by
     
 </dd>
 </dl>
@@ -15448,7 +15632,7 @@ client.Entitlements.CountCompanyUserUsage(
 <dl>
 <dd>
 
-**metric:** `*schematichq.UserUsageMetric` — Which metric to break usage down by
+**metric:** `schematichq.UserUsageMetric` — Which metric to break usage down by
     
 </dd>
 </dl>
@@ -15651,7 +15835,7 @@ request := &schematichq.ListCustomPlanBillingsRequest{
     PlanID: schematichq.String(
         "plan_id",
     ),
-    PlanBillingSource: schematichq.PlanBillingSourceCustomPlan.Ptr(),
+    PlanBillingSource: schematichq.PlanBillingSourceAmendment.Ptr(),
     Status: schematichq.CustomPlanBillingStatusActive.Ptr(),
     Statuses: []*schematichq.CustomPlanBillingStatus{
         schematichq.CustomPlanBillingStatusActive.Ptr(),
@@ -15697,7 +15881,7 @@ client.Plans.ListCustomPlanBillings(
 <dl>
 <dd>
 
-**planBillingSource:** `*schematichq.PlanBillingSource` — Filter by the flow that created the billing record. Defaults to custom_plan.
+**planBillingSource:** `*schematichq.PlanBillingSource` — Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan.
     
 </dd>
 </dl>
@@ -16538,7 +16722,7 @@ client.Plans.UpsertPlanForBillingProduct(
 <dl>
 <dd>
 
-**billingProvider:** `*schematichq.BillingProviderType` 
+**billingProvider:** `schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -16586,7 +16770,7 @@ client.Plans.UpsertPlanForBillingProduct(
 <dl>
 <dd>
 
-**planType:** `*schematichq.PlanType` 
+**planType:** `schematichq.PlanType` 
     
 </dd>
 </dl>
@@ -17127,6 +17311,63 @@ client.Plans.DeletePlanVersion(
 </dl>
 </details>
 
+<details><summary><code>client.Plans.GetPlanVersionDiff(PlanVersionID) -> *schematichq.GetPlanVersionDiffResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetPlanVersionDiffRequest{
+    Against: schematichq.String(
+        "against",
+    ),
+}
+client.Plans.GetPlanVersionDiff(
+    context.TODO(),
+    "plan_version_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planVersionID:** `string` — plan_version_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**against:** `*string` — The version to compare against. Defaults to the plan's published version.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Plans.PublishPlanVersion(PlanVersionID, request) -> *schematichq.PublishPlanVersionResponse</code></summary>
 <dl>
 <dd>
@@ -17173,7 +17414,7 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**activationStrategy:** `*schematichq.CustomPlanActivationStrategy` 
+**activationStrategy:** `*schematichq.CustomPlanActivationStrategy` — When the company gets the plan. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
     
 </dd>
 </dl>
@@ -17205,7 +17446,15 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**couponExternalID:** `*string` 
+**collectionMethod:** `*schematichq.BillingCollectionMethod` — How the invoice a custom-plan republish raises today is collected. send_invoice (the default) issues it for the company to pay; charge_automatically charges the default payment method straight away. Only accepted on a custom-plan republish with migration_strategy immediate and proration_behavior always_invoice.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**couponExternalID:** `*string` — A Stripe coupon to apply. On a custom-plan republish it discounts the amendment invoice and is only used when that invoice is raised today; it must exist in Stripe. It is attached to the subscription, so a repeating or forever coupon also discounts the renewals that follow.
     
 </dd>
 </dl>
@@ -17229,7 +17478,7 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**daysUntilDue:** `*int64` 
+**daysUntilDue:** `*int64` — Payment terms in days. On a custom-plan republish they apply to the amendment invoice only, leave the subscription's renewal terms unchanged, and are only used when that invoice is raised today and sent rather than charged. Defaults to the subscription's terms.
     
 </dd>
 </dl>
@@ -17245,7 +17494,7 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**migrationStrategy:** `*schematichq.PlanVersionMigrationStrategy` 
+**migrationStrategy:** `schematichq.PlanVersionMigrationStrategy` 
     
 </dd>
 </dl>
@@ -17427,7 +17676,7 @@ client.Components.CreateComponent(
 <dl>
 <dd>
 
-**entityType:** `*schematichq.ComponentEntityType` 
+**entityType:** `schematichq.ComponentEntityType` 
     
 </dd>
 </dl>
@@ -18160,7 +18409,7 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**exportType:** `*schematichq.DataExportType` 
+**exportType:** `schematichq.DataExportType` 
     
 </dd>
 </dl>
@@ -18176,7 +18425,7 @@ client.Dataexports.CreateDataExport(
 <dl>
 <dd>
 
-**outputFileType:** `*schematichq.DataExportOutputFileType` 
+**outputFileType:** `schematichq.DataExportOutputFileType` 
     
 </dd>
 </dl>
@@ -18973,6 +19222,14 @@ client.Features.CreateFeature(
 <dl>
 <dd>
 
+**eventSource:** `*schematichq.FeatureEventSource` — Which event stream meters this feature; defaults to track, and cannot change after creation. Inference is only valid on event features: their event_subtype matches the event label on inference events, and they meter through credits only.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **eventSubtype:** `*string` 
     
 </dd>
@@ -18981,7 +19238,7 @@ client.Features.CreateFeature(
 <dl>
 <dd>
 
-**featureType:** `*schematichq.FeatureType` 
+**featureType:** `schematichq.FeatureType` 
     
 </dd>
 </dl>
@@ -19142,6 +19399,14 @@ client.Features.UpdateFeature(
 <dd>
 
 **description:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**eventSource:** `*schematichq.FeatureEventSource` — Which event stream meters this feature. It is fixed at creation: an update that changes it is rejected.
     
 </dd>
 </dl>
@@ -19314,7 +19579,7 @@ client.Features.UpsertFeatureForBillingProduct(
 <dl>
 <dd>
 
-**billingProvider:** `*schematichq.BillingProviderType` 
+**billingProvider:** `schematichq.BillingProviderType` 
     
 </dd>
 </dl>
@@ -19323,6 +19588,14 @@ client.Features.UpsertFeatureForBillingProduct(
 <dd>
 
 **description:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**eventSource:** `*schematichq.FeatureEventSource` — Which event stream meters this feature; defaults to track, and cannot change after creation. Inference is only valid on event features: their event_subtype matches the event label on inference events, and they meter through credits only.
     
 </dd>
 </dl>
@@ -19346,7 +19619,7 @@ client.Features.UpsertFeatureForBillingProduct(
 <dl>
 <dd>
 
-**featureType:** `*schematichq.FeatureType` 
+**featureType:** `schematichq.FeatureType` 
     
 </dd>
 </dl>
@@ -21836,7 +22109,7 @@ client.Plangroups.CreatePlanGroup(
 <dl>
 <dd>
 
-**prorationBehavior:** `*schematichq.ProrationBehavior` 
+**prorationBehavior:** `schematichq.ProrationBehavior` 
     
 </dd>
 </dl>
@@ -22237,7 +22510,7 @@ client.Plangroups.UpdatePlanGroup(
 <dl>
 <dd>
 
-**prorationBehavior:** `*schematichq.ProrationBehavior` 
+**prorationBehavior:** `schematichq.ProrationBehavior` 
     
 </dd>
 </dl>
@@ -22783,7 +23056,7 @@ client.Planmigrations.CreateMigration(
 <dl>
 <dd>
 
-**strategy:** `*schematichq.PlanVersionMigrationStrategy` 
+**strategy:** `schematichq.PlanVersionMigrationStrategy` 
     
 </dd>
 </dl>
@@ -22791,7 +23064,7 @@ client.Planmigrations.CreateMigration(
 <dl>
 <dd>
 
-**targetPlanType:** `*schematichq.PlanType` 
+**targetPlanType:** `schematichq.PlanType` 
     
 </dd>
 </dl>
@@ -22987,7 +23260,7 @@ client.Planmigrations.RetryMigration(
 <dl>
 <dd>
 
-**errorCodes:** `[]*schematichq.MigrationErrorCode` 
+**errorCodes:** `[]schematichq.MigrationErrorCode` 
     
 </dd>
 </dl>
@@ -23168,7 +23441,7 @@ client.Planmigrations.PreviewMigration(
 <dl>
 <dd>
 
-**targetPlanType:** `*schematichq.PlanType` 
+**targetPlanType:** `schematichq.PlanType` 
     
 </dd>
 </dl>
@@ -23891,7 +24164,7 @@ client.Webhooks.CreateWebhook(
 <dl>
 <dd>
 
-**requestTypes:** `[]*schematichq.WebhookRequestType` 
+**requestTypes:** `[]schematichq.WebhookRequestType` 
     
 </dd>
 </dl>
@@ -24019,7 +24292,7 @@ client.Webhooks.UpdateWebhook(
 <dl>
 <dd>
 
-**requestTypes:** `[]*schematichq.WebhookRequestType` 
+**requestTypes:** `[]schematichq.WebhookRequestType` 
     
 </dd>
 </dl>
@@ -24133,7 +24406,7 @@ client.Webhooks.SendTestWebhookAction(
 <dl>
 <dd>
 
-**requestType:** `*schematichq.WebhookRequestType` 
+**requestType:** `schematichq.WebhookRequestType` 
     
 </dd>
 </dl>

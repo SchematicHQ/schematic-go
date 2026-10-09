@@ -3974,7 +3974,7 @@ var (
 )
 
 type BillingPriceResponseData struct {
-	Currency        string                      `json:"currency" url:"currency"`
+	Currency        Currency                    `json:"currency" url:"currency"`
 	ExternalPriceID string                      `json:"external_price_id" url:"external_price_id"`
 	ID              string                      `json:"id" url:"id"`
 	Interval        BillingProductPriceInterval `json:"interval" url:"interval"`
@@ -3992,7 +3992,7 @@ type BillingPriceResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (b *BillingPriceResponseData) GetCurrency() string {
+func (b *BillingPriceResponseData) GetCurrency() Currency {
 	if b == nil {
 		return ""
 	}
@@ -4080,7 +4080,7 @@ func (b *BillingPriceResponseData) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPriceResponseData) SetCurrency(currency string) {
+func (b *BillingPriceResponseData) SetCurrency(currency Currency) {
 	b.Currency = currency
 	b.require(billingPriceResponseDataFieldCurrency)
 }
@@ -4264,7 +4264,7 @@ var (
 type BillingPriceView struct {
 	BillingScheme        BillingPriceScheme                     `json:"billing_scheme" url:"billing_scheme"`
 	CreatedAt            time.Time                              `json:"created_at" url:"created_at"`
-	Currency             string                                 `json:"currency" url:"currency"`
+	Currency             Currency                               `json:"currency" url:"currency"`
 	ID                   string                                 `json:"id" url:"id"`
 	Interval             BillingProductPriceInterval            `json:"interval" url:"interval"`
 	IntervalCount        int64                                  `json:"interval_count" url:"interval_count"`
@@ -4308,7 +4308,7 @@ func (b *BillingPriceView) GetCreatedAt() time.Time {
 	return b.CreatedAt
 }
 
-func (b *BillingPriceView) GetCurrency() string {
+func (b *BillingPriceView) GetCurrency() Currency {
 	if b == nil {
 		return ""
 	}
@@ -4494,7 +4494,7 @@ func (b *BillingPriceView) SetCreatedAt(createdAt time.Time) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingPriceView) SetCurrency(currency string) {
+func (b *BillingPriceView) SetCurrency(currency Currency) {
 	b.Currency = currency
 	b.require(billingPriceViewFieldCurrency)
 }
@@ -5053,7 +5053,7 @@ type BillingProductForSubscriptionResponseData struct {
 	BillingScheme              BillingPriceScheme                     `json:"billing_scheme" url:"billing_scheme"`
 	BillingThreshold           *int64                                 `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
 	CreatedAt                  time.Time                              `json:"created_at" url:"created_at"`
-	Currency                   string                                 `json:"currency" url:"currency"`
+	Currency                   Currency                               `json:"currency" url:"currency"`
 	EnvironmentID              string                                 `json:"environment_id" url:"environment_id"`
 	ExternalID                 string                                 `json:"external_id" url:"external_id"`
 	ID                         string                                 `json:"id" url:"id"`
@@ -5102,7 +5102,7 @@ func (b *BillingProductForSubscriptionResponseData) GetCreatedAt() time.Time {
 	return b.CreatedAt
 }
 
-func (b *BillingProductForSubscriptionResponseData) GetCurrency() string {
+func (b *BillingProductForSubscriptionResponseData) GetCurrency() Currency {
 	if b == nil {
 		return ""
 	}
@@ -5281,7 +5281,7 @@ func (b *BillingProductForSubscriptionResponseData) SetCreatedAt(createdAt time.
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductForSubscriptionResponseData) SetCurrency(currency string) {
+func (b *BillingProductForSubscriptionResponseData) SetCurrency(currency Currency) {
 	b.Currency = currency
 	b.require(billingProductForSubscriptionResponseDataFieldCurrency)
 }
@@ -6488,7 +6488,7 @@ type BillingSubscriptionDiscountView struct {
 	AmountOff              *int64     `json:"amount_off,omitempty" url:"amount_off,omitempty"`
 	CouponID               string     `json:"coupon_id" url:"coupon_id"`
 	CouponName             string     `json:"coupon_name" url:"coupon_name"`
-	Currency               *string    `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency               *Currency  `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomerFacingCode     *string    `json:"customer_facing_code,omitempty" url:"customer_facing_code,omitempty"`
 	DiscountExternalID     string     `json:"discount_external_id" url:"discount_external_id"`
 	Duration               string     `json:"duration" url:"duration"`
@@ -6528,7 +6528,7 @@ func (b *BillingSubscriptionDiscountView) GetCouponName() string {
 	return b.CouponName
 }
 
-func (b *BillingSubscriptionDiscountView) GetCurrency() *string {
+func (b *BillingSubscriptionDiscountView) GetCurrency() *Currency {
 	if b == nil {
 		return nil
 	}
@@ -6644,7 +6644,7 @@ func (b *BillingSubscriptionDiscountView) SetCouponName(couponName string) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionDiscountView) SetCurrency(currency *string) {
+func (b *BillingSubscriptionDiscountView) SetCurrency(currency *Currency) {
 	b.Currency = currency
 	b.require(billingSubscriptionDiscountViewFieldCurrency)
 }
@@ -6828,7 +6828,7 @@ type BillingSubscriptionView struct {
 	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
 	CompanyID              *string                                      `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt              time.Time                                    `json:"created_at" url:"created_at"`
-	Currency               string                                       `json:"currency" url:"currency"`
+	Currency               Currency                                     `json:"currency" url:"currency"`
 	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
 	DefaultPaymentMethodID *string                                      `json:"default_payment_method_id,omitempty" url:"default_payment_method_id,omitempty"`
 	Discounts              []*BillingSubscriptionDiscountView           `json:"discounts" url:"discounts"`
@@ -6890,7 +6890,7 @@ func (b *BillingSubscriptionView) GetCreatedAt() time.Time {
 	return b.CreatedAt
 }
 
-func (b *BillingSubscriptionView) GetCurrency() string {
+func (b *BillingSubscriptionView) GetCurrency() Currency {
 	if b == nil {
 		return ""
 	}
@@ -7076,7 +7076,7 @@ func (b *BillingSubscriptionView) SetCreatedAt(createdAt time.Time) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingSubscriptionView) SetCurrency(currency string) {
+func (b *BillingSubscriptionView) SetCurrency(currency Currency) {
 	b.Currency = currency
 	b.require(billingSubscriptionViewFieldCurrency)
 }
@@ -7583,7 +7583,7 @@ type ChangeSubscriptionRequestBody struct {
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
 	// ISO 4217 currency this cart is being built in. Prices are still selected by id; this records the intent, and a cart that prices in another currency is reported as a problem.
-	Currency          *string                          `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency          *Currency                        `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomFieldValues []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
 	NewPlanID         string                           `json:"new_plan_id" url:"new_plan_id"`
 	NewPriceID        string                           `json:"new_price_id" url:"new_price_id"`
@@ -7635,7 +7635,7 @@ func (c *ChangeSubscriptionRequestBody) GetCreditBundles() []*UpdateCreditBundle
 	return c.CreditBundles
 }
 
-func (c *ChangeSubscriptionRequestBody) GetCurrency() *string {
+func (c *ChangeSubscriptionRequestBody) GetCurrency() *Currency {
 	if c == nil {
 		return nil
 	}
@@ -7751,7 +7751,7 @@ func (c *ChangeSubscriptionRequestBody) SetCreditBundles(creditBundles []*Update
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ChangeSubscriptionRequestBody) SetCurrency(currency *string) {
+func (c *ChangeSubscriptionRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(changeSubscriptionRequestBodyFieldCurrency)
 }
@@ -9814,16 +9814,17 @@ var (
 	companyOverrideResponseDataFieldMetricPeriod           = big.NewInt(1 << 9)
 	companyOverrideResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 10)
 	companyOverrideResponseDataFieldNotes                  = big.NewInt(1 << 11)
-	companyOverrideResponseDataFieldRuleID                 = big.NewInt(1 << 12)
-	companyOverrideResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 13)
-	companyOverrideResponseDataFieldUpdatedAt              = big.NewInt(1 << 14)
-	companyOverrideResponseDataFieldValueBool              = big.NewInt(1 << 15)
-	companyOverrideResponseDataFieldValueCredit            = big.NewInt(1 << 16)
-	companyOverrideResponseDataFieldValueCreditID          = big.NewInt(1 << 17)
-	companyOverrideResponseDataFieldValueNumeric           = big.NewInt(1 << 18)
-	companyOverrideResponseDataFieldValueTrait             = big.NewInt(1 << 19)
-	companyOverrideResponseDataFieldValueTraitID           = big.NewInt(1 << 20)
-	companyOverrideResponseDataFieldValueType              = big.NewInt(1 << 21)
+	companyOverrideResponseDataFieldQuantityRates          = big.NewInt(1 << 12)
+	companyOverrideResponseDataFieldRuleID                 = big.NewInt(1 << 13)
+	companyOverrideResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 14)
+	companyOverrideResponseDataFieldUpdatedAt              = big.NewInt(1 << 15)
+	companyOverrideResponseDataFieldValueBool              = big.NewInt(1 << 16)
+	companyOverrideResponseDataFieldValueCredit            = big.NewInt(1 << 17)
+	companyOverrideResponseDataFieldValueCreditID          = big.NewInt(1 << 18)
+	companyOverrideResponseDataFieldValueNumeric           = big.NewInt(1 << 19)
+	companyOverrideResponseDataFieldValueTrait             = big.NewInt(1 << 20)
+	companyOverrideResponseDataFieldValueTraitID           = big.NewInt(1 << 21)
+	companyOverrideResponseDataFieldValueType              = big.NewInt(1 << 22)
 )
 
 type CompanyOverrideResponseData struct {
@@ -9839,16 +9840,18 @@ type CompanyOverrideResponseData struct {
 	MetricPeriod           *MetricPeriod                      `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset            `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	Notes                  []*CompanyOverrideNoteResponseData `json:"notes" url:"notes"`
-	RuleID                 *string                            `json:"rule_id,omitempty" url:"rule_id,omitempty"`
-	RuleIDUsageExceeded    *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
-	UpdatedAt              time.Time                          `json:"updated_at" url:"updated_at"`
-	ValueBool              *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueCredit            *BillingCreditResponseData         `json:"value_credit,omitempty" url:"value_credit,omitempty"`
-	ValueCreditID          *string                            `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int64                             `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTrait             *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
-	ValueTraitID           *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType              EntitlementValueType               `json:"value_type" url:"value_type"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Absent when the entitlement prices requests only.
+	QuantityRates       map[string]float64                 `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
+	RuleID              *string                            `json:"rule_id,omitempty" url:"rule_id,omitempty"`
+	RuleIDUsageExceeded *string                            `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
+	UpdatedAt           time.Time                          `json:"updated_at" url:"updated_at"`
+	ValueBool           *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCredit         *BillingCreditResponseData         `json:"value_credit,omitempty" url:"value_credit,omitempty"`
+	ValueCreditID       *string                            `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
+	ValueNumeric        *int64                             `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTrait          *EntityTraitDefinitionResponseData `json:"value_trait,omitempty" url:"value_trait,omitempty"`
+	ValueTraitID        *string                            `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType           EntitlementValueType               `json:"value_type" url:"value_type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -9939,6 +9942,13 @@ func (c *CompanyOverrideResponseData) GetNotes() []*CompanyOverrideNoteResponseD
 		return nil
 	}
 	return c.Notes
+}
+
+func (c *CompanyOverrideResponseData) GetQuantityRates() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRates
 }
 
 func (c *CompanyOverrideResponseData) GetRuleID() *string {
@@ -10109,6 +10119,13 @@ func (c *CompanyOverrideResponseData) SetMetricPeriodMonthReset(metricPeriodMont
 func (c *CompanyOverrideResponseData) SetNotes(notes []*CompanyOverrideNoteResponseData) {
 	c.Notes = notes
 	c.require(companyOverrideResponseDataFieldNotes)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyOverrideResponseData) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(companyOverrideResponseDataFieldQuantityRates)
 }
 
 // SetRuleID sets the RuleID field and marks it as non-optional;
@@ -11354,7 +11371,7 @@ var (
 type CompanySubscriptionResponseData struct {
 	CancelAt               *time.Time                                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
-	Currency               string                                       `json:"currency" url:"currency"`
+	Currency               Currency                                     `json:"currency" url:"currency"`
 	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
 	Discounts              []*BillingSubscriptionDiscountView           `json:"discounts" url:"discounts"`
 	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
@@ -11390,7 +11407,7 @@ func (c *CompanySubscriptionResponseData) GetCancelAtPeriodEnd() bool {
 	return c.CancelAtPeriodEnd
 }
 
-func (c *CompanySubscriptionResponseData) GetCurrency() string {
+func (c *CompanySubscriptionResponseData) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -11520,7 +11537,7 @@ func (c *CompanySubscriptionResponseData) SetCancelAtPeriodEnd(cancelAtPeriodEnd
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanySubscriptionResponseData) SetCurrency(currency string) {
+func (c *CompanySubscriptionResponseData) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(companySubscriptionResponseDataFieldCurrency)
 }
@@ -12615,9 +12632,10 @@ var (
 	conditionFieldMetricPeriodMonthReset    = big.NewInt(1 << 9)
 	conditionFieldMetricValue               = big.NewInt(1 << 10)
 	conditionFieldOperator                  = big.NewInt(1 << 11)
-	conditionFieldResourceIDs               = big.NewInt(1 << 12)
-	conditionFieldTraitDefinition           = big.NewInt(1 << 13)
-	conditionFieldTraitValue                = big.NewInt(1 << 14)
+	conditionFieldQuantityRates             = big.NewInt(1 << 12)
+	conditionFieldResourceIDs               = big.NewInt(1 << 13)
+	conditionFieldTraitDefinition           = big.NewInt(1 << 14)
+	conditionFieldTraitValue                = big.NewInt(1 << 15)
 )
 
 type Condition struct {
@@ -12633,6 +12651,7 @@ type Condition struct {
 	MetricPeriodMonthReset    *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MetricValue               *int64                  `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator                  ComparableOperator      `json:"operator" url:"operator"`
+	QuantityRates             map[string]float64      `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	ResourceIDs               []string                `json:"resource_ids" url:"resource_ids"`
 	TraitDefinition           *TraitDefinition        `json:"trait_definition,omitempty" url:"trait_definition,omitempty"`
 	TraitValue                string                  `json:"trait_value" url:"trait_value"`
@@ -12726,6 +12745,13 @@ func (c *Condition) GetOperator() ComparableOperator {
 		return ""
 	}
 	return c.Operator
+}
+
+func (c *Condition) GetQuantityRates() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRates
 }
 
 func (c *Condition) GetResourceIDs() []string {
@@ -12847,6 +12873,13 @@ func (c *Condition) SetMetricValue(metricValue *int64) {
 func (c *Condition) SetOperator(operator ComparableOperator) {
 	c.Operator = operator
 	c.require(conditionFieldOperator)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *Condition) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(conditionFieldQuantityRates)
 }
 
 // SetResourceIDs sets the ResourceIDs field and marks it as non-optional;
@@ -13418,15 +13451,16 @@ var (
 	conditionResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 12)
 	conditionResponseDataFieldMetricValue            = big.NewInt(1 << 13)
 	conditionResponseDataFieldOperator               = big.NewInt(1 << 14)
-	conditionResponseDataFieldResourceUnspecifiedIDs = big.NewInt(1 << 15)
-	conditionResponseDataFieldRuleID                 = big.NewInt(1 << 16)
-	conditionResponseDataFieldTraitEntityType        = big.NewInt(1 << 17)
-	conditionResponseDataFieldTraitID                = big.NewInt(1 << 18)
-	conditionResponseDataFieldTraitValue             = big.NewInt(1 << 19)
-	conditionResponseDataFieldTraitValueBool         = big.NewInt(1 << 20)
-	conditionResponseDataFieldTraitValueDate         = big.NewInt(1 << 21)
-	conditionResponseDataFieldTraitValueInt          = big.NewInt(1 << 22)
-	conditionResponseDataFieldUpdatedAt              = big.NewInt(1 << 23)
+	conditionResponseDataFieldQuantityRates          = big.NewInt(1 << 15)
+	conditionResponseDataFieldResourceUnspecifiedIDs = big.NewInt(1 << 16)
+	conditionResponseDataFieldRuleID                 = big.NewInt(1 << 17)
+	conditionResponseDataFieldTraitEntityType        = big.NewInt(1 << 18)
+	conditionResponseDataFieldTraitID                = big.NewInt(1 << 19)
+	conditionResponseDataFieldTraitValue             = big.NewInt(1 << 20)
+	conditionResponseDataFieldTraitValueBool         = big.NewInt(1 << 21)
+	conditionResponseDataFieldTraitValueDate         = big.NewInt(1 << 22)
+	conditionResponseDataFieldTraitValueInt          = big.NewInt(1 << 23)
+	conditionResponseDataFieldUpdatedAt              = big.NewInt(1 << 24)
 )
 
 type ConditionResponseData struct {
@@ -13445,6 +13479,7 @@ type ConditionResponseData struct {
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MetricValue            *int64                  `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator               ComparableOperator      `json:"operator" url:"operator"`
+	QuantityRates          map[string]float64      `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	ResourceUnspecifiedIDs []string                `json:"resource_unspecified_ids" url:"resource_unspecified_ids"`
 	RuleID                 string                  `json:"rule_id" url:"rule_id"`
 	TraitEntityType        *EntityType             `json:"trait_entity_type,omitempty" url:"trait_entity_type,omitempty"`
@@ -13565,6 +13600,13 @@ func (c *ConditionResponseData) GetOperator() ComparableOperator {
 		return ""
 	}
 	return c.Operator
+}
+
+func (c *ConditionResponseData) GetQuantityRates() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRates
 }
 
 func (c *ConditionResponseData) GetResourceUnspecifiedIDs() []string {
@@ -13749,6 +13791,13 @@ func (c *ConditionResponseData) SetMetricValue(metricValue *int64) {
 func (c *ConditionResponseData) SetOperator(operator ComparableOperator) {
 	c.Operator = operator
 	c.require(conditionResponseDataFieldOperator)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionResponseData) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(conditionResponseDataFieldQuantityRates)
 }
 
 // SetResourceUnspecifiedIDs sets the ResourceUnspecifiedIDs field and marks it as non-optional;
@@ -13936,17 +13985,18 @@ var (
 	conditionViewFieldOperator               = big.NewInt(1 << 17)
 	conditionViewFieldPlanVersions           = big.NewInt(1 << 18)
 	conditionViewFieldPlans                  = big.NewInt(1 << 19)
-	conditionViewFieldResourceUnspecifiedIDs = big.NewInt(1 << 20)
-	conditionViewFieldRuleID                 = big.NewInt(1 << 21)
-	conditionViewFieldTrait                  = big.NewInt(1 << 22)
-	conditionViewFieldTraitEntityType        = big.NewInt(1 << 23)
-	conditionViewFieldTraitID                = big.NewInt(1 << 24)
-	conditionViewFieldTraitValue             = big.NewInt(1 << 25)
-	conditionViewFieldTraitValueBool         = big.NewInt(1 << 26)
-	conditionViewFieldTraitValueDate         = big.NewInt(1 << 27)
-	conditionViewFieldTraitValueInt          = big.NewInt(1 << 28)
-	conditionViewFieldUpdatedAt              = big.NewInt(1 << 29)
-	conditionViewFieldUsers                  = big.NewInt(1 << 30)
+	conditionViewFieldQuantityRates          = big.NewInt(1 << 20)
+	conditionViewFieldResourceUnspecifiedIDs = big.NewInt(1 << 21)
+	conditionViewFieldRuleID                 = big.NewInt(1 << 22)
+	conditionViewFieldTrait                  = big.NewInt(1 << 23)
+	conditionViewFieldTraitEntityType        = big.NewInt(1 << 24)
+	conditionViewFieldTraitID                = big.NewInt(1 << 25)
+	conditionViewFieldTraitValue             = big.NewInt(1 << 26)
+	conditionViewFieldTraitValueBool         = big.NewInt(1 << 27)
+	conditionViewFieldTraitValueDate         = big.NewInt(1 << 28)
+	conditionViewFieldTraitValueInt          = big.NewInt(1 << 29)
+	conditionViewFieldUpdatedAt              = big.NewInt(1 << 30)
+	conditionViewFieldUsers                  = big.NewInt(1 << 31)
 )
 
 type ConditionView struct {
@@ -13970,6 +14020,7 @@ type ConditionView struct {
 	Operator               ComparableOperator                 `json:"operator" url:"operator"`
 	PlanVersions           []*GenericPreviewObject            `json:"plan_versions" url:"plan_versions"`
 	Plans                  []*GenericPreviewObject            `json:"plans" url:"plans"`
+	QuantityRates          map[string]float64                 `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	ResourceUnspecifiedIDs []string                           `json:"resource_unspecified_ids" url:"resource_unspecified_ids"`
 	RuleID                 string                             `json:"rule_id" url:"rule_id"`
 	Trait                  *EntityTraitDefinitionResponseData `json:"trait,omitempty" url:"trait,omitempty"`
@@ -14127,6 +14178,13 @@ func (c *ConditionView) GetPlans() []*GenericPreviewObject {
 		return nil
 	}
 	return c.Plans
+}
+
+func (c *ConditionView) GetQuantityRates() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRates
 }
 
 func (c *ConditionView) GetResourceUnspecifiedIDs() []string {
@@ -14360,6 +14418,13 @@ func (c *ConditionView) SetPlanVersions(planVersions []*GenericPreviewObject) {
 func (c *ConditionView) SetPlans(plans []*GenericPreviewObject) {
 	c.Plans = plans
 	c.require(conditionViewFieldPlans)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConditionView) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(conditionViewFieldQuantityRates)
 }
 
 // SetResourceUnspecifiedIDs sets the ResourceUnspecifiedIDs field and marks it as non-optional;
@@ -14596,14 +14661,14 @@ var (
 )
 
 type CouponRequestBody struct {
-	AmountOff        int64   `json:"amount_off" url:"amount_off"`
-	Currency         *string `json:"currency,omitempty" url:"currency,omitempty"`
-	Duration         string  `json:"duration" url:"duration"`
-	DurationInMonths int64   `json:"duration_in_months" url:"duration_in_months"`
-	MaxRedemptions   int64   `json:"max_redemptions" url:"max_redemptions"`
-	Name             string  `json:"name" url:"name"`
-	PercentOff       float64 `json:"percent_off" url:"percent_off"`
-	TimesRedeemed    int64   `json:"times_redeemed" url:"times_redeemed"`
+	AmountOff        int64     `json:"amount_off" url:"amount_off"`
+	Currency         *Currency `json:"currency,omitempty" url:"currency,omitempty"`
+	Duration         string    `json:"duration" url:"duration"`
+	DurationInMonths int64     `json:"duration_in_months" url:"duration_in_months"`
+	MaxRedemptions   int64     `json:"max_redemptions" url:"max_redemptions"`
+	Name             string    `json:"name" url:"name"`
+	PercentOff       float64   `json:"percent_off" url:"percent_off"`
+	TimesRedeemed    int64     `json:"times_redeemed" url:"times_redeemed"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -14619,7 +14684,7 @@ func (c *CouponRequestBody) GetAmountOff() int64 {
 	return c.AmountOff
 }
 
-func (c *CouponRequestBody) GetCurrency() *string {
+func (c *CouponRequestBody) GetCurrency() *Currency {
 	if c == nil {
 		return nil
 	}
@@ -14693,7 +14758,7 @@ func (c *CouponRequestBody) SetAmountOff(amountOff int64) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CouponRequestBody) SetCurrency(currency *string) {
+func (c *CouponRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(couponRequestBodyFieldCurrency)
 }
@@ -15458,11 +15523,12 @@ var (
 	createEntitlementReqCommonFieldFeatureID              = big.NewInt(1 << 1)
 	createEntitlementReqCommonFieldMetricPeriod           = big.NewInt(1 << 2)
 	createEntitlementReqCommonFieldMetricPeriodMonthReset = big.NewInt(1 << 3)
-	createEntitlementReqCommonFieldValueBool              = big.NewInt(1 << 4)
-	createEntitlementReqCommonFieldValueCreditID          = big.NewInt(1 << 5)
-	createEntitlementReqCommonFieldValueNumeric           = big.NewInt(1 << 6)
-	createEntitlementReqCommonFieldValueTraitID           = big.NewInt(1 << 7)
-	createEntitlementReqCommonFieldValueType              = big.NewInt(1 << 8)
+	createEntitlementReqCommonFieldQuantityRates          = big.NewInt(1 << 4)
+	createEntitlementReqCommonFieldValueBool              = big.NewInt(1 << 5)
+	createEntitlementReqCommonFieldValueCreditID          = big.NewInt(1 << 6)
+	createEntitlementReqCommonFieldValueNumeric           = big.NewInt(1 << 7)
+	createEntitlementReqCommonFieldValueTraitID           = big.NewInt(1 << 8)
+	createEntitlementReqCommonFieldValueType              = big.NewInt(1 << 9)
 )
 
 type CreateEntitlementReqCommon struct {
@@ -15470,11 +15536,13 @@ type CreateEntitlementReqCommon struct {
 	FeatureID              string                  `json:"feature_id" url:"feature_id"`
 	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	ValueBool              *bool                   `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueCreditID          *string                 `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int64                  `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTraitID           *string                 `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType              EntitlementValueType    `json:"value_type" url:"value_type"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates map[string]float64   `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
+	ValueBool     *bool                `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCreditID *string              `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
+	ValueNumeric  *int64               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTraitID  *string              `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType     EntitlementValueType `json:"value_type" url:"value_type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -15509,6 +15577,13 @@ func (c *CreateEntitlementReqCommon) GetMetricPeriodMonthReset() *MetricPeriodMo
 		return nil
 	}
 	return c.MetricPeriodMonthReset
+}
+
+func (c *CreateEntitlementReqCommon) GetQuantityRates() map[string]float64 {
+	if c == nil {
+		return nil
+	}
+	return c.QuantityRates
 }
 
 func (c *CreateEntitlementReqCommon) GetValueBool() *bool {
@@ -15588,6 +15663,13 @@ func (c *CreateEntitlementReqCommon) SetMetricPeriod(metricPeriod *MetricPeriod)
 func (c *CreateEntitlementReqCommon) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createEntitlementReqCommonFieldMetricPeriodMonthReset)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementReqCommon) SetQuantityRates(quantityRates map[string]float64) {
+	c.QuantityRates = quantityRates
+	c.require(createEntitlementReqCommonFieldQuantityRates)
 }
 
 // SetValueBool sets the ValueBool field and marks it as non-optional;
@@ -15943,7 +16025,7 @@ var (
 )
 
 type CreditBundleCurrencyPriceResponseData struct {
-	Currency string                    `json:"currency" url:"currency"`
+	Currency Currency                  `json:"currency" url:"currency"`
 	Price    *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -15953,7 +16035,7 @@ type CreditBundleCurrencyPriceResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreditBundleCurrencyPriceResponseData) GetCurrency() string {
+func (c *CreditBundleCurrencyPriceResponseData) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -15985,7 +16067,7 @@ func (c *CreditBundleCurrencyPriceResponseData) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditBundleCurrencyPriceResponseData) SetCurrency(currency string) {
+func (c *CreditBundleCurrencyPriceResponseData) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(creditBundleCurrencyPriceResponseDataFieldCurrency)
 }
@@ -16045,7 +16127,7 @@ var (
 )
 
 type CreditCurrencyPrice struct {
-	Currency string            `json:"currency" url:"currency"`
+	Currency Currency          `json:"currency" url:"currency"`
 	Price    *BillingPriceView `json:"price,omitempty" url:"price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -16055,7 +16137,7 @@ type CreditCurrencyPrice struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreditCurrencyPrice) GetCurrency() string {
+func (c *CreditCurrencyPrice) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -16087,7 +16169,7 @@ func (c *CreditCurrencyPrice) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCurrencyPrice) SetCurrency(currency string) {
+func (c *CreditCurrencyPrice) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(creditCurrencyPriceFieldCurrency)
 }
@@ -16147,7 +16229,7 @@ var (
 )
 
 type CreditCurrencyPriceResponseData struct {
-	Currency string                    `json:"currency" url:"currency"`
+	Currency Currency                  `json:"currency" url:"currency"`
 	Price    *BillingPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -16157,7 +16239,7 @@ type CreditCurrencyPriceResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreditCurrencyPriceResponseData) GetCurrency() string {
+func (c *CreditCurrencyPriceResponseData) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -16189,7 +16271,7 @@ func (c *CreditCurrencyPriceResponseData) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCurrencyPriceResponseData) SetCurrency(currency string) {
+func (c *CreditCurrencyPriceResponseData) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(creditCurrencyPriceResponseDataFieldCurrency)
 }
@@ -17827,6 +17909,424 @@ func (c *CreditsWebhookCreditSummary) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type Currency string
+
+const (
+	CurrencyAed Currency = "aed"
+	CurrencyAfn Currency = "afn"
+	CurrencyAll Currency = "all"
+	CurrencyAmd Currency = "amd"
+	CurrencyAng Currency = "ang"
+	CurrencyAoa Currency = "aoa"
+	CurrencyArs Currency = "ars"
+	CurrencyAud Currency = "aud"
+	CurrencyAwg Currency = "awg"
+	CurrencyAzn Currency = "azn"
+	CurrencyBam Currency = "bam"
+	CurrencyBbd Currency = "bbd"
+	CurrencyBdt Currency = "bdt"
+	CurrencyBif Currency = "bif"
+	CurrencyBmd Currency = "bmd"
+	CurrencyBnd Currency = "bnd"
+	CurrencyBob Currency = "bob"
+	CurrencyBrl Currency = "brl"
+	CurrencyBsd Currency = "bsd"
+	CurrencyBwp Currency = "bwp"
+	CurrencyByn Currency = "byn"
+	CurrencyBzd Currency = "bzd"
+	CurrencyCad Currency = "cad"
+	CurrencyCdf Currency = "cdf"
+	CurrencyChf Currency = "chf"
+	CurrencyClp Currency = "clp"
+	CurrencyCny Currency = "cny"
+	CurrencyCop Currency = "cop"
+	CurrencyCrc Currency = "crc"
+	CurrencyCve Currency = "cve"
+	CurrencyCzk Currency = "czk"
+	CurrencyDjf Currency = "djf"
+	CurrencyDkk Currency = "dkk"
+	CurrencyDop Currency = "dop"
+	CurrencyDzd Currency = "dzd"
+	CurrencyEgp Currency = "egp"
+	CurrencyEtb Currency = "etb"
+	CurrencyEur Currency = "eur"
+	CurrencyFjd Currency = "fjd"
+	CurrencyFkp Currency = "fkp"
+	CurrencyGbp Currency = "gbp"
+	CurrencyGel Currency = "gel"
+	CurrencyGip Currency = "gip"
+	CurrencyGmd Currency = "gmd"
+	CurrencyGnf Currency = "gnf"
+	CurrencyGtq Currency = "gtq"
+	CurrencyGyd Currency = "gyd"
+	CurrencyHkd Currency = "hkd"
+	CurrencyHnl Currency = "hnl"
+	CurrencyHtg Currency = "htg"
+	CurrencyHuf Currency = "huf"
+	CurrencyIdr Currency = "idr"
+	CurrencyIls Currency = "ils"
+	CurrencyInr Currency = "inr"
+	CurrencyIsk Currency = "isk"
+	CurrencyJmd Currency = "jmd"
+	CurrencyJpy Currency = "jpy"
+	CurrencyKes Currency = "kes"
+	CurrencyKgs Currency = "kgs"
+	CurrencyKhr Currency = "khr"
+	CurrencyKmf Currency = "kmf"
+	CurrencyKrw Currency = "krw"
+	CurrencyKyd Currency = "kyd"
+	CurrencyKzt Currency = "kzt"
+	CurrencyLak Currency = "lak"
+	CurrencyLbp Currency = "lbp"
+	CurrencyLkr Currency = "lkr"
+	CurrencyLrd Currency = "lrd"
+	CurrencyLsl Currency = "lsl"
+	CurrencyMad Currency = "mad"
+	CurrencyMdl Currency = "mdl"
+	CurrencyMga Currency = "mga"
+	CurrencyMkd Currency = "mkd"
+	CurrencyMmk Currency = "mmk"
+	CurrencyMnt Currency = "mnt"
+	CurrencyMop Currency = "mop"
+	CurrencyMur Currency = "mur"
+	CurrencyMvr Currency = "mvr"
+	CurrencyMwk Currency = "mwk"
+	CurrencyMxn Currency = "mxn"
+	CurrencyMyr Currency = "myr"
+	CurrencyMzn Currency = "mzn"
+	CurrencyNad Currency = "nad"
+	CurrencyNgn Currency = "ngn"
+	CurrencyNio Currency = "nio"
+	CurrencyNok Currency = "nok"
+	CurrencyNpr Currency = "npr"
+	CurrencyNzd Currency = "nzd"
+	CurrencyPab Currency = "pab"
+	CurrencyPen Currency = "pen"
+	CurrencyPgk Currency = "pgk"
+	CurrencyPhp Currency = "php"
+	CurrencyPkr Currency = "pkr"
+	CurrencyPln Currency = "pln"
+	CurrencyPyg Currency = "pyg"
+	CurrencyQar Currency = "qar"
+	CurrencyRon Currency = "ron"
+	CurrencyRsd Currency = "rsd"
+	CurrencyRub Currency = "rub"
+	CurrencyRwf Currency = "rwf"
+	CurrencySar Currency = "sar"
+	CurrencySbd Currency = "sbd"
+	CurrencyScr Currency = "scr"
+	CurrencySek Currency = "sek"
+	CurrencySgd Currency = "sgd"
+	CurrencyShp Currency = "shp"
+	CurrencySle Currency = "sle"
+	CurrencySos Currency = "sos"
+	CurrencySrd Currency = "srd"
+	CurrencyStd Currency = "std"
+	CurrencySzl Currency = "szl"
+	CurrencyThb Currency = "thb"
+	CurrencyTjs Currency = "tjs"
+	CurrencyTop Currency = "top"
+	CurrencyTry Currency = "try"
+	CurrencyTtd Currency = "ttd"
+	CurrencyTwd Currency = "twd"
+	CurrencyTzs Currency = "tzs"
+	CurrencyUah Currency = "uah"
+	CurrencyUgx Currency = "ugx"
+	CurrencyUsd Currency = "usd"
+	CurrencyUyu Currency = "uyu"
+	CurrencyUzs Currency = "uzs"
+	CurrencyVnd Currency = "vnd"
+	CurrencyVuv Currency = "vuv"
+	CurrencyWst Currency = "wst"
+	CurrencyXaf Currency = "xaf"
+	CurrencyXcd Currency = "xcd"
+	CurrencyXcg Currency = "xcg"
+	CurrencyXof Currency = "xof"
+	CurrencyXpf Currency = "xpf"
+	CurrencyYer Currency = "yer"
+	CurrencyZar Currency = "zar"
+	CurrencyZmw Currency = "zmw"
+)
+
+func NewCurrencyFromString(s string) (Currency, error) {
+	switch s {
+	case "aed":
+		return CurrencyAed, nil
+	case "afn":
+		return CurrencyAfn, nil
+	case "all":
+		return CurrencyAll, nil
+	case "amd":
+		return CurrencyAmd, nil
+	case "ang":
+		return CurrencyAng, nil
+	case "aoa":
+		return CurrencyAoa, nil
+	case "ars":
+		return CurrencyArs, nil
+	case "aud":
+		return CurrencyAud, nil
+	case "awg":
+		return CurrencyAwg, nil
+	case "azn":
+		return CurrencyAzn, nil
+	case "bam":
+		return CurrencyBam, nil
+	case "bbd":
+		return CurrencyBbd, nil
+	case "bdt":
+		return CurrencyBdt, nil
+	case "bif":
+		return CurrencyBif, nil
+	case "bmd":
+		return CurrencyBmd, nil
+	case "bnd":
+		return CurrencyBnd, nil
+	case "bob":
+		return CurrencyBob, nil
+	case "brl":
+		return CurrencyBrl, nil
+	case "bsd":
+		return CurrencyBsd, nil
+	case "bwp":
+		return CurrencyBwp, nil
+	case "byn":
+		return CurrencyByn, nil
+	case "bzd":
+		return CurrencyBzd, nil
+	case "cad":
+		return CurrencyCad, nil
+	case "cdf":
+		return CurrencyCdf, nil
+	case "chf":
+		return CurrencyChf, nil
+	case "clp":
+		return CurrencyClp, nil
+	case "cny":
+		return CurrencyCny, nil
+	case "cop":
+		return CurrencyCop, nil
+	case "crc":
+		return CurrencyCrc, nil
+	case "cve":
+		return CurrencyCve, nil
+	case "czk":
+		return CurrencyCzk, nil
+	case "djf":
+		return CurrencyDjf, nil
+	case "dkk":
+		return CurrencyDkk, nil
+	case "dop":
+		return CurrencyDop, nil
+	case "dzd":
+		return CurrencyDzd, nil
+	case "egp":
+		return CurrencyEgp, nil
+	case "etb":
+		return CurrencyEtb, nil
+	case "eur":
+		return CurrencyEur, nil
+	case "fjd":
+		return CurrencyFjd, nil
+	case "fkp":
+		return CurrencyFkp, nil
+	case "gbp":
+		return CurrencyGbp, nil
+	case "gel":
+		return CurrencyGel, nil
+	case "gip":
+		return CurrencyGip, nil
+	case "gmd":
+		return CurrencyGmd, nil
+	case "gnf":
+		return CurrencyGnf, nil
+	case "gtq":
+		return CurrencyGtq, nil
+	case "gyd":
+		return CurrencyGyd, nil
+	case "hkd":
+		return CurrencyHkd, nil
+	case "hnl":
+		return CurrencyHnl, nil
+	case "htg":
+		return CurrencyHtg, nil
+	case "huf":
+		return CurrencyHuf, nil
+	case "idr":
+		return CurrencyIdr, nil
+	case "ils":
+		return CurrencyIls, nil
+	case "inr":
+		return CurrencyInr, nil
+	case "isk":
+		return CurrencyIsk, nil
+	case "jmd":
+		return CurrencyJmd, nil
+	case "jpy":
+		return CurrencyJpy, nil
+	case "kes":
+		return CurrencyKes, nil
+	case "kgs":
+		return CurrencyKgs, nil
+	case "khr":
+		return CurrencyKhr, nil
+	case "kmf":
+		return CurrencyKmf, nil
+	case "krw":
+		return CurrencyKrw, nil
+	case "kyd":
+		return CurrencyKyd, nil
+	case "kzt":
+		return CurrencyKzt, nil
+	case "lak":
+		return CurrencyLak, nil
+	case "lbp":
+		return CurrencyLbp, nil
+	case "lkr":
+		return CurrencyLkr, nil
+	case "lrd":
+		return CurrencyLrd, nil
+	case "lsl":
+		return CurrencyLsl, nil
+	case "mad":
+		return CurrencyMad, nil
+	case "mdl":
+		return CurrencyMdl, nil
+	case "mga":
+		return CurrencyMga, nil
+	case "mkd":
+		return CurrencyMkd, nil
+	case "mmk":
+		return CurrencyMmk, nil
+	case "mnt":
+		return CurrencyMnt, nil
+	case "mop":
+		return CurrencyMop, nil
+	case "mur":
+		return CurrencyMur, nil
+	case "mvr":
+		return CurrencyMvr, nil
+	case "mwk":
+		return CurrencyMwk, nil
+	case "mxn":
+		return CurrencyMxn, nil
+	case "myr":
+		return CurrencyMyr, nil
+	case "mzn":
+		return CurrencyMzn, nil
+	case "nad":
+		return CurrencyNad, nil
+	case "ngn":
+		return CurrencyNgn, nil
+	case "nio":
+		return CurrencyNio, nil
+	case "nok":
+		return CurrencyNok, nil
+	case "npr":
+		return CurrencyNpr, nil
+	case "nzd":
+		return CurrencyNzd, nil
+	case "pab":
+		return CurrencyPab, nil
+	case "pen":
+		return CurrencyPen, nil
+	case "pgk":
+		return CurrencyPgk, nil
+	case "php":
+		return CurrencyPhp, nil
+	case "pkr":
+		return CurrencyPkr, nil
+	case "pln":
+		return CurrencyPln, nil
+	case "pyg":
+		return CurrencyPyg, nil
+	case "qar":
+		return CurrencyQar, nil
+	case "ron":
+		return CurrencyRon, nil
+	case "rsd":
+		return CurrencyRsd, nil
+	case "rub":
+		return CurrencyRub, nil
+	case "rwf":
+		return CurrencyRwf, nil
+	case "sar":
+		return CurrencySar, nil
+	case "sbd":
+		return CurrencySbd, nil
+	case "scr":
+		return CurrencyScr, nil
+	case "sek":
+		return CurrencySek, nil
+	case "sgd":
+		return CurrencySgd, nil
+	case "shp":
+		return CurrencyShp, nil
+	case "sle":
+		return CurrencySle, nil
+	case "sos":
+		return CurrencySos, nil
+	case "srd":
+		return CurrencySrd, nil
+	case "std":
+		return CurrencyStd, nil
+	case "szl":
+		return CurrencySzl, nil
+	case "thb":
+		return CurrencyThb, nil
+	case "tjs":
+		return CurrencyTjs, nil
+	case "top":
+		return CurrencyTop, nil
+	case "try":
+		return CurrencyTry, nil
+	case "ttd":
+		return CurrencyTtd, nil
+	case "twd":
+		return CurrencyTwd, nil
+	case "tzs":
+		return CurrencyTzs, nil
+	case "uah":
+		return CurrencyUah, nil
+	case "ugx":
+		return CurrencyUgx, nil
+	case "usd":
+		return CurrencyUsd, nil
+	case "uyu":
+		return CurrencyUyu, nil
+	case "uzs":
+		return CurrencyUzs, nil
+	case "vnd":
+		return CurrencyVnd, nil
+	case "vuv":
+		return CurrencyVuv, nil
+	case "wst":
+		return CurrencyWst, nil
+	case "xaf":
+		return CurrencyXaf, nil
+	case "xcd":
+		return CurrencyXcd, nil
+	case "xcg":
+		return CurrencyXcg, nil
+	case "xof":
+		return CurrencyXof, nil
+	case "xpf":
+		return CurrencyXpf, nil
+	case "yer":
+		return CurrencyYer, nil
+	case "zar":
+		return CurrencyZar, nil
+	case "zmw":
+		return CurrencyZmw, nil
+	}
+	var t Currency
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c Currency) Ptr() *Currency {
+	return &c
+}
+
 var (
 	currencyPriceRequestBodyFieldCurrency                  = big.NewInt(1 << 0)
 	currencyPriceRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 1)
@@ -17841,7 +18341,7 @@ var (
 )
 
 type CurrencyPriceRequestBody struct {
-	Currency                  string                        `json:"currency" url:"currency"`
+	Currency                  Currency                      `json:"currency" url:"currency"`
 	MonthlyPriceTiers         []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice          *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal   *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
@@ -17859,7 +18359,7 @@ type CurrencyPriceRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CurrencyPriceRequestBody) GetCurrency() string {
+func (c *CurrencyPriceRequestBody) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -17947,7 +18447,7 @@ func (c *CurrencyPriceRequestBody) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CurrencyPriceRequestBody) SetCurrency(currency string) {
+func (c *CurrencyPriceRequestBody) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(currencyPriceRequestBodyFieldCurrency)
 }
@@ -18088,15 +18588,16 @@ var (
 	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 5)
 	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 6)
 	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 7)
-	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 8)
-	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 11)
-	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 12)
-	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 13)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 14)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 15)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 16)
+	customPlanBillingResponseDataFieldMigrationID        = big.NewInt(1 << 8)
+	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 9)
+	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 13)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 14)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 15)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 16)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 17)
 )
 
 type CustomPlanBillingResponseData struct {
@@ -18110,8 +18611,10 @@ type CustomPlanBillingResponseData struct {
 	DaysUntilDue      int64      `json:"days_until_due" url:"days_until_due"`
 	ExternalInvoiceID *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
 	ID                string     `json:"id" url:"id"`
-	PaidAt            *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
-	// The flow that created this billing record: a custom plan, or a standard plan assigned by invoice through Manage Plan.
+	// The plan version migration this amendment invoice belongs to. Null for a first publish or a plan assigned through Manage Plan.
+	MigrationID *string    `json:"migration_id,omitempty" url:"migration_id,omitempty"`
+	PaidAt      *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
+	// The flow that created this billing record: a custom plan's first publish, an amendment of a live custom plan, or a standard plan assigned by invoice through Manage Plan.
 	PlanBillingSource PlanBillingSource `json:"plan_billing_source" url:"plan_billing_source"`
 	PlanID            string            `json:"plan_id" url:"plan_id"`
 	// Whether the shortened period the renewal date created was billed pro rata when the subscription started. False means that period is free and the first invoice is the one raised on the renewal date.
@@ -18183,6 +18686,13 @@ func (c *CustomPlanBillingResponseData) GetID() string {
 		return ""
 	}
 	return c.ID
+}
+
+func (c *CustomPlanBillingResponseData) GetMigrationID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.MigrationID
 }
 
 func (c *CustomPlanBillingResponseData) GetPaidAt() *time.Time {
@@ -18318,6 +18828,13 @@ func (c *CustomPlanBillingResponseData) SetExternalInvoiceID(externalInvoiceID *
 func (c *CustomPlanBillingResponseData) SetID(id string) {
 	c.ID = id
 	c.require(customPlanBillingResponseDataFieldID)
+}
+
+// SetMigrationID sets the MigrationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetMigrationID(migrationID *string) {
+	c.MigrationID = migrationID
+	c.require(customPlanBillingResponseDataFieldMigrationID)
 }
 
 // SetPaidAt sets the PaidAt field and marks it as non-optional;
@@ -19168,7 +19685,7 @@ var (
 )
 
 type EntitlementCurrencyPricesResponseData struct {
-	Currency       string            `json:"currency" url:"currency"`
+	Currency       Currency          `json:"currency" url:"currency"`
 	MonthlyPrice   *BillingPriceView `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	QuarterlyPrice *BillingPriceView `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
 	YearlyPrice    *BillingPriceView `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
@@ -19180,7 +19697,7 @@ type EntitlementCurrencyPricesResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (e *EntitlementCurrencyPricesResponseData) GetCurrency() string {
+func (e *EntitlementCurrencyPricesResponseData) GetCurrency() Currency {
 	if e == nil {
 		return ""
 	}
@@ -19226,7 +19743,7 @@ func (e *EntitlementCurrencyPricesResponseData) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EntitlementCurrencyPricesResponseData) SetCurrency(currency string) {
+func (e *EntitlementCurrencyPricesResponseData) SetCurrency(currency Currency) {
 	e.Currency = currency
 	e.require(entitlementCurrencyPricesResponseDataFieldCurrency)
 }
@@ -21434,24 +21951,25 @@ var (
 	featureDetailResponseDataFieldBillingProduct            = big.NewInt(1 << 1)
 	featureDetailResponseDataFieldCreatedAt                 = big.NewInt(1 << 2)
 	featureDetailResponseDataFieldDescription               = big.NewInt(1 << 3)
-	featureDetailResponseDataFieldEventSubtype              = big.NewInt(1 << 4)
-	featureDetailResponseDataFieldEventSummary              = big.NewInt(1 << 5)
-	featureDetailResponseDataFieldFeatureType               = big.NewInt(1 << 6)
-	featureDetailResponseDataFieldFlags                     = big.NewInt(1 << 7)
-	featureDetailResponseDataFieldIcon                      = big.NewInt(1 << 8)
-	featureDetailResponseDataFieldID                        = big.NewInt(1 << 9)
-	featureDetailResponseDataFieldLicenseID                 = big.NewInt(1 << 10)
-	featureDetailResponseDataFieldLifecyclePhase            = big.NewInt(1 << 11)
-	featureDetailResponseDataFieldMaintainer                = big.NewInt(1 << 12)
-	featureDetailResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 13)
-	featureDetailResponseDataFieldName                      = big.NewInt(1 << 14)
-	featureDetailResponseDataFieldPlans                     = big.NewInt(1 << 15)
-	featureDetailResponseDataFieldPluralName                = big.NewInt(1 << 16)
-	featureDetailResponseDataFieldSingularName              = big.NewInt(1 << 17)
-	featureDetailResponseDataFieldTrait                     = big.NewInt(1 << 18)
-	featureDetailResponseDataFieldTraitID                   = big.NewInt(1 << 19)
-	featureDetailResponseDataFieldUpdatedAt                 = big.NewInt(1 << 20)
-	featureDetailResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 21)
+	featureDetailResponseDataFieldEventSource               = big.NewInt(1 << 4)
+	featureDetailResponseDataFieldEventSubtype              = big.NewInt(1 << 5)
+	featureDetailResponseDataFieldEventSummary              = big.NewInt(1 << 6)
+	featureDetailResponseDataFieldFeatureType               = big.NewInt(1 << 7)
+	featureDetailResponseDataFieldFlags                     = big.NewInt(1 << 8)
+	featureDetailResponseDataFieldIcon                      = big.NewInt(1 << 9)
+	featureDetailResponseDataFieldID                        = big.NewInt(1 << 10)
+	featureDetailResponseDataFieldLicenseID                 = big.NewInt(1 << 11)
+	featureDetailResponseDataFieldLifecyclePhase            = big.NewInt(1 << 12)
+	featureDetailResponseDataFieldMaintainer                = big.NewInt(1 << 13)
+	featureDetailResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 14)
+	featureDetailResponseDataFieldName                      = big.NewInt(1 << 15)
+	featureDetailResponseDataFieldPlans                     = big.NewInt(1 << 16)
+	featureDetailResponseDataFieldPluralName                = big.NewInt(1 << 17)
+	featureDetailResponseDataFieldSingularName              = big.NewInt(1 << 18)
+	featureDetailResponseDataFieldTrait                     = big.NewInt(1 << 19)
+	featureDetailResponseDataFieldTraitID                   = big.NewInt(1 << 20)
+	featureDetailResponseDataFieldUpdatedAt                 = big.NewInt(1 << 21)
+	featureDetailResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 22)
 )
 
 type FeatureDetailResponseData struct {
@@ -21460,12 +21978,14 @@ type FeatureDetailResponseData struct {
 	BillingProduct *BillingProductResponseData `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	CreatedAt      time.Time                   `json:"created_at" url:"created_at"`
 	Description    string                      `json:"description" url:"description"`
-	EventSubtype   *string                     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventSummary   *EventSummaryResponseData   `json:"event_summary,omitempty" url:"event_summary,omitempty"`
-	FeatureType    FeatureType                 `json:"feature_type" url:"feature_type"`
-	Flags          []*FlagDetailResponseData   `json:"flags" url:"flags"`
-	Icon           string                      `json:"icon" url:"icon"`
-	ID             string                      `json:"id" url:"id"`
+	// Which event stream meters this feature. Track features are metered by track events; inference features are metered by inference events whose event label matches event_subtype, and meter through credits only.
+	EventSource  FeatureEventSource        `json:"event_source" url:"event_source"`
+	EventSubtype *string                   `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventSummary *EventSummaryResponseData `json:"event_summary,omitempty" url:"event_summary,omitempty"`
+	FeatureType  FeatureType               `json:"feature_type" url:"feature_type"`
+	Flags        []*FlagDetailResponseData `json:"flags" url:"flags"`
+	Icon         string                    `json:"icon" url:"icon"`
+	ID           string                    `json:"id" url:"id"`
 	// The license sold through this feature. Set only on features of type license, and created automatically with them.
 	LicenseID                 *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase            *FeatureLifecyclePhase             `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
@@ -21514,6 +22034,13 @@ func (f *FeatureDetailResponseData) GetDescription() string {
 		return ""
 	}
 	return f.Description
+}
+
+func (f *FeatureDetailResponseData) GetEventSource() FeatureEventSource {
+	if f == nil {
+		return ""
+	}
+	return f.EventSource
 }
 
 func (f *FeatureDetailResponseData) GetEventSubtype() *string {
@@ -21684,6 +22211,13 @@ func (f *FeatureDetailResponseData) SetCreatedAt(createdAt time.Time) {
 func (f *FeatureDetailResponseData) SetDescription(description string) {
 	f.Description = description
 	f.require(featureDetailResponseDataFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureDetailResponseData) SetEventSource(eventSource FeatureEventSource) {
+	f.EventSource = eventSource
+	f.require(featureDetailResponseDataFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -21882,10 +22416,11 @@ var (
 	featureEntitlementFieldMetricPeriod    = big.NewInt(1 << 12)
 	featureEntitlementFieldMetricResetAt   = big.NewInt(1 << 13)
 	featureEntitlementFieldMonthReset      = big.NewInt(1 << 14)
-	featureEntitlementFieldSoftLimit       = big.NewInt(1 << 15)
-	featureEntitlementFieldUsage           = big.NewInt(1 << 16)
-	featureEntitlementFieldValueType       = big.NewInt(1 << 17)
-	featureEntitlementFieldWarningTiers    = big.NewInt(1 << 18)
+	featureEntitlementFieldQuantityRates   = big.NewInt(1 << 15)
+	featureEntitlementFieldSoftLimit       = big.NewInt(1 << 16)
+	featureEntitlementFieldUsage           = big.NewInt(1 << 17)
+	featureEntitlementFieldValueType       = big.NewInt(1 << 18)
+	featureEntitlementFieldWarningTiers    = big.NewInt(1 << 19)
 )
 
 type FeatureEntitlement struct {
@@ -21919,6 +22454,8 @@ type FeatureEntitlement struct {
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// For event-based feature entitlements that have a monthly period, whether that monthly reset is based on the calendar month or a billing cycle
 	MonthReset *MetricPeriodMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the credit cost per unit of each quantity an event carries, keyed by quantity key (per token for inference features). Absent when the entitlement prices requests only
+	QuantityRates map[string]float64 `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	// For usage-based pricing, the soft limit for overage charges or the next tier boundary
 	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// If the company has a numeric entitlement for this feature, the current usage amount
@@ -22038,6 +22575,13 @@ func (f *FeatureEntitlement) GetMonthReset() *MetricPeriodMonthReset {
 		return nil
 	}
 	return f.MonthReset
+}
+
+func (f *FeatureEntitlement) GetQuantityRates() map[string]float64 {
+	if f == nil {
+		return nil
+	}
+	return f.QuantityRates
 }
 
 func (f *FeatureEntitlement) GetSoftLimit() *int64 {
@@ -22189,6 +22733,13 @@ func (f *FeatureEntitlement) SetMonthReset(monthReset *MetricPeriodMonthReset) {
 	f.require(featureEntitlementFieldMonthReset)
 }
 
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureEntitlement) SetQuantityRates(quantityRates map[string]float64) {
+	f.QuantityRates = quantityRates
+	f.require(featureEntitlementFieldQuantityRates)
+}
+
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (f *FeatureEntitlement) SetSoftLimit(softLimit *int64) {
@@ -22267,39 +22818,64 @@ func (f *FeatureEntitlement) String() string {
 	return fmt.Sprintf("%#v", f)
 }
 
+type FeatureEventSource string
+
+const (
+	FeatureEventSourceInference FeatureEventSource = "inference"
+	FeatureEventSourceTrack     FeatureEventSource = "track"
+)
+
+func NewFeatureEventSourceFromString(s string) (FeatureEventSource, error) {
+	switch s {
+	case "inference":
+		return FeatureEventSourceInference, nil
+	case "track":
+		return FeatureEventSourceTrack, nil
+	}
+	var t FeatureEventSource
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (f FeatureEventSource) Ptr() *FeatureEventSource {
+	return &f
+}
+
 var (
 	featureInPlanResponseDataFieldBillingLinkedResource     = big.NewInt(1 << 0)
 	featureInPlanResponseDataFieldCreatedAt                 = big.NewInt(1 << 1)
 	featureInPlanResponseDataFieldDescription               = big.NewInt(1 << 2)
-	featureInPlanResponseDataFieldEventSubtype              = big.NewInt(1 << 3)
-	featureInPlanResponseDataFieldEventSummary              = big.NewInt(1 << 4)
-	featureInPlanResponseDataFieldFeatureType               = big.NewInt(1 << 5)
-	featureInPlanResponseDataFieldFlags                     = big.NewInt(1 << 6)
-	featureInPlanResponseDataFieldIcon                      = big.NewInt(1 << 7)
-	featureInPlanResponseDataFieldID                        = big.NewInt(1 << 8)
-	featureInPlanResponseDataFieldLicenseID                 = big.NewInt(1 << 9)
-	featureInPlanResponseDataFieldLifecyclePhase            = big.NewInt(1 << 10)
-	featureInPlanResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 11)
-	featureInPlanResponseDataFieldName                      = big.NewInt(1 << 12)
-	featureInPlanResponseDataFieldPlans                     = big.NewInt(1 << 13)
-	featureInPlanResponseDataFieldPluralName                = big.NewInt(1 << 14)
-	featureInPlanResponseDataFieldSingularName              = big.NewInt(1 << 15)
-	featureInPlanResponseDataFieldTrait                     = big.NewInt(1 << 16)
-	featureInPlanResponseDataFieldTraitID                   = big.NewInt(1 << 17)
-	featureInPlanResponseDataFieldUpdatedAt                 = big.NewInt(1 << 18)
-	featureInPlanResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 19)
+	featureInPlanResponseDataFieldEventSource               = big.NewInt(1 << 3)
+	featureInPlanResponseDataFieldEventSubtype              = big.NewInt(1 << 4)
+	featureInPlanResponseDataFieldEventSummary              = big.NewInt(1 << 5)
+	featureInPlanResponseDataFieldFeatureType               = big.NewInt(1 << 6)
+	featureInPlanResponseDataFieldFlags                     = big.NewInt(1 << 7)
+	featureInPlanResponseDataFieldIcon                      = big.NewInt(1 << 8)
+	featureInPlanResponseDataFieldID                        = big.NewInt(1 << 9)
+	featureInPlanResponseDataFieldLicenseID                 = big.NewInt(1 << 10)
+	featureInPlanResponseDataFieldLifecyclePhase            = big.NewInt(1 << 11)
+	featureInPlanResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 12)
+	featureInPlanResponseDataFieldName                      = big.NewInt(1 << 13)
+	featureInPlanResponseDataFieldPlans                     = big.NewInt(1 << 14)
+	featureInPlanResponseDataFieldPluralName                = big.NewInt(1 << 15)
+	featureInPlanResponseDataFieldSingularName              = big.NewInt(1 << 16)
+	featureInPlanResponseDataFieldTrait                     = big.NewInt(1 << 17)
+	featureInPlanResponseDataFieldTraitID                   = big.NewInt(1 << 18)
+	featureInPlanResponseDataFieldUpdatedAt                 = big.NewInt(1 << 19)
+	featureInPlanResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 20)
 )
 
 type FeatureInPlanResponseData struct {
 	BillingLinkedResource *BillingLinkedResourceResponseData `json:"billing_linked_resource,omitempty" url:"billing_linked_resource,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
 	Description           string                             `json:"description" url:"description"`
-	EventSubtype          *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	EventSummary          *EventSummaryResponseData          `json:"event_summary,omitempty" url:"event_summary,omitempty"`
-	FeatureType           FeatureType                        `json:"feature_type" url:"feature_type"`
-	Flags                 []*FlagInPlanResponseData          `json:"flags" url:"flags"`
-	Icon                  string                             `json:"icon" url:"icon"`
-	ID                    string                             `json:"id" url:"id"`
+	// Which event stream meters this feature. Track features are metered by track events; inference features are metered by inference events whose event label matches event_subtype, and meter through credits only.
+	EventSource  FeatureEventSource        `json:"event_source" url:"event_source"`
+	EventSubtype *string                   `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	EventSummary *EventSummaryResponseData `json:"event_summary,omitempty" url:"event_summary,omitempty"`
+	FeatureType  FeatureType               `json:"feature_type" url:"feature_type"`
+	Flags        []*FlagInPlanResponseData `json:"flags" url:"flags"`
+	Icon         string                    `json:"icon" url:"icon"`
+	ID           string                    `json:"id" url:"id"`
 	// The license sold through this feature. Set only on features of type license, and created automatically with them.
 	LicenseID                 *string                            `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase            *FeatureLifecyclePhase             `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
@@ -22340,6 +22916,13 @@ func (f *FeatureInPlanResponseData) GetDescription() string {
 		return ""
 	}
 	return f.Description
+}
+
+func (f *FeatureInPlanResponseData) GetEventSource() FeatureEventSource {
+	if f == nil {
+		return ""
+	}
+	return f.EventSource
 }
 
 func (f *FeatureInPlanResponseData) GetEventSubtype() *string {
@@ -22496,6 +23079,13 @@ func (f *FeatureInPlanResponseData) SetCreatedAt(createdAt time.Time) {
 func (f *FeatureInPlanResponseData) SetDescription(description string) {
 	f.Description = description
 	f.require(featureInPlanResponseDataFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureInPlanResponseData) SetEventSource(eventSource FeatureEventSource) {
+	f.EventSource = eventSource
+	f.require(featureInPlanResponseDataFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -22717,28 +23307,31 @@ func (f FeatureLifecyclePhase) Ptr() *FeatureLifecyclePhase {
 var (
 	featureResponseDataFieldCreatedAt                 = big.NewInt(1 << 0)
 	featureResponseDataFieldDescription               = big.NewInt(1 << 1)
-	featureResponseDataFieldEventSubtype              = big.NewInt(1 << 2)
-	featureResponseDataFieldFeatureType               = big.NewInt(1 << 3)
-	featureResponseDataFieldIcon                      = big.NewInt(1 << 4)
-	featureResponseDataFieldID                        = big.NewInt(1 << 5)
-	featureResponseDataFieldLicenseID                 = big.NewInt(1 << 6)
-	featureResponseDataFieldLifecyclePhase            = big.NewInt(1 << 7)
-	featureResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 8)
-	featureResponseDataFieldName                      = big.NewInt(1 << 9)
-	featureResponseDataFieldPluralName                = big.NewInt(1 << 10)
-	featureResponseDataFieldSingularName              = big.NewInt(1 << 11)
-	featureResponseDataFieldTraitID                   = big.NewInt(1 << 12)
-	featureResponseDataFieldUpdatedAt                 = big.NewInt(1 << 13)
-	featureResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 14)
+	featureResponseDataFieldEventSource               = big.NewInt(1 << 2)
+	featureResponseDataFieldEventSubtype              = big.NewInt(1 << 3)
+	featureResponseDataFieldFeatureType               = big.NewInt(1 << 4)
+	featureResponseDataFieldIcon                      = big.NewInt(1 << 5)
+	featureResponseDataFieldID                        = big.NewInt(1 << 6)
+	featureResponseDataFieldLicenseID                 = big.NewInt(1 << 7)
+	featureResponseDataFieldLifecyclePhase            = big.NewInt(1 << 8)
+	featureResponseDataFieldMaintainerAccountMemberID = big.NewInt(1 << 9)
+	featureResponseDataFieldName                      = big.NewInt(1 << 10)
+	featureResponseDataFieldPluralName                = big.NewInt(1 << 11)
+	featureResponseDataFieldSingularName              = big.NewInt(1 << 12)
+	featureResponseDataFieldTraitID                   = big.NewInt(1 << 13)
+	featureResponseDataFieldUpdatedAt                 = big.NewInt(1 << 14)
+	featureResponseDataFieldUsageLimitTraitID         = big.NewInt(1 << 15)
 )
 
 type FeatureResponseData struct {
-	CreatedAt    time.Time   `json:"created_at" url:"created_at"`
-	Description  string      `json:"description" url:"description"`
-	EventSubtype *string     `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	FeatureType  FeatureType `json:"feature_type" url:"feature_type"`
-	Icon         string      `json:"icon" url:"icon"`
-	ID           string      `json:"id" url:"id"`
+	CreatedAt   time.Time `json:"created_at" url:"created_at"`
+	Description string    `json:"description" url:"description"`
+	// Which event stream meters this feature. Track features are metered by track events; inference features are metered by inference events whose event label matches event_subtype, and meter through credits only.
+	EventSource  FeatureEventSource `json:"event_source" url:"event_source"`
+	EventSubtype *string            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
+	FeatureType  FeatureType        `json:"feature_type" url:"feature_type"`
+	Icon         string             `json:"icon" url:"icon"`
+	ID           string             `json:"id" url:"id"`
 	// The license sold through this feature. Set only on features of type license, and created automatically with them.
 	LicenseID                 *string                `json:"license_id,omitempty" url:"license_id,omitempty"`
 	LifecyclePhase            *FeatureLifecyclePhase `json:"lifecycle_phase,omitempty" url:"lifecycle_phase,omitempty"`
@@ -22770,6 +23363,13 @@ func (f *FeatureResponseData) GetDescription() string {
 		return ""
 	}
 	return f.Description
+}
+
+func (f *FeatureResponseData) GetEventSource() FeatureEventSource {
+	if f == nil {
+		return ""
+	}
+	return f.EventSource
 }
 
 func (f *FeatureResponseData) GetEventSubtype() *string {
@@ -22891,6 +23491,13 @@ func (f *FeatureResponseData) SetCreatedAt(createdAt time.Time) {
 func (f *FeatureResponseData) SetDescription(description string) {
 	f.Description = description
 	f.require(featureResponseDataFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureResponseData) SetEventSource(eventSource FeatureEventSource) {
+	f.EventSource = eventSource
+	f.require(featureResponseDataFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -23994,22 +24601,23 @@ var (
 	featureViewFieldBillingProduct        = big.NewInt(1 << 2)
 	featureViewFieldCreatedAt             = big.NewInt(1 << 3)
 	featureViewFieldDescription           = big.NewInt(1 << 4)
-	featureViewFieldEventSubtype          = big.NewInt(1 << 5)
-	featureViewFieldEventSummary          = big.NewInt(1 << 6)
-	featureViewFieldFeatureType           = big.NewInt(1 << 7)
-	featureViewFieldFlags                 = big.NewInt(1 << 8)
-	featureViewFieldIcon                  = big.NewInt(1 << 9)
-	featureViewFieldID                    = big.NewInt(1 << 10)
-	featureViewFieldLicenseID             = big.NewInt(1 << 11)
-	featureViewFieldLifecyclePhase        = big.NewInt(1 << 12)
-	featureViewFieldName                  = big.NewInt(1 << 13)
-	featureViewFieldPlans                 = big.NewInt(1 << 14)
-	featureViewFieldPluralName            = big.NewInt(1 << 15)
-	featureViewFieldSingularName          = big.NewInt(1 << 16)
-	featureViewFieldTrait                 = big.NewInt(1 << 17)
-	featureViewFieldTraitID               = big.NewInt(1 << 18)
-	featureViewFieldUpdatedAt             = big.NewInt(1 << 19)
-	featureViewFieldUsageLimitTraitID     = big.NewInt(1 << 20)
+	featureViewFieldEventSource           = big.NewInt(1 << 5)
+	featureViewFieldEventSubtype          = big.NewInt(1 << 6)
+	featureViewFieldEventSummary          = big.NewInt(1 << 7)
+	featureViewFieldFeatureType           = big.NewInt(1 << 8)
+	featureViewFieldFlags                 = big.NewInt(1 << 9)
+	featureViewFieldIcon                  = big.NewInt(1 << 10)
+	featureViewFieldID                    = big.NewInt(1 << 11)
+	featureViewFieldLicenseID             = big.NewInt(1 << 12)
+	featureViewFieldLifecyclePhase        = big.NewInt(1 << 13)
+	featureViewFieldName                  = big.NewInt(1 << 14)
+	featureViewFieldPlans                 = big.NewInt(1 << 15)
+	featureViewFieldPluralName            = big.NewInt(1 << 16)
+	featureViewFieldSingularName          = big.NewInt(1 << 17)
+	featureViewFieldTrait                 = big.NewInt(1 << 18)
+	featureViewFieldTraitID               = big.NewInt(1 << 19)
+	featureViewFieldUpdatedAt             = big.NewInt(1 << 20)
+	featureViewFieldUsageLimitTraitID     = big.NewInt(1 << 21)
 )
 
 type FeatureView struct {
@@ -24018,6 +24626,7 @@ type FeatureView struct {
 	BillingProduct        *BillingProductRecordResponseData  `json:"billing_product,omitempty" url:"billing_product,omitempty"`
 	CreatedAt             time.Time                          `json:"created_at" url:"created_at"`
 	Description           string                             `json:"description" url:"description"`
+	EventSource           FeatureEventSource                 `json:"event_source" url:"event_source"`
 	EventSubtype          *string                            `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
 	EventSummary          *EventSummaryResponseData          `json:"event_summary,omitempty" url:"event_summary,omitempty"`
 	FeatureType           FeatureType                        `json:"feature_type" url:"feature_type"`
@@ -24075,6 +24684,13 @@ func (f *FeatureView) GetDescription() string {
 		return ""
 	}
 	return f.Description
+}
+
+func (f *FeatureView) GetEventSource() FeatureEventSource {
+	if f == nil {
+		return ""
+	}
+	return f.EventSource
 }
 
 func (f *FeatureView) GetEventSubtype() *string {
@@ -24238,6 +24854,13 @@ func (f *FeatureView) SetCreatedAt(createdAt time.Time) {
 func (f *FeatureView) SetDescription(description string) {
 	f.Description = description
 	f.require(featureViewFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FeatureView) SetEventSource(eventSource FeatureEventSource) {
+	f.EventSource = eventSource
+	f.require(featureViewFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -25663,7 +26286,7 @@ type InvoiceRequestBody struct {
 	AmountPaid              int64          `json:"amount_paid" url:"amount_paid"`
 	AmountRemaining         int64          `json:"amount_remaining" url:"amount_remaining"`
 	CollectionMethod        string         `json:"collection_method" url:"collection_method"`
-	Currency                string         `json:"currency" url:"currency"`
+	Currency                Currency       `json:"currency" url:"currency"`
 	CustomerExternalID      string         `json:"customer_external_id" url:"customer_external_id"`
 	DueDate                 *time.Time     `json:"due_date,omitempty" url:"due_date,omitempty"`
 	EndingBalance           *int64         `json:"ending_balance,omitempty" url:"ending_balance,omitempty"`
@@ -25710,7 +26333,7 @@ func (i *InvoiceRequestBody) GetCollectionMethod() string {
 	return i.CollectionMethod
 }
 
-func (i *InvoiceRequestBody) GetCurrency() string {
+func (i *InvoiceRequestBody) GetCurrency() Currency {
 	if i == nil {
 		return ""
 	}
@@ -25833,7 +26456,7 @@ func (i *InvoiceRequestBody) SetCollectionMethod(collectionMethod string) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceRequestBody) SetCurrency(currency string) {
+func (i *InvoiceRequestBody) SetCurrency(currency Currency) {
 	i.Currency = currency
 	i.require(invoiceRequestBodyFieldCurrency)
 }
@@ -25990,7 +26613,7 @@ type InvoiceResponseData struct {
 	CollectionMethod        string              `json:"collection_method" url:"collection_method"`
 	CompanyID               *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt               time.Time           `json:"created_at" url:"created_at"`
-	Currency                string              `json:"currency" url:"currency"`
+	Currency                Currency            `json:"currency" url:"currency"`
 	CustomerExternalID      string              `json:"customer_external_id" url:"customer_external_id"`
 	DueDate                 *time.Time          `json:"due_date,omitempty" url:"due_date,omitempty"`
 	EndingBalance           int64               `json:"ending_balance" url:"ending_balance"`
@@ -26057,7 +26680,7 @@ func (i *InvoiceResponseData) GetCreatedAt() time.Time {
 	return i.CreatedAt
 }
 
-func (i *InvoiceResponseData) GetCurrency() string {
+func (i *InvoiceResponseData) GetCurrency() Currency {
 	if i == nil {
 		return ""
 	}
@@ -26229,7 +26852,7 @@ func (i *InvoiceResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InvoiceResponseData) SetCurrency(currency string) {
+func (i *InvoiceResponseData) SetCurrency(currency Currency) {
 	i.Currency = currency
 	i.require(invoiceResponseDataFieldCurrency)
 }
@@ -27257,7 +27880,7 @@ type PendingMigrationResponseData struct {
 	ProrationBehavior *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
 	// Deprecated; use effective_at, which carries the same value.
 	ScheduledFor *time.Time `json:"scheduled_for,omitempty" url:"scheduled_for,omitempty"`
-	// Whether the company moves at the end of its billing period (end_of_billing_period) or on a specific date (scheduled). The type is shared with plan version migrations, but only those two values appear here: an immediate migration never pends.
+	// Whether the company moves at the end of its billing period (end_of_billing_period) or on a specific date (scheduled). The type is shared with plan version migrations, but only those two values appear here: this view lists deferred migrations only, so an immediate migration is never shown, even while it is pending.
 	Strategy            PlanVersionMigrationStrategy `json:"strategy" url:"strategy"`
 	ToPlanID            string                       `json:"to_plan_id" url:"to_plan_id"`
 	ToPlanName          string                       `json:"to_plan_name" url:"to_plan_name"`
@@ -27470,12 +28093,15 @@ func (p *PendingMigrationResponseData) String() string {
 type PlanBillingSource string
 
 const (
+	PlanBillingSourceAmendment  PlanBillingSource = "amendment"
 	PlanBillingSourceCustomPlan PlanBillingSource = "custom_plan"
 	PlanBillingSourceManagePlan PlanBillingSource = "manage_plan"
 )
 
 func NewPlanBillingSourceFromString(s string) (PlanBillingSource, error) {
 	switch s {
+	case "amendment":
+		return PlanBillingSourceAmendment, nil
 	case "custom_plan":
 		return PlanBillingSourceCustomPlan, nil
 	case "manage_plan":
@@ -28413,11 +29039,11 @@ var (
 )
 
 type PlanCurrencyPriceRequestBody struct {
-	Currency       string `json:"currency" url:"currency"`
-	MonthlyPrice   *int64 `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
-	OneTimePrice   *int64 `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
-	QuarterlyPrice *int64 `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
-	YearlyPrice    *int64 `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+	Currency       Currency `json:"currency" url:"currency"`
+	MonthlyPrice   *int64   `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	OneTimePrice   *int64   `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	QuarterlyPrice *int64   `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	YearlyPrice    *int64   `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -28426,7 +29052,7 @@ type PlanCurrencyPriceRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (p *PlanCurrencyPriceRequestBody) GetCurrency() string {
+func (p *PlanCurrencyPriceRequestBody) GetCurrency() Currency {
 	if p == nil {
 		return ""
 	}
@@ -28479,7 +29105,7 @@ func (p *PlanCurrencyPriceRequestBody) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCurrencyPriceRequestBody) SetCurrency(currency string) {
+func (p *PlanCurrencyPriceRequestBody) SetCurrency(currency Currency) {
 	p.Currency = currency
 	p.require(planCurrencyPriceRequestBodyFieldCurrency)
 }
@@ -28563,7 +29189,7 @@ var (
 )
 
 type PlanCurrencyPricesResponseData struct {
-	Currency       string                    `json:"currency" url:"currency"`
+	Currency       Currency                  `json:"currency" url:"currency"`
 	MonthlyPrice   *BillingPriceResponseData `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
 	OneTimePrice   *BillingPriceResponseData `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
 	QuarterlyPrice *BillingPriceResponseData `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
@@ -28576,7 +29202,7 @@ type PlanCurrencyPricesResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (p *PlanCurrencyPricesResponseData) GetCurrency() string {
+func (p *PlanCurrencyPricesResponseData) GetCurrency() Currency {
 	if p == nil {
 		return ""
 	}
@@ -28629,7 +29255,7 @@ func (p *PlanCurrencyPricesResponseData) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PlanCurrencyPricesResponseData) SetCurrency(currency string) {
+func (p *PlanCurrencyPricesResponseData) SetCurrency(currency Currency) {
 	p.Currency = currency
 	p.require(planCurrencyPricesResponseDataFieldCurrency)
 }
@@ -29367,19 +29993,20 @@ var (
 	planEntitlementResponseDataFieldPlan                   = big.NewInt(1 << 16)
 	planEntitlementResponseDataFieldPlanID                 = big.NewInt(1 << 17)
 	planEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 18)
-	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 19)
-	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 20)
-	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 21)
-	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 22)
-	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 23)
-	planEntitlementResponseDataFieldUsageQuantity          = big.NewInt(1 << 24)
-	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 25)
-	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 26)
-	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 27)
-	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 28)
-	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 29)
-	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 30)
-	planEntitlementResponseDataFieldWarningTiers           = big.NewInt(1 << 31)
+	planEntitlementResponseDataFieldQuantityRates          = big.NewInt(1 << 19)
+	planEntitlementResponseDataFieldRuleID                 = big.NewInt(1 << 20)
+	planEntitlementResponseDataFieldRuleIDUsageExceeded    = big.NewInt(1 << 21)
+	planEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 22)
+	planEntitlementResponseDataFieldUpdatedAt              = big.NewInt(1 << 23)
+	planEntitlementResponseDataFieldUsageBasedProduct      = big.NewInt(1 << 24)
+	planEntitlementResponseDataFieldUsageQuantity          = big.NewInt(1 << 25)
+	planEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 26)
+	planEntitlementResponseDataFieldValueCredit            = big.NewInt(1 << 27)
+	planEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 28)
+	planEntitlementResponseDataFieldValueTrait             = big.NewInt(1 << 29)
+	planEntitlementResponseDataFieldValueTraitID           = big.NewInt(1 << 30)
+	planEntitlementResponseDataFieldValueType              = big.NewInt(1 << 31)
+	planEntitlementResponseDataFieldWarningTiers           = big.NewInt(1 << 32)
 )
 
 type PlanEntitlementResponseData struct {
@@ -29400,15 +30027,17 @@ type PlanEntitlementResponseData struct {
 	// How often overage charges are assessed and invoiced. Null or end_of_billing_period means the billing provider aggregates usage over the subscription's own period and bills it at period end. Monthly and quarterly mean Schematic assesses the overage each month or quarter and bills it on its own invoice. Only applies to overage price behavior.
 	OverageBillingCadence *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"overage_billing_cadence,omitempty"`
 	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end), which for a quarterly window means calendar quarters. Only meaningful when overage_billing_cadence is monthly or quarterly.
-	OverageInvoiceAnchor *BillingArrearsAnchor       `json:"overage_invoice_anchor,omitempty" url:"overage_invoice_anchor,omitempty"`
-	Plan                 *PlanResponseData           `json:"plan,omitempty" url:"plan,omitempty"`
-	PlanID               string                      `json:"plan_id" url:"plan_id"`
-	PriceBehavior        *EntitlementPriceBehavior   `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
-	RuleID               string                      `json:"rule_id" url:"rule_id"`
-	RuleIDUsageExceeded  *string                     `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
-	SoftLimit            *int64                      `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
-	UpdatedAt            time.Time                   `json:"updated_at" url:"updated_at"`
-	UsageBasedProduct    *BillingProductResponseData `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
+	OverageInvoiceAnchor *BillingArrearsAnchor     `json:"overage_invoice_anchor,omitempty" url:"overage_invoice_anchor,omitempty"`
+	Plan                 *PlanResponseData         `json:"plan,omitempty" url:"plan,omitempty"`
+	PlanID               string                    `json:"plan_id" url:"plan_id"`
+	PriceBehavior        *EntitlementPriceBehavior `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Absent when the entitlement prices requests only.
+	QuantityRates       map[string]float64          `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
+	RuleID              string                      `json:"rule_id" url:"rule_id"`
+	RuleIDUsageExceeded *string                     `json:"rule_id_usage_exceeded,omitempty" url:"rule_id_usage_exceeded,omitempty"`
+	SoftLimit           *int64                      `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	UpdatedAt           time.Time                   `json:"updated_at" url:"updated_at"`
+	UsageBasedProduct   *BillingProductResponseData `json:"usage_based_product,omitempty" url:"usage_based_product,omitempty"`
 	// The committed unit quantity for this entitlement. For custom plans this is the minimum the company is contractually committed to: the company can buy more, and finalizing a new plan version sets the subscription quantity to the larger of this value and what the subscription already holds. For standard plans it is the quantity pre-filled when subscribing. Only applies to pay-in-advance entitlements.
 	UsageQuantity *int64                             `json:"usage_quantity,omitempty" url:"usage_quantity,omitempty"`
 	ValueBool     *bool                              `json:"value_bool,omitempty" url:"value_bool,omitempty"`
@@ -29557,6 +30186,13 @@ func (p *PlanEntitlementResponseData) GetPriceBehavior() *EntitlementPriceBehavi
 		return nil
 	}
 	return p.PriceBehavior
+}
+
+func (p *PlanEntitlementResponseData) GetQuantityRates() map[string]float64 {
+	if p == nil {
+		return nil
+	}
+	return p.QuantityRates
 }
 
 func (p *PlanEntitlementResponseData) GetRuleID() string {
@@ -29797,6 +30433,13 @@ func (p *PlanEntitlementResponseData) SetPlanID(planID string) {
 func (p *PlanEntitlementResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
 	p.PriceBehavior = priceBehavior
 	p.require(planEntitlementResponseDataFieldPriceBehavior)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanEntitlementResponseData) SetQuantityRates(quantityRates map[string]float64) {
+	p.QuantityRates = quantityRates
+	p.require(planEntitlementResponseDataFieldQuantityRates)
 }
 
 // SetRuleID sets the RuleID field and marks it as non-optional;
@@ -35047,9 +35690,10 @@ var (
 	rulesengineConditionFieldMetricPeriodMonthReset    = big.NewInt(1 << 9)
 	rulesengineConditionFieldMetricValue               = big.NewInt(1 << 10)
 	rulesengineConditionFieldOperator                  = big.NewInt(1 << 11)
-	rulesengineConditionFieldResourceIDs               = big.NewInt(1 << 12)
-	rulesengineConditionFieldTraitDefinition           = big.NewInt(1 << 13)
-	rulesengineConditionFieldTraitValue                = big.NewInt(1 << 14)
+	rulesengineConditionFieldQuantityRates             = big.NewInt(1 << 12)
+	rulesengineConditionFieldResourceIDs               = big.NewInt(1 << 13)
+	rulesengineConditionFieldTraitDefinition           = big.NewInt(1 << 14)
+	rulesengineConditionFieldTraitValue                = big.NewInt(1 << 15)
 )
 
 type RulesengineCondition struct {
@@ -35065,6 +35709,7 @@ type RulesengineCondition struct {
 	MetricPeriodMonthReset    *RulesengineMetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
 	MetricValue               *int64                             `json:"metric_value,omitempty" url:"metric_value,omitempty"`
 	Operator                  RulesengineComparableOperator      `json:"operator" url:"operator"`
+	QuantityRates             map[string]float64                 `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	ResourceIDs               []string                           `json:"resource_ids" url:"resource_ids"`
 	TraitDefinition           *RulesengineTraitDefinition        `json:"trait_definition,omitempty" url:"trait_definition,omitempty"`
 	TraitValue                string                             `json:"trait_value" url:"trait_value"`
@@ -35158,6 +35803,13 @@ func (r *RulesengineCondition) GetOperator() RulesengineComparableOperator {
 		return ""
 	}
 	return r.Operator
+}
+
+func (r *RulesengineCondition) GetQuantityRates() map[string]float64 {
+	if r == nil {
+		return nil
+	}
+	return r.QuantityRates
 }
 
 func (r *RulesengineCondition) GetResourceIDs() []string {
@@ -35279,6 +35931,13 @@ func (r *RulesengineCondition) SetMetricValue(metricValue *int64) {
 func (r *RulesengineCondition) SetOperator(operator RulesengineComparableOperator) {
 	r.Operator = operator
 	r.require(rulesengineConditionFieldOperator)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCondition) SetQuantityRates(quantityRates map[string]float64) {
+	r.QuantityRates = quantityRates
+	r.require(rulesengineConditionFieldQuantityRates)
 }
 
 // SetResourceIDs sets the ResourceIDs field and marks it as non-optional;
@@ -35991,10 +36650,11 @@ var (
 	rulesengineFeatureEntitlementFieldMetricPeriod    = big.NewInt(1 << 12)
 	rulesengineFeatureEntitlementFieldMetricResetAt   = big.NewInt(1 << 13)
 	rulesengineFeatureEntitlementFieldMonthReset      = big.NewInt(1 << 14)
-	rulesengineFeatureEntitlementFieldSoftLimit       = big.NewInt(1 << 15)
-	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 16)
-	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 17)
-	rulesengineFeatureEntitlementFieldWarningTiers    = big.NewInt(1 << 18)
+	rulesengineFeatureEntitlementFieldQuantityRates   = big.NewInt(1 << 15)
+	rulesengineFeatureEntitlementFieldSoftLimit       = big.NewInt(1 << 16)
+	rulesengineFeatureEntitlementFieldUsage           = big.NewInt(1 << 17)
+	rulesengineFeatureEntitlementFieldValueType       = big.NewInt(1 << 18)
+	rulesengineFeatureEntitlementFieldWarningTiers    = big.NewInt(1 << 19)
 )
 
 type RulesengineFeatureEntitlement struct {
@@ -36028,6 +36688,8 @@ type RulesengineFeatureEntitlement struct {
 	MetricResetAt *time.Time `json:"metric_reset_at,omitempty" url:"metric_reset_at,omitempty"`
 	// For event-based feature entitlements that have a monthly period, whether that monthly reset is based on the calendar month or a billing cycle
 	MonthReset *RulesengineMetricPeriodMonthReset `json:"month_reset,omitempty" url:"month_reset,omitempty"`
+	// If the company has a credit-based entitlement for this feature, the credit cost per unit of each quantity an event carries, keyed by quantity key (per token for inference features). Absent when the entitlement prices requests only
+	QuantityRates map[string]float64 `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
 	// For usage-based pricing, the soft limit for overage charges or the next tier boundary
 	SoftLimit *int64 `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
 	// If the company has a numeric entitlement for this feature, the current usage amount
@@ -36147,6 +36809,13 @@ func (r *RulesengineFeatureEntitlement) GetMonthReset() *RulesengineMetricPeriod
 		return nil
 	}
 	return r.MonthReset
+}
+
+func (r *RulesengineFeatureEntitlement) GetQuantityRates() map[string]float64 {
+	if r == nil {
+		return nil
+	}
+	return r.QuantityRates
 }
 
 func (r *RulesengineFeatureEntitlement) GetSoftLimit() *int64 {
@@ -36296,6 +36965,13 @@ func (r *RulesengineFeatureEntitlement) SetMetricResetAt(metricResetAt *time.Tim
 func (r *RulesengineFeatureEntitlement) SetMonthReset(monthReset *RulesengineMetricPeriodMonthReset) {
 	r.MonthReset = monthReset
 	r.require(rulesengineFeatureEntitlementFieldMonthReset)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineFeatureEntitlement) SetQuantityRates(quantityRates map[string]float64) {
+	r.QuantityRates = quantityRates
+	r.require(rulesengineFeatureEntitlementFieldQuantityRates)
 }
 
 // SetSoftLimit sets the SoftLimit field and marks it as non-optional;
@@ -37538,7 +38214,7 @@ var (
 )
 
 type ScheduledDowngradeResponseData struct {
-	Currency              string    `json:"currency" url:"currency"`
+	Currency              Currency  `json:"currency" url:"currency"`
 	EffectiveAfter        time.Time `json:"effective_after" url:"effective_after"`
 	FromPlanID            string    `json:"from_plan_id" url:"from_plan_id"`
 	FromPlanName          string    `json:"from_plan_name" url:"from_plan_name"`
@@ -37557,7 +38233,7 @@ type ScheduledDowngradeResponseData struct {
 	rawJSON         json.RawMessage
 }
 
-func (s *ScheduledDowngradeResponseData) GetCurrency() string {
+func (s *ScheduledDowngradeResponseData) GetCurrency() Currency {
 	if s == nil {
 		return ""
 	}
@@ -37652,7 +38328,7 @@ func (s *ScheduledDowngradeResponseData) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (s *ScheduledDowngradeResponseData) SetCurrency(currency string) {
+func (s *ScheduledDowngradeResponseData) SetCurrency(currency Currency) {
 	s.Currency = currency
 	s.require(scheduledDowngradeResponseDataFieldCurrency)
 }
@@ -39098,22 +39774,25 @@ var (
 	updateEntitlementReqCommonFieldCreditConsumptionRate  = big.NewInt(1 << 0)
 	updateEntitlementReqCommonFieldMetricPeriod           = big.NewInt(1 << 1)
 	updateEntitlementReqCommonFieldMetricPeriodMonthReset = big.NewInt(1 << 2)
-	updateEntitlementReqCommonFieldValueBool              = big.NewInt(1 << 3)
-	updateEntitlementReqCommonFieldValueCreditID          = big.NewInt(1 << 4)
-	updateEntitlementReqCommonFieldValueNumeric           = big.NewInt(1 << 5)
-	updateEntitlementReqCommonFieldValueTraitID           = big.NewInt(1 << 6)
-	updateEntitlementReqCommonFieldValueType              = big.NewInt(1 << 7)
+	updateEntitlementReqCommonFieldQuantityRates          = big.NewInt(1 << 3)
+	updateEntitlementReqCommonFieldValueBool              = big.NewInt(1 << 4)
+	updateEntitlementReqCommonFieldValueCreditID          = big.NewInt(1 << 5)
+	updateEntitlementReqCommonFieldValueNumeric           = big.NewInt(1 << 6)
+	updateEntitlementReqCommonFieldValueTraitID           = big.NewInt(1 << 7)
+	updateEntitlementReqCommonFieldValueType              = big.NewInt(1 << 8)
 )
 
 type UpdateEntitlementReqCommon struct {
 	CreditConsumptionRate  *float64                `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
 	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"metric_period,omitempty"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
-	ValueBool              *bool                   `json:"value_bool,omitempty" url:"value_bool,omitempty"`
-	ValueCreditID          *string                 `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
-	ValueNumeric           *int64                  `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
-	ValueTraitID           *string                 `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
-	ValueType              EntitlementValueType    `json:"value_type" url:"value_type"`
+	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
+	QuantityRates map[string]float64   `json:"quantity_rates,omitempty" url:"quantity_rates,omitempty"`
+	ValueBool     *bool                `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueCreditID *string              `json:"value_credit_id,omitempty" url:"value_credit_id,omitempty"`
+	ValueNumeric  *int64               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueTraitID  *string              `json:"value_trait_id,omitempty" url:"value_trait_id,omitempty"`
+	ValueType     EntitlementValueType `json:"value_type" url:"value_type"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -39141,6 +39820,13 @@ func (u *UpdateEntitlementReqCommon) GetMetricPeriodMonthReset() *MetricPeriodMo
 		return nil
 	}
 	return u.MetricPeriodMonthReset
+}
+
+func (u *UpdateEntitlementReqCommon) GetQuantityRates() map[string]float64 {
+	if u == nil {
+		return nil
+	}
+	return u.QuantityRates
 }
 
 func (u *UpdateEntitlementReqCommon) GetValueBool() *bool {
@@ -39213,6 +39899,13 @@ func (u *UpdateEntitlementReqCommon) SetMetricPeriod(metricPeriod *MetricPeriod)
 func (u *UpdateEntitlementReqCommon) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	u.MetricPeriodMonthReset = metricPeriodMonthReset
 	u.require(updateEntitlementReqCommonFieldMetricPeriodMonthReset)
+}
+
+// SetQuantityRates sets the QuantityRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateEntitlementReqCommon) SetQuantityRates(quantityRates map[string]float64) {
+	u.QuantityRates = quantityRates
+	u.require(updateEntitlementReqCommonFieldQuantityRates)
 }
 
 // SetValueBool sets the ValueBool field and marks it as non-optional;
@@ -39582,7 +40275,7 @@ type UpsertBillingProductRequestBody struct {
 	BillingProductID *string                         `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
 	BillingStrategy  *BillingStrategy                `json:"billing_strategy,omitempty" url:"billing_strategy,omitempty"`
 	ChargeType       ChargeType                      `json:"charge_type" url:"charge_type"`
-	Currency         *string                         `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency         *Currency                       `json:"currency,omitempty" url:"currency,omitempty"`
 	CurrencyPrices   []*PlanCurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
 	IsTrialable      bool                            `json:"is_trialable" url:"is_trialable"`
 	MonthlyPrice     *int64                          `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
@@ -39623,7 +40316,7 @@ func (u *UpsertBillingProductRequestBody) GetChargeType() ChargeType {
 	return u.ChargeType
 }
 
-func (u *UpsertBillingProductRequestBody) GetCurrency() *string {
+func (u *UpsertBillingProductRequestBody) GetCurrency() *Currency {
 	if u == nil {
 		return nil
 	}
@@ -39746,7 +40439,7 @@ func (u *UpsertBillingProductRequestBody) SetChargeType(chargeType ChargeType) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpsertBillingProductRequestBody) SetCurrency(currency *string) {
+func (u *UpsertBillingProductRequestBody) SetCurrency(currency *Currency) {
 	u.Currency = currency
 	u.require(upsertBillingProductRequestBodyFieldCurrency)
 }
@@ -40128,7 +40821,7 @@ var (
 type UsageBasedEntitlementRequestBody struct {
 	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
 	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
-	Currency                *string                       `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency                *Currency                     `json:"currency,omitempty" url:"currency,omitempty"`
 	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"monthly_metered_price_id,omitempty"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
@@ -40176,7 +40869,7 @@ func (u *UsageBasedEntitlementRequestBody) GetBillingThreshold() *int64 {
 	return u.BillingThreshold
 }
 
-func (u *UsageBasedEntitlementRequestBody) GetCurrency() *string {
+func (u *UsageBasedEntitlementRequestBody) GetCurrency() *Currency {
 	if u == nil {
 		return nil
 	}
@@ -40362,7 +41055,7 @@ func (u *UsageBasedEntitlementRequestBody) SetBillingThreshold(billingThreshold 
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UsageBasedEntitlementRequestBody) SetCurrency(currency *string) {
+func (u *UsageBasedEntitlementRequestBody) SetCurrency(currency *Currency) {
 	u.Currency = currency
 	u.require(usageBasedEntitlementRequestBodyFieldCurrency)
 }

@@ -689,7 +689,7 @@ var (
 type BillingProductPriceResponseData struct {
 	BillingScheme     BillingPriceScheme          `json:"billing_scheme" url:"billing_scheme"`
 	CreatedAt         time.Time                   `json:"created_at" url:"created_at"`
-	Currency          string                      `json:"currency" url:"currency"`
+	Currency          Currency                    `json:"currency" url:"currency"`
 	ID                string                      `json:"id" url:"id"`
 	Interval          BillingProductPriceInterval `json:"interval" url:"interval"`
 	IntervalCount     int64                       `json:"interval_count" url:"interval_count"`
@@ -727,7 +727,7 @@ func (b *BillingProductPriceResponseData) GetCreatedAt() time.Time {
 	return b.CreatedAt
 }
 
-func (b *BillingProductPriceResponseData) GetCurrency() string {
+func (b *BillingProductPriceResponseData) GetCurrency() Currency {
 	if b == nil {
 		return ""
 	}
@@ -871,7 +871,7 @@ func (b *BillingProductPriceResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (b *BillingProductPriceResponseData) SetCurrency(currency string) {
+func (b *BillingProductPriceResponseData) SetCurrency(currency Currency) {
 	b.Currency = currency
 	b.require(billingProductPriceResponseDataFieldCurrency)
 }
@@ -2836,7 +2836,7 @@ var (
 )
 
 type CreditBundleCurrencyPrice struct {
-	Currency string            `json:"currency" url:"currency"`
+	Currency Currency          `json:"currency" url:"currency"`
 	Price    *BillingPriceView `json:"price,omitempty" url:"price,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -2846,7 +2846,7 @@ type CreditBundleCurrencyPrice struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreditBundleCurrencyPrice) GetCurrency() string {
+func (c *CreditBundleCurrencyPrice) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -2878,7 +2878,7 @@ func (c *CreditBundleCurrencyPrice) require(field *big.Int) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditBundleCurrencyPrice) SetCurrency(currency string) {
+func (c *CreditBundleCurrencyPrice) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(creditBundleCurrencyPriceFieldCurrency)
 }
@@ -2990,7 +2990,7 @@ type CreditCompanyGrantView struct {
 	CreditDescription      string                              `json:"credit_description" url:"credit_description"`
 	CreditIcon             *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
 	CreditName             string                              `json:"credit_name" url:"credit_name"`
-	Currency               *string                             `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency               *Currency                           `json:"currency,omitempty" url:"currency,omitempty"`
 	ExhaustedAt            *time.Time                          `json:"exhausted_at,omitempty" url:"exhausted_at,omitempty"`
 	ExpiresAt              *time.Time                          `json:"expires_at,omitempty" url:"expires_at,omitempty"`
 	ExpiryType             *BillingCreditExpiryType            `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
@@ -3003,7 +3003,7 @@ type CreditCompanyGrantView struct {
 	PlanName               *string                             `json:"plan_name,omitempty" url:"plan_name,omitempty"`
 	PluralName             *string                             `json:"plural_name,omitempty" url:"plural_name,omitempty"`
 	PostpaidChargeAmount   *int64                              `json:"postpaid_charge_amount,omitempty" url:"postpaid_charge_amount,omitempty"`
-	PostpaidChargeCurrency *string                             `json:"postpaid_charge_currency,omitempty" url:"postpaid_charge_currency,omitempty"`
+	PostpaidChargeCurrency *Currency                           `json:"postpaid_charge_currency,omitempty" url:"postpaid_charge_currency,omitempty"`
 	PostpaidChargedCredits *float64                            `json:"postpaid_charged_credits,omitempty" url:"postpaid_charged_credits,omitempty"`
 	PostpaidPeriodEnd      *time.Time                          `json:"postpaid_period_end,omitempty" url:"postpaid_period_end,omitempty"`
 	PostpaidRate           *int64                              `json:"postpaid_rate,omitempty" url:"postpaid_rate,omitempty"`
@@ -3102,7 +3102,7 @@ func (c *CreditCompanyGrantView) GetCreditName() string {
 	return c.CreditName
 }
 
-func (c *CreditCompanyGrantView) GetCurrency() *string {
+func (c *CreditCompanyGrantView) GetCurrency() *Currency {
 	if c == nil {
 		return nil
 	}
@@ -3193,7 +3193,7 @@ func (c *CreditCompanyGrantView) GetPostpaidChargeAmount() *int64 {
 	return c.PostpaidChargeAmount
 }
 
-func (c *CreditCompanyGrantView) GetPostpaidChargeCurrency() *string {
+func (c *CreditCompanyGrantView) GetPostpaidChargeCurrency() *Currency {
 	if c == nil {
 		return nil
 	}
@@ -3428,7 +3428,7 @@ func (c *CreditCompanyGrantView) SetCreditName(creditName string) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetCurrency(currency *string) {
+func (c *CreditCompanyGrantView) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(creditCompanyGrantViewFieldCurrency)
 }
@@ -3519,7 +3519,7 @@ func (c *CreditCompanyGrantView) SetPostpaidChargeAmount(postpaidChargeAmount *i
 
 // SetPostpaidChargeCurrency sets the PostpaidChargeCurrency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreditCompanyGrantView) SetPostpaidChargeCurrency(postpaidChargeCurrency *string) {
+func (c *CreditCompanyGrantView) SetPostpaidChargeCurrency(postpaidChargeCurrency *Currency) {
 	c.PostpaidChargeCurrency = postpaidChargeCurrency
 	c.require(creditCompanyGrantViewFieldPostpaidChargeCurrency)
 }
@@ -3920,7 +3920,7 @@ var (
 
 type EstimatedPlanTotal struct {
 	Amount   int64            `json:"amount" url:"amount"`
-	Currency string           `json:"currency" url:"currency"`
+	Currency Currency         `json:"currency" url:"currency"`
 	Period   PlanPriceCadence `json:"period" url:"period"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -3937,7 +3937,7 @@ func (e *EstimatedPlanTotal) GetAmount() int64 {
 	return e.Amount
 }
 
-func (e *EstimatedPlanTotal) GetCurrency() string {
+func (e *EstimatedPlanTotal) GetCurrency() Currency {
 	if e == nil {
 		return ""
 	}
@@ -3976,7 +3976,7 @@ func (e *EstimatedPlanTotal) SetAmount(amount int64) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (e *EstimatedPlanTotal) SetCurrency(currency string) {
+func (e *EstimatedPlanTotal) SetCurrency(currency Currency) {
 	e.Currency = currency
 	e.require(estimatedPlanTotalFieldCurrency)
 }
@@ -4195,7 +4195,7 @@ type UpcomingInvoiceResponseData struct {
 	CollectionMethod        string              `json:"collection_method" url:"collection_method"`
 	CompanyID               *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CreatedAt               time.Time           `json:"created_at" url:"created_at"`
-	Currency                string              `json:"currency" url:"currency"`
+	Currency                Currency            `json:"currency" url:"currency"`
 	CustomerExternalID      string              `json:"customer_external_id" url:"customer_external_id"`
 	DueDate                 *time.Time          `json:"due_date,omitempty" url:"due_date,omitempty"`
 	EndingBalance           int64               `json:"ending_balance" url:"ending_balance"`
@@ -4261,7 +4261,7 @@ func (u *UpcomingInvoiceResponseData) GetCreatedAt() time.Time {
 	return u.CreatedAt
 }
 
-func (u *UpcomingInvoiceResponseData) GetCurrency() string {
+func (u *UpcomingInvoiceResponseData) GetCurrency() Currency {
 	if u == nil {
 		return ""
 	}
@@ -4426,7 +4426,7 @@ func (u *UpcomingInvoiceResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (u *UpcomingInvoiceResponseData) SetCurrency(currency string) {
+func (u *UpcomingInvoiceResponseData) SetCurrency(currency Currency) {
 	u.Currency = currency
 	u.require(upcomingInvoiceResponseDataFieldCurrency)
 }
@@ -4690,13 +4690,13 @@ func (b *BindCatalogResponse) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-// Input parameters
 var (
 	countComponentsParamsFieldLimit  = big.NewInt(1 << 0)
 	countComponentsParamsFieldOffset = big.NewInt(1 << 1)
 	countComponentsParamsFieldQ      = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type CountComponentsParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
@@ -5223,13 +5223,13 @@ func (g *GetComponentResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listComponentsParamsFieldLimit  = big.NewInt(1 << 0)
 	listComponentsParamsFieldOffset = big.NewInt(1 << 1)
 	listComponentsParamsFieldQ      = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type ListComponentsParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
@@ -5447,12 +5447,12 @@ func (l *ListComponentsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	previewComponentDataParamsFieldCompanyID   = big.NewInt(1 << 0)
 	previewComponentDataParamsFieldComponentID = big.NewInt(1 << 1)
 )
 
+// Input parameters
 type PreviewComponentDataParams struct {
 	CompanyID   *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	ComponentID *string `json:"component_id,omitempty" url:"component_id,omitempty"`

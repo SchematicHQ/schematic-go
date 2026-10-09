@@ -1876,7 +1876,7 @@ func TestSettersBillingProductPriceResponseData(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &BillingProductPriceResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -2055,7 +2055,7 @@ func TestGettersBillingProductPriceResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &BillingProductPriceResponseData{}
-		var expected string
+		var expected Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -2528,7 +2528,7 @@ func TestSettersMarkExplicitBillingProductPriceResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &BillingProductPriceResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
@@ -9109,7 +9109,7 @@ func TestSettersMarkExplicitComponentResponseData(t *testing.T) {
 func TestSettersCreditBundleCurrencyPrice(t *testing.T) {
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &CreditBundleCurrencyPrice{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -9130,7 +9130,7 @@ func TestGettersCreditBundleCurrencyPrice(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditBundleCurrencyPrice{}
-		var expected string
+		var expected Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -9189,7 +9189,7 @@ func TestSettersMarkExplicitCreditBundleCurrencyPrice(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditBundleCurrencyPrice{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
@@ -9332,7 +9332,7 @@ func TestSettersCreditCompanyGrantView(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &CreditCompanyGrantView{}
-		var fernTestValueCurrency *string
+		var fernTestValueCurrency *Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -9436,7 +9436,7 @@ func TestSettersCreditCompanyGrantView(t *testing.T) {
 
 	t.Run("SetPostpaidChargeCurrency", func(t *testing.T) {
 		obj := &CreditCompanyGrantView{}
-		var fernTestValuePostpaidChargeCurrency *string
+		var fernTestValuePostpaidChargeCurrency *Currency
 		obj.SetPostpaidChargeCurrency(fernTestValuePostpaidChargeCurrency)
 		assert.Equal(t, fernTestValuePostpaidChargeCurrency, obj.PostpaidChargeCurrency)
 		assert.NotNil(t, obj.explicitFields)
@@ -9879,7 +9879,7 @@ func TestGettersCreditCompanyGrantView(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditCompanyGrantView{}
-		var expected *string
+		var expected *Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -10288,7 +10288,7 @@ func TestGettersCreditCompanyGrantView(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditCompanyGrantView{}
-		var expected *string
+		var expected *Currency
 		obj.PostpaidChargeCurrency = expected
 
 		// Act & Assert
@@ -11234,7 +11234,7 @@ func TestSettersMarkExplicitCreditCompanyGrantView(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditCompanyGrantView{}
-		var fernTestValueCurrency *string
+		var fernTestValueCurrency *Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
@@ -11637,7 +11637,7 @@ func TestSettersMarkExplicitCreditCompanyGrantView(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &CreditCompanyGrantView{}
-		var fernTestValuePostpaidChargeCurrency *string
+		var fernTestValuePostpaidChargeCurrency *Currency
 
 		// Act
 		obj.SetPostpaidChargeCurrency(fernTestValuePostpaidChargeCurrency)
@@ -12678,7 +12678,7 @@ func TestSettersEstimatedPlanTotal(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &EstimatedPlanTotal{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -12722,7 +12722,7 @@ func TestGettersEstimatedPlanTotal(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &EstimatedPlanTotal{}
-		var expected string
+		var expected Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -12802,7 +12802,7 @@ func TestSettersMarkExplicitEstimatedPlanTotal(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &EstimatedPlanTotal{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)
@@ -13200,7 +13200,7 @@ func TestSettersUpcomingInvoiceResponseData(t *testing.T) {
 
 	t.Run("SetCurrency", func(t *testing.T) {
 		obj := &UpcomingInvoiceResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 		obj.SetCurrency(fernTestValueCurrency)
 		assert.Equal(t, fernTestValueCurrency, obj.Currency)
 		assert.NotNil(t, obj.explicitFields)
@@ -13473,7 +13473,7 @@ func TestGettersUpcomingInvoiceResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpcomingInvoiceResponseData{}
-		var expected string
+		var expected Currency
 		obj.Currency = expected
 
 		// Act & Assert
@@ -14077,7 +14077,7 @@ func TestSettersMarkExplicitUpcomingInvoiceResponseData(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &UpcomingInvoiceResponseData{}
-		var fernTestValueCurrency string
+		var fernTestValueCurrency Currency
 
 		// Act
 		obj.SetCurrency(fernTestValueCurrency)

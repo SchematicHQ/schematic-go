@@ -31,6 +31,13 @@ func (b *BadRequestError) Unwrap() error {
 	return b.APIError
 }
 
+func (b *BadRequestError) GetBody() *APIError {
+	if b == nil {
+		return nil
+	}
+	return b.Body
+}
+
 // Forbidden
 type ForbiddenError struct {
 	*core.APIError
@@ -53,6 +60,13 @@ func (f *ForbiddenError) MarshalJSON() ([]byte, error) {
 
 func (f *ForbiddenError) Unwrap() error {
 	return f.APIError
+}
+
+func (f *ForbiddenError) GetBody() *APIError {
+	if f == nil {
+		return nil
+	}
+	return f.Body
 }
 
 // Server error
@@ -79,6 +93,13 @@ func (i *InternalServerError) Unwrap() error {
 	return i.APIError
 }
 
+func (i *InternalServerError) GetBody() *APIError {
+	if i == nil {
+		return nil
+	}
+	return i.Body
+}
+
 // Not found
 type NotFoundError struct {
 	*core.APIError
@@ -101,6 +122,13 @@ func (n *NotFoundError) MarshalJSON() ([]byte, error) {
 
 func (n *NotFoundError) Unwrap() error {
 	return n.APIError
+}
+
+func (n *NotFoundError) GetBody() *APIError {
+	if n == nil {
+		return nil
+	}
+	return n.Body
 }
 
 // Payment required
@@ -127,6 +155,13 @@ func (p *PaymentRequiredError) Unwrap() error {
 	return p.APIError
 }
 
+func (p *PaymentRequiredError) GetBody() *APIError {
+	if p == nil {
+		return nil
+	}
+	return p.Body
+}
+
 // Unauthorized
 type UnauthorizedError struct {
 	*core.APIError
@@ -149,4 +184,11 @@ func (u *UnauthorizedError) MarshalJSON() ([]byte, error) {
 
 func (u *UnauthorizedError) Unwrap() error {
 	return u.APIError
+}
+
+func (u *UnauthorizedError) GetBody() *APIError {
+	if u == nil {
+		return nil
+	}
+	return u.Body
 }

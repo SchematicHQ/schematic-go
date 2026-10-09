@@ -87,12 +87,18 @@ func (c *CheckAndReserveFlagRequestBody) SetUser(user map[string]string) {
 }
 
 func (c *CheckAndReserveFlagRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler CheckAndReserveFlagRequestBody
-	var body unmarshaler
+	type embed CheckAndReserveFlagRequestBody
+	var body = struct {
+		embed
+		ExpiresAt *internal.DateTime `json:"expires_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*c = CheckAndReserveFlagRequestBody(body)
+	*c = CheckAndReserveFlagRequestBody(body.embed)
+	c.ExpiresAt = body.ExpiresAt.TimePtr()
 	return nil
 }
 
@@ -342,20 +348,23 @@ func (c *CountFlagsRequest) SetOffset(offset *int64) {
 
 var (
 	createFeatureRequestBodyFieldDescription               = big.NewInt(1 << 0)
-	createFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 1)
-	createFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 2)
-	createFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 3)
-	createFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 4)
-	createFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 5)
-	createFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 6)
-	createFeatureRequestBodyFieldName                      = big.NewInt(1 << 7)
-	createFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 8)
-	createFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 9)
-	createFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 10)
+	createFeatureRequestBodyFieldEventSource               = big.NewInt(1 << 1)
+	createFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 2)
+	createFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 3)
+	createFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 4)
+	createFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 5)
+	createFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 6)
+	createFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 7)
+	createFeatureRequestBodyFieldName                      = big.NewInt(1 << 8)
+	createFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 9)
+	createFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 10)
+	createFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 11)
 )
 
 type CreateFeatureRequestBody struct {
-	Description               string                         `json:"description" url:"-"`
+	Description string `json:"description" url:"-"`
+	// Which event stream meters this feature; defaults to track, and cannot change after creation. Inference is only valid on event features: their event_subtype matches the event label on inference events, and they meter through credits only.
+	EventSource               *FeatureEventSource            `json:"event_source,omitempty" url:"-"`
 	EventSubtype              *string                        `json:"event_subtype,omitempty" url:"-"`
 	FeatureType               FeatureType                    `json:"feature_type" url:"-"`
 	Flag                      *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
@@ -385,6 +394,13 @@ func (c *CreateFeatureRequestBody) require(field *big.Int) {
 func (c *CreateFeatureRequestBody) SetDescription(description string) {
 	c.Description = description
 	c.require(createFeatureRequestBodyFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateFeatureRequestBody) SetEventSource(eventSource *FeatureEventSource) {
+	c.EventSource = eventSource
+	c.require(createFeatureRequestBodyFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -4422,7 +4438,6 @@ func (c *CheckFlagsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countFeaturesParamsFieldBooleanRequireEvent       = big.NewInt(1 << 0)
 	countFeaturesParamsFieldFeatureType               = big.NewInt(1 << 1)
@@ -4436,6 +4451,7 @@ var (
 	countFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 9)
 )
 
+// Input parameters
 type CountFeaturesParams struct {
 	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
 	BooleanRequireEvent *bool `json:"boolean_require_event,omitempty" url:"boolean_require_event,omitempty"`
@@ -4765,7 +4781,6 @@ func (c *CountFeaturesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countFlagsParamsFieldFeatureID = big.NewInt(1 << 0)
 	countFlagsParamsFieldIDs       = big.NewInt(1 << 1)
@@ -4774,6 +4789,7 @@ var (
 	countFlagsParamsFieldQ         = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type CountFlagsParams struct {
 	FeatureID *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	IDs       []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -5640,7 +5656,6 @@ func (g *GetFlagResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listFeaturesParamsFieldBooleanRequireEvent       = big.NewInt(1 << 0)
 	listFeaturesParamsFieldFeatureType               = big.NewInt(1 << 1)
@@ -5654,6 +5669,7 @@ var (
 	listFeaturesParamsFieldWithoutPlanEntitlementFor = big.NewInt(1 << 9)
 )
 
+// Input parameters
 type ListFeaturesParams struct {
 	// Only return boolean features if there is an associated event. Automatically includes boolean in the feature types filter.
 	BooleanRequireEvent *bool `json:"boolean_require_event,omitempty" url:"boolean_require_event,omitempty"`
@@ -5983,7 +5999,6 @@ func (l *ListFeaturesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listFlagsParamsFieldFeatureID = big.NewInt(1 << 0)
 	listFlagsParamsFieldIDs       = big.NewInt(1 << 1)
@@ -5992,6 +6007,7 @@ var (
 	listFlagsParamsFieldQ         = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type ListFlagsParams struct {
 	FeatureID *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	IDs       []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -6654,20 +6670,23 @@ func (u *UpsertFeatureForBillingProductResponse) String() string {
 
 var (
 	updateFeatureRequestBodyFieldDescription               = big.NewInt(1 << 0)
-	updateFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 1)
-	updateFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 2)
-	updateFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 3)
-	updateFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 4)
-	updateFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 5)
-	updateFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 6)
-	updateFeatureRequestBodyFieldName                      = big.NewInt(1 << 7)
-	updateFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 8)
-	updateFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 9)
-	updateFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 10)
+	updateFeatureRequestBodyFieldEventSource               = big.NewInt(1 << 1)
+	updateFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 2)
+	updateFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 3)
+	updateFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 4)
+	updateFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 5)
+	updateFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 6)
+	updateFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 7)
+	updateFeatureRequestBodyFieldName                      = big.NewInt(1 << 8)
+	updateFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 9)
+	updateFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 10)
+	updateFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 11)
 )
 
 type UpdateFeatureRequestBody struct {
-	Description               *string                        `json:"description,omitempty" url:"-"`
+	Description *string `json:"description,omitempty" url:"-"`
+	// Which event stream meters this feature. It is fixed at creation: an update that changes it is rejected.
+	EventSource               *FeatureEventSource            `json:"event_source,omitempty" url:"-"`
 	EventSubtype              *string                        `json:"event_subtype,omitempty" url:"-"`
 	FeatureType               *FeatureType                   `json:"feature_type,omitempty" url:"-"`
 	Flag                      *CreateOrUpdateFlagRequestBody `json:"flag,omitempty" url:"-"`
@@ -6697,6 +6716,13 @@ func (u *UpdateFeatureRequestBody) require(field *big.Int) {
 func (u *UpdateFeatureRequestBody) SetDescription(description *string) {
 	u.Description = description
 	u.require(updateFeatureRequestBodyFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateFeatureRequestBody) SetEventSource(eventSource *FeatureEventSource) {
+	u.EventSource = eventSource
+	u.require(updateFeatureRequestBodyFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;
@@ -6841,22 +6867,25 @@ func (u *UpdateFlagRulesRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	createBillingLinkedFeatureRequestBodyFieldBillingProvider           = big.NewInt(1 << 0)
 	createBillingLinkedFeatureRequestBodyFieldDescription               = big.NewInt(1 << 1)
-	createBillingLinkedFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 2)
-	createBillingLinkedFeatureRequestBodyFieldExternalResourceID        = big.NewInt(1 << 3)
-	createBillingLinkedFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 4)
-	createBillingLinkedFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 5)
-	createBillingLinkedFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 6)
-	createBillingLinkedFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 7)
-	createBillingLinkedFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 8)
-	createBillingLinkedFeatureRequestBodyFieldName                      = big.NewInt(1 << 9)
-	createBillingLinkedFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 10)
-	createBillingLinkedFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 11)
-	createBillingLinkedFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 12)
+	createBillingLinkedFeatureRequestBodyFieldEventSource               = big.NewInt(1 << 2)
+	createBillingLinkedFeatureRequestBodyFieldEventSubtype              = big.NewInt(1 << 3)
+	createBillingLinkedFeatureRequestBodyFieldExternalResourceID        = big.NewInt(1 << 4)
+	createBillingLinkedFeatureRequestBodyFieldFeatureType               = big.NewInt(1 << 5)
+	createBillingLinkedFeatureRequestBodyFieldFlag                      = big.NewInt(1 << 6)
+	createBillingLinkedFeatureRequestBodyFieldIcon                      = big.NewInt(1 << 7)
+	createBillingLinkedFeatureRequestBodyFieldLifecyclePhase            = big.NewInt(1 << 8)
+	createBillingLinkedFeatureRequestBodyFieldMaintainerAccountMemberID = big.NewInt(1 << 9)
+	createBillingLinkedFeatureRequestBodyFieldName                      = big.NewInt(1 << 10)
+	createBillingLinkedFeatureRequestBodyFieldPluralName                = big.NewInt(1 << 11)
+	createBillingLinkedFeatureRequestBodyFieldSingularName              = big.NewInt(1 << 12)
+	createBillingLinkedFeatureRequestBodyFieldTraitID                   = big.NewInt(1 << 13)
 )
 
 type CreateBillingLinkedFeatureRequestBody struct {
-	BillingProvider           BillingProviderType            `json:"billing_provider" url:"-"`
-	Description               string                         `json:"description" url:"-"`
+	BillingProvider BillingProviderType `json:"billing_provider" url:"-"`
+	Description     string              `json:"description" url:"-"`
+	// Which event stream meters this feature; defaults to track, and cannot change after creation. Inference is only valid on event features: their event_subtype matches the event label on inference events, and they meter through credits only.
+	EventSource               *FeatureEventSource            `json:"event_source,omitempty" url:"-"`
 	EventSubtype              *string                        `json:"event_subtype,omitempty" url:"-"`
 	ExternalResourceID        string                         `json:"external_resource_id" url:"-"`
 	FeatureType               FeatureType                    `json:"feature_type" url:"-"`
@@ -6894,6 +6923,13 @@ func (c *CreateBillingLinkedFeatureRequestBody) SetBillingProvider(billingProvid
 func (c *CreateBillingLinkedFeatureRequestBody) SetDescription(description string) {
 	c.Description = description
 	c.require(createBillingLinkedFeatureRequestBodyFieldDescription)
+}
+
+// SetEventSource sets the EventSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedFeatureRequestBody) SetEventSource(eventSource *FeatureEventSource) {
+	c.EventSource = eventSource
+	c.require(createBillingLinkedFeatureRequestBodyFieldEventSource)
 }
 
 // SetEventSubtype sets the EventSubtype field and marks it as non-optional;

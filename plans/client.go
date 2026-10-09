@@ -74,7 +74,7 @@ func (c *Client) UpdateCompanyPlans(
 //	    PlanID: schematichq.String(
 //	        "plan_id",
 //	    ),
-//	    PlanBillingSource: schematichq.PlanBillingSourceCustomPlan.Ptr(),
+//	    PlanBillingSource: schematichq.PlanBillingSourceAmendment.Ptr(),
 //	    Status: schematichq.CustomPlanBillingStatusActive.Ptr(),
 //	    Statuses: []*schematichq.CustomPlanBillingStatus{
 //	        schematichq.CustomPlanBillingStatusActive.Ptr(),
@@ -641,6 +641,37 @@ func (c *Client) DeletePlanVersion(
 	opts ...option.RequestOption,
 ) (*schematichq.DeletePlanVersionResponse, error) {
 	response, err := c.WithRawResponse.DeletePlanVersion(
+		ctx,
+		planVersionID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.GetPlanVersionDiffRequest{
+//	    Against: schematichq.String(
+//	        "against",
+//	    ),
+//	}
+//	client.Plans.GetPlanVersionDiff(
+//	    context.TODO(),
+//	    "plan_version_id",
+//	    request,
+//	)
+func (c *Client) GetPlanVersionDiff(
+	ctx context.Context,
+	// plan_version_id
+	planVersionID string,
+	request *schematichq.GetPlanVersionDiffRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetPlanVersionDiffResponse, error) {
+	response, err := c.WithRawResponse.GetPlanVersionDiff(
 		ctx,
 		planVersionID,
 		request,

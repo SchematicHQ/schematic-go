@@ -2881,7 +2881,6 @@ func (w *WhoAmIResponseData) String() string {
 	return fmt.Sprintf("%#v", w)
 }
 
-// Input parameters
 var (
 	countAccountMembersParamsFieldIDs    = big.NewInt(1 << 0)
 	countAccountMembersParamsFieldLimit  = big.NewInt(1 << 1)
@@ -2890,6 +2889,7 @@ var (
 	countAccountMembersParamsFieldRole   = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type CountAccountMembersParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -3139,7 +3139,6 @@ func (c *CountAccountMembersResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countAPIKeysParamsFieldEnvironmentID      = big.NewInt(1 << 0)
 	countAPIKeysParamsFieldLimit              = big.NewInt(1 << 1)
@@ -3147,6 +3146,7 @@ var (
 	countAPIKeysParamsFieldRequireEnvironment = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type CountAPIKeysParams struct {
 	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
@@ -3379,7 +3379,6 @@ func (c *CountAPIKeysResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countAuditLogsParamsFieldActorType     = big.NewInt(1 << 0)
 	countAuditLogsParamsFieldEndTime       = big.NewInt(1 << 1)
@@ -3390,6 +3389,7 @@ var (
 	countAuditLogsParamsFieldStartTime     = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type CountAuditLogsParams struct {
 	ActorType     *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
 	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
@@ -4709,7 +4709,6 @@ func (g *GetWhoAmIResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listAccountMembersParamsFieldIDs    = big.NewInt(1 << 0)
 	listAccountMembersParamsFieldLimit  = big.NewInt(1 << 1)
@@ -4718,6 +4717,7 @@ var (
 	listAccountMembersParamsFieldRole   = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type ListAccountMembersParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -4967,7 +4967,6 @@ func (l *ListAccountMembersResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listAPIKeysParamsFieldEnvironmentID      = big.NewInt(1 << 0)
 	listAPIKeysParamsFieldLimit              = big.NewInt(1 << 1)
@@ -4975,6 +4974,7 @@ var (
 	listAPIKeysParamsFieldRequireEnvironment = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListAPIKeysParams struct {
 	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
@@ -5207,7 +5207,6 @@ func (l *ListAPIKeysResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listAuditLogsParamsFieldActorType     = big.NewInt(1 << 0)
 	listAuditLogsParamsFieldEndTime       = big.NewInt(1 << 1)
@@ -5218,6 +5217,7 @@ var (
 	listAuditLogsParamsFieldStartTime     = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type ListAuditLogsParams struct {
 	ActorType     *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
 	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
@@ -5507,13 +5507,13 @@ func (l *ListAuditLogsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listEnvironmentsParamsFieldIDs    = big.NewInt(1 << 0)
 	listEnvironmentsParamsFieldLimit  = big.NewInt(1 << 1)
 	listEnvironmentsParamsFieldOffset = big.NewInt(1 << 2)
 )
 
+// Input parameters
 type ListEnvironmentsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)

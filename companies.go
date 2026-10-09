@@ -1825,7 +1825,7 @@ type CompanyBillingEntitySubscriptionResponseData struct {
 	CancelAt               *time.Time                                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
 	Company                *CompanyResponseData                         `json:"company,omitempty" url:"company,omitempty"`
-	Currency               string                                       `json:"currency" url:"currency"`
+	Currency               Currency                                     `json:"currency" url:"currency"`
 	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
 	Discounts              []*BillingSubscriptionDiscountView           `json:"discounts" url:"discounts"`
 	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
@@ -1869,7 +1869,7 @@ func (c *CompanyBillingEntitySubscriptionResponseData) GetCompany() *CompanyResp
 	return c.Company
 }
 
-func (c *CompanyBillingEntitySubscriptionResponseData) GetCurrency() string {
+func (c *CompanyBillingEntitySubscriptionResponseData) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -2013,7 +2013,7 @@ func (c *CompanyBillingEntitySubscriptionResponseData) SetCompany(company *Compa
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyBillingEntitySubscriptionResponseData) SetCurrency(currency string) {
+func (c *CompanyBillingEntitySubscriptionResponseData) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(companyBillingEntitySubscriptionResponseDataFieldCurrency)
 }
@@ -2907,6 +2907,7 @@ func (k *KeysRequestBody) String() string {
 type PlanChangeAction string
 
 const (
+	PlanChangeActionAmendment                 PlanChangeAction = "amendment"
 	PlanChangeActionCheckout                  PlanChangeAction = "checkout"
 	PlanChangeActionCompanyUpsert             PlanChangeAction = "company_upsert"
 	PlanChangeActionFallbackPlan              PlanChangeAction = "fallback_plan"
@@ -2922,6 +2923,8 @@ const (
 
 func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 	switch s {
+	case "amendment":
+		return PlanChangeActionAmendment, nil
 	case "checkout":
 		return PlanChangeActionCheckout, nil
 	case "company_upsert":
@@ -2950,6 +2953,37 @@ func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 }
 
 func (p PlanChangeAction) Ptr() *PlanChangeAction {
+	return &p
+}
+
+type PlanChangeAmendmentStatus string
+
+const (
+	PlanChangeAmendmentStatusApplied   PlanChangeAmendmentStatus = "applied"
+	PlanChangeAmendmentStatusCancelled PlanChangeAmendmentStatus = "cancelled"
+	PlanChangeAmendmentStatusFailed    PlanChangeAmendmentStatus = "failed"
+	PlanChangeAmendmentStatusScheduled PlanChangeAmendmentStatus = "scheduled"
+	PlanChangeAmendmentStatusSkipped   PlanChangeAmendmentStatus = "skipped"
+)
+
+func NewPlanChangeAmendmentStatusFromString(s string) (PlanChangeAmendmentStatus, error) {
+	switch s {
+	case "applied":
+		return PlanChangeAmendmentStatusApplied, nil
+	case "cancelled":
+		return PlanChangeAmendmentStatusCancelled, nil
+	case "failed":
+		return PlanChangeAmendmentStatusFailed, nil
+	case "scheduled":
+		return PlanChangeAmendmentStatusScheduled, nil
+	case "skipped":
+		return PlanChangeAmendmentStatusSkipped, nil
+	}
+	var t PlanChangeAmendmentStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PlanChangeAmendmentStatus) Ptr() *PlanChangeAmendmentStatus {
 	return &p
 }
 
@@ -2986,39 +3020,43 @@ var (
 	planChangeResponseDataFieldActorType                = big.NewInt(1 << 1)
 	planChangeResponseDataFieldAddOnsAdded              = big.NewInt(1 << 2)
 	planChangeResponseDataFieldAddOnsRemoved            = big.NewInt(1 << 3)
-	planChangeResponseDataFieldAPIKey                   = big.NewInt(1 << 4)
-	planChangeResponseDataFieldAuditLog                 = big.NewInt(1 << 5)
-	planChangeResponseDataFieldBasePlan                 = big.NewInt(1 << 6)
-	planChangeResponseDataFieldBasePlanAction           = big.NewInt(1 << 7)
-	planChangeResponseDataFieldBasePlanVersion          = big.NewInt(1 << 8)
-	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 9)
-	planChangeResponseDataFieldCompanyID                = big.NewInt(1 << 10)
-	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 11)
-	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 12)
-	planChangeResponseDataFieldID                       = big.NewInt(1 << 13)
-	planChangeResponseDataFieldIntegration              = big.NewInt(1 << 14)
-	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 15)
-	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 16)
-	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 17)
-	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 18)
-	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 19)
-	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 20)
-	planChangeResponseDataFieldTrialConvertedAt         = big.NewInt(1 << 21)
-	planChangeResponseDataFieldTrialExpiresAt           = big.NewInt(1 << 22)
-	planChangeResponseDataFieldTrialStatus              = big.NewInt(1 << 23)
-	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 24)
-	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 25)
-	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 26)
+	planChangeResponseDataFieldAmendmentStatus          = big.NewInt(1 << 4)
+	planChangeResponseDataFieldAPIKey                   = big.NewInt(1 << 5)
+	planChangeResponseDataFieldAuditLog                 = big.NewInt(1 << 6)
+	planChangeResponseDataFieldBasePlan                 = big.NewInt(1 << 7)
+	planChangeResponseDataFieldBasePlanAction           = big.NewInt(1 << 8)
+	planChangeResponseDataFieldBasePlanVersion          = big.NewInt(1 << 9)
+	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 10)
+	planChangeResponseDataFieldCompanyID                = big.NewInt(1 << 11)
+	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 12)
+	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 13)
+	planChangeResponseDataFieldID                       = big.NewInt(1 << 14)
+	planChangeResponseDataFieldIntegration              = big.NewInt(1 << 15)
+	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 16)
+	planChangeResponseDataFieldMigrationID              = big.NewInt(1 << 17)
+	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 18)
+	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 19)
+	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 20)
+	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 21)
+	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 22)
+	planChangeResponseDataFieldTrialConvertedAt         = big.NewInt(1 << 23)
+	planChangeResponseDataFieldTrialExpiresAt           = big.NewInt(1 << 24)
+	planChangeResponseDataFieldTrialStatus              = big.NewInt(1 << 25)
+	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 26)
+	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 27)
+	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 28)
 )
 
 type PlanChangeResponseData struct {
-	Action        PlanChangeAction          `json:"action" url:"action"`
-	ActorType     ActorType                 `json:"actor_type" url:"actor_type"`
-	AddOnsAdded   []*PlanSnapshotView       `json:"add_ons_added" url:"add_ons_added"`
-	AddOnsRemoved []*PlanSnapshotView       `json:"add_ons_removed" url:"add_ons_removed"`
-	APIKey        *APIKeyResponseData       `json:"api_key,omitempty" url:"api_key,omitempty"`
-	AuditLog      *AuditLogListResponseData `json:"audit_log,omitempty" url:"audit_log,omitempty"`
-	BasePlan      *PlanSnapshotView         `json:"base_plan,omitempty" url:"base_plan,omitempty"`
+	Action        PlanChangeAction    `json:"action" url:"action"`
+	ActorType     ActorType           `json:"actor_type" url:"actor_type"`
+	AddOnsAdded   []*PlanSnapshotView `json:"add_ons_added" url:"add_ons_added"`
+	AddOnsRemoved []*PlanSnapshotView `json:"add_ons_removed" url:"add_ons_removed"`
+	// Set when the action is amendment. A custom plan amendment records one plan change per status: scheduled when it is finalized for a later date, then applied when the company moves to the new version, cancelled when the scheduled change is called off, or failed or skipped when its migration ends without moving the company (an error, or the company was no longer on the version the amendment started from). Only an applied amendment changed the company's plan version.
+	AmendmentStatus *PlanChangeAmendmentStatus `json:"amendment_status,omitempty" url:"amendment_status,omitempty"`
+	APIKey          *APIKeyResponseData        `json:"api_key,omitempty" url:"api_key,omitempty"`
+	AuditLog        *AuditLogListResponseData  `json:"audit_log,omitempty" url:"audit_log,omitempty"`
+	BasePlan        *PlanSnapshotView          `json:"base_plan,omitempty" url:"base_plan,omitempty"`
 	// Any special behavior that affected the assignment of the base plan during this change.
 	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
 	// The plan version that was assigned during this change.
@@ -3031,7 +3069,9 @@ type PlanChangeResponseData struct {
 	// The integration that performed this change, when the actor is an integration-owned API key (e.g. a billing-provider sync).
 	Integration *IntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
 	// True when this change moved the company to a different version of the same plan (e.g. a plan version migration) rather than to a different plan.
-	IsVersionUpgrade bool              `json:"is_version_upgrade" url:"is_version_upgrade"`
+	IsVersionUpgrade bool `json:"is_version_upgrade" url:"is_version_upgrade"`
+	// The plan version migration that carries this change. Set on amendment plan changes, where it ties the scheduled, applied and cancelled records of one amendment together.
+	MigrationID      *string           `json:"migration_id,omitempty" url:"migration_id,omitempty"`
 	PreviousBasePlan *PlanSnapshotView `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
 	// The plan version of the previous base plan before this change.
 	PreviousBasePlanVersion *PlanVersionSnapshotView `json:"previous_base_plan_version,omitempty" url:"previous_base_plan_version,omitempty"`
@@ -3083,6 +3123,13 @@ func (p *PlanChangeResponseData) GetAddOnsRemoved() []*PlanSnapshotView {
 		return nil
 	}
 	return p.AddOnsRemoved
+}
+
+func (p *PlanChangeResponseData) GetAmendmentStatus() *PlanChangeAmendmentStatus {
+	if p == nil {
+		return nil
+	}
+	return p.AmendmentStatus
 }
 
 func (p *PlanChangeResponseData) GetAPIKey() *APIKeyResponseData {
@@ -3167,6 +3214,13 @@ func (p *PlanChangeResponseData) GetIsVersionUpgrade() bool {
 		return false
 	}
 	return p.IsVersionUpgrade
+}
+
+func (p *PlanChangeResponseData) GetMigrationID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.MigrationID
 }
 
 func (p *PlanChangeResponseData) GetPreviousBasePlan() *PlanSnapshotView {
@@ -3290,6 +3344,13 @@ func (p *PlanChangeResponseData) SetAddOnsRemoved(addOnsRemoved []*PlanSnapshotV
 	p.require(planChangeResponseDataFieldAddOnsRemoved)
 }
 
+// SetAmendmentStatus sets the AmendmentStatus field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetAmendmentStatus(amendmentStatus *PlanChangeAmendmentStatus) {
+	p.AmendmentStatus = amendmentStatus
+	p.require(planChangeResponseDataFieldAmendmentStatus)
+}
+
 // SetAPIKey sets the APIKey field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanChangeResponseData) SetAPIKey(apiKey *APIKeyResponseData) {
@@ -3372,6 +3433,13 @@ func (p *PlanChangeResponseData) SetIntegration(integration *IntegrationResponse
 func (p *PlanChangeResponseData) SetIsVersionUpgrade(isVersionUpgrade bool) {
 	p.IsVersionUpgrade = isVersionUpgrade
 	p.require(planChangeResponseDataFieldIsVersionUpgrade)
+}
+
+// SetMigrationID sets the MigrationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetMigrationID(migrationID *string) {
+	p.MigrationID = migrationID
+	p.require(planChangeResponseDataFieldMigrationID)
 }
 
 // SetPreviousBasePlan sets the PreviousBasePlan field and marks it as non-optional;
@@ -5307,7 +5375,6 @@ func (u *UserDetailResponseData) String() string {
 	return fmt.Sprintf("%#v", u)
 }
 
-// Input parameters
 var (
 	countCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
 	countCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
@@ -5332,6 +5399,7 @@ var (
 	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 20)
 )
 
+// Input parameters
 type CountCompaniesParams struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
@@ -5838,7 +5906,6 @@ func (c *CountCompaniesResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countEntityKeyDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
 	countEntityKeyDefinitionsParamsFieldIDs        = big.NewInt(1 << 1)
@@ -5847,6 +5914,7 @@ var (
 	countEntityKeyDefinitionsParamsFieldQ          = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type CountEntityKeyDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
@@ -6094,7 +6162,6 @@ func (c *CountEntityKeyDefinitionsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countEntityKeysParamsFieldDefinitionID = big.NewInt(1 << 0)
 	countEntityKeysParamsFieldEntityType   = big.NewInt(1 << 1)
@@ -6102,6 +6169,7 @@ var (
 	countEntityKeysParamsFieldOffset       = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type CountEntityKeysParams struct {
 	DefinitionID *string     `json:"definition_id,omitempty" url:"definition_id,omitempty"`
 	EntityType   *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
@@ -6334,7 +6402,6 @@ func (c *CountEntityKeysResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countEntityTraitDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
 	countEntityTraitDefinitionsParamsFieldIDs        = big.NewInt(1 << 1)
@@ -6345,6 +6412,7 @@ var (
 	countEntityTraitDefinitionsParamsFieldTraitTypes = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type CountEntityTraitDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
@@ -6622,7 +6690,6 @@ func (c *CountEntityTraitDefinitionsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countEntityTraitsParamsFieldDefinitionID = big.NewInt(1 << 0)
 	countEntityTraitsParamsFieldEntityType   = big.NewInt(1 << 1)
@@ -6630,6 +6697,7 @@ var (
 	countEntityTraitsParamsFieldOffset       = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type CountEntityTraitsParams struct {
 	DefinitionID *string     `json:"definition_id,omitempty" url:"definition_id,omitempty"`
 	EntityType   *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
@@ -6862,7 +6930,6 @@ func (c *CountEntityTraitsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countPlanTraitsParamsFieldIDs      = big.NewInt(1 << 0)
 	countPlanTraitsParamsFieldLimit    = big.NewInt(1 << 1)
@@ -6872,6 +6939,7 @@ var (
 	countPlanTraitsParamsFieldTraitIDs = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type CountPlanTraitsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -7134,7 +7202,6 @@ func (c *CountPlanTraitsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countUsersParamsFieldCompanyID = big.NewInt(1 << 0)
 	countUsersParamsFieldIDs       = big.NewInt(1 << 1)
@@ -7144,6 +7211,7 @@ var (
 	countUsersParamsFieldQ         = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type CountUsersParams struct {
 	// Filter users by company ID (starts with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -7822,12 +7890,12 @@ func (d *DeleteCompanyMembershipResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
-// Input parameters
 var (
 	deleteCompanyParamsFieldCancelSubscription = big.NewInt(1 << 0)
 	deleteCompanyParamsFieldProrate            = big.NewInt(1 << 1)
 )
 
+// Input parameters
 type DeleteCompanyParams struct {
 	CancelSubscription *bool `json:"cancel_subscription,omitempty" url:"cancel_subscription,omitempty"`
 	Prorate            *bool `json:"prorate,omitempty" url:"prorate,omitempty"`
@@ -8440,7 +8508,6 @@ func (d *DeleteUserResponse) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
-// Input parameters
 var (
 	getActiveCompanySubscriptionParamsFieldCompanyID  = big.NewInt(1 << 0)
 	getActiveCompanySubscriptionParamsFieldCompanyIDs = big.NewInt(1 << 1)
@@ -8448,6 +8515,7 @@ var (
 	getActiveCompanySubscriptionParamsFieldOffset     = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetActiveCompanySubscriptionParams struct {
 	CompanyID  *string  `json:"company_id,omitempty" url:"company_id,omitempty"`
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
@@ -8680,11 +8748,11 @@ func (g *GetActiveCompanySubscriptionResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getBillingEntityChildSubscriptionsParamsFieldCompanyID = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type GetBillingEntityChildSubscriptionsParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 
@@ -8870,11 +8938,11 @@ func (g *GetBillingEntityChildSubscriptionsResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getCompanyBillingEntityParamsFieldCompanyID = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type GetCompanyBillingEntityParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 
@@ -9369,7 +9437,6 @@ func (g *GetEntityTraitDefinitionUsageResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	getEntityTraitValuesParamsFieldDefinitionID = big.NewInt(1 << 0)
 	getEntityTraitValuesParamsFieldLimit        = big.NewInt(1 << 1)
@@ -9377,6 +9444,7 @@ var (
 	getEntityTraitValuesParamsFieldQ            = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type GetEntityTraitValuesParams struct {
 	DefinitionID *string `json:"definition_id,omitempty" url:"definition_id,omitempty"`
 	// Page limit (default 100)
@@ -10124,7 +10192,6 @@ func (g *GetUserResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
 	listCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
@@ -10149,6 +10216,7 @@ var (
 	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 20)
 )
 
+// Input parameters
 type ListCompaniesParams struct {
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
@@ -10655,7 +10723,6 @@ func (l *ListCompaniesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listCompanyMembershipsParamsFieldCompanyID = big.NewInt(1 << 0)
 	listCompanyMembershipsParamsFieldLimit     = big.NewInt(1 << 1)
@@ -10663,6 +10730,7 @@ var (
 	listCompanyMembershipsParamsFieldUserID    = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListCompanyMembershipsParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// Page limit (default 100)
@@ -10895,7 +10963,6 @@ func (l *ListCompanyMembershipsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listEntityKeyDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
 	listEntityKeyDefinitionsParamsFieldIDs        = big.NewInt(1 << 1)
@@ -10904,6 +10971,7 @@ var (
 	listEntityKeyDefinitionsParamsFieldQ          = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type ListEntityKeyDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
@@ -11151,7 +11219,6 @@ func (l *ListEntityKeyDefinitionsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listEntityTraitDefinitionsParamsFieldEntityType = big.NewInt(1 << 0)
 	listEntityTraitDefinitionsParamsFieldIDs        = big.NewInt(1 << 1)
@@ -11162,6 +11229,7 @@ var (
 	listEntityTraitDefinitionsParamsFieldTraitTypes = big.NewInt(1 << 6)
 )
 
+// Input parameters
 type ListEntityTraitDefinitionsParams struct {
 	EntityType *EntityType `json:"entity_type,omitempty" url:"entity_type,omitempty"`
 	IDs        []string    `json:"ids,omitempty" url:"ids,omitempty"`
@@ -11439,7 +11507,6 @@ func (l *ListEntityTraitDefinitionsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listPlanChangesParamsFieldAction         = big.NewInt(1 << 0)
 	listPlanChangesParamsFieldBasePlanAction = big.NewInt(1 << 1)
@@ -11449,6 +11516,7 @@ var (
 	listPlanChangesParamsFieldOffset         = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type ListPlanChangesParams struct {
 	Action         *PlanChangeAction         `json:"action,omitempty" url:"action,omitempty"`
 	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
@@ -11711,7 +11779,6 @@ func (l *ListPlanChangesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listPlanTraitsParamsFieldIDs      = big.NewInt(1 << 0)
 	listPlanTraitsParamsFieldLimit    = big.NewInt(1 << 1)
@@ -11721,6 +11788,7 @@ var (
 	listPlanTraitsParamsFieldTraitIDs = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type ListPlanTraitsParams struct {
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
 	// Page limit (default 100)
@@ -11983,7 +12051,6 @@ func (l *ListPlanTraitsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listUsersParamsFieldCompanyID = big.NewInt(1 << 0)
 	listUsersParamsFieldIDs       = big.NewInt(1 << 1)
@@ -11993,6 +12060,7 @@ var (
 	listUsersParamsFieldQ         = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type ListUsersParams struct {
 	// Filter users by company ID (starts with comp_)
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
@@ -12259,11 +12327,11 @@ func (l *ListUsersResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	lookupCompanyParamsFieldKeys = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type LookupCompanyParams struct {
 	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 
@@ -12449,11 +12517,11 @@ func (l *LookupCompanyResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	lookupUserParamsFieldKeys = big.NewInt(1 << 0)
 )
 
+// Input parameters
 type LookupUserParams struct {
 	Keys map[string]string `json:"keys,omitempty" url:"keys,omitempty"`
 

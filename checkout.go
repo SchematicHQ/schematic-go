@@ -85,9 +85,9 @@ var (
 )
 
 type CheckoutDataRequestBody struct {
-	CompanyID      string  `json:"company_id" url:"-"`
-	Currency       *string `json:"currency,omitempty" url:"-"`
-	SelectedPlanID *string `json:"selected_plan_id,omitempty" url:"-"`
+	CompanyID      string    `json:"company_id" url:"-"`
+	Currency       *Currency `json:"currency,omitempty" url:"-"`
+	SelectedPlanID *string   `json:"selected_plan_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -111,7 +111,7 @@ func (c *CheckoutDataRequestBody) SetCompanyID(companyID string) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckoutDataRequestBody) SetCurrency(currency *string) {
+func (c *CheckoutDataRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(checkoutDataRequestBodyFieldCurrency)
 }
@@ -170,7 +170,7 @@ type ChangeSubscriptionInternalRequestBody struct {
 	CouponExternalID   *string                               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles      []*UpdateCreditBundleRequestBody      `json:"credit_bundles" url:"credit_bundles"`
 	// ISO 4217 currency this cart is being built in. Prices are still selected by id; this records the intent, and a cart that prices in another currency is reported as a problem.
-	Currency          *string                          `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency          *Currency                        `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomFieldValues []*CheckoutFieldValue            `json:"custom_field_values" url:"custom_field_values"`
 	NewPlanID         string                           `json:"new_plan_id" url:"new_plan_id"`
 	NewPriceID        string                           `json:"new_price_id" url:"new_price_id"`
@@ -229,7 +229,7 @@ func (c *ChangeSubscriptionInternalRequestBody) GetCreditBundles() []*UpdateCred
 	return c.CreditBundles
 }
 
-func (c *ChangeSubscriptionInternalRequestBody) GetCurrency() *string {
+func (c *ChangeSubscriptionInternalRequestBody) GetCurrency() *Currency {
 	if c == nil {
 		return nil
 	}
@@ -352,7 +352,7 @@ func (c *ChangeSubscriptionInternalRequestBody) SetCreditBundles(creditBundles [
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *ChangeSubscriptionInternalRequestBody) SetCurrency(currency *string) {
+func (c *ChangeSubscriptionInternalRequestBody) SetCurrency(currency *Currency) {
 	c.Currency = currency
 	c.require(changeSubscriptionInternalRequestBodyFieldCurrency)
 }
@@ -733,6 +733,370 @@ func (c *CheckoutDataResponseData) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CheckoutProblemCode string
+
+const (
+	CheckoutProblemCodeAddOnRequiresBilledPlan                CheckoutProblemCode = "add_on_requires_billed_plan"
+	CheckoutProblemCodeBillingCycleAnchorConflictsWithTrial   CheckoutProblemCode = "billing_cycle_anchor_conflicts_with_trial"
+	CheckoutProblemCodeBillingCycleAnchorMustBeFuture         CheckoutProblemCode = "billing_cycle_anchor_must_be_future"
+	CheckoutProblemCodeCreditBundleIncompatible               CheckoutProblemCode = "credit_bundle_incompatible"
+	CheckoutProblemCodeCurrencyMismatch                       CheckoutProblemCode = "currency_mismatch"
+	CheckoutProblemCodeDiscountIneligible                     CheckoutProblemCode = "discount_ineligible"
+	CheckoutProblemCodeFreeFirstPeriodActivatesOnPayment      CheckoutProblemCode = "free_first_period_activates_on_payment"
+	CheckoutProblemCodeInvoiceEmailRequired                   CheckoutProblemCode = "invoice_email_required"
+	CheckoutProblemCodeInvoicedSubscriptionConflictsWithTrial CheckoutProblemCode = "invoiced_subscription_conflicts_with_trial"
+	CheckoutProblemCodeOptInRequired                          CheckoutProblemCode = "opt_in_required"
+	CheckoutProblemCodePaymentMethodRequired                  CheckoutProblemCode = "payment_method_required"
+	CheckoutProblemCodePlanUnavailable                        CheckoutProblemCode = "plan_unavailable"
+	CheckoutProblemCodePriceUnavailable                       CheckoutProblemCode = "price_unavailable"
+	CheckoutProblemCodeProrateFirstPeriodWithoutAnchor        CheckoutProblemCode = "prorate_first_period_without_anchor"
+	CheckoutProblemCodeProviderRejected                       CheckoutProblemCode = "provider_rejected"
+	CheckoutProblemCodeSelectionInvalid                       CheckoutProblemCode = "selection_invalid"
+	CheckoutProblemCodeTrialEndMustBeFuture                   CheckoutProblemCode = "trial_end_must_be_future"
+	CheckoutProblemCodeTrialEndTooFar                         CheckoutProblemCode = "trial_end_too_far"
+	CheckoutProblemCodeUsageOverLimit                         CheckoutProblemCode = "usage_over_limit"
+)
+
+func NewCheckoutProblemCodeFromString(s string) (CheckoutProblemCode, error) {
+	switch s {
+	case "add_on_requires_billed_plan":
+		return CheckoutProblemCodeAddOnRequiresBilledPlan, nil
+	case "billing_cycle_anchor_conflicts_with_trial":
+		return CheckoutProblemCodeBillingCycleAnchorConflictsWithTrial, nil
+	case "billing_cycle_anchor_must_be_future":
+		return CheckoutProblemCodeBillingCycleAnchorMustBeFuture, nil
+	case "credit_bundle_incompatible":
+		return CheckoutProblemCodeCreditBundleIncompatible, nil
+	case "currency_mismatch":
+		return CheckoutProblemCodeCurrencyMismatch, nil
+	case "discount_ineligible":
+		return CheckoutProblemCodeDiscountIneligible, nil
+	case "free_first_period_activates_on_payment":
+		return CheckoutProblemCodeFreeFirstPeriodActivatesOnPayment, nil
+	case "invoice_email_required":
+		return CheckoutProblemCodeInvoiceEmailRequired, nil
+	case "invoiced_subscription_conflicts_with_trial":
+		return CheckoutProblemCodeInvoicedSubscriptionConflictsWithTrial, nil
+	case "opt_in_required":
+		return CheckoutProblemCodeOptInRequired, nil
+	case "payment_method_required":
+		return CheckoutProblemCodePaymentMethodRequired, nil
+	case "plan_unavailable":
+		return CheckoutProblemCodePlanUnavailable, nil
+	case "price_unavailable":
+		return CheckoutProblemCodePriceUnavailable, nil
+	case "prorate_first_period_without_anchor":
+		return CheckoutProblemCodeProrateFirstPeriodWithoutAnchor, nil
+	case "provider_rejected":
+		return CheckoutProblemCodeProviderRejected, nil
+	case "selection_invalid":
+		return CheckoutProblemCodeSelectionInvalid, nil
+	case "trial_end_must_be_future":
+		return CheckoutProblemCodeTrialEndMustBeFuture, nil
+	case "trial_end_too_far":
+		return CheckoutProblemCodeTrialEndTooFar, nil
+	case "usage_over_limit":
+		return CheckoutProblemCodeUsageOverLimit, nil
+	}
+	var t CheckoutProblemCode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CheckoutProblemCode) Ptr() *CheckoutProblemCode {
+	return &c
+}
+
+var (
+	checkoutProblemResponseDataFieldBlocking        = big.NewInt(1 << 0)
+	checkoutProblemResponseDataFieldBundleID        = big.NewInt(1 << 1)
+	checkoutProblemResponseDataFieldCode            = big.NewInt(1 << 2)
+	checkoutProblemResponseDataFieldCurrency        = big.NewInt(1 << 3)
+	checkoutProblemResponseDataFieldDetail          = big.NewInt(1 << 4)
+	checkoutProblemResponseDataFieldFeatureID       = big.NewInt(1 << 5)
+	checkoutProblemResponseDataFieldFieldID         = big.NewInt(1 << 6)
+	checkoutProblemResponseDataFieldMessage         = big.NewInt(1 << 7)
+	checkoutProblemResponseDataFieldPaymentMethodID = big.NewInt(1 << 8)
+	checkoutProblemResponseDataFieldPlanID          = big.NewInt(1 << 9)
+	checkoutProblemResponseDataFieldPriceID         = big.NewInt(1 << 10)
+	checkoutProblemResponseDataFieldSource          = big.NewInt(1 << 11)
+)
+
+type CheckoutProblemResponseData struct {
+	// Whether completing the checkout would be refused while this stands.
+	Blocking bool                `json:"blocking" url:"blocking"`
+	BundleID *string             `json:"bundle_id,omitempty" url:"bundle_id,omitempty"`
+	Code     CheckoutProblemCode `json:"code" url:"code"`
+	// The currency this problem is about, when it is about one.
+	Currency *Currency `json:"currency,omitempty" url:"currency,omitempty"`
+	// Diagnostic detail for operators, including what the billing provider said. Never shown to a customer.
+	Detail    *string `json:"detail,omitempty" url:"detail,omitempty"`
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FieldID   *string `json:"field_id,omitempty" url:"field_id,omitempty"`
+	// What is wrong, in words safe for anyone allowed to read the checkout.
+	Message         string                `json:"message" url:"message"`
+	PaymentMethodID *string               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PlanID          *string               `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PriceID         *string               `json:"price_id,omitempty" url:"price_id,omitempty"`
+	Source          CheckoutProblemSource `json:"source" url:"source"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutProblemResponseData) GetBlocking() bool {
+	if c == nil {
+		return false
+	}
+	return c.Blocking
+}
+
+func (c *CheckoutProblemResponseData) GetBundleID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BundleID
+}
+
+func (c *CheckoutProblemResponseData) GetCode() CheckoutProblemCode {
+	if c == nil {
+		return ""
+	}
+	return c.Code
+}
+
+func (c *CheckoutProblemResponseData) GetCurrency() *Currency {
+	if c == nil {
+		return nil
+	}
+	return c.Currency
+}
+
+func (c *CheckoutProblemResponseData) GetDetail() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Detail
+}
+
+func (c *CheckoutProblemResponseData) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CheckoutProblemResponseData) GetFieldID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FieldID
+}
+
+func (c *CheckoutProblemResponseData) GetMessage() string {
+	if c == nil {
+		return ""
+	}
+	return c.Message
+}
+
+func (c *CheckoutProblemResponseData) GetPaymentMethodID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PaymentMethodID
+}
+
+func (c *CheckoutProblemResponseData) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CheckoutProblemResponseData) GetPriceID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PriceID
+}
+
+func (c *CheckoutProblemResponseData) GetSource() CheckoutProblemSource {
+	if c == nil {
+		return ""
+	}
+	return c.Source
+}
+
+func (c *CheckoutProblemResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CheckoutProblemResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBlocking sets the Blocking field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetBlocking(blocking bool) {
+	c.Blocking = blocking
+	c.require(checkoutProblemResponseDataFieldBlocking)
+}
+
+// SetBundleID sets the BundleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetBundleID(bundleID *string) {
+	c.BundleID = bundleID
+	c.require(checkoutProblemResponseDataFieldBundleID)
+}
+
+// SetCode sets the Code field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetCode(code CheckoutProblemCode) {
+	c.Code = code
+	c.require(checkoutProblemResponseDataFieldCode)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetCurrency(currency *Currency) {
+	c.Currency = currency
+	c.require(checkoutProblemResponseDataFieldCurrency)
+}
+
+// SetDetail sets the Detail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetDetail(detail *string) {
+	c.Detail = detail
+	c.require(checkoutProblemResponseDataFieldDetail)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(checkoutProblemResponseDataFieldFeatureID)
+}
+
+// SetFieldID sets the FieldID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetFieldID(fieldID *string) {
+	c.FieldID = fieldID
+	c.require(checkoutProblemResponseDataFieldFieldID)
+}
+
+// SetMessage sets the Message field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetMessage(message string) {
+	c.Message = message
+	c.require(checkoutProblemResponseDataFieldMessage)
+}
+
+// SetPaymentMethodID sets the PaymentMethodID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetPaymentMethodID(paymentMethodID *string) {
+	c.PaymentMethodID = paymentMethodID
+	c.require(checkoutProblemResponseDataFieldPaymentMethodID)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetPlanID(planID *string) {
+	c.PlanID = planID
+	c.require(checkoutProblemResponseDataFieldPlanID)
+}
+
+// SetPriceID sets the PriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetPriceID(priceID *string) {
+	c.PriceID = priceID
+	c.require(checkoutProblemResponseDataFieldPriceID)
+}
+
+// SetSource sets the Source field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetSource(source CheckoutProblemSource) {
+	c.Source = source
+	c.require(checkoutProblemResponseDataFieldSource)
+}
+
+func (c *CheckoutProblemResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckoutProblemResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CheckoutProblemResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckoutProblemResponseData) MarshalJSON() ([]byte, error) {
+	type embed CheckoutProblemResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CheckoutProblemResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CheckoutProblemSource string
+
+const (
+	CheckoutProblemSourceProvider    CheckoutProblemSource = "provider"
+	CheckoutProblemSourceRequirement CheckoutProblemSource = "requirement"
+	CheckoutProblemSourceValidation  CheckoutProblemSource = "validation"
+)
+
+func NewCheckoutProblemSourceFromString(s string) (CheckoutProblemSource, error) {
+	switch s {
+	case "provider":
+		return CheckoutProblemSourceProvider, nil
+	case "requirement":
+		return CheckoutProblemSourceRequirement, nil
+	case "validation":
+		return CheckoutProblemSourceValidation, nil
+	}
+	var t CheckoutProblemSource
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CheckoutProblemSource) Ptr() *CheckoutProblemSource {
+	return &c
+}
+
 var (
 	checkoutSubscriptionFieldApplicationID                    = big.NewInt(1 << 0)
 	checkoutSubscriptionFieldCancelAt                         = big.NewInt(1 << 1)
@@ -768,7 +1132,7 @@ type CheckoutSubscription struct {
 	ConfirmPaymentIntentClientSecret *string                             `json:"confirm_payment_intent_client_secret,omitempty" url:"confirm_payment_intent_client_secret,omitempty"`
 	ConfirmPaymentIntentID           *string                             `json:"confirm_payment_intent_id,omitempty" url:"confirm_payment_intent_id,omitempty"`
 	CreatedAt                        time.Time                           `json:"created_at" url:"created_at"`
-	Currency                         string                              `json:"currency" url:"currency"`
+	Currency                         Currency                            `json:"currency" url:"currency"`
 	CustomerExternalID               string                              `json:"customer_external_id" url:"customer_external_id"`
 	DefaultPaymentMethodID           *string                             `json:"default_payment_method_id,omitempty" url:"default_payment_method_id,omitempty"`
 	ExpiredAt                        *time.Time                          `json:"expired_at,omitempty" url:"expired_at,omitempty"`
@@ -842,7 +1206,7 @@ func (c *CheckoutSubscription) GetCreatedAt() time.Time {
 	return c.CreatedAt
 }
 
-func (c *CheckoutSubscription) GetCurrency() string {
+func (c *CheckoutSubscription) GetCurrency() Currency {
 	if c == nil {
 		return ""
 	}
@@ -1028,7 +1392,7 @@ func (c *CheckoutSubscription) SetCreatedAt(createdAt time.Time) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CheckoutSubscription) SetCurrency(currency string) {
+func (c *CheckoutSubscription) SetCurrency(currency Currency) {
 	c.Currency = currency
 	c.require(checkoutSubscriptionFieldCurrency)
 }
@@ -1934,10 +2298,12 @@ func (c *CreditBundlePurchaseResponseData) String() string {
 }
 
 var (
-	managePlanPreviewResponseResponseDataFieldSubscriptionChangePreview = big.NewInt(1 << 0)
+	managePlanPreviewResponseResponseDataFieldProblems                  = big.NewInt(1 << 0)
+	managePlanPreviewResponseResponseDataFieldSubscriptionChangePreview = big.NewInt(1 << 1)
 )
 
 type ManagePlanPreviewResponseResponseData struct {
+	Problems                  []*CheckoutProblemResponseData         `json:"problems" url:"problems"`
 	SubscriptionChangePreview *PreviewSubscriptionChangeResponseData `json:"subscription_change_preview,omitempty" url:"subscription_change_preview,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -1945,6 +2311,13 @@ type ManagePlanPreviewResponseResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (m *ManagePlanPreviewResponseResponseData) GetProblems() []*CheckoutProblemResponseData {
+	if m == nil {
+		return nil
+	}
+	return m.Problems
 }
 
 func (m *ManagePlanPreviewResponseResponseData) GetSubscriptionChangePreview() *PreviewSubscriptionChangeResponseData {
@@ -1968,6 +2341,13 @@ func (m *ManagePlanPreviewResponseResponseData) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	m.explicitFields = next
+}
+
+// SetProblems sets the Problems field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanPreviewResponseResponseData) SetProblems(problems []*CheckoutProblemResponseData) {
+	m.Problems = problems
+	m.require(managePlanPreviewResponseResponseDataFieldProblems)
 }
 
 // SetSubscriptionChangePreview sets the SubscriptionChangePreview field and marks it as non-optional;
@@ -2036,13 +2416,14 @@ var (
 	managePlanRequestFieldCurrency                 = big.NewInt(1 << 13)
 	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 14)
 	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 15)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 16)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 17)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 18)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 19)
-	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 20)
-	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 21)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 22)
+	managePlanRequestFieldPaidOutsideStripe        = big.NewInt(1 << 16)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 17)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 18)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 19)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 20)
+	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 21)
+	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 22)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 23)
 )
 
 type ManagePlanRequest struct {
@@ -2066,10 +2447,12 @@ type ManagePlanRequest struct {
 	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles    []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
 	// ISO 4217 currency this change is being built in. Prices are still selected by id; this records the intent.
-	Currency          *string               `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency          *Currency             `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomFieldValues []*CheckoutFieldValue `json:"custom_field_values" url:"custom_field_values"`
 	// Payment terms in days for an invoiced subscription. Defaults to 30.
-	DaysUntilDue             *int64                           `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	DaysUntilDue *int64 `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	// If true, the first invoice is recorded in Stripe as paid outside Stripe and the company gets the plan straight away. Requires collection_method to be send_invoice, and the invoice is not emailed. Defaults to false.
+	PaidOutsideStripe        *bool                            `json:"paid_outside_stripe,omitempty" url:"paid_outside_stripe,omitempty"`
 	PayInAdvanceEntitlements []*UpdatePayInAdvanceRequestBody `json:"pay_in_advance_entitlements" url:"pay_in_advance_entitlements"`
 	PaymentMethodExternalID  *string                          `json:"payment_method_external_id,omitempty" url:"payment_method_external_id,omitempty"`
 	PromoCode                *string                          `json:"promo_code,omitempty" url:"promo_code,omitempty"`
@@ -2179,7 +2562,7 @@ func (m *ManagePlanRequest) GetCreditBundles() []*UpdateCreditBundleRequestBody 
 	return m.CreditBundles
 }
 
-func (m *ManagePlanRequest) GetCurrency() *string {
+func (m *ManagePlanRequest) GetCurrency() *Currency {
 	if m == nil {
 		return nil
 	}
@@ -2198,6 +2581,13 @@ func (m *ManagePlanRequest) GetDaysUntilDue() *int64 {
 		return nil
 	}
 	return m.DaysUntilDue
+}
+
+func (m *ManagePlanRequest) GetPaidOutsideStripe() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.PaidOutsideStripe
 }
 
 func (m *ManagePlanRequest) GetPayInAdvanceEntitlements() []*UpdatePayInAdvanceRequestBody {
@@ -2358,7 +2748,7 @@ func (m *ManagePlanRequest) SetCreditBundles(creditBundles []*UpdateCreditBundle
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (m *ManagePlanRequest) SetCurrency(currency *string) {
+func (m *ManagePlanRequest) SetCurrency(currency *Currency) {
 	m.Currency = currency
 	m.require(managePlanRequestFieldCurrency)
 }
@@ -2375,6 +2765,13 @@ func (m *ManagePlanRequest) SetCustomFieldValues(customFieldValues []*CheckoutFi
 func (m *ManagePlanRequest) SetDaysUntilDue(daysUntilDue *int64) {
 	m.DaysUntilDue = daysUntilDue
 	m.require(managePlanRequestFieldDaysUntilDue)
+}
+
+// SetPaidOutsideStripe sets the PaidOutsideStripe field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetPaidOutsideStripe(paidOutsideStripe *bool) {
+	m.PaidOutsideStripe = paidOutsideStripe
+	m.require(managePlanRequestFieldPaidOutsideStripe)
 }
 
 // SetPayInAdvanceEntitlements sets the PayInAdvanceEntitlements field and marks it as non-optional;
@@ -2481,13 +2878,17 @@ func (m *ManagePlanRequest) String() string {
 }
 
 var (
-	managePlanResponseResponseDataFieldCompany = big.NewInt(1 << 0)
-	managePlanResponseResponseDataFieldSuccess = big.NewInt(1 << 1)
+	managePlanResponseResponseDataFieldCheckoutID = big.NewInt(1 << 0)
+	managePlanResponseResponseDataFieldCompany    = big.NewInt(1 << 1)
+	managePlanResponseResponseDataFieldProblems   = big.NewInt(1 << 2)
+	managePlanResponseResponseDataFieldSuccess    = big.NewInt(1 << 3)
 )
 
 type ManagePlanResponseResponseData struct {
-	Company *CompanyDetailResponseData `json:"company,omitempty" url:"company,omitempty"`
-	Success bool                       `json:"success" url:"success"`
+	CheckoutID *string                        `json:"checkout_id,omitempty" url:"checkout_id,omitempty"`
+	Company    *CompanyDetailResponseData     `json:"company,omitempty" url:"company,omitempty"`
+	Problems   []*CheckoutProblemResponseData `json:"problems" url:"problems"`
+	Success    bool                           `json:"success" url:"success"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2496,11 +2897,25 @@ type ManagePlanResponseResponseData struct {
 	rawJSON         json.RawMessage
 }
 
+func (m *ManagePlanResponseResponseData) GetCheckoutID() *string {
+	if m == nil {
+		return nil
+	}
+	return m.CheckoutID
+}
+
 func (m *ManagePlanResponseResponseData) GetCompany() *CompanyDetailResponseData {
 	if m == nil {
 		return nil
 	}
 	return m.Company
+}
+
+func (m *ManagePlanResponseResponseData) GetProblems() []*CheckoutProblemResponseData {
+	if m == nil {
+		return nil
+	}
+	return m.Problems
 }
 
 func (m *ManagePlanResponseResponseData) GetSuccess() bool {
@@ -2526,11 +2941,25 @@ func (m *ManagePlanResponseResponseData) require(field *big.Int) {
 	m.explicitFields = next
 }
 
+// SetCheckoutID sets the CheckoutID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanResponseResponseData) SetCheckoutID(checkoutID *string) {
+	m.CheckoutID = checkoutID
+	m.require(managePlanResponseResponseDataFieldCheckoutID)
+}
+
 // SetCompany sets the Company field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (m *ManagePlanResponseResponseData) SetCompany(company *CompanyDetailResponseData) {
 	m.Company = company
 	m.require(managePlanResponseResponseDataFieldCompany)
+}
+
+// SetProblems sets the Problems field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanResponseResponseData) SetProblems(problems []*CheckoutProblemResponseData) {
+	m.Problems = problems
+	m.require(managePlanResponseResponseDataFieldProblems)
 }
 
 // SetSuccess sets the Success field and marks it as non-optional;
@@ -2712,11 +3141,12 @@ var (
 	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired = big.NewInt(1 << 8)
 	previewSubscriptionChangeResponseDataFieldPercentOff            = big.NewInt(1 << 9)
 	previewSubscriptionChangeResponseDataFieldPeriodStart           = big.NewInt(1 << 10)
-	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 11)
-	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 12)
-	previewSubscriptionChangeResponseDataFieldScheduledChangeTime   = big.NewInt(1 << 13)
-	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 14)
-	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 15)
+	previewSubscriptionChangeResponseDataFieldProblems              = big.NewInt(1 << 11)
+	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 12)
+	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 13)
+	previewSubscriptionChangeResponseDataFieldScheduledChangeTime   = big.NewInt(1 << 14)
+	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 15)
+	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 16)
 )
 
 type PreviewSubscriptionChangeResponseData struct {
@@ -2731,6 +3161,7 @@ type PreviewSubscriptionChangeResponseData struct {
 	PaymentMethodRequired bool                                    `json:"payment_method_required" url:"payment_method_required"`
 	PercentOff            float64                                 `json:"percent_off" url:"percent_off"`
 	PeriodStart           time.Time                               `json:"period_start" url:"period_start"`
+	Problems              []*CheckoutProblemResponseData          `json:"problems" url:"problems"`
 	PromoCodeApplied      bool                                    `json:"promo_code_applied" url:"promo_code_applied"`
 	Proration             int64                                   `json:"proration" url:"proration"`
 	ScheduledChangeTime   *time.Time                              `json:"scheduled_change_time,omitempty" url:"scheduled_change_time,omitempty"`
@@ -2819,6 +3250,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetPeriodStart() time.Time {
 		return time.Time{}
 	}
 	return p.PeriodStart
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetProblems() []*CheckoutProblemResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Problems
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetPromoCodeApplied() bool {
@@ -2949,6 +3387,13 @@ func (p *PreviewSubscriptionChangeResponseData) SetPeriodStart(periodStart time.
 	p.require(previewSubscriptionChangeResponseDataFieldPeriodStart)
 }
 
+// SetProblems sets the Problems field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetProblems(problems []*CheckoutProblemResponseData) {
+	p.Problems = problems
+	p.require(previewSubscriptionChangeResponseDataFieldProblems)
+}
+
 // SetPromoCodeApplied sets the PromoCodeApplied field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PreviewSubscriptionChangeResponseData) SetPromoCodeApplied(promoCodeApplied bool) {
@@ -3059,7 +3504,7 @@ var (
 type PreviewSubscriptionDiscountResponseData struct {
 	AmountOff           *int64     `json:"amount_off,omitempty" url:"amount_off,omitempty"`
 	CouponName          string     `json:"coupon_name" url:"coupon_name"`
-	Currency            *string    `json:"currency,omitempty" url:"currency,omitempty"`
+	Currency            *Currency  `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomerFacingCode  *string    `json:"customer_facing_code,omitempty" url:"customer_facing_code,omitempty"`
 	Duration            string     `json:"duration" url:"duration"`
 	DurationInMonths    *int64     `json:"duration_in_months,omitempty" url:"duration_in_months,omitempty"`
@@ -3090,7 +3535,7 @@ func (p *PreviewSubscriptionDiscountResponseData) GetCouponName() string {
 	return p.CouponName
 }
 
-func (p *PreviewSubscriptionDiscountResponseData) GetCurrency() *string {
+func (p *PreviewSubscriptionDiscountResponseData) GetCurrency() *Currency {
 	if p == nil {
 		return nil
 	}
@@ -3185,7 +3630,7 @@ func (p *PreviewSubscriptionDiscountResponseData) SetCouponName(couponName strin
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PreviewSubscriptionDiscountResponseData) SetCurrency(currency *string) {
+func (p *PreviewSubscriptionDiscountResponseData) SetCurrency(currency *Currency) {
 	p.Currency = currency
 	p.require(previewSubscriptionDiscountResponseDataFieldCurrency)
 }
@@ -3324,7 +3769,7 @@ var (
 type PreviewSubscriptionFinanceResponseData struct {
 	AmountOff int64 `json:"amount_off" url:"amount_off"`
 	// ISO 4217 currency every amount in this block is denominated in.
-	Currency                 string                                         `json:"currency" url:"currency"`
+	Currency                 Currency                                       `json:"currency" url:"currency"`
 	DiscountAmount           int64                                          `json:"discount_amount" url:"discount_amount"`
 	Discounts                []*PreviewSubscriptionDiscountResponseData     `json:"discounts" url:"discounts"`
 	DueNow                   int64                                          `json:"due_now" url:"due_now"`
@@ -3356,7 +3801,7 @@ func (p *PreviewSubscriptionFinanceResponseData) GetAmountOff() int64 {
 	return p.AmountOff
 }
 
-func (p *PreviewSubscriptionFinanceResponseData) GetCurrency() string {
+func (p *PreviewSubscriptionFinanceResponseData) GetCurrency() Currency {
 	if p == nil {
 		return ""
 	}
@@ -3500,7 +3945,7 @@ func (p *PreviewSubscriptionFinanceResponseData) SetAmountOff(amountOff int64) {
 
 // SetCurrency sets the Currency field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PreviewSubscriptionFinanceResponseData) SetCurrency(currency string) {
+func (p *PreviewSubscriptionFinanceResponseData) SetCurrency(currency Currency) {
 	p.Currency = currency
 	p.require(previewSubscriptionFinanceResponseDataFieldCurrency)
 }
@@ -5308,12 +5753,18 @@ func (u *UpdateTrialEndRequestBody) SetTrialEnd(trialEnd *time.Time) {
 }
 
 func (u *UpdateTrialEndRequestBody) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdateTrialEndRequestBody
-	var body unmarshaler
+	type embed UpdateTrialEndRequestBody
+	var body = struct {
+		embed
+		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed: embed(*u),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*u = UpdateTrialEndRequestBody(body)
+	*u = UpdateTrialEndRequestBody(body.embed)
+	u.TrialEnd = body.TrialEnd.TimePtr()
 	return nil
 }
 

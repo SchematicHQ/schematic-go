@@ -65,12 +65,18 @@ func (c *CreateScheduledCheckoutRequest) SetToPlanID(toPlanID string) {
 }
 
 func (c *CreateScheduledCheckoutRequest) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateScheduledCheckoutRequest
-	var body unmarshaler
+	type embed CreateScheduledCheckoutRequest
+	var body = struct {
+		embed
+		ExecuteAfter *internal.DateTime `json:"execute_after"`
+	}{
+		embed: embed(*c),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*c = CreateScheduledCheckoutRequest(body)
+	*c = CreateScheduledCheckoutRequest(body.embed)
+	c.ExecuteAfter = body.ExecuteAfter.Time()
 	return nil
 }
 
@@ -698,7 +704,6 @@ func (g *GetScheduledCheckoutResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listScheduledCheckoutsParamsFieldCompanyID = big.NewInt(1 << 0)
 	listScheduledCheckoutsParamsFieldLimit     = big.NewInt(1 << 1)
@@ -706,6 +711,7 @@ var (
 	listScheduledCheckoutsParamsFieldStatus    = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListScheduledCheckoutsParams struct {
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// Page limit (default 100)
@@ -1078,12 +1084,18 @@ func (u *UpdateScheduledCheckoutRequest) SetStatus(status *ScheduledCheckoutStat
 }
 
 func (u *UpdateScheduledCheckoutRequest) UnmarshalJSON(data []byte) error {
-	type unmarshaler UpdateScheduledCheckoutRequest
-	var body unmarshaler
+	type embed UpdateScheduledCheckoutRequest
+	var body = struct {
+		embed
+		ExecuteAfter *internal.DateTime `json:"execute_after,omitempty"`
+	}{
+		embed: embed(*u),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*u = UpdateScheduledCheckoutRequest(body)
+	*u = UpdateScheduledCheckoutRequest(body.embed)
+	u.ExecuteAfter = body.ExecuteAfter.TimePtr()
 	return nil
 }
 

@@ -286,7 +286,6 @@ func (l *LicenseResponseData) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	countLicensesParamsFieldFeatureIDs = big.NewInt(1 << 0)
 	countLicensesParamsFieldIDs        = big.NewInt(1 << 1)
@@ -295,6 +294,7 @@ var (
 	countLicensesParamsFieldOffset     = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type CountLicensesParams struct {
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
 	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -645,7 +645,6 @@ func (g *GetSingleLicenseResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listLicensesParamsFieldFeatureIDs = big.NewInt(1 << 0)
 	listLicensesParamsFieldIDs        = big.NewInt(1 << 1)
@@ -654,6 +653,7 @@ var (
 	listLicensesParamsFieldOffset     = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type ListLicensesParams struct {
 	FeatureIDs []string `json:"feature_ids,omitempty" url:"feature_ids,omitempty"`
 	IDs        []string `json:"ids,omitempty" url:"ids,omitempty"`

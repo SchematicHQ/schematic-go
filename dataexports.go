@@ -1714,7 +1714,6 @@ func (g *GetDataExportResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listDataExportsParamsFieldExportType = big.NewInt(1 << 0)
 	listDataExportsParamsFieldLimit      = big.NewInt(1 << 1)
@@ -1722,6 +1721,7 @@ var (
 	listDataExportsParamsFieldStatus     = big.NewInt(1 << 3)
 )
 
+// Input parameters
 type ListDataExportsParams struct {
 	ExportType *DataExportType `json:"export_type,omitempty" url:"export_type,omitempty"`
 	// Page limit (default 100)

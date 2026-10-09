@@ -304,7 +304,7 @@ func (c *Client) ListInvoices(
 //	    AmountPaid: int64(1000000),
 //	    AmountRemaining: int64(1000000),
 //	    CollectionMethod: "collection_method",
-//	    Currency: "currency",
+//	    Currency: schematichq.CurrencyAed,
 //	    CustomerExternalID: "customer_external_id",
 //	    Subtotal: int64(1000000),
 //	}
@@ -499,9 +499,7 @@ func (c *Client) DeletePaymentMethodByExternalID(
 // Example:
 //
 //	request := &schematichq.ListBillingPricesRequest{
-//	    Currency: schematichq.String(
-//	        "currency",
-//	    ),
+//	    Currency: schematichq.CurrencyAed.Ptr(),
 //	    ForInitialPlan: schematichq.Bool(
 //	        true,
 //	    ),
@@ -576,7 +574,7 @@ func (c *Client) ListBillingPrices(
 //
 //	request := &schematichq.CreateBillingPriceRequestBody{
 //	    BillingScheme: schematichq.BillingPriceSchemePerUnit,
-//	    Currency: "currency",
+//	    Currency: schematichq.CurrencyAed,
 //	    ExternalAccountID: "external_account_id",
 //	    Interval: "interval",
 //	    IsActive: true,
@@ -636,9 +634,7 @@ func (c *Client) DeleteBillingProduct(
 // Example:
 //
 //	request := &schematichq.ListBillingProductPricesRequest{
-//	    Currency: schematichq.String(
-//	        "currency",
-//	    ),
+//	    Currency: schematichq.CurrencyAed.Ptr(),
 //	    ForInitialPlan: schematichq.Bool(
 //	        true,
 //	    ),
@@ -948,9 +944,51 @@ func (c *Client) UpdateCompanyBillingProfile(
 
 // Example:
 //
+//	client.Billing.GetBillingSettings(
+//	    context.TODO(),
+//	)
+func (c *Client) GetBillingSettings(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetBillingSettingsResponse, error) {
+	response, err := c.WithRawResponse.GetBillingSettings(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpdateBillingSettingsRequestBody{}
+//	client.Billing.UpdateBillingSettings(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) UpdateBillingSettings(
+	ctx context.Context,
+	request *schematichq.UpdateBillingSettingsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateBillingSettingsResponse, error) {
+	response, err := c.WithRawResponse.UpdateBillingSettings(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.CreateBillingSubscriptionRequestBody{
 //	    CancelAtPeriodEnd: true,
-//	    Currency: "currency",
+//	    Currency: schematichq.CurrencyAed,
 //	    CustomerExternalID: "customer_external_id",
 //	    Discounts: []*schematichq.BillingSubscriptionDiscount{
 //	        &schematichq.BillingSubscriptionDiscount{
@@ -967,7 +1005,7 @@ func (c *Client) UpdateCompanyBillingProfile(
 //	    ),
 //	    ProductExternalIDs: []*schematichq.BillingProductPricing{
 //	        &schematichq.BillingProductPricing{
-//	            Currency: "currency",
+//	            Currency: schematichq.CurrencyAed,
 //	            Interval: "interval",
 //	            Price: int64(1000000),
 //	            PriceExternalID: "price_external_id",

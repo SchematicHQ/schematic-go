@@ -75,7 +75,7 @@ func (c *Client) ListBillingCredits(
 // Example:
 //
 //	request := &schematichq.CreateBillingCreditRequestBody{
-//	    Currency: "currency",
+//	    Currency: schematichq.CurrencyAed,
 //	    Description: "description",
 //	    Name: "name",
 //	}
@@ -202,6 +202,38 @@ func (c *Client) ListCompanyCreditBalances(
 
 // Example:
 //
+//	request := &schematichq.GetCreditBalanceTimeSeriesRequest{
+//	    BillingCreditID: "billing_credit_id",
+//	    CompanyID: "company_id",
+//	    EndTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	    StartTime: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	}
+//	client.Credits.GetCreditBalanceTimeSeries(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) GetCreditBalanceTimeSeries(
+	ctx context.Context,
+	request *schematichq.GetCreditBalanceTimeSeriesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetCreditBalanceTimeSeriesResponse, error) {
+	response, err := c.WithRawResponse.GetCreditBalanceTimeSeries(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListCreditBundlesRequest{
 //	    IDs: []*string{
 //	        schematichq.String(
@@ -247,7 +279,7 @@ func (c *Client) ListCreditBundles(
 //	request := &schematichq.CreateCreditBundleRequestBody{
 //	    BundleName: "bundle_name",
 //	    CreditID: "credit_id",
-//	    Currency: "currency",
+//	    Currency: schematichq.CurrencyAed,
 //	    PricePerUnit: int64(1000000),
 //	}
 //	client.Credits.CreateCreditBundle(

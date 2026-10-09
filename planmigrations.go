@@ -299,12 +299,18 @@ func (c *CreateMigrationInput) SetTargetPlanType(targetPlanType PlanType) {
 }
 
 func (c *CreateMigrationInput) UnmarshalJSON(data []byte) error {
-	type unmarshaler CreateMigrationInput
-	var body unmarshaler
+	type embed CreateMigrationInput
+	var body = struct {
+		embed
+		ScheduledAt *internal.DateTime `json:"scheduled_at,omitempty"`
+	}{
+		embed: embed(*c),
+	}
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
 	}
-	*c = CreateMigrationInput(body)
+	*c = CreateMigrationInput(body.embed)
+	c.ScheduledAt = body.ScheduledAt.TimePtr()
 	return nil
 }
 
@@ -1936,7 +1942,6 @@ func (c *CompleteMigrationNowResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countCompanyMigrationsParamsFieldLimit       = big.NewInt(1 << 0)
 	countCompanyMigrationsParamsFieldMigrationID = big.NewInt(1 << 1)
@@ -1945,6 +1950,7 @@ var (
 	countCompanyMigrationsParamsFieldStatus      = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type CountCompanyMigrationsParams struct {
 	// Page limit (default 100)
 	Limit       *int64  `json:"limit,omitempty" url:"limit,omitempty"`
@@ -2192,7 +2198,6 @@ func (c *CountCompanyMigrationsResponse) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
-// Input parameters
 var (
 	countMigrationsParamsFieldFeatureID            = big.NewInt(1 << 0)
 	countMigrationsParamsFieldFeaturePlanRolloutID = big.NewInt(1 << 1)
@@ -2202,6 +2207,7 @@ var (
 	countMigrationsParamsFieldStatus               = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type CountMigrationsParams struct {
 	FeatureID            *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FeaturePlanRolloutID *string `json:"feature_plan_rollout_id,omitempty" url:"feature_plan_rollout_id,omitempty"`
@@ -2670,7 +2676,6 @@ func (g *GetMigrationResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-// Input parameters
 var (
 	listCompanyMigrationsParamsFieldLimit       = big.NewInt(1 << 0)
 	listCompanyMigrationsParamsFieldMigrationID = big.NewInt(1 << 1)
@@ -2679,6 +2684,7 @@ var (
 	listCompanyMigrationsParamsFieldStatus      = big.NewInt(1 << 4)
 )
 
+// Input parameters
 type ListCompanyMigrationsParams struct {
 	// Page limit (default 100)
 	Limit       *int64  `json:"limit,omitempty" url:"limit,omitempty"`
@@ -2926,7 +2932,6 @@ func (l *ListCompanyMigrationsResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
-// Input parameters
 var (
 	listMigrationsParamsFieldFeatureID            = big.NewInt(1 << 0)
 	listMigrationsParamsFieldFeaturePlanRolloutID = big.NewInt(1 << 1)
@@ -2936,6 +2941,7 @@ var (
 	listMigrationsParamsFieldStatus               = big.NewInt(1 << 5)
 )
 
+// Input parameters
 type ListMigrationsParams struct {
 	FeatureID            *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FeaturePlanRolloutID *string `json:"feature_plan_rollout_id,omitempty" url:"feature_plan_rollout_id,omitempty"`

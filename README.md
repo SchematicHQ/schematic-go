@@ -794,6 +794,12 @@ When running in Replicator Mode, the client will:
 - Use cached data populated by the external replicator service
 - Fall back to direct API calls if the replicator is not available
 
+#### Cache Readiness
+
+The client serves flag checks from the replicator's cache only once the replicator reports that the cache is ready. The replicator's health endpoint answers `ready: true` once its cache is complete for the current cache version. Until then, and whenever a health check fails or the replicator cannot be reached, `CheckFlag`, `CheckFlagWithEntitlement` and `CheckFlags` all skip the cache and ask the Schematic API instead, falling back to the flag's default value if the API call fails. Once the cache is ready, all three evaluate locally from the cache, and any flag the cache cannot answer (for example, one that is not in it yet) still falls back to the API.
+
+The datastream client's `IsCacheReady()` reports the same readiness the flag checks use.
+
 ## Credit Leases and Reservations
 
 For features metered by credit burndown, such as inference tokens, `Check` reserves credits for the work you are about to do and `TrackWithReservation` settles the reservation with the actual usage. The SDK gates in one of two modes:

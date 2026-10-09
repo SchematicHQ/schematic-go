@@ -185,8 +185,12 @@ func (c *DataStreamClient) Close() {
 	c.logger.Info(ctx, "WebSocket connection closed")
 }
 
-// IsConnected checks if the WebSocket connection is active
-// In replicator mode, returns true if the external replicator is ready
+// IsConnected reports whether the WebSocket connection is active.
+//
+// In replicator mode there is no WebSocket, and this reports the replicator's
+// readiness instead, the same value IsCacheReady returns there. That behavior
+// is kept for backward compatibility; to ask whether flag checks can be served
+// from the cache, use IsCacheReady.
 func (c *DataStreamClient) IsConnected() bool {
 	if c.replicatorMode {
 		return c.IsReplicatorReady()
@@ -197,6 +201,24 @@ func (c *DataStreamClient) IsConnected() bool {
 	}
 
 	return c.wsClient.IsConnected()
+}
+
+// IsCacheReady reports whether flag checks may be evaluated from the cache.
+//
+// In replicator mode this is the replicator's readiness from its last health
+// poll: true once the replicator reports its cache complete for the current
+// cache version, and false before that or after a poll that failed. While it
+// is false, SchematicClient does not read the cache and answers flag checks
+// from the API.
+//
+// Outside replicator mode the SDK fills its own cache over the WebSocket and
+// fetches what it lacks on demand, so there is nothing to wait for and this
+// returns true.
+func (c *DataStreamClient) IsCacheReady() bool {
+	if c.replicatorMode {
+		return c.IsReplicatorReady()
+	}
+	return true
 }
 
 func (c *DataStreamClient) handleMessageResponse(ctx context.Context, message *schematicdatastreamws.DataStreamResp) error {
@@ -585,7 +607,8 @@ func (c *DataStreamClient) resolveEntities(
 	}
 
 	// In replicator mode, evaluate with what the cache holds instead of
-	// fetching: the external replicator should have populated it already.
+	// fetching: the external replicator owns populating it, and SchematicClient
+	// only evaluates here once IsCacheReady says the replicator has finished.
 	if c.replicatorMode {
 		return cachedCompany, cachedUser, nil
 	}

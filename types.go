@@ -8188,6 +8188,445 @@ func (c *CheckoutFieldWithValue) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CheckoutProblemCode string
+
+const (
+	CheckoutProblemCodeAddOnConflictsWithPlan                   CheckoutProblemCode = "add_on_conflicts_with_plan"
+	CheckoutProblemCodeAddOnIntervalMismatch                    CheckoutProblemCode = "add_on_interval_mismatch"
+	CheckoutProblemCodeAddOnRequiresBilledPlan                  CheckoutProblemCode = "add_on_requires_billed_plan"
+	CheckoutProblemCodeAddOnUnavailable                         CheckoutProblemCode = "add_on_unavailable"
+	CheckoutProblemCodeBillingCycleAnchorConflictsWithTrial     CheckoutProblemCode = "billing_cycle_anchor_conflicts_with_trial"
+	CheckoutProblemCodeBillingCycleAnchorMustBeFuture           CheckoutProblemCode = "billing_cycle_anchor_must_be_future"
+	CheckoutProblemCodeBillingCycleAnchorNeedsNewSubscription   CheckoutProblemCode = "billing_cycle_anchor_needs_new_subscription"
+	CheckoutProblemCodeBillingCycleAnchorWithoutPlan            CheckoutProblemCode = "billing_cycle_anchor_without_plan"
+	CheckoutProblemCodeBillingStartDateMustBePast               CheckoutProblemCode = "billing_start_date_must_be_past"
+	CheckoutProblemCodeBillingStartDateNeedsNewSubscription     CheckoutProblemCode = "billing_start_date_needs_new_subscription"
+	CheckoutProblemCodeBillingStartDateNeedsRenewalDate         CheckoutProblemCode = "billing_start_date_needs_renewal_date"
+	CheckoutProblemCodeBillingStartDateNotBeforeRenewalDate     CheckoutProblemCode = "billing_start_date_not_before_renewal_date"
+	CheckoutProblemCodeBillingStartDateTooFarInPast             CheckoutProblemCode = "billing_start_date_too_far_in_past"
+	CheckoutProblemCodeCreditBundleIncompatible                 CheckoutProblemCode = "credit_bundle_incompatible"
+	CheckoutProblemCodeCreditBundleUnavailable                  CheckoutProblemCode = "credit_bundle_unavailable"
+	CheckoutProblemCodeCreditBundlesActivateOnPayment           CheckoutProblemCode = "credit_bundles_activate_on_payment"
+	CheckoutProblemCodeCurrencyMismatch                         CheckoutProblemCode = "currency_mismatch"
+	CheckoutProblemCodeCustomFieldRequired                      CheckoutProblemCode = "custom_field_required"
+	CheckoutProblemCodeDiscountIneligible                       CheckoutProblemCode = "discount_ineligible"
+	CheckoutProblemCodeDowngradeNotPermitted                    CheckoutProblemCode = "downgrade_not_permitted"
+	CheckoutProblemCodeFreeFirstPeriodActivatesOnPayment        CheckoutProblemCode = "free_first_period_activates_on_payment"
+	CheckoutProblemCodeInvoiceEmailRequired                     CheckoutProblemCode = "invoice_email_required"
+	CheckoutProblemCodeInvoicedSubscriptionConflictsWithTrial   CheckoutProblemCode = "invoiced_subscription_conflicts_with_trial"
+	CheckoutProblemCodeInvoicedSubscriptionNeedsNewSubscription CheckoutProblemCode = "invoiced_subscription_needs_new_subscription"
+	CheckoutProblemCodeInvoicedSubscriptionRequiresPlan         CheckoutProblemCode = "invoiced_subscription_requires_plan"
+	CheckoutProblemCodeOptInRequired                            CheckoutProblemCode = "opt_in_required"
+	CheckoutProblemCodePayInAdvancePriceInvalid                 CheckoutProblemCode = "pay_in_advance_price_invalid"
+	CheckoutProblemCodePayInAdvanceRequired                     CheckoutProblemCode = "pay_in_advance_required"
+	CheckoutProblemCodePaymentMethodRequired                    CheckoutProblemCode = "payment_method_required"
+	CheckoutProblemCodePlanNotTrialable                         CheckoutProblemCode = "plan_not_trialable"
+	CheckoutProblemCodePlanUnavailable                          CheckoutProblemCode = "plan_unavailable"
+	CheckoutProblemCodePriceUnavailable                         CheckoutProblemCode = "price_unavailable"
+	CheckoutProblemCodeProrateFirstPeriodWithoutAnchor          CheckoutProblemCode = "prorate_first_period_without_anchor"
+	CheckoutProblemCodeProviderRejected                         CheckoutProblemCode = "provider_rejected"
+	CheckoutProblemCodeScheduledChangeBlocksPurchase            CheckoutProblemCode = "scheduled_change_blocks_purchase"
+	CheckoutProblemCodeScheduledChangePending                   CheckoutProblemCode = "scheduled_change_pending"
+	CheckoutProblemCodeSelectionInvalid                         CheckoutProblemCode = "selection_invalid"
+	CheckoutProblemCodeSubscriptionCurrencyChange               CheckoutProblemCode = "subscription_currency_change"
+	CheckoutProblemCodeTrialEndMustBeFuture                     CheckoutProblemCode = "trial_end_must_be_future"
+	CheckoutProblemCodeTrialEndTooFar                           CheckoutProblemCode = "trial_end_too_far"
+	CheckoutProblemCodeTrialExcludesAddOns                      CheckoutProblemCode = "trial_excludes_add_ons"
+	CheckoutProblemCodeTrialExcludesUsageBased                  CheckoutProblemCode = "trial_excludes_usage_based"
+	CheckoutProblemCodeUsagePriceMissingForInterval             CheckoutProblemCode = "usage_price_missing_for_interval"
+	CheckoutProblemCodeUsageOverLimit                           CheckoutProblemCode = "usage_over_limit"
+)
+
+func NewCheckoutProblemCodeFromString(s string) (CheckoutProblemCode, error) {
+	switch s {
+	case "add_on_conflicts_with_plan":
+		return CheckoutProblemCodeAddOnConflictsWithPlan, nil
+	case "add_on_interval_mismatch":
+		return CheckoutProblemCodeAddOnIntervalMismatch, nil
+	case "add_on_requires_billed_plan":
+		return CheckoutProblemCodeAddOnRequiresBilledPlan, nil
+	case "add_on_unavailable":
+		return CheckoutProblemCodeAddOnUnavailable, nil
+	case "billing_cycle_anchor_conflicts_with_trial":
+		return CheckoutProblemCodeBillingCycleAnchorConflictsWithTrial, nil
+	case "billing_cycle_anchor_must_be_future":
+		return CheckoutProblemCodeBillingCycleAnchorMustBeFuture, nil
+	case "billing_cycle_anchor_needs_new_subscription":
+		return CheckoutProblemCodeBillingCycleAnchorNeedsNewSubscription, nil
+	case "billing_cycle_anchor_without_plan":
+		return CheckoutProblemCodeBillingCycleAnchorWithoutPlan, nil
+	case "billing_start_date_must_be_past":
+		return CheckoutProblemCodeBillingStartDateMustBePast, nil
+	case "billing_start_date_needs_new_subscription":
+		return CheckoutProblemCodeBillingStartDateNeedsNewSubscription, nil
+	case "billing_start_date_needs_renewal_date":
+		return CheckoutProblemCodeBillingStartDateNeedsRenewalDate, nil
+	case "billing_start_date_not_before_renewal_date":
+		return CheckoutProblemCodeBillingStartDateNotBeforeRenewalDate, nil
+	case "billing_start_date_too_far_in_past":
+		return CheckoutProblemCodeBillingStartDateTooFarInPast, nil
+	case "credit_bundle_incompatible":
+		return CheckoutProblemCodeCreditBundleIncompatible, nil
+	case "credit_bundle_unavailable":
+		return CheckoutProblemCodeCreditBundleUnavailable, nil
+	case "credit_bundles_activate_on_payment":
+		return CheckoutProblemCodeCreditBundlesActivateOnPayment, nil
+	case "currency_mismatch":
+		return CheckoutProblemCodeCurrencyMismatch, nil
+	case "custom_field_required":
+		return CheckoutProblemCodeCustomFieldRequired, nil
+	case "discount_ineligible":
+		return CheckoutProblemCodeDiscountIneligible, nil
+	case "downgrade_not_permitted":
+		return CheckoutProblemCodeDowngradeNotPermitted, nil
+	case "free_first_period_activates_on_payment":
+		return CheckoutProblemCodeFreeFirstPeriodActivatesOnPayment, nil
+	case "invoice_email_required":
+		return CheckoutProblemCodeInvoiceEmailRequired, nil
+	case "invoiced_subscription_conflicts_with_trial":
+		return CheckoutProblemCodeInvoicedSubscriptionConflictsWithTrial, nil
+	case "invoiced_subscription_needs_new_subscription":
+		return CheckoutProblemCodeInvoicedSubscriptionNeedsNewSubscription, nil
+	case "invoiced_subscription_requires_plan":
+		return CheckoutProblemCodeInvoicedSubscriptionRequiresPlan, nil
+	case "opt_in_required":
+		return CheckoutProblemCodeOptInRequired, nil
+	case "pay_in_advance_price_invalid":
+		return CheckoutProblemCodePayInAdvancePriceInvalid, nil
+	case "pay_in_advance_required":
+		return CheckoutProblemCodePayInAdvanceRequired, nil
+	case "payment_method_required":
+		return CheckoutProblemCodePaymentMethodRequired, nil
+	case "plan_not_trialable":
+		return CheckoutProblemCodePlanNotTrialable, nil
+	case "plan_unavailable":
+		return CheckoutProblemCodePlanUnavailable, nil
+	case "price_unavailable":
+		return CheckoutProblemCodePriceUnavailable, nil
+	case "prorate_first_period_without_anchor":
+		return CheckoutProblemCodeProrateFirstPeriodWithoutAnchor, nil
+	case "provider_rejected":
+		return CheckoutProblemCodeProviderRejected, nil
+	case "scheduled_change_blocks_purchase":
+		return CheckoutProblemCodeScheduledChangeBlocksPurchase, nil
+	case "scheduled_change_pending":
+		return CheckoutProblemCodeScheduledChangePending, nil
+	case "selection_invalid":
+		return CheckoutProblemCodeSelectionInvalid, nil
+	case "subscription_currency_change":
+		return CheckoutProblemCodeSubscriptionCurrencyChange, nil
+	case "trial_end_must_be_future":
+		return CheckoutProblemCodeTrialEndMustBeFuture, nil
+	case "trial_end_too_far":
+		return CheckoutProblemCodeTrialEndTooFar, nil
+	case "trial_excludes_add_ons":
+		return CheckoutProblemCodeTrialExcludesAddOns, nil
+	case "trial_excludes_usage_based":
+		return CheckoutProblemCodeTrialExcludesUsageBased, nil
+	case "usage_price_missing_for_interval":
+		return CheckoutProblemCodeUsagePriceMissingForInterval, nil
+	case "usage_over_limit":
+		return CheckoutProblemCodeUsageOverLimit, nil
+	}
+	var t CheckoutProblemCode
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CheckoutProblemCode) Ptr() *CheckoutProblemCode {
+	return &c
+}
+
+var (
+	checkoutProblemResponseDataFieldBlocking        = big.NewInt(1 << 0)
+	checkoutProblemResponseDataFieldBundleID        = big.NewInt(1 << 1)
+	checkoutProblemResponseDataFieldCode            = big.NewInt(1 << 2)
+	checkoutProblemResponseDataFieldCurrency        = big.NewInt(1 << 3)
+	checkoutProblemResponseDataFieldDetail          = big.NewInt(1 << 4)
+	checkoutProblemResponseDataFieldFeatureID       = big.NewInt(1 << 5)
+	checkoutProblemResponseDataFieldFieldID         = big.NewInt(1 << 6)
+	checkoutProblemResponseDataFieldMessage         = big.NewInt(1 << 7)
+	checkoutProblemResponseDataFieldPaymentMethodID = big.NewInt(1 << 8)
+	checkoutProblemResponseDataFieldPlanID          = big.NewInt(1 << 9)
+	checkoutProblemResponseDataFieldPriceID         = big.NewInt(1 << 10)
+	checkoutProblemResponseDataFieldSource          = big.NewInt(1 << 11)
+)
+
+type CheckoutProblemResponseData struct {
+	// Whether completing the checkout would be refused while this stands.
+	Blocking bool                `json:"blocking" url:"blocking"`
+	BundleID *string             `json:"bundle_id,omitempty" url:"bundle_id,omitempty"`
+	Code     CheckoutProblemCode `json:"code" url:"code"`
+	// The currency this problem is about, when it is about one.
+	Currency *Currency `json:"currency,omitempty" url:"currency,omitempty"`
+	// Diagnostic detail for operators, including what the billing provider said. Never shown to a customer.
+	Detail    *string `json:"detail,omitempty" url:"detail,omitempty"`
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FieldID   *string `json:"field_id,omitempty" url:"field_id,omitempty"`
+	// What is wrong, in words safe for anyone allowed to read the checkout.
+	Message         string                `json:"message" url:"message"`
+	PaymentMethodID *string               `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
+	PlanID          *string               `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	PriceID         *string               `json:"price_id,omitempty" url:"price_id,omitempty"`
+	Source          CheckoutProblemSource `json:"source" url:"source"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutProblemResponseData) GetBlocking() bool {
+	if c == nil {
+		return false
+	}
+	return c.Blocking
+}
+
+func (c *CheckoutProblemResponseData) GetBundleID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BundleID
+}
+
+func (c *CheckoutProblemResponseData) GetCode() CheckoutProblemCode {
+	if c == nil {
+		return ""
+	}
+	return c.Code
+}
+
+func (c *CheckoutProblemResponseData) GetCurrency() *Currency {
+	if c == nil {
+		return nil
+	}
+	return c.Currency
+}
+
+func (c *CheckoutProblemResponseData) GetDetail() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Detail
+}
+
+func (c *CheckoutProblemResponseData) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CheckoutProblemResponseData) GetFieldID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FieldID
+}
+
+func (c *CheckoutProblemResponseData) GetMessage() string {
+	if c == nil {
+		return ""
+	}
+	return c.Message
+}
+
+func (c *CheckoutProblemResponseData) GetPaymentMethodID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PaymentMethodID
+}
+
+func (c *CheckoutProblemResponseData) GetPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanID
+}
+
+func (c *CheckoutProblemResponseData) GetPriceID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PriceID
+}
+
+func (c *CheckoutProblemResponseData) GetSource() CheckoutProblemSource {
+	if c == nil {
+		return ""
+	}
+	return c.Source
+}
+
+func (c *CheckoutProblemResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CheckoutProblemResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBlocking sets the Blocking field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetBlocking(blocking bool) {
+	c.Blocking = blocking
+	c.require(checkoutProblemResponseDataFieldBlocking)
+}
+
+// SetBundleID sets the BundleID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetBundleID(bundleID *string) {
+	c.BundleID = bundleID
+	c.require(checkoutProblemResponseDataFieldBundleID)
+}
+
+// SetCode sets the Code field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetCode(code CheckoutProblemCode) {
+	c.Code = code
+	c.require(checkoutProblemResponseDataFieldCode)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetCurrency(currency *Currency) {
+	c.Currency = currency
+	c.require(checkoutProblemResponseDataFieldCurrency)
+}
+
+// SetDetail sets the Detail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetDetail(detail *string) {
+	c.Detail = detail
+	c.require(checkoutProblemResponseDataFieldDetail)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(checkoutProblemResponseDataFieldFeatureID)
+}
+
+// SetFieldID sets the FieldID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetFieldID(fieldID *string) {
+	c.FieldID = fieldID
+	c.require(checkoutProblemResponseDataFieldFieldID)
+}
+
+// SetMessage sets the Message field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetMessage(message string) {
+	c.Message = message
+	c.require(checkoutProblemResponseDataFieldMessage)
+}
+
+// SetPaymentMethodID sets the PaymentMethodID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetPaymentMethodID(paymentMethodID *string) {
+	c.PaymentMethodID = paymentMethodID
+	c.require(checkoutProblemResponseDataFieldPaymentMethodID)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetPlanID(planID *string) {
+	c.PlanID = planID
+	c.require(checkoutProblemResponseDataFieldPlanID)
+}
+
+// SetPriceID sets the PriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetPriceID(priceID *string) {
+	c.PriceID = priceID
+	c.require(checkoutProblemResponseDataFieldPriceID)
+}
+
+// SetSource sets the Source field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutProblemResponseData) SetSource(source CheckoutProblemSource) {
+	c.Source = source
+	c.require(checkoutProblemResponseDataFieldSource)
+}
+
+func (c *CheckoutProblemResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CheckoutProblemResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CheckoutProblemResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CheckoutProblemResponseData) MarshalJSON() ([]byte, error) {
+	type embed CheckoutProblemResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CheckoutProblemResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CheckoutProblemSource string
+
+const (
+	CheckoutProblemSourceProvider    CheckoutProblemSource = "provider"
+	CheckoutProblemSourceRequirement CheckoutProblemSource = "requirement"
+	CheckoutProblemSourceValidation  CheckoutProblemSource = "validation"
+)
+
+func NewCheckoutProblemSourceFromString(s string) (CheckoutProblemSource, error) {
+	switch s {
+	case "provider":
+		return CheckoutProblemSourceProvider, nil
+	case "requirement":
+		return CheckoutProblemSourceRequirement, nil
+	case "validation":
+		return CheckoutProblemSourceValidation, nil
+	}
+	var t CheckoutProblemSource
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CheckoutProblemSource) Ptr() *CheckoutProblemSource {
+	return &c
+}
+
 var (
 	companyBillingDetailsViewFieldAddress          = big.NewInt(1 << 0)
 	companyBillingDetailsViewFieldCheckoutSettings = big.NewInt(1 << 1)
@@ -18583,21 +19022,23 @@ var (
 	customPlanBillingResponseDataFieldActivationStrategy = big.NewInt(1 << 0)
 	customPlanBillingResponseDataFieldBillingCycleAnchor = big.NewInt(1 << 1)
 	customPlanBillingResponseDataFieldBillingStartDate   = big.NewInt(1 << 2)
-	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 3)
-	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 4)
-	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 5)
-	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 6)
-	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 7)
-	customPlanBillingResponseDataFieldMigrationID        = big.NewInt(1 << 8)
-	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 11)
-	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 12)
-	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 13)
-	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 14)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 15)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 16)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 17)
+	customPlanBillingResponseDataFieldCheckoutID         = big.NewInt(1 << 3)
+	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 4)
+	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 5)
+	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 6)
+	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 7)
+	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 8)
+	customPlanBillingResponseDataFieldMigrationID        = big.NewInt(1 << 9)
+	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldProblems           = big.NewInt(1 << 13)
+	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 14)
+	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 15)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 16)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 17)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 18)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 19)
 )
 
 type CustomPlanBillingResponseData struct {
@@ -18605,18 +19046,22 @@ type CustomPlanBillingResponseData struct {
 	// The billing period renewal date pinned when the subscription started, when one was set. When no invoice exists yet, the first invoice is raised on this date.
 	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
 	// The date the contract term starts, when the operator pinned one. A past date was backdated onto the subscription so the first period runs from the contract date rather than from finalization.
-	BillingStartDate  *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
-	CompanyID         string     `json:"company_id" url:"company_id"`
-	CreatedAt         time.Time  `json:"created_at" url:"created_at"`
-	DaysUntilDue      int64      `json:"days_until_due" url:"days_until_due"`
-	ExternalInvoiceID *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
-	ID                string     `json:"id" url:"id"`
+	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
+	// The checkout this billing record was created from, when it was created from one.
+	CheckoutID        *string   `json:"checkout_id,omitempty" url:"checkout_id,omitempty"`
+	CompanyID         string    `json:"company_id" url:"company_id"`
+	CreatedAt         time.Time `json:"created_at" url:"created_at"`
+	DaysUntilDue      int64     `json:"days_until_due" url:"days_until_due"`
+	ExternalInvoiceID *string   `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
+	ID                string    `json:"id" url:"id"`
 	// The plan version migration this amendment invoice belongs to. Null for a first publish or a plan assigned through Manage Plan.
 	MigrationID *string    `json:"migration_id,omitempty" url:"migration_id,omitempty"`
 	PaidAt      *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
 	// The flow that created this billing record: a custom plan's first publish, an amendment of a live custom plan, or a standard plan assigned by invoice through Manage Plan.
 	PlanBillingSource PlanBillingSource `json:"plan_billing_source" url:"plan_billing_source"`
 	PlanID            string            `json:"plan_id" url:"plan_id"`
+	// What the linked checkout still reports wrong, in the order found. Empty when there is no linked checkout or it completed cleanly.
+	Problems []*CheckoutProblemResponseData `json:"problems" url:"problems"`
 	// Whether the shortened period the renewal date created was billed pro rata when the subscription started. False means that period is free and the first invoice is the one raised on the renewal date.
 	ProrateFirstPeriod *bool                   `json:"prorate_first_period,omitempty" url:"prorate_first_period,omitempty"`
 	PublishedAt        *time.Time              `json:"published_at,omitempty" url:"published_at,omitempty"`
@@ -18651,6 +19096,13 @@ func (c *CustomPlanBillingResponseData) GetBillingStartDate() *time.Time {
 		return nil
 	}
 	return c.BillingStartDate
+}
+
+func (c *CustomPlanBillingResponseData) GetCheckoutID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CheckoutID
 }
 
 func (c *CustomPlanBillingResponseData) GetCompanyID() string {
@@ -18714,6 +19166,13 @@ func (c *CustomPlanBillingResponseData) GetPlanID() string {
 		return ""
 	}
 	return c.PlanID
+}
+
+func (c *CustomPlanBillingResponseData) GetProblems() []*CheckoutProblemResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Problems
 }
 
 func (c *CustomPlanBillingResponseData) GetProrateFirstPeriod() *bool {
@@ -18795,6 +19254,13 @@ func (c *CustomPlanBillingResponseData) SetBillingStartDate(billingStartDate *ti
 	c.require(customPlanBillingResponseDataFieldBillingStartDate)
 }
 
+// SetCheckoutID sets the CheckoutID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetCheckoutID(checkoutID *string) {
+	c.CheckoutID = checkoutID
+	c.require(customPlanBillingResponseDataFieldCheckoutID)
+}
+
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CustomPlanBillingResponseData) SetCompanyID(companyID string) {
@@ -18856,6 +19322,13 @@ func (c *CustomPlanBillingResponseData) SetPlanBillingSource(planBillingSource P
 func (c *CustomPlanBillingResponseData) SetPlanID(planID string) {
 	c.PlanID = planID
 	c.require(customPlanBillingResponseDataFieldPlanID)
+}
+
+// SetProblems sets the Problems field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetProblems(problems []*CheckoutProblemResponseData) {
+	c.Problems = problems
+	c.require(customPlanBillingResponseDataFieldProblems)
 }
 
 // SetProrateFirstPeriod sets the ProrateFirstPeriod field and marks it as non-optional;
@@ -29016,6 +29489,108 @@ func (p *PlanCreditGrantView) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanCreditGrantView) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	planCreditVisibilityFieldCreditID = big.NewInt(1 << 0)
+	planCreditVisibilityFieldVisible  = big.NewInt(1 << 1)
+)
+
+type PlanCreditVisibility struct {
+	CreditID string `json:"credit_id" url:"credit_id"`
+	Visible  bool   `json:"visible" url:"visible"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanCreditVisibility) GetCreditID() string {
+	if p == nil {
+		return ""
+	}
+	return p.CreditID
+}
+
+func (p *PlanCreditVisibility) GetVisible() bool {
+	if p == nil {
+		return false
+	}
+	return p.Visible
+}
+
+func (p *PlanCreditVisibility) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanCreditVisibility) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditVisibility) SetCreditID(creditID string) {
+	p.CreditID = creditID
+	p.require(planCreditVisibilityFieldCreditID)
+}
+
+// SetVisible sets the Visible field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditVisibility) SetVisible(visible bool) {
+	p.Visible = visible
+	p.require(planCreditVisibilityFieldVisible)
+}
+
+func (p *PlanCreditVisibility) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanCreditVisibility
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanCreditVisibility(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanCreditVisibility) MarshalJSON() ([]byte, error) {
+	type embed PlanCreditVisibility
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanCreditVisibility) String() string {
 	if p == nil {
 		return "<nil>"
 	}

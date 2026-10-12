@@ -139,6 +139,14 @@ func TestSettersPlanViewPublicResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetCreditVisibility", func(t *testing.T) {
+		obj := &PlanViewPublicResponseData{}
+		var fernTestValueCreditVisibility []*PlanCreditVisibility
+		obj.SetCreditVisibility(fernTestValueCreditVisibility)
+		assert.Equal(t, fernTestValueCreditVisibility, obj.CreditVisibility)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCredits", func(t *testing.T) {
 		obj := &PlanViewPublicResponseData{}
 		var fernTestValueCredits []*BillingCreditResponseData
@@ -810,6 +818,39 @@ func TestGettersPlanViewPublicResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCreatedAt() // Should return zero value
+	})
+
+	t.Run("GetCreditVisibility", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanViewPublicResponseData{}
+		var expected []*PlanCreditVisibility
+		obj.CreditVisibility = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCreditVisibility(), "getter should return the property value")
+	})
+
+	t.Run("GetCreditVisibility_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanViewPublicResponseData{}
+		obj.CreditVisibility = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCreditVisibility(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCreditVisibility_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *PlanViewPublicResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCreditVisibility() // Should return zero value
 	})
 
 	t.Run("GetCredits", func(t *testing.T) {
@@ -1980,6 +2021,37 @@ func TestSettersMarkExplicitPlanViewPublicResponseData(t *testing.T) {
 
 		// Act
 		obj.SetCreatedAt(fernTestValueCreatedAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetCreditVisibility_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PlanViewPublicResponseData{}
+		var fernTestValueCreditVisibility []*PlanCreditVisibility
+
+		// Act
+		obj.SetCreditVisibility(fernTestValueCreditVisibility)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

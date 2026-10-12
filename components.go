@@ -1053,35 +1053,36 @@ var (
 	companyPlanDetailResponseDataFieldControlledBy          = big.NewInt(1 << 14)
 	companyPlanDetailResponseDataFieldCopiedFromPlanID      = big.NewInt(1 << 15)
 	companyPlanDetailResponseDataFieldCreatedAt             = big.NewInt(1 << 16)
-	companyPlanDetailResponseDataFieldCredits               = big.NewInt(1 << 17)
-	companyPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 18)
-	companyPlanDetailResponseDataFieldCurrent               = big.NewInt(1 << 19)
-	companyPlanDetailResponseDataFieldCustom                = big.NewInt(1 << 20)
-	companyPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 21)
-	companyPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 22)
-	companyPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 23)
-	companyPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 24)
-	companyPlanDetailResponseDataFieldEstimatedTotals       = big.NewInt(1 << 25)
-	companyPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 26)
-	companyPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 27)
-	companyPlanDetailResponseDataFieldID                    = big.NewInt(1 << 28)
-	companyPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 29)
-	companyPlanDetailResponseDataFieldInvalidReason         = big.NewInt(1 << 30)
-	companyPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 31)
-	companyPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 32)
-	companyPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 33)
-	companyPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 34)
-	companyPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 35)
-	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 36)
-	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 37)
-	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 38)
-	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 39)
-	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 40)
-	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 41)
-	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 42)
-	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 43)
-	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 44)
-	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 45)
+	companyPlanDetailResponseDataFieldCreditVisibility      = big.NewInt(1 << 17)
+	companyPlanDetailResponseDataFieldCredits               = big.NewInt(1 << 18)
+	companyPlanDetailResponseDataFieldCurrencyPrices        = big.NewInt(1 << 19)
+	companyPlanDetailResponseDataFieldCurrent               = big.NewInt(1 << 20)
+	companyPlanDetailResponseDataFieldCustom                = big.NewInt(1 << 21)
+	companyPlanDetailResponseDataFieldCustomPlanConfig      = big.NewInt(1 << 22)
+	companyPlanDetailResponseDataFieldDescription           = big.NewInt(1 << 23)
+	companyPlanDetailResponseDataFieldDraftVersion          = big.NewInt(1 << 24)
+	companyPlanDetailResponseDataFieldEntitlements          = big.NewInt(1 << 25)
+	companyPlanDetailResponseDataFieldEstimatedTotals       = big.NewInt(1 << 26)
+	companyPlanDetailResponseDataFieldFeatures              = big.NewInt(1 << 27)
+	companyPlanDetailResponseDataFieldIcon                  = big.NewInt(1 << 28)
+	companyPlanDetailResponseDataFieldID                    = big.NewInt(1 << 29)
+	companyPlanDetailResponseDataFieldIncludedCreditGrants  = big.NewInt(1 << 30)
+	companyPlanDetailResponseDataFieldInvalidReason         = big.NewInt(1 << 31)
+	companyPlanDetailResponseDataFieldIsCustom              = big.NewInt(1 << 32)
+	companyPlanDetailResponseDataFieldIsDefault             = big.NewInt(1 << 33)
+	companyPlanDetailResponseDataFieldIsFree                = big.NewInt(1 << 34)
+	companyPlanDetailResponseDataFieldIsTrialable           = big.NewInt(1 << 35)
+	companyPlanDetailResponseDataFieldMonthlyPrice          = big.NewInt(1 << 36)
+	companyPlanDetailResponseDataFieldName                  = big.NewInt(1 << 37)
+	companyPlanDetailResponseDataFieldOneTimePrice          = big.NewInt(1 << 38)
+	companyPlanDetailResponseDataFieldPlanType              = big.NewInt(1 << 39)
+	companyPlanDetailResponseDataFieldQuarterlyPrice        = big.NewInt(1 << 40)
+	companyPlanDetailResponseDataFieldTrialDays             = big.NewInt(1 << 41)
+	companyPlanDetailResponseDataFieldUpdatedAt             = big.NewInt(1 << 42)
+	companyPlanDetailResponseDataFieldUsageViolations       = big.NewInt(1 << 43)
+	companyPlanDetailResponseDataFieldValid                 = big.NewInt(1 << 44)
+	companyPlanDetailResponseDataFieldVersions              = big.NewInt(1 << 45)
+	companyPlanDetailResponseDataFieldYearlyPrice           = big.NewInt(1 << 46)
 )
 
 type CompanyPlanDetailResponseData struct {
@@ -1102,6 +1103,7 @@ type CompanyPlanDetailResponseData struct {
 	ControlledBy          BillingProviderType                  `json:"controlled_by" url:"controlled_by"`
 	CopiedFromPlanID      *string                              `json:"copied_from_plan_id,omitempty" url:"copied_from_plan_id,omitempty"`
 	CreatedAt             time.Time                            `json:"created_at" url:"created_at"`
+	CreditVisibility      []*PlanCreditVisibility              `json:"credit_visibility,omitempty" url:"credit_visibility,omitempty"`
 	Credits               []*BillingCreditResponseData         `json:"credits" url:"credits"`
 	CurrencyPrices        []*PlanCurrencyPricesResponseData    `json:"currency_prices" url:"currency_prices"`
 	Current               bool                                 `json:"current" url:"current"`
@@ -1257,6 +1259,13 @@ func (c *CompanyPlanDetailResponseData) GetCreatedAt() time.Time {
 		return time.Time{}
 	}
 	return c.CreatedAt
+}
+
+func (c *CompanyPlanDetailResponseData) GetCreditVisibility() []*PlanCreditVisibility {
+	if c == nil {
+		return nil
+	}
+	return c.CreditVisibility
 }
 
 func (c *CompanyPlanDetailResponseData) GetCredits() []*BillingCreditResponseData {
@@ -1595,6 +1604,13 @@ func (c *CompanyPlanDetailResponseData) SetCopiedFromPlanID(copiedFromPlanID *st
 func (c *CompanyPlanDetailResponseData) SetCreatedAt(createdAt time.Time) {
 	c.CreatedAt = createdAt
 	c.require(companyPlanDetailResponseDataFieldCreatedAt)
+}
+
+// SetCreditVisibility sets the CreditVisibility field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyPlanDetailResponseData) SetCreditVisibility(creditVisibility []*PlanCreditVisibility) {
+	c.CreditVisibility = creditVisibility
+	c.require(companyPlanDetailResponseDataFieldCreditVisibility)
 }
 
 // SetCredits sets the Credits field and marks it as non-optional;

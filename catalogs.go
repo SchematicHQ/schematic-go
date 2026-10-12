@@ -501,11 +501,13 @@ func (c *CatalogConfigOrderedEntitlementResponseData) String() string {
 }
 
 var (
-	catalogConfigOrderedPlanFieldEntitlements = big.NewInt(1 << 0)
-	catalogConfigOrderedPlanFieldPlanID       = big.NewInt(1 << 1)
+	catalogConfigOrderedPlanFieldCredits      = big.NewInt(1 << 0)
+	catalogConfigOrderedPlanFieldEntitlements = big.NewInt(1 << 1)
+	catalogConfigOrderedPlanFieldPlanID       = big.NewInt(1 << 2)
 )
 
 type CatalogConfigOrderedPlan struct {
+	Credits      []*CatalogConfigPlanCredit         `json:"credits,omitempty" url:"credits,omitempty"`
 	Entitlements []*CatalogConfigOrderedEntitlement `json:"entitlements,omitempty" url:"entitlements,omitempty"`
 	PlanID       string                             `json:"plan_id" url:"plan_id"`
 
@@ -514,6 +516,13 @@ type CatalogConfigOrderedPlan struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CatalogConfigOrderedPlan) GetCredits() []*CatalogConfigPlanCredit {
+	if c == nil {
+		return nil
+	}
+	return c.Credits
 }
 
 func (c *CatalogConfigOrderedPlan) GetEntitlements() []*CatalogConfigOrderedEntitlement {
@@ -544,6 +553,13 @@ func (c *CatalogConfigOrderedPlan) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigOrderedPlan) SetCredits(credits []*CatalogConfigPlanCredit) {
+	c.Credits = credits
+	c.require(catalogConfigOrderedPlanFieldCredits)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -603,11 +619,13 @@ func (c *CatalogConfigOrderedPlan) String() string {
 }
 
 var (
-	catalogConfigOrderedPlanResponseDataFieldEntitlements = big.NewInt(1 << 0)
-	catalogConfigOrderedPlanResponseDataFieldPlanID       = big.NewInt(1 << 1)
+	catalogConfigOrderedPlanResponseDataFieldCredits      = big.NewInt(1 << 0)
+	catalogConfigOrderedPlanResponseDataFieldEntitlements = big.NewInt(1 << 1)
+	catalogConfigOrderedPlanResponseDataFieldPlanID       = big.NewInt(1 << 2)
 )
 
 type CatalogConfigOrderedPlanResponseData struct {
+	Credits      []*CatalogConfigPlanCreditResponseData         `json:"credits" url:"credits"`
 	Entitlements []*CatalogConfigOrderedEntitlementResponseData `json:"entitlements" url:"entitlements"`
 	PlanID       string                                         `json:"plan_id" url:"plan_id"`
 
@@ -616,6 +634,13 @@ type CatalogConfigOrderedPlanResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CatalogConfigOrderedPlanResponseData) GetCredits() []*CatalogConfigPlanCreditResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Credits
 }
 
 func (c *CatalogConfigOrderedPlanResponseData) GetEntitlements() []*CatalogConfigOrderedEntitlementResponseData {
@@ -646,6 +671,13 @@ func (c *CatalogConfigOrderedPlanResponseData) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigOrderedPlanResponseData) SetCredits(credits []*CatalogConfigPlanCreditResponseData) {
+	c.Credits = credits
+	c.require(catalogConfigOrderedPlanResponseDataFieldCredits)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -690,6 +722,210 @@ func (c *CatalogConfigOrderedPlanResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CatalogConfigOrderedPlanResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogConfigPlanCreditFieldCreditID = big.NewInt(1 << 0)
+	catalogConfigPlanCreditFieldVisible  = big.NewInt(1 << 1)
+)
+
+type CatalogConfigPlanCredit struct {
+	CreditID string `json:"credit_id" url:"credit_id"`
+	Visible  *bool  `json:"visible,omitempty" url:"visible,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogConfigPlanCredit) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CatalogConfigPlanCredit) GetVisible() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.Visible
+}
+
+func (c *CatalogConfigPlanCredit) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogConfigPlanCredit) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigPlanCredit) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(catalogConfigPlanCreditFieldCreditID)
+}
+
+// SetVisible sets the Visible field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigPlanCredit) SetVisible(visible *bool) {
+	c.Visible = visible
+	c.require(catalogConfigPlanCreditFieldVisible)
+}
+
+func (c *CatalogConfigPlanCredit) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogConfigPlanCredit
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogConfigPlanCredit(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogConfigPlanCredit) MarshalJSON() ([]byte, error) {
+	type embed CatalogConfigPlanCredit
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogConfigPlanCredit) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogConfigPlanCreditResponseDataFieldCreditID = big.NewInt(1 << 0)
+	catalogConfigPlanCreditResponseDataFieldVisible  = big.NewInt(1 << 1)
+)
+
+type CatalogConfigPlanCreditResponseData struct {
+	CreditID string `json:"credit_id" url:"credit_id"`
+	Visible  bool   `json:"visible" url:"visible"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogConfigPlanCreditResponseData) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CatalogConfigPlanCreditResponseData) GetVisible() bool {
+	if c == nil {
+		return false
+	}
+	return c.Visible
+}
+
+func (c *CatalogConfigPlanCreditResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogConfigPlanCreditResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigPlanCreditResponseData) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(catalogConfigPlanCreditResponseDataFieldCreditID)
+}
+
+// SetVisible sets the Visible field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigPlanCreditResponseData) SetVisible(visible bool) {
+	c.Visible = visible
+	c.require(catalogConfigPlanCreditResponseDataFieldVisible)
+}
+
+func (c *CatalogConfigPlanCreditResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogConfigPlanCreditResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogConfigPlanCreditResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogConfigPlanCreditResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogConfigPlanCreditResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogConfigPlanCreditResponseData) String() string {
 	if c == nil {
 		return "<nil>"
 	}

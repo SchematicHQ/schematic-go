@@ -1328,6 +1328,108 @@ func (c *ComponentSettingsResponseData) String() string {
 }
 
 var (
+	creditsInPlanFieldCreditID = big.NewInt(1 << 0)
+	creditsInPlanFieldVisible  = big.NewInt(1 << 1)
+)
+
+type CreditsInPlan struct {
+	CreditID string `json:"credit_id" url:"credit_id"`
+	Visible  *bool  `json:"visible,omitempty" url:"visible,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditsInPlan) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CreditsInPlan) GetVisible() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.Visible
+}
+
+func (c *CreditsInPlan) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditsInPlan) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsInPlan) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(creditsInPlanFieldCreditID)
+}
+
+// SetVisible sets the Visible field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditsInPlan) SetVisible(visible *bool) {
+	c.Visible = visible
+	c.require(creditsInPlanFieldVisible)
+}
+
+func (c *CreditsInPlan) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditsInPlan
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditsInPlan(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditsInPlan) MarshalJSON() ([]byte, error) {
+	type embed CreditsInPlan
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditsInPlan) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	entitlementsInPlanFieldEntitlementID = big.NewInt(1 << 0)
 	entitlementsInPlanFieldVisible       = big.NewInt(1 << 1)
 )
@@ -1430,11 +1532,13 @@ func (e *EntitlementsInPlan) String() string {
 }
 
 var (
-	orderedPlansInGroupFieldEntitlements = big.NewInt(1 << 0)
-	orderedPlansInGroupFieldPlanID       = big.NewInt(1 << 1)
+	orderedPlansInGroupFieldCredits      = big.NewInt(1 << 0)
+	orderedPlansInGroupFieldEntitlements = big.NewInt(1 << 1)
+	orderedPlansInGroupFieldPlanID       = big.NewInt(1 << 2)
 )
 
 type OrderedPlansInGroup struct {
+	Credits      []*CreditsInPlan      `json:"credits,omitempty" url:"credits,omitempty"`
 	Entitlements []*EntitlementsInPlan `json:"entitlements,omitempty" url:"entitlements,omitempty"`
 	PlanID       string                `json:"plan_id" url:"plan_id"`
 
@@ -1443,6 +1547,13 @@ type OrderedPlansInGroup struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (o *OrderedPlansInGroup) GetCredits() []*CreditsInPlan {
+	if o == nil {
+		return nil
+	}
+	return o.Credits
 }
 
 func (o *OrderedPlansInGroup) GetEntitlements() []*EntitlementsInPlan {
@@ -1473,6 +1584,13 @@ func (o *OrderedPlansInGroup) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	o.explicitFields = next
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (o *OrderedPlansInGroup) SetCredits(credits []*CreditsInPlan) {
+	o.Credits = credits
+	o.require(orderedPlansInGroupFieldCredits)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;
@@ -1529,6 +1647,108 @@ func (o *OrderedPlansInGroup) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", o)
+}
+
+var (
+	planCreditOrderFieldCreditID = big.NewInt(1 << 0)
+	planCreditOrderFieldVisible  = big.NewInt(1 << 1)
+)
+
+type PlanCreditOrder struct {
+	CreditID string `json:"credit_id" url:"credit_id"`
+	Visible  bool   `json:"visible" url:"visible"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanCreditOrder) GetCreditID() string {
+	if p == nil {
+		return ""
+	}
+	return p.CreditID
+}
+
+func (p *PlanCreditOrder) GetVisible() bool {
+	if p == nil {
+		return false
+	}
+	return p.Visible
+}
+
+func (p *PlanCreditOrder) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanCreditOrder) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditOrder) SetCreditID(creditID string) {
+	p.CreditID = creditID
+	p.require(planCreditOrderFieldCreditID)
+}
+
+// SetVisible sets the Visible field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditOrder) SetVisible(visible bool) {
+	p.Visible = visible
+	p.require(planCreditOrderFieldVisible)
+}
+
+func (p *PlanCreditOrder) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanCreditOrder
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanCreditOrder(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanCreditOrder) MarshalJSON() ([]byte, error) {
+	type embed PlanCreditOrder
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanCreditOrder) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 var (
@@ -2414,11 +2634,13 @@ func (p *PlanGroupDetailResponseData) String() string {
 }
 
 var (
-	planGroupPlanEntitlementsOrderFieldEntitlements = big.NewInt(1 << 0)
-	planGroupPlanEntitlementsOrderFieldPlanID       = big.NewInt(1 << 1)
+	planGroupPlanEntitlementsOrderFieldCredits      = big.NewInt(1 << 0)
+	planGroupPlanEntitlementsOrderFieldEntitlements = big.NewInt(1 << 1)
+	planGroupPlanEntitlementsOrderFieldPlanID       = big.NewInt(1 << 2)
 )
 
 type PlanGroupPlanEntitlementsOrder struct {
+	Credits      []*PlanCreditOrder       `json:"credits" url:"credits"`
 	Entitlements []*PlanEntitlementsOrder `json:"entitlements,omitempty" url:"entitlements,omitempty"`
 	PlanID       string                   `json:"plan_id" url:"plan_id"`
 
@@ -2427,6 +2649,13 @@ type PlanGroupPlanEntitlementsOrder struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (p *PlanGroupPlanEntitlementsOrder) GetCredits() []*PlanCreditOrder {
+	if p == nil {
+		return nil
+	}
+	return p.Credits
 }
 
 func (p *PlanGroupPlanEntitlementsOrder) GetEntitlements() []*PlanEntitlementsOrder {
@@ -2457,6 +2686,13 @@ func (p *PlanGroupPlanEntitlementsOrder) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	p.explicitFields = next
+}
+
+// SetCredits sets the Credits field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanGroupPlanEntitlementsOrder) SetCredits(credits []*PlanCreditOrder) {
+	p.Credits = credits
+	p.require(planGroupPlanEntitlementsOrderFieldCredits)
 }
 
 // SetEntitlements sets the Entitlements field and marks it as non-optional;

@@ -675,6 +675,14 @@ func TestSettersMarkExplicitCatalogConfigOrderedEntitlementResponseData(t *testi
 }
 
 func TestSettersCatalogConfigOrderedPlan(t *testing.T) {
+	t.Run("SetCredits", func(t *testing.T) {
+		obj := &CatalogConfigOrderedPlan{}
+		var fernTestValueCredits []*CatalogConfigPlanCredit
+		obj.SetCredits(fernTestValueCredits)
+		assert.Equal(t, fernTestValueCredits, obj.Credits)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEntitlements", func(t *testing.T) {
 		obj := &CatalogConfigOrderedPlan{}
 		var fernTestValueEntitlements []*CatalogConfigOrderedEntitlement
@@ -694,6 +702,39 @@ func TestSettersCatalogConfigOrderedPlan(t *testing.T) {
 }
 
 func TestGettersCatalogConfigOrderedPlan(t *testing.T) {
+	t.Run("GetCredits", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigOrderedPlan{}
+		var expected []*CatalogConfigPlanCredit
+		obj.Credits = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCredits(), "getter should return the property value")
+	})
+
+	t.Run("GetCredits_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigOrderedPlan{}
+		obj.Credits = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCredits(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCredits_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigOrderedPlan
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCredits() // Should return zero value
+	})
+
 	t.Run("GetEntitlements", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -753,6 +794,37 @@ func TestGettersCatalogConfigOrderedPlan(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCatalogConfigOrderedPlan(t *testing.T) {
+	t.Run("SetCredits_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigOrderedPlan{}
+		var fernTestValueCredits []*CatalogConfigPlanCredit
+
+		// Act
+		obj.SetCredits(fernTestValueCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetEntitlements_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -818,6 +890,14 @@ func TestSettersMarkExplicitCatalogConfigOrderedPlan(t *testing.T) {
 }
 
 func TestSettersCatalogConfigOrderedPlanResponseData(t *testing.T) {
+	t.Run("SetCredits", func(t *testing.T) {
+		obj := &CatalogConfigOrderedPlanResponseData{}
+		var fernTestValueCredits []*CatalogConfigPlanCreditResponseData
+		obj.SetCredits(fernTestValueCredits)
+		assert.Equal(t, fernTestValueCredits, obj.Credits)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEntitlements", func(t *testing.T) {
 		obj := &CatalogConfigOrderedPlanResponseData{}
 		var fernTestValueEntitlements []*CatalogConfigOrderedEntitlementResponseData
@@ -837,6 +917,39 @@ func TestSettersCatalogConfigOrderedPlanResponseData(t *testing.T) {
 }
 
 func TestGettersCatalogConfigOrderedPlanResponseData(t *testing.T) {
+	t.Run("GetCredits", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigOrderedPlanResponseData{}
+		var expected []*CatalogConfigPlanCreditResponseData
+		obj.Credits = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCredits(), "getter should return the property value")
+	})
+
+	t.Run("GetCredits_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigOrderedPlanResponseData{}
+		obj.Credits = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCredits(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCredits_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigOrderedPlanResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCredits() // Should return zero value
+	})
+
 	t.Run("GetEntitlements", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -896,6 +1009,37 @@ func TestGettersCatalogConfigOrderedPlanResponseData(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCatalogConfigOrderedPlanResponseData(t *testing.T) {
+	t.Run("SetCredits_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigOrderedPlanResponseData{}
+		var fernTestValueCredits []*CatalogConfigPlanCreditResponseData
+
+		// Act
+		obj.SetCredits(fernTestValueCredits)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetEntitlements_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -935,6 +1079,282 @@ func TestSettersMarkExplicitCatalogConfigOrderedPlanResponseData(t *testing.T) {
 
 		// Act
 		obj.SetPlanID(fernTestValuePlanID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+}
+
+func TestSettersCatalogConfigPlanCredit(t *testing.T) {
+	t.Run("SetCreditID", func(t *testing.T) {
+		obj := &CatalogConfigPlanCredit{}
+		var fernTestValueCreditID string
+		obj.SetCreditID(fernTestValueCreditID)
+		assert.Equal(t, fernTestValueCreditID, obj.CreditID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetVisible", func(t *testing.T) {
+		obj := &CatalogConfigPlanCredit{}
+		var fernTestValueVisible *bool
+		obj.SetVisible(fernTestValueVisible)
+		assert.Equal(t, fernTestValueVisible, obj.Visible)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersCatalogConfigPlanCredit(t *testing.T) {
+	t.Run("GetCreditID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCredit{}
+		var expected string
+		obj.CreditID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCreditID(), "getter should return the property value")
+	})
+
+	t.Run("GetCreditID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCredit
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCreditID() // Should return zero value
+	})
+
+	t.Run("GetVisible", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCredit{}
+		var expected *bool
+		obj.Visible = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetVisible(), "getter should return the property value")
+	})
+
+	t.Run("GetVisible_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCredit{}
+		obj.Visible = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetVisible(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetVisible_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCredit
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetVisible() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitCatalogConfigPlanCredit(t *testing.T) {
+	t.Run("SetCreditID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCredit{}
+		var fernTestValueCreditID string
+
+		// Act
+		obj.SetCreditID(fernTestValueCreditID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetVisible_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCredit{}
+		var fernTestValueVisible *bool
+
+		// Act
+		obj.SetVisible(fernTestValueVisible)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+}
+
+func TestSettersCatalogConfigPlanCreditResponseData(t *testing.T) {
+	t.Run("SetCreditID", func(t *testing.T) {
+		obj := &CatalogConfigPlanCreditResponseData{}
+		var fernTestValueCreditID string
+		obj.SetCreditID(fernTestValueCreditID)
+		assert.Equal(t, fernTestValueCreditID, obj.CreditID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetVisible", func(t *testing.T) {
+		obj := &CatalogConfigPlanCreditResponseData{}
+		var fernTestValueVisible bool
+		obj.SetVisible(fernTestValueVisible)
+		assert.Equal(t, fernTestValueVisible, obj.Visible)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+}
+
+func TestGettersCatalogConfigPlanCreditResponseData(t *testing.T) {
+	t.Run("GetCreditID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCreditResponseData{}
+		var expected string
+		obj.CreditID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCreditID(), "getter should return the property value")
+	})
+
+	t.Run("GetCreditID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCreditResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCreditID() // Should return zero value
+	})
+
+	t.Run("GetVisible", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCreditResponseData{}
+		var expected bool
+		obj.Visible = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetVisible(), "getter should return the property value")
+	})
+
+	t.Run("GetVisible_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCreditResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetVisible() // Should return zero value
+	})
+
+}
+
+func TestSettersMarkExplicitCatalogConfigPlanCreditResponseData(t *testing.T) {
+	t.Run("SetCreditID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCreditResponseData{}
+		var fernTestValueCreditID string
+
+		// Act
+		obj.SetCreditID(fernTestValueCreditID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetVisible_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCreditResponseData{}
+		var fernTestValueVisible bool
+
+		// Act
+		obj.SetVisible(fernTestValueVisible)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -5569,6 +5989,72 @@ func TestJSONMarshalingCatalogConfigOrderedPlanResponseData(t *testing.T) {
 	})
 }
 
+func TestJSONMarshalingCatalogConfigPlanCredit(t *testing.T) {
+	t.Run("MarshalUnmarshal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCredit{}
+
+		// Act - Marshal to JSON
+		data, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed")
+		assert.NotNil(t, data, "marshaled data should not be nil")
+		assert.NotEmpty(t, data, "marshaled data should not be empty")
+
+		// Unmarshal back and verify round-trip
+		var unmarshaled CatalogConfigPlanCredit
+		err = json.Unmarshal(data, &unmarshaled)
+		assert.NoError(t, err, "round-trip unmarshal should succeed")
+	})
+
+	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
+		t.Parallel()
+		var obj CatalogConfigPlanCredit
+		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
+		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
+	})
+
+	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
+		t.Parallel()
+		var obj CatalogConfigPlanCredit
+		err := json.Unmarshal([]byte(`{}`), &obj)
+		assert.NoError(t, err, "unmarshaling empty object should succeed")
+	})
+}
+
+func TestJSONMarshalingCatalogConfigPlanCreditResponseData(t *testing.T) {
+	t.Run("MarshalUnmarshal", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CatalogConfigPlanCreditResponseData{}
+
+		// Act - Marshal to JSON
+		data, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed")
+		assert.NotNil(t, data, "marshaled data should not be nil")
+		assert.NotEmpty(t, data, "marshaled data should not be empty")
+
+		// Unmarshal back and verify round-trip
+		var unmarshaled CatalogConfigPlanCreditResponseData
+		err = json.Unmarshal(data, &unmarshaled)
+		assert.NoError(t, err, "round-trip unmarshal should succeed")
+	})
+
+	t.Run("UnmarshalInvalidJSON", func(t *testing.T) {
+		t.Parallel()
+		var obj CatalogConfigPlanCreditResponseData
+		err := json.Unmarshal([]byte(`{invalid json}`), &obj)
+		assert.Error(t, err, "unmarshaling invalid JSON should return an error")
+	})
+
+	t.Run("UnmarshalEmptyObject", func(t *testing.T) {
+		t.Parallel()
+		var obj CatalogConfigPlanCreditResponseData
+		err := json.Unmarshal([]byte(`{}`), &obj)
+		assert.NoError(t, err, "unmarshaling empty object should succeed")
+	})
+}
+
 func TestJSONMarshalingCatalogConfigurationResponseData(t *testing.T) {
 	t.Run("MarshalUnmarshal", func(t *testing.T) {
 		t.Parallel()
@@ -6226,6 +6712,38 @@ func TestStringCatalogConfigOrderedPlanResponseData(t *testing.T) {
 	})
 }
 
+func TestStringCatalogConfigPlanCredit(t *testing.T) {
+	t.Run("StringMethod", func(t *testing.T) {
+		t.Parallel()
+		obj := &CatalogConfigPlanCredit{}
+		result := obj.String()
+		assert.NotEmpty(t, result, "String() should return a non-empty representation")
+	})
+
+	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCredit
+		result := obj.String()
+		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
+func TestStringCatalogConfigPlanCreditResponseData(t *testing.T) {
+	t.Run("StringMethod", func(t *testing.T) {
+		t.Parallel()
+		obj := &CatalogConfigPlanCreditResponseData{}
+		result := obj.String()
+		assert.NotEmpty(t, result, "String() should return a non-empty representation")
+	})
+
+	t.Run("StringMethod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCreditResponseData
+		result := obj.String()
+		assert.Equal(t, "<nil>", result, "String() should return <nil> for nil receiver")
+	})
+}
+
 func TestStringCatalogConfigurationResponseData(t *testing.T) {
 	t.Run("StringMethod", func(t *testing.T) {
 		t.Parallel()
@@ -6631,6 +7149,52 @@ func TestExtraPropertiesCatalogConfigOrderedPlanResponseData(t *testing.T) {
 	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *CatalogConfigOrderedPlanResponseData
+		extraProps := obj.GetExtraProperties()
+		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
+	})
+}
+
+func TestExtraPropertiesCatalogConfigPlanCredit(t *testing.T) {
+	t.Run("GetExtraProperties", func(t *testing.T) {
+		t.Parallel()
+		obj := &CatalogConfigPlanCredit{}
+		// Should not panic when calling GetExtraProperties()
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("GetExtraProperties() panicked: %v", r)
+			}
+		}()
+		extraProps := obj.GetExtraProperties()
+		// Result can be nil or an empty/non-empty map
+		_ = extraProps
+	})
+
+	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCredit
+		extraProps := obj.GetExtraProperties()
+		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
+	})
+}
+
+func TestExtraPropertiesCatalogConfigPlanCreditResponseData(t *testing.T) {
+	t.Run("GetExtraProperties", func(t *testing.T) {
+		t.Parallel()
+		obj := &CatalogConfigPlanCreditResponseData{}
+		// Should not panic when calling GetExtraProperties()
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("GetExtraProperties() panicked: %v", r)
+			}
+		}()
+		extraProps := obj.GetExtraProperties()
+		// Result can be nil or an empty/non-empty map
+		_ = extraProps
+	})
+
+	t.Run("GetExtraProperties_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CatalogConfigPlanCreditResponseData
 		extraProps := obj.GetExtraProperties()
 		assert.Nil(t, extraProps, "nil receiver should return nil without panicking")
 	})

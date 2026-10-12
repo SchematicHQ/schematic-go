@@ -62,7 +62,7 @@ import (
 
 func main() {
   apiKey := os.Getenv("SCHEMATIC_API_KEY")
-  client := schematicclient.NewSchematicClient(option.WithAPIKey(apiKey), option.WithDisabledFlagCheckCache())
+  client := schematicclient.NewSchematicClient(option.WithAPIKey(apiKey), option.WithDisableFlagCheckCache())
   defer client.Close()
 }
 ```

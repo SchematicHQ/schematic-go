@@ -13,6 +13,13 @@ updates:
     labels:
       - "gomod"
       - "Dependabot"
+    ignore:
+      # 9.23 takes a weak.Pointer to its own Client, and Go compiles that
+      # generic, with a wrapper for each of Client's ~730 methods, into every
+      # package that reaches the type. In schematic-api that made test
+      # compiles ~37% slower. Lift once upstream drops the pointer to Client.
+      - dependency-name: "github.com/redis/go-redis/v9"
+        versions: [">= 9.23.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

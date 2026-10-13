@@ -144,7 +144,10 @@ type DatastreamOption interface {
 }
 
 type DatastreamOptions struct {
-	CacheTTL              time.Duration
+	CacheTTL time.Duration
+	// FlagPageSize is how many flags to ask the server to put in one message of
+	// the flags snapshot. Zero takes the SDK's default.
+	FlagPageSize          int
 	CacheConfig           CacheConfig
 	ReplicatorMode        bool
 	ReplicatorHealthURL   string
@@ -161,6 +164,27 @@ func (c CacheTTL) applyDatastreamOptions(opts *DatastreamOptions) {
 
 func WithCacheTTL(ttl time.Duration) DatastreamOption {
 	return CacheTTL{ttl: ttl}
+}
+
+type FlagPageSize struct {
+	size int
+}
+
+func (f FlagPageSize) applyDatastreamOptions(opts *DatastreamOptions) {
+	opts.FlagPageSize = f.size
+}
+
+// WithFlagPageSize sets how many flags the server puts in one message of the
+// flags snapshot. The snapshot is paged because it runs past a megabyte for an
+// ordinary set of flags and rules, which exceeds what some hosts will accept in
+// one frame.
+//
+// The default suits most hosts. Lower it where frames are tighter or memory is
+// scarce, raise it to trade messages for size. A size at or below zero takes
+// the default, and the server caps what it honours, so neither end can be
+// talked into an unbounded page.
+func WithFlagPageSize(size int) DatastreamOption {
+	return FlagPageSize{size: size}
 }
 
 // Define an interface for Redis options

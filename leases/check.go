@@ -409,7 +409,7 @@ func staticFailureOutcome(req CheckRequest, reason string, flag *rulesengine.Fla
 // lease expiry, which beats risking a double refund.
 func undoDebit(ctx context.Context, deps CheckDeps, record ReservationRecord) {
 	_, claimed, err := deps.Reservations.Consume(ctx, record.ID, 0)
-	if err == nil && !claimed {
+	if err == nil && !claimed && refundable(record.LeaseID) {
 		err = deps.Leases.Refund(ctx, record.CompanyID, record.CreditTypeID, record.CreditsReserved, record.LeaseID)
 	}
 	if err != nil {

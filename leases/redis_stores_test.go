@@ -249,6 +249,36 @@ func TestRedisReservationStoreDoubleConsumeClaimsOnce(t *testing.T) {
 	assert.Equal(t, 970.0, entry.LocalRemainingCredits)
 }
 
+// A hold that cannot name its lease is claimed but not refunded: an empty pin
+// would credit whichever lease holds the slot now.
+func TestRedisReservationStoreSkipsTheRefundWithoutALeaseID(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	b := newRedisBackend(t)
+	installLease(t, b.leases, b.clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
+
+	_, _, _, err := b.leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	require.NoError(t, err)
+	require.NoError(t, b.reservations.Add(ctx, newReservation("res_1", "", 100, 0, b.clock)))
+	require.NoError(t, b.reservations.Add(ctx, newReservation("res_2", "", 100, 60_000, b.clock)))
+
+	swept, err := b.reservations.SweepExpired(ctx)
+	require.NoError(t, err)
+	assert.Equal(t, 1, swept)
+
+	consumed, claimed, err := b.reservations.Consume(ctx, "res_2", 30)
+	require.NoError(t, err)
+	assert.True(t, claimed)
+	assert.Equal(t, 30.0, consumed)
+
+	entry, err := b.leases.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 900.0, entry.LocalRemainingCredits)
+	reserved, err := b.reservations.ReservedCredits(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Zero(t, reserved)
+}
+
 // Fractional amounts must survive the round trip: a Lua number reply truncates
 // to an integer, which is why balances are stored and returned as strings.
 func TestRedisLeaseStoreKeepsFractionalAmountsExact(t *testing.T) {

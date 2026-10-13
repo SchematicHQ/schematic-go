@@ -340,10 +340,16 @@ func (m *LeaseManager) MaybeExtend(ctx context.Context, companyID, creditTypeID 
 			m.logger.Debug(ctx, fmt.Sprintf("Extend in flight for %s/%s outlasted the caller's deadline; not waiting on it", companyID, creditTypeID))
 			return result
 		}
+		if !joined {
+			return result
+		}
 		// The flight asked for at least what we need, which covers every
 		// watermark-driven joiner and any check the tranche fits. One wire call
-		// serves all of them, which is the point of single-flight.
-		if !joined || additionalAmount <= flightAsk {
+		// serves all of them, which is the point of single-flight. But the flight
+		// re-checks the slot against its starter's requirement, not ours: if a
+		// sibling's extend landed first it may have decided to send nothing and
+		// handed back a balance still short of what we need.
+		if additionalAmount <= flightAsk && (result == nil || !shortOf(result, requiredCredits)) {
 			return result
 		}
 		// Go round again to re-read the slot that flight just moved, so what we
@@ -374,8 +380,12 @@ func (m *LeaseManager) readLiveLease(ctx context.Context, companyID, creditTypeI
 // needsExtend reports whether the slot sits low enough to warrant an extend.
 func (m *LeaseManager) needsExtend(entry *LeaseState, resolved ResolvedLeaseConfig, requiredCredits *float64) bool {
 	belowWatermark := entry.LocalRemainingCredits/max(entry.GrantedAmount, 1) <= resolved.LowWaterMark
-	belowRequired := requiredCredits != nil && entry.LocalRemainingCredits < *requiredCredits
-	return belowWatermark || belowRequired
+	return belowWatermark || shortOf(entry, requiredCredits)
+}
+
+// shortOf reports whether the slot holds less than a caller's requirement.
+func shortOf(entry *LeaseState, requiredCredits *float64) bool {
+	return requiredCredits != nil && entry.LocalRemainingCredits < *requiredCredits
 }
 
 // recheckAndExtend re-reads the slot now that this flight owns it, and extends

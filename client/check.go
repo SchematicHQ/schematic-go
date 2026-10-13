@@ -79,8 +79,8 @@ type CheckOption func(*checkOptions)
 // consume. The check holds that quantity, rounded up to a whole event unit,
 // times the entitlement's consumption rate from the company's credit balance,
 // and returns a Reservation to settle with TrackWithReservation. A fractional
-// quantity is allowed and is what the hold records; the credits it costs round
-// up, since the server bills whole events. Without it, Check is a plain flag
+// quantity is allowed; the credits it costs round up, since the server bills
+// whole events. Without it, Check is a plain flag
 // check that holds nothing.
 func WithUsage(quantity float64) CheckOption {
 	return func(o *checkOptions) { o.usage = &quantity }
@@ -827,10 +827,14 @@ func (c *SchematicClient) checkWithServerReservation(
 	// attempt of this check with the one hold it already took, while the next
 	// check gets its own key and its own hold.
 	idempotencyKey := uuid.NewString()
+	// Whole event units, as the client-lease path sizes its hold: the settle
+	// bills ceil(actual) units, so a hold on the raw fraction would cover less
+	// than the settle charges.
+	quantity := math.Ceil(usage)
 	body := &schematicgo.CheckAndReserveFlagRequestBody{
 		Company:        evalCtx.Company,
 		User:           evalCtx.User,
-		Quantity:       &usage,
+		Quantity:       &quantity,
 		ExpiresAt:      &expiresAt,
 		IdempotencyKey: &idempotencyKey,
 		Preflight:      mergedPreflight(evalCtx.Preflight, o.preflight()),

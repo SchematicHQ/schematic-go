@@ -121,3 +121,32 @@ func TestInMemoryReservationStoreSweepRacesSettleWithoutDoubleRefunding(t *testi
 	require.NoError(t, err)
 	assert.Zero(t, count)
 }
+
+// A hold that cannot name its lease is claimed but not refunded: an unpinned
+// refund would land on whichever lease holds the slot now.
+func TestInMemoryReservationStoreSkipsTheRefundWithoutALeaseID(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	leases := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, leases, clock, "lse_1", "co_1", "ct_1", 1000, 3_600_000)
+	reservations := NewInMemoryReservationStore(leases, InMemoryReservationStoreOptions{Clock: clock.Now})
+
+	_, _, _, err := leases.TryReserve(ctx, "co_1", "ct_1", 100)
+	require.NoError(t, err)
+	require.NoError(t, reservations.Add(ctx, newReservation("res_1", "", 100, 0, clock)))
+	require.NoError(t, reservations.Add(ctx, newReservation("res_2", "", 100, 60_000, clock)))
+
+	swept, err := reservations.SweepExpired(ctx)
+	require.NoError(t, err)
+	assert.Equal(t, 1, swept)
+
+	consumed, claimed, err := reservations.Consume(ctx, "res_2", 30)
+	require.NoError(t, err)
+	assert.True(t, claimed)
+	assert.Equal(t, 30.0, consumed)
+
+	entry, err := leases.Get(ctx, "co_1", "ct_1")
+	require.NoError(t, err)
+	assert.Equal(t, 900.0, entry.LocalRemainingCredits)
+}

@@ -1084,7 +1084,7 @@ func TestCheckFractionalUsage(t *testing.T) {
 	req, ok := rec.find(checkAndReservePath)
 	require.True(t, ok)
 	body := decodeBody(t, req.body)
-	assert.Equal(t, 2.5, body["quantity"], "the hold is sized from the fraction the caller declared")
+	assert.Equal(t, float64(3), body["quantity"], "the hold rounds up to the whole units the settle bills")
 
 	// The preflight's quantity is an integer and its question is an upper
 	// bound, so the fraction rounds up rather than down.

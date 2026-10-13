@@ -958,6 +958,63 @@ func TestExtendFollowUpDoesNotInheritASmallerFollowUp(t *testing.T) {
 	assert.GreaterOrEqual(t, largerResult.LocalRemainingCredits, largerNeed)
 }
 
+// A sibling's extend lands while a watermark flight waits to re-read the slot,
+// so the flight decides to send nothing. The check that joined it needs more
+// than that balance, and taking it would fail its retry reserve with the
+// credits still on the server.
+func TestExtendJoinerRechecksAFlightThatSentNothing(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	clock := newVirtualClock()
+	wire := &extendScriptWire{release: make(chan struct{})}
+	close(wire.release)
+	wire.grants = []LeaseGrant{serverTotal(clock, 2400)}
+
+	inner := NewInMemoryLeaseStore(InMemoryLeaseStoreOptions{Clock: clock.Now})
+	installLease(t, inner, clock, "lse_1", "co_1", "ct_1", 1000, 300_000)
+	_, _, _, err := inner.TryReserve(ctx, "co_1", "ct_1", 800)
+	require.NoError(t, err)
+	// The starter's flight re-reads the slot on its second read; hold it there.
+	gate := make(chan struct{})
+	store := &heldReadStore{LeaseStore: inner, caller: "starter", nth: 2, gate: gate}
+	manager := NewLeaseManager(wire, store, LeaseManagerOptions{
+		Clock:  clock.Now,
+		Config: ResolvedLeaseConfig{LeaseSize: 1000, LowWaterMark: 0.25},
+	})
+	t.Cleanup(manager.Stop)
+
+	starter := make(chan *LeaseState, 1)
+	go func() {
+		starter <- manager.MaybeExtend(context.WithValue(ctx, callerKey{}, "starter"), "co_1", "ct_1", nil)
+	}()
+	require.Eventually(t, func() bool {
+		manager.extendFlights.mu.Lock()
+		defer manager.extendFlights.mu.Unlock()
+		return len(manager.extendFlights.inFlight) == 1
+	}, time.Second, time.Millisecond)
+
+	// 900 against 200 remaining is a 700 shortfall, inside the flight's tranche.
+	required := 900.0
+	joiner := make(chan *LeaseState, 1)
+	go func() { joiner <- manager.MaybeExtend(ctx, "co_1", "ct_1", &required) }()
+	time.Sleep(20 * time.Millisecond)
+
+	// A sibling pod's extend lands: 600 remaining of 1400 clears the water mark.
+	require.NoError(t, inner.Extend(ctx, "co_1", "ct_1", 1400, nil, "lse_1"))
+	close(gate)
+
+	started := <-starter
+	require.NotNil(t, started)
+	assert.Equal(t, 600.0, started.LocalRemainingCredits, "the flight sent nothing")
+
+	joined := <-joiner
+	require.NotNil(t, joined)
+	assert.GreaterOrEqual(t, joined.LocalRemainingCredits, required)
+	calls := wire.extends()
+	require.Len(t, calls, 1, "the joiner issued its own extend")
+	assert.Equal(t, 1000.0, calls[0].additionalAmount)
+}
+
 // A joiner waits on somebody else's wire call, which runs on whatever deadline
 // that caller set. A check with little time to spend must not sit behind it.
 func TestExtendJoinerStopsWaitingWhenItsOwnDeadlinePasses(t *testing.T) {

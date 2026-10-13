@@ -188,7 +188,7 @@ type CountFeaturesRequest struct {
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"-" url:"q,omitempty"`
-	// Filter out features that already have a company override for the specified company ID
+	// Filter out features that have an unexpired company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
@@ -519,7 +519,7 @@ type ListFeaturesRequest struct {
 	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"-" url:"q,omitempty"`
-	// Filter out features that already have a company override for the specified company ID
+	// Filter out features that have an unexpired company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"-" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"-" url:"without_plan_entitlement_for,omitempty"`
@@ -4468,7 +4468,7 @@ type CountFeaturesParams struct {
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
-	// Filter out features that already have a company override for the specified company ID
+	// Filter out features that have an unexpired company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"without_company_override_for,omitempty" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"without_plan_entitlement_for,omitempty" url:"without_plan_entitlement_for,omitempty"`
@@ -5686,7 +5686,7 @@ type ListFeaturesParams struct {
 	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Search by feature name or ID
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
-	// Filter out features that already have a company override for the specified company ID
+	// Filter out features that have an unexpired company override for the specified company ID
 	WithoutCompanyOverrideFor *string `json:"without_company_override_for,omitempty" url:"without_company_override_for,omitempty"`
 	// Filter out features that already have a plan entitlement for the specified plan ID
 	WithoutPlanEntitlementFor *string `json:"without_plan_entitlement_for,omitempty" url:"without_plan_entitlement_for,omitempty"`

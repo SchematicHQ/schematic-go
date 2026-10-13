@@ -714,3 +714,35 @@ func (c *Client) PublishPlanVersion(
 	}
 	return response.Body, nil
 }
+
+// Example:
+//
+//	request := &schematichq.PublishPlanVersionRequestBody{
+//	    ExcludedCompanyIDs: []string{
+//	        "excluded_company_ids",
+//	    },
+//	    MigrationStrategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
+//	}
+//	client.Plans.PreviewPublishPlanVersion(
+//	    context.TODO(),
+//	    "plan_version_id",
+//	    request,
+//	)
+func (c *Client) PreviewPublishPlanVersion(
+	ctx context.Context,
+	// plan_version_id
+	planVersionID string,
+	request *schematichq.PublishPlanVersionRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.PreviewPublishPlanVersionResponse, error) {
+	response, err := c.WithRawResponse.PreviewPublishPlanVersion(
+		ctx,
+		planVersionID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}

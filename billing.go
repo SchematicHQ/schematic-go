@@ -228,6 +228,71 @@ func (c *CountCustomersRequest) SetOffset(offset *int64) {
 }
 
 var (
+	countNativeInvoicesRequestFieldCompanyID     = big.NewInt(1 << 0)
+	countNativeInvoicesRequestFieldContractID    = big.NewInt(1 << 1)
+	countNativeInvoicesRequestFieldDocumentState = big.NewInt(1 << 2)
+	countNativeInvoicesRequestFieldLimit         = big.NewInt(1 << 3)
+	countNativeInvoicesRequestFieldOffset        = big.NewInt(1 << 4)
+)
+
+type CountNativeInvoicesRequest struct {
+	CompanyID     *string               `json:"-" url:"company_id,omitempty"`
+	ContractID    *string               `json:"-" url:"contract_id,omitempty"`
+	DocumentState *InvoiceDocumentState `json:"-" url:"document_state,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (c *CountNativeInvoicesRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesRequest) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countNativeInvoicesRequestFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesRequest) SetContractID(contractID *string) {
+	c.ContractID = contractID
+	c.require(countNativeInvoicesRequestFieldContractID)
+}
+
+// SetDocumentState sets the DocumentState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesRequest) SetDocumentState(documentState *InvoiceDocumentState) {
+	c.DocumentState = documentState
+	c.require(countNativeInvoicesRequestFieldDocumentState)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesRequest) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countNativeInvoicesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesRequest) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countNativeInvoicesRequestFieldOffset)
+}
+
+var (
 	listBillingPricesRequestFieldCurrency           = big.NewInt(1 << 0)
 	listBillingPricesRequestFieldForInitialPlan     = big.NewInt(1 << 1)
 	listBillingPricesRequestFieldForTrialExpiryPlan = big.NewInt(1 << 2)
@@ -1056,6 +1121,71 @@ func (l *ListMetersRequest) SetOffset(offset *int64) {
 }
 
 var (
+	listNativeInvoicesRequestFieldCompanyID     = big.NewInt(1 << 0)
+	listNativeInvoicesRequestFieldContractID    = big.NewInt(1 << 1)
+	listNativeInvoicesRequestFieldDocumentState = big.NewInt(1 << 2)
+	listNativeInvoicesRequestFieldLimit         = big.NewInt(1 << 3)
+	listNativeInvoicesRequestFieldOffset        = big.NewInt(1 << 4)
+)
+
+type ListNativeInvoicesRequest struct {
+	CompanyID     *string               `json:"-" url:"company_id,omitempty"`
+	ContractID    *string               `json:"-" url:"contract_id,omitempty"`
+	DocumentState *InvoiceDocumentState `json:"-" url:"document_state,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListNativeInvoicesRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesRequest) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listNativeInvoicesRequestFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesRequest) SetContractID(contractID *string) {
+	l.ContractID = contractID
+	l.require(listNativeInvoicesRequestFieldContractID)
+}
+
+// SetDocumentState sets the DocumentState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesRequest) SetDocumentState(documentState *InvoiceDocumentState) {
+	l.DocumentState = documentState
+	l.require(listNativeInvoicesRequestFieldDocumentState)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listNativeInvoicesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listNativeInvoicesRequestFieldOffset)
+}
+
+var (
 	listPaymentMethodsRequestFieldCompanyID          = big.NewInt(1 << 0)
 	listPaymentMethodsRequestFieldCustomerExternalID = big.NewInt(1 << 1)
 	listPaymentMethodsRequestFieldLimit              = big.NewInt(1 << 2)
@@ -1109,6 +1239,93 @@ func (l *ListPaymentMethodsRequest) SetLimit(limit *int64) {
 func (l *ListPaymentMethodsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listPaymentMethodsRequestFieldOffset)
+}
+
+var (
+	markInvoicePaidRequestBodyFieldAmount         = big.NewInt(1 << 0)
+	markInvoicePaidRequestBodyFieldIdempotencyKey = big.NewInt(1 << 1)
+	markInvoicePaidRequestBodyFieldReference      = big.NewInt(1 << 2)
+	markInvoicePaidRequestBodyFieldSettledAt      = big.NewInt(1 << 3)
+)
+
+type MarkInvoicePaidRequestBody struct {
+	// Amount paid, in minor units of the invoice's currency. Leave empty to mark the whole remaining amount as paid.
+	Amount *int64 `json:"amount,omitempty" url:"-"`
+	// A retry with the same key records the payment once.
+	IdempotencyKey string `json:"idempotency_key" url:"-"`
+	// A note that identifies the payment, such as a bank transfer reference.
+	Reference *string `json:"reference,omitempty" url:"-"`
+	// When the payment arrived. Defaults to now, and cannot be in the future.
+	SettledAt *time.Time `json:"settled_at,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (m *MarkInvoicePaidRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
+	}
+	next.Or(next, field)
+	m.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MarkInvoicePaidRequestBody) SetAmount(amount *int64) {
+	m.Amount = amount
+	m.require(markInvoicePaidRequestBodyFieldAmount)
+}
+
+// SetIdempotencyKey sets the IdempotencyKey field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MarkInvoicePaidRequestBody) SetIdempotencyKey(idempotencyKey string) {
+	m.IdempotencyKey = idempotencyKey
+	m.require(markInvoicePaidRequestBodyFieldIdempotencyKey)
+}
+
+// SetReference sets the Reference field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MarkInvoicePaidRequestBody) SetReference(reference *string) {
+	m.Reference = reference
+	m.require(markInvoicePaidRequestBodyFieldReference)
+}
+
+// SetSettledAt sets the SettledAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MarkInvoicePaidRequestBody) SetSettledAt(settledAt *time.Time) {
+	m.SettledAt = settledAt
+	m.require(markInvoicePaidRequestBodyFieldSettledAt)
+}
+
+func (m *MarkInvoicePaidRequestBody) UnmarshalJSON(data []byte) error {
+	type embed MarkInvoicePaidRequestBody
+	var body = struct {
+		embed
+		SettledAt *internal.DateTime `json:"settled_at,omitempty"`
+	}{
+		embed: embed(*m),
+	}
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*m = MarkInvoicePaidRequestBody(body.embed)
+	m.SettledAt = body.SettledAt.TimePtr()
+	return nil
+}
+
+func (m *MarkInvoicePaidRequestBody) MarshalJSON() ([]byte, error) {
+	type embed MarkInvoicePaidRequestBody
+	var marshaler = struct {
+		embed
+		SettledAt *internal.DateTime `json:"settled_at,omitempty"`
+	}{
+		embed:     embed(*m),
+		SettledAt: internal.NewOptionalDateTime(m.SettledAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (
@@ -2061,6 +2278,1389 @@ func (b *BillingCustomerWithSubscriptionsResponseData) MarshalJSON() ([]byte, er
 }
 
 func (b *BillingCustomerWithSubscriptionsResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingInvoiceDetailResponseDataFieldAmountPaid      = big.NewInt(1 << 0)
+	billingInvoiceDetailResponseDataFieldAmountRemaining = big.NewInt(1 << 1)
+	billingInvoiceDetailResponseDataFieldCollectionState = big.NewInt(1 << 2)
+	billingInvoiceDetailResponseDataFieldCollector       = big.NewInt(1 << 3)
+	billingInvoiceDetailResponseDataFieldCompanyID       = big.NewInt(1 << 4)
+	billingInvoiceDetailResponseDataFieldContractID      = big.NewInt(1 << 5)
+	billingInvoiceDetailResponseDataFieldCreatedAt       = big.NewInt(1 << 6)
+	billingInvoiceDetailResponseDataFieldCurrency        = big.NewInt(1 << 7)
+	billingInvoiceDetailResponseDataFieldDocumentState   = big.NewInt(1 << 8)
+	billingInvoiceDetailResponseDataFieldDueAt           = big.NewInt(1 << 9)
+	billingInvoiceDetailResponseDataFieldFinalizedAt     = big.NewInt(1 << 10)
+	billingInvoiceDetailResponseDataFieldID              = big.NewInt(1 << 11)
+	billingInvoiceDetailResponseDataFieldLines           = big.NewInt(1 << 12)
+	billingInvoiceDetailResponseDataFieldNumber          = big.NewInt(1 << 13)
+	billingInvoiceDetailResponseDataFieldPeriodEnd       = big.NewInt(1 << 14)
+	billingInvoiceDetailResponseDataFieldPeriodStart     = big.NewInt(1 << 15)
+	billingInvoiceDetailResponseDataFieldSettlements     = big.NewInt(1 << 16)
+	billingInvoiceDetailResponseDataFieldStatus          = big.NewInt(1 << 17)
+	billingInvoiceDetailResponseDataFieldSubtotal        = big.NewInt(1 << 18)
+	billingInvoiceDetailResponseDataFieldTerms           = big.NewInt(1 << 19)
+	billingInvoiceDetailResponseDataFieldTotal           = big.NewInt(1 << 20)
+)
+
+type BillingInvoiceDetailResponseData struct {
+	AmountPaid      int64 `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining int64 `json:"amount_remaining" url:"amount_remaining"`
+	// The collector's report on payment. Null on a draft.
+	CollectionState *InvoiceCollectionState                 `json:"collection_state,omitempty" url:"collection_state,omitempty"`
+	Collector       *Collector                              `json:"collector,omitempty" url:"collector,omitempty"`
+	CompanyID       string                                  `json:"company_id" url:"company_id"`
+	ContractID      string                                  `json:"contract_id" url:"contract_id"`
+	CreatedAt       time.Time                               `json:"created_at" url:"created_at"`
+	Currency        Currency                                `json:"currency" url:"currency"`
+	DocumentState   InvoiceDocumentState                    `json:"document_state" url:"document_state"`
+	DueAt           *time.Time                              `json:"due_at,omitempty" url:"due_at,omitempty"`
+	FinalizedAt     *time.Time                              `json:"finalized_at,omitempty" url:"finalized_at,omitempty"`
+	ID              string                                  `json:"id" url:"id"`
+	Lines           []*BillingInvoiceLineResponseData       `json:"lines" url:"lines"`
+	Number          *string                                 `json:"number,omitempty" url:"number,omitempty"`
+	PeriodEnd       time.Time                               `json:"period_end" url:"period_end"`
+	PeriodStart     time.Time                               `json:"period_start" url:"period_start"`
+	Settlements     []*BillingInvoiceSettlementResponseData `json:"settlements" url:"settlements"`
+	Status          InvoiceStatus                           `json:"status" url:"status"`
+	Subtotal        int64                                   `json:"subtotal" url:"subtotal"`
+	// The contract's terms, copied when the invoice was finalized. Null on a draft.
+	Terms *BillingInvoiceTermsResponseData `json:"terms,omitempty" url:"terms,omitempty"`
+	Total int64                            `json:"total" url:"total"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceDetailResponseData) GetAmountPaid() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountPaid
+}
+
+func (b *BillingInvoiceDetailResponseData) GetAmountRemaining() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountRemaining
+}
+
+func (b *BillingInvoiceDetailResponseData) GetCollectionState() *InvoiceCollectionState {
+	if b == nil {
+		return nil
+	}
+	return b.CollectionState
+}
+
+func (b *BillingInvoiceDetailResponseData) GetCollector() *Collector {
+	if b == nil {
+		return nil
+	}
+	return b.Collector
+}
+
+func (b *BillingInvoiceDetailResponseData) GetCompanyID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CompanyID
+}
+
+func (b *BillingInvoiceDetailResponseData) GetContractID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ContractID
+}
+
+func (b *BillingInvoiceDetailResponseData) GetCreatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.CreatedAt
+}
+
+func (b *BillingInvoiceDetailResponseData) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingInvoiceDetailResponseData) GetDocumentState() InvoiceDocumentState {
+	if b == nil {
+		return ""
+	}
+	return b.DocumentState
+}
+
+func (b *BillingInvoiceDetailResponseData) GetDueAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.DueAt
+}
+
+func (b *BillingInvoiceDetailResponseData) GetFinalizedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.FinalizedAt
+}
+
+func (b *BillingInvoiceDetailResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingInvoiceDetailResponseData) GetLines() []*BillingInvoiceLineResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Lines
+}
+
+func (b *BillingInvoiceDetailResponseData) GetNumber() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Number
+}
+
+func (b *BillingInvoiceDetailResponseData) GetPeriodEnd() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingInvoiceDetailResponseData) GetPeriodStart() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingInvoiceDetailResponseData) GetSettlements() []*BillingInvoiceSettlementResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Settlements
+}
+
+func (b *BillingInvoiceDetailResponseData) GetStatus() InvoiceStatus {
+	if b == nil {
+		return ""
+	}
+	return b.Status
+}
+
+func (b *BillingInvoiceDetailResponseData) GetSubtotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Subtotal
+}
+
+func (b *BillingInvoiceDetailResponseData) GetTerms() *BillingInvoiceTermsResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Terms
+}
+
+func (b *BillingInvoiceDetailResponseData) GetTotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Total
+}
+
+func (b *BillingInvoiceDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingInvoiceDetailResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmountPaid sets the AmountPaid field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetAmountPaid(amountPaid int64) {
+	b.AmountPaid = amountPaid
+	b.require(billingInvoiceDetailResponseDataFieldAmountPaid)
+}
+
+// SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetAmountRemaining(amountRemaining int64) {
+	b.AmountRemaining = amountRemaining
+	b.require(billingInvoiceDetailResponseDataFieldAmountRemaining)
+}
+
+// SetCollectionState sets the CollectionState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetCollectionState(collectionState *InvoiceCollectionState) {
+	b.CollectionState = collectionState
+	b.require(billingInvoiceDetailResponseDataFieldCollectionState)
+}
+
+// SetCollector sets the Collector field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetCollector(collector *Collector) {
+	b.Collector = collector
+	b.require(billingInvoiceDetailResponseDataFieldCollector)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetCompanyID(companyID string) {
+	b.CompanyID = companyID
+	b.require(billingInvoiceDetailResponseDataFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetContractID(contractID string) {
+	b.ContractID = contractID
+	b.require(billingInvoiceDetailResponseDataFieldContractID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetCreatedAt(createdAt time.Time) {
+	b.CreatedAt = createdAt
+	b.require(billingInvoiceDetailResponseDataFieldCreatedAt)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingInvoiceDetailResponseDataFieldCurrency)
+}
+
+// SetDocumentState sets the DocumentState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetDocumentState(documentState InvoiceDocumentState) {
+	b.DocumentState = documentState
+	b.require(billingInvoiceDetailResponseDataFieldDocumentState)
+}
+
+// SetDueAt sets the DueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetDueAt(dueAt *time.Time) {
+	b.DueAt = dueAt
+	b.require(billingInvoiceDetailResponseDataFieldDueAt)
+}
+
+// SetFinalizedAt sets the FinalizedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetFinalizedAt(finalizedAt *time.Time) {
+	b.FinalizedAt = finalizedAt
+	b.require(billingInvoiceDetailResponseDataFieldFinalizedAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingInvoiceDetailResponseDataFieldID)
+}
+
+// SetLines sets the Lines field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetLines(lines []*BillingInvoiceLineResponseData) {
+	b.Lines = lines
+	b.require(billingInvoiceDetailResponseDataFieldLines)
+}
+
+// SetNumber sets the Number field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetNumber(number *string) {
+	b.Number = number
+	b.require(billingInvoiceDetailResponseDataFieldNumber)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetPeriodEnd(periodEnd time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingInvoiceDetailResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetPeriodStart(periodStart time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingInvoiceDetailResponseDataFieldPeriodStart)
+}
+
+// SetSettlements sets the Settlements field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetSettlements(settlements []*BillingInvoiceSettlementResponseData) {
+	b.Settlements = settlements
+	b.require(billingInvoiceDetailResponseDataFieldSettlements)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetStatus(status InvoiceStatus) {
+	b.Status = status
+	b.require(billingInvoiceDetailResponseDataFieldStatus)
+}
+
+// SetSubtotal sets the Subtotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetSubtotal(subtotal int64) {
+	b.Subtotal = subtotal
+	b.require(billingInvoiceDetailResponseDataFieldSubtotal)
+}
+
+// SetTerms sets the Terms field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetTerms(terms *BillingInvoiceTermsResponseData) {
+	b.Terms = terms
+	b.require(billingInvoiceDetailResponseDataFieldTerms)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetTotal(total int64) {
+	b.Total = total
+	b.require(billingInvoiceDetailResponseDataFieldTotal)
+}
+
+func (b *BillingInvoiceDetailResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingInvoiceDetailResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt   *internal.DateTime `json:"created_at"`
+		DueAt       *internal.DateTime `json:"due_at,omitempty"`
+		FinalizedAt *internal.DateTime `json:"finalized_at,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingInvoiceDetailResponseData(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
+	b.DueAt = unmarshaler.DueAt.TimePtr()
+	b.FinalizedAt = unmarshaler.FinalizedAt.TimePtr()
+	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	b.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingInvoiceDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingInvoiceDetailResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt   *internal.DateTime `json:"created_at"`
+		DueAt       *internal.DateTime `json:"due_at,omitempty"`
+		FinalizedAt *internal.DateTime `json:"finalized_at,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*b),
+		CreatedAt:   internal.NewDateTime(b.CreatedAt),
+		DueAt:       internal.NewOptionalDateTime(b.DueAt),
+		FinalizedAt: internal.NewOptionalDateTime(b.FinalizedAt),
+		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingInvoiceDetailResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingInvoiceLineResponseDataFieldAmount             = big.NewInt(1 << 0)
+	billingInvoiceLineResponseDataFieldChargeIDs          = big.NewInt(1 << 1)
+	billingInvoiceLineResponseDataFieldID                 = big.NewInt(1 << 2)
+	billingInvoiceLineResponseDataFieldKind               = big.NewInt(1 << 3)
+	billingInvoiceLineResponseDataFieldPeriodEnd          = big.NewInt(1 << 4)
+	billingInvoiceLineResponseDataFieldPeriodStart        = big.NewInt(1 << 5)
+	billingInvoiceLineResponseDataFieldQuantity           = big.NewInt(1 << 6)
+	billingInvoiceLineResponseDataFieldSubscriptionLineID = big.NewInt(1 << 7)
+	billingInvoiceLineResponseDataFieldTaxable            = big.NewInt(1 << 8)
+	billingInvoiceLineResponseDataFieldUnitAmount         = big.NewInt(1 << 9)
+)
+
+type BillingInvoiceLineResponseData struct {
+	// In minor units of the invoice's currency.
+	Amount int64 `json:"amount" url:"amount"`
+	// The charges this line sums.
+	ChargeIDs          []string        `json:"charge_ids" url:"charge_ids"`
+	ID                 string          `json:"id" url:"id"`
+	Kind               InvoiceLineKind `json:"kind" url:"kind"`
+	PeriodEnd          *time.Time      `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart        *time.Time      `json:"period_start,omitempty" url:"period_start,omitempty"`
+	Quantity           *int64          `json:"quantity,omitempty" url:"quantity,omitempty"`
+	SubscriptionLineID *string         `json:"subscription_line_id,omitempty" url:"subscription_line_id,omitempty"`
+	Taxable            bool            `json:"taxable" url:"taxable"`
+	UnitAmount         *int64          `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceLineResponseData) GetAmount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Amount
+}
+
+func (b *BillingInvoiceLineResponseData) GetChargeIDs() []string {
+	if b == nil {
+		return nil
+	}
+	return b.ChargeIDs
+}
+
+func (b *BillingInvoiceLineResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingInvoiceLineResponseData) GetKind() InvoiceLineKind {
+	if b == nil {
+		return ""
+	}
+	return b.Kind
+}
+
+func (b *BillingInvoiceLineResponseData) GetPeriodEnd() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingInvoiceLineResponseData) GetPeriodStart() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingInvoiceLineResponseData) GetQuantity() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.Quantity
+}
+
+func (b *BillingInvoiceLineResponseData) GetSubscriptionLineID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SubscriptionLineID
+}
+
+func (b *BillingInvoiceLineResponseData) GetTaxable() bool {
+	if b == nil {
+		return false
+	}
+	return b.Taxable
+}
+
+func (b *BillingInvoiceLineResponseData) GetUnitAmount() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.UnitAmount
+}
+
+func (b *BillingInvoiceLineResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingInvoiceLineResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetAmount(amount int64) {
+	b.Amount = amount
+	b.require(billingInvoiceLineResponseDataFieldAmount)
+}
+
+// SetChargeIDs sets the ChargeIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetChargeIDs(chargeIDs []string) {
+	b.ChargeIDs = chargeIDs
+	b.require(billingInvoiceLineResponseDataFieldChargeIDs)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingInvoiceLineResponseDataFieldID)
+}
+
+// SetKind sets the Kind field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetKind(kind InvoiceLineKind) {
+	b.Kind = kind
+	b.require(billingInvoiceLineResponseDataFieldKind)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetPeriodEnd(periodEnd *time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingInvoiceLineResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetPeriodStart(periodStart *time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingInvoiceLineResponseDataFieldPeriodStart)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetQuantity(quantity *int64) {
+	b.Quantity = quantity
+	b.require(billingInvoiceLineResponseDataFieldQuantity)
+}
+
+// SetSubscriptionLineID sets the SubscriptionLineID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetSubscriptionLineID(subscriptionLineID *string) {
+	b.SubscriptionLineID = subscriptionLineID
+	b.require(billingInvoiceLineResponseDataFieldSubscriptionLineID)
+}
+
+// SetTaxable sets the Taxable field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetTaxable(taxable bool) {
+	b.Taxable = taxable
+	b.require(billingInvoiceLineResponseDataFieldTaxable)
+}
+
+// SetUnitAmount sets the UnitAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetUnitAmount(unitAmount *int64) {
+	b.UnitAmount = unitAmount
+	b.require(billingInvoiceLineResponseDataFieldUnitAmount)
+}
+
+func (b *BillingInvoiceLineResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingInvoiceLineResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingInvoiceLineResponseData(unmarshaler.embed)
+	b.PeriodEnd = unmarshaler.PeriodEnd.TimePtr()
+	b.PeriodStart = unmarshaler.PeriodStart.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingInvoiceLineResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingInvoiceLineResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed:       embed(*b),
+		PeriodEnd:   internal.NewOptionalDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewOptionalDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingInvoiceLineResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingInvoiceResponseDataFieldAmountPaid      = big.NewInt(1 << 0)
+	billingInvoiceResponseDataFieldAmountRemaining = big.NewInt(1 << 1)
+	billingInvoiceResponseDataFieldCollectionState = big.NewInt(1 << 2)
+	billingInvoiceResponseDataFieldCollector       = big.NewInt(1 << 3)
+	billingInvoiceResponseDataFieldCompanyID       = big.NewInt(1 << 4)
+	billingInvoiceResponseDataFieldContractID      = big.NewInt(1 << 5)
+	billingInvoiceResponseDataFieldCreatedAt       = big.NewInt(1 << 6)
+	billingInvoiceResponseDataFieldCurrency        = big.NewInt(1 << 7)
+	billingInvoiceResponseDataFieldDocumentState   = big.NewInt(1 << 8)
+	billingInvoiceResponseDataFieldDueAt           = big.NewInt(1 << 9)
+	billingInvoiceResponseDataFieldFinalizedAt     = big.NewInt(1 << 10)
+	billingInvoiceResponseDataFieldID              = big.NewInt(1 << 11)
+	billingInvoiceResponseDataFieldNumber          = big.NewInt(1 << 12)
+	billingInvoiceResponseDataFieldPeriodEnd       = big.NewInt(1 << 13)
+	billingInvoiceResponseDataFieldPeriodStart     = big.NewInt(1 << 14)
+	billingInvoiceResponseDataFieldStatus          = big.NewInt(1 << 15)
+	billingInvoiceResponseDataFieldSubtotal        = big.NewInt(1 << 16)
+	billingInvoiceResponseDataFieldTotal           = big.NewInt(1 << 17)
+)
+
+type BillingInvoiceResponseData struct {
+	AmountPaid      int64 `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining int64 `json:"amount_remaining" url:"amount_remaining"`
+	// The collector's report on payment. Null on a draft.
+	CollectionState *InvoiceCollectionState `json:"collection_state,omitempty" url:"collection_state,omitempty"`
+	Collector       *Collector              `json:"collector,omitempty" url:"collector,omitempty"`
+	CompanyID       string                  `json:"company_id" url:"company_id"`
+	ContractID      string                  `json:"contract_id" url:"contract_id"`
+	CreatedAt       time.Time               `json:"created_at" url:"created_at"`
+	Currency        Currency                `json:"currency" url:"currency"`
+	DocumentState   InvoiceDocumentState    `json:"document_state" url:"document_state"`
+	DueAt           *time.Time              `json:"due_at,omitempty" url:"due_at,omitempty"`
+	FinalizedAt     *time.Time              `json:"finalized_at,omitempty" url:"finalized_at,omitempty"`
+	ID              string                  `json:"id" url:"id"`
+	Number          *string                 `json:"number,omitempty" url:"number,omitempty"`
+	PeriodEnd       time.Time               `json:"period_end" url:"period_end"`
+	PeriodStart     time.Time               `json:"period_start" url:"period_start"`
+	Status          InvoiceStatus           `json:"status" url:"status"`
+	Subtotal        int64                   `json:"subtotal" url:"subtotal"`
+	Total           int64                   `json:"total" url:"total"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceResponseData) GetAmountPaid() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountPaid
+}
+
+func (b *BillingInvoiceResponseData) GetAmountRemaining() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountRemaining
+}
+
+func (b *BillingInvoiceResponseData) GetCollectionState() *InvoiceCollectionState {
+	if b == nil {
+		return nil
+	}
+	return b.CollectionState
+}
+
+func (b *BillingInvoiceResponseData) GetCollector() *Collector {
+	if b == nil {
+		return nil
+	}
+	return b.Collector
+}
+
+func (b *BillingInvoiceResponseData) GetCompanyID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CompanyID
+}
+
+func (b *BillingInvoiceResponseData) GetContractID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ContractID
+}
+
+func (b *BillingInvoiceResponseData) GetCreatedAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.CreatedAt
+}
+
+func (b *BillingInvoiceResponseData) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingInvoiceResponseData) GetDocumentState() InvoiceDocumentState {
+	if b == nil {
+		return ""
+	}
+	return b.DocumentState
+}
+
+func (b *BillingInvoiceResponseData) GetDueAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.DueAt
+}
+
+func (b *BillingInvoiceResponseData) GetFinalizedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.FinalizedAt
+}
+
+func (b *BillingInvoiceResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingInvoiceResponseData) GetNumber() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Number
+}
+
+func (b *BillingInvoiceResponseData) GetPeriodEnd() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingInvoiceResponseData) GetPeriodStart() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingInvoiceResponseData) GetStatus() InvoiceStatus {
+	if b == nil {
+		return ""
+	}
+	return b.Status
+}
+
+func (b *BillingInvoiceResponseData) GetSubtotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Subtotal
+}
+
+func (b *BillingInvoiceResponseData) GetTotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Total
+}
+
+func (b *BillingInvoiceResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingInvoiceResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmountPaid sets the AmountPaid field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetAmountPaid(amountPaid int64) {
+	b.AmountPaid = amountPaid
+	b.require(billingInvoiceResponseDataFieldAmountPaid)
+}
+
+// SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetAmountRemaining(amountRemaining int64) {
+	b.AmountRemaining = amountRemaining
+	b.require(billingInvoiceResponseDataFieldAmountRemaining)
+}
+
+// SetCollectionState sets the CollectionState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetCollectionState(collectionState *InvoiceCollectionState) {
+	b.CollectionState = collectionState
+	b.require(billingInvoiceResponseDataFieldCollectionState)
+}
+
+// SetCollector sets the Collector field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetCollector(collector *Collector) {
+	b.Collector = collector
+	b.require(billingInvoiceResponseDataFieldCollector)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetCompanyID(companyID string) {
+	b.CompanyID = companyID
+	b.require(billingInvoiceResponseDataFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetContractID(contractID string) {
+	b.ContractID = contractID
+	b.require(billingInvoiceResponseDataFieldContractID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetCreatedAt(createdAt time.Time) {
+	b.CreatedAt = createdAt
+	b.require(billingInvoiceResponseDataFieldCreatedAt)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingInvoiceResponseDataFieldCurrency)
+}
+
+// SetDocumentState sets the DocumentState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetDocumentState(documentState InvoiceDocumentState) {
+	b.DocumentState = documentState
+	b.require(billingInvoiceResponseDataFieldDocumentState)
+}
+
+// SetDueAt sets the DueAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetDueAt(dueAt *time.Time) {
+	b.DueAt = dueAt
+	b.require(billingInvoiceResponseDataFieldDueAt)
+}
+
+// SetFinalizedAt sets the FinalizedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetFinalizedAt(finalizedAt *time.Time) {
+	b.FinalizedAt = finalizedAt
+	b.require(billingInvoiceResponseDataFieldFinalizedAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingInvoiceResponseDataFieldID)
+}
+
+// SetNumber sets the Number field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetNumber(number *string) {
+	b.Number = number
+	b.require(billingInvoiceResponseDataFieldNumber)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetPeriodEnd(periodEnd time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingInvoiceResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetPeriodStart(periodStart time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingInvoiceResponseDataFieldPeriodStart)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetStatus(status InvoiceStatus) {
+	b.Status = status
+	b.require(billingInvoiceResponseDataFieldStatus)
+}
+
+// SetSubtotal sets the Subtotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetSubtotal(subtotal int64) {
+	b.Subtotal = subtotal
+	b.require(billingInvoiceResponseDataFieldSubtotal)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetTotal(total int64) {
+	b.Total = total
+	b.require(billingInvoiceResponseDataFieldTotal)
+}
+
+func (b *BillingInvoiceResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingInvoiceResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt   *internal.DateTime `json:"created_at"`
+		DueAt       *internal.DateTime `json:"due_at,omitempty"`
+		FinalizedAt *internal.DateTime `json:"finalized_at,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingInvoiceResponseData(unmarshaler.embed)
+	b.CreatedAt = unmarshaler.CreatedAt.Time()
+	b.DueAt = unmarshaler.DueAt.TimePtr()
+	b.FinalizedAt = unmarshaler.FinalizedAt.TimePtr()
+	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	b.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingInvoiceResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingInvoiceResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt   *internal.DateTime `json:"created_at"`
+		DueAt       *internal.DateTime `json:"due_at,omitempty"`
+		FinalizedAt *internal.DateTime `json:"finalized_at,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*b),
+		CreatedAt:   internal.NewDateTime(b.CreatedAt),
+		DueAt:       internal.NewOptionalDateTime(b.DueAt),
+		FinalizedAt: internal.NewOptionalDateTime(b.FinalizedAt),
+		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingInvoiceResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingInvoiceSettlementResponseDataFieldAmount    = big.NewInt(1 << 0)
+	billingInvoiceSettlementResponseDataFieldCollector = big.NewInt(1 << 1)
+	billingInvoiceSettlementResponseDataFieldID        = big.NewInt(1 << 2)
+	billingInvoiceSettlementResponseDataFieldReference = big.NewInt(1 << 3)
+	billingInvoiceSettlementResponseDataFieldSettledAt = big.NewInt(1 << 4)
+)
+
+type BillingInvoiceSettlementResponseData struct {
+	Amount    int64     `json:"amount" url:"amount"`
+	Collector Collector `json:"collector" url:"collector"`
+	ID        string    `json:"id" url:"id"`
+	Reference *string   `json:"reference,omitempty" url:"reference,omitempty"`
+	SettledAt time.Time `json:"settled_at" url:"settled_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceSettlementResponseData) GetAmount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Amount
+}
+
+func (b *BillingInvoiceSettlementResponseData) GetCollector() Collector {
+	if b == nil {
+		return ""
+	}
+	return b.Collector
+}
+
+func (b *BillingInvoiceSettlementResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingInvoiceSettlementResponseData) GetReference() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Reference
+}
+
+func (b *BillingInvoiceSettlementResponseData) GetSettledAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.SettledAt
+}
+
+func (b *BillingInvoiceSettlementResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingInvoiceSettlementResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceSettlementResponseData) SetAmount(amount int64) {
+	b.Amount = amount
+	b.require(billingInvoiceSettlementResponseDataFieldAmount)
+}
+
+// SetCollector sets the Collector field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceSettlementResponseData) SetCollector(collector Collector) {
+	b.Collector = collector
+	b.require(billingInvoiceSettlementResponseDataFieldCollector)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceSettlementResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingInvoiceSettlementResponseDataFieldID)
+}
+
+// SetReference sets the Reference field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceSettlementResponseData) SetReference(reference *string) {
+	b.Reference = reference
+	b.require(billingInvoiceSettlementResponseDataFieldReference)
+}
+
+// SetSettledAt sets the SettledAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceSettlementResponseData) SetSettledAt(settledAt time.Time) {
+	b.SettledAt = settledAt
+	b.require(billingInvoiceSettlementResponseDataFieldSettledAt)
+}
+
+func (b *BillingInvoiceSettlementResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingInvoiceSettlementResponseData
+	var unmarshaler = struct {
+		embed
+		SettledAt *internal.DateTime `json:"settled_at"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingInvoiceSettlementResponseData(unmarshaler.embed)
+	b.SettledAt = unmarshaler.SettledAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingInvoiceSettlementResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingInvoiceSettlementResponseData
+	var marshaler = struct {
+		embed
+		SettledAt *internal.DateTime `json:"settled_at"`
+	}{
+		embed:     embed(*b),
+		SettledAt: internal.NewDateTime(b.SettledAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingInvoiceSettlementResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingInvoiceTermsResponseDataFieldCollectionMethod = big.NewInt(1 << 0)
+	billingInvoiceTermsResponseDataFieldCollector        = big.NewInt(1 << 1)
+	billingInvoiceTermsResponseDataFieldCurrency         = big.NewInt(1 << 2)
+	billingInvoiceTermsResponseDataFieldDaysUntilDue     = big.NewInt(1 << 3)
+	billingInvoiceTermsResponseDataFieldPaymentGating    = big.NewInt(1 << 4)
+	billingInvoiceTermsResponseDataFieldPurchaseOrder    = big.NewInt(1 << 5)
+)
+
+type BillingInvoiceTermsResponseData struct {
+	CollectionMethod BillingCollectionMethod `json:"collection_method" url:"collection_method"`
+	Collector        Collector               `json:"collector" url:"collector"`
+	Currency         *Currency               `json:"currency,omitempty" url:"currency,omitempty"`
+	DaysUntilDue     *int64                  `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	PaymentGating    PaymentGating           `json:"payment_gating" url:"payment_gating"`
+	PurchaseOrder    *string                 `json:"purchase_order,omitempty" url:"purchase_order,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceTermsResponseData) GetCollectionMethod() BillingCollectionMethod {
+	if b == nil {
+		return ""
+	}
+	return b.CollectionMethod
+}
+
+func (b *BillingInvoiceTermsResponseData) GetCollector() Collector {
+	if b == nil {
+		return ""
+	}
+	return b.Collector
+}
+
+func (b *BillingInvoiceTermsResponseData) GetCurrency() *Currency {
+	if b == nil {
+		return nil
+	}
+	return b.Currency
+}
+
+func (b *BillingInvoiceTermsResponseData) GetDaysUntilDue() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.DaysUntilDue
+}
+
+func (b *BillingInvoiceTermsResponseData) GetPaymentGating() PaymentGating {
+	if b == nil {
+		return ""
+	}
+	return b.PaymentGating
+}
+
+func (b *BillingInvoiceTermsResponseData) GetPurchaseOrder() *string {
+	if b == nil {
+		return nil
+	}
+	return b.PurchaseOrder
+}
+
+func (b *BillingInvoiceTermsResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingInvoiceTermsResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceTermsResponseData) SetCollectionMethod(collectionMethod BillingCollectionMethod) {
+	b.CollectionMethod = collectionMethod
+	b.require(billingInvoiceTermsResponseDataFieldCollectionMethod)
+}
+
+// SetCollector sets the Collector field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceTermsResponseData) SetCollector(collector Collector) {
+	b.Collector = collector
+	b.require(billingInvoiceTermsResponseDataFieldCollector)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceTermsResponseData) SetCurrency(currency *Currency) {
+	b.Currency = currency
+	b.require(billingInvoiceTermsResponseDataFieldCurrency)
+}
+
+// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceTermsResponseData) SetDaysUntilDue(daysUntilDue *int64) {
+	b.DaysUntilDue = daysUntilDue
+	b.require(billingInvoiceTermsResponseDataFieldDaysUntilDue)
+}
+
+// SetPaymentGating sets the PaymentGating field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceTermsResponseData) SetPaymentGating(paymentGating PaymentGating) {
+	b.PaymentGating = paymentGating
+	b.require(billingInvoiceTermsResponseDataFieldPaymentGating)
+}
+
+// SetPurchaseOrder sets the PurchaseOrder field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceTermsResponseData) SetPurchaseOrder(purchaseOrder *string) {
+	b.PurchaseOrder = purchaseOrder
+	b.require(billingInvoiceTermsResponseDataFieldPurchaseOrder)
+}
+
+func (b *BillingInvoiceTermsResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingInvoiceTermsResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingInvoiceTermsResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingInvoiceTermsResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingInvoiceTermsResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingInvoiceTermsResponseData) String() string {
 	if b == nil {
 		return "<nil>"
 	}
@@ -3185,6 +4785,31 @@ func (b *BillingSubscriptionResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
+type Collector string
+
+const (
+	CollectorExternal       Collector = "external"
+	CollectorStripeInvoice  Collector = "stripe_invoice"
+	CollectorStripePayments Collector = "stripe_payments"
+)
+
+func NewCollectorFromString(s string) (Collector, error) {
+	switch s {
+	case "external":
+		return CollectorExternal, nil
+	case "stripe_invoice":
+		return CollectorStripeInvoice, nil
+	case "stripe_payments":
+		return CollectorStripePayments, nil
+	}
+	var t Collector
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c Collector) Ptr() *Collector {
+	return &c
+}
+
 var (
 	createBillingPriceTierRequestBodyFieldFlatAmount      = big.NewInt(1 << 0)
 	createBillingPriceTierRequestBodyFieldPerUnitDecimal  = big.NewInt(1 << 1)
@@ -3349,6 +4974,124 @@ func (c *CreateBillingPriceTierRequestBody) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+type InvoiceCollectionState string
+
+const (
+	InvoiceCollectionStateExported      InvoiceCollectionState = "exported"
+	InvoiceCollectionStatePaid          InvoiceCollectionState = "paid"
+	InvoiceCollectionStatePartiallyPaid InvoiceCollectionState = "partially_paid"
+	InvoiceCollectionStatePastDue       InvoiceCollectionState = "past_due"
+	InvoiceCollectionStatePaymentFailed InvoiceCollectionState = "payment_failed"
+	InvoiceCollectionStateQueued        InvoiceCollectionState = "queued"
+	InvoiceCollectionStateSent          InvoiceCollectionState = "sent"
+)
+
+func NewInvoiceCollectionStateFromString(s string) (InvoiceCollectionState, error) {
+	switch s {
+	case "exported":
+		return InvoiceCollectionStateExported, nil
+	case "paid":
+		return InvoiceCollectionStatePaid, nil
+	case "partially_paid":
+		return InvoiceCollectionStatePartiallyPaid, nil
+	case "past_due":
+		return InvoiceCollectionStatePastDue, nil
+	case "payment_failed":
+		return InvoiceCollectionStatePaymentFailed, nil
+	case "queued":
+		return InvoiceCollectionStateQueued, nil
+	case "sent":
+		return InvoiceCollectionStateSent, nil
+	}
+	var t InvoiceCollectionState
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i InvoiceCollectionState) Ptr() *InvoiceCollectionState {
+	return &i
+}
+
+type InvoiceDocumentState string
+
+const (
+	InvoiceDocumentStateCredited  InvoiceDocumentState = "credited"
+	InvoiceDocumentStateDraft     InvoiceDocumentState = "draft"
+	InvoiceDocumentStateFinalized InvoiceDocumentState = "finalized"
+	InvoiceDocumentStateVoid      InvoiceDocumentState = "void"
+)
+
+func NewInvoiceDocumentStateFromString(s string) (InvoiceDocumentState, error) {
+	switch s {
+	case "credited":
+		return InvoiceDocumentStateCredited, nil
+	case "draft":
+		return InvoiceDocumentStateDraft, nil
+	case "finalized":
+		return InvoiceDocumentStateFinalized, nil
+	case "void":
+		return InvoiceDocumentStateVoid, nil
+	}
+	var t InvoiceDocumentState
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i InvoiceDocumentState) Ptr() *InvoiceDocumentState {
+	return &i
+}
+
+type InvoiceLineKind string
+
+const (
+	InvoiceLineKindAdjustment     InvoiceLineKind = "adjustment"
+	InvoiceLineKindPurchase       InvoiceLineKind = "purchase"
+	InvoiceLineKindReconciliation InvoiceLineKind = "reconciliation"
+	InvoiceLineKindSubscription   InvoiceLineKind = "subscription"
+	InvoiceLineKindTrueUp         InvoiceLineKind = "true_up"
+)
+
+func NewInvoiceLineKindFromString(s string) (InvoiceLineKind, error) {
+	switch s {
+	case "adjustment":
+		return InvoiceLineKindAdjustment, nil
+	case "purchase":
+		return InvoiceLineKindPurchase, nil
+	case "reconciliation":
+		return InvoiceLineKindReconciliation, nil
+	case "subscription":
+		return InvoiceLineKindSubscription, nil
+	case "true_up":
+		return InvoiceLineKindTrueUp, nil
+	}
+	var t InvoiceLineKind
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i InvoiceLineKind) Ptr() *InvoiceLineKind {
+	return &i
+}
+
+type PaymentGating string
+
+const (
+	PaymentGatingKeepServing PaymentGating = "keep_serving"
+	PaymentGatingRevokeAfter PaymentGating = "revoke_after"
+)
+
+func NewPaymentGatingFromString(s string) (PaymentGating, error) {
+	switch s {
+	case "keep_serving":
+		return PaymentGatingKeepServing, nil
+	case "revoke_after":
+		return PaymentGatingRevokeAfter, nil
+	}
+	var t PaymentGating
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PaymentGating) Ptr() *PaymentGating {
+	return &p
 }
 
 var (
@@ -4014,6 +5757,262 @@ func (c *CountCustomersResponse) String() string {
 }
 
 var (
+	countNativeInvoicesParamsFieldCompanyID     = big.NewInt(1 << 0)
+	countNativeInvoicesParamsFieldContractID    = big.NewInt(1 << 1)
+	countNativeInvoicesParamsFieldDocumentState = big.NewInt(1 << 2)
+	countNativeInvoicesParamsFieldLimit         = big.NewInt(1 << 3)
+	countNativeInvoicesParamsFieldOffset        = big.NewInt(1 << 4)
+)
+
+// Input parameters
+type CountNativeInvoicesParams struct {
+	CompanyID     *string               `json:"company_id,omitempty" url:"company_id,omitempty"`
+	ContractID    *string               `json:"contract_id,omitempty" url:"contract_id,omitempty"`
+	DocumentState *InvoiceDocumentState `json:"document_state,omitempty" url:"document_state,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountNativeInvoicesParams) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CountNativeInvoicesParams) GetContractID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.ContractID
+}
+
+func (c *CountNativeInvoicesParams) GetDocumentState() *InvoiceDocumentState {
+	if c == nil {
+		return nil
+	}
+	return c.DocumentState
+}
+
+func (c *CountNativeInvoicesParams) GetLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Limit
+}
+
+func (c *CountNativeInvoicesParams) GetOffset() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Offset
+}
+
+func (c *CountNativeInvoicesParams) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountNativeInvoicesParams) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesParams) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(countNativeInvoicesParamsFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesParams) SetContractID(contractID *string) {
+	c.ContractID = contractID
+	c.require(countNativeInvoicesParamsFieldContractID)
+}
+
+// SetDocumentState sets the DocumentState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesParams) SetDocumentState(documentState *InvoiceDocumentState) {
+	c.DocumentState = documentState
+	c.require(countNativeInvoicesParamsFieldDocumentState)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesParams) SetLimit(limit *int64) {
+	c.Limit = limit
+	c.require(countNativeInvoicesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesParams) SetOffset(offset *int64) {
+	c.Offset = offset
+	c.require(countNativeInvoicesParamsFieldOffset)
+}
+
+func (c *CountNativeInvoicesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountNativeInvoicesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountNativeInvoicesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountNativeInvoicesParams) MarshalJSON() ([]byte, error) {
+	type embed CountNativeInvoicesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountNativeInvoicesParams) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	countNativeInvoicesResponseFieldData   = big.NewInt(1 << 0)
+	countNativeInvoicesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type CountNativeInvoicesResponse struct {
+	Data *CountResponse `json:"data" url:"data"`
+	// Input parameters
+	Params *CountNativeInvoicesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CountNativeInvoicesResponse) GetData() *CountResponse {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *CountNativeInvoicesResponse) GetParams() *CountNativeInvoicesParams {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *CountNativeInvoicesResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CountNativeInvoicesResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesResponse) SetData(data *CountResponse) {
+	c.Data = data
+	c.require(countNativeInvoicesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountNativeInvoicesResponse) SetParams(params *CountNativeInvoicesParams) {
+	c.Params = params
+	c.require(countNativeInvoicesResponseFieldParams)
+}
+
+func (c *CountNativeInvoicesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler CountNativeInvoicesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CountNativeInvoicesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CountNativeInvoicesResponse) MarshalJSON() ([]byte, error) {
+	type embed CountNativeInvoicesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CountNativeInvoicesResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	deleteBillingCouponResponseFieldData   = big.NewInt(1 << 0)
 	deleteBillingCouponResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -4632,6 +6631,109 @@ func (d *DeleteProductPriceResponse) String() string {
 }
 
 var (
+	finalizeNativeInvoiceResponseFieldData   = big.NewInt(1 << 0)
+	finalizeNativeInvoiceResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type FinalizeNativeInvoiceResponse struct {
+	Data *BillingInvoiceDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (f *FinalizeNativeInvoiceResponse) GetData() *BillingInvoiceDetailResponseData {
+	if f == nil {
+		return nil
+	}
+	return f.Data
+}
+
+func (f *FinalizeNativeInvoiceResponse) GetParams() map[string]any {
+	if f == nil {
+		return nil
+	}
+	return f.Params
+}
+
+func (f *FinalizeNativeInvoiceResponse) GetExtraProperties() map[string]interface{} {
+	if f == nil {
+		return nil
+	}
+	return f.extraProperties
+}
+
+func (f *FinalizeNativeInvoiceResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if f.explicitFields != nil {
+		next.Set(f.explicitFields)
+	}
+	next.Or(next, field)
+	f.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FinalizeNativeInvoiceResponse) SetData(data *BillingInvoiceDetailResponseData) {
+	f.Data = data
+	f.require(finalizeNativeInvoiceResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (f *FinalizeNativeInvoiceResponse) SetParams(params map[string]any) {
+	f.Params = params
+	f.require(finalizeNativeInvoiceResponseFieldParams)
+}
+
+func (f *FinalizeNativeInvoiceResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler FinalizeNativeInvoiceResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*f = FinalizeNativeInvoiceResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *f)
+	if err != nil {
+		return err
+	}
+	f.extraProperties = extraProperties
+	f.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (f *FinalizeNativeInvoiceResponse) MarshalJSON() ([]byte, error) {
+	type embed FinalizeNativeInvoiceResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*f),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, f.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (f *FinalizeNativeInvoiceResponse) String() string {
+	if f == nil {
+		return "<nil>"
+	}
+	if len(f.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(f.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(f); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", f)
+}
+
+var (
 	getBillingSettingsResponseFieldData   = big.NewInt(1 << 0)
 	getBillingSettingsResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -4720,6 +6822,109 @@ func (g *GetBillingSettingsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetBillingSettingsResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getNativeInvoiceResponseFieldData   = big.NewInt(1 << 0)
+	getNativeInvoiceResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetNativeInvoiceResponse struct {
+	Data *BillingInvoiceDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetNativeInvoiceResponse) GetData() *BillingInvoiceDetailResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetNativeInvoiceResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetNativeInvoiceResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetNativeInvoiceResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetNativeInvoiceResponse) SetData(data *BillingInvoiceDetailResponseData) {
+	g.Data = data
+	g.require(getNativeInvoiceResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetNativeInvoiceResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getNativeInvoiceResponseFieldParams)
+}
+
+func (g *GetNativeInvoiceResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetNativeInvoiceResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetNativeInvoiceResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetNativeInvoiceResponse) MarshalJSON() ([]byte, error) {
+	type embed GetNativeInvoiceResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetNativeInvoiceResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -7315,6 +9520,262 @@ func (l *ListMetersResponse) String() string {
 }
 
 var (
+	listNativeInvoicesParamsFieldCompanyID     = big.NewInt(1 << 0)
+	listNativeInvoicesParamsFieldContractID    = big.NewInt(1 << 1)
+	listNativeInvoicesParamsFieldDocumentState = big.NewInt(1 << 2)
+	listNativeInvoicesParamsFieldLimit         = big.NewInt(1 << 3)
+	listNativeInvoicesParamsFieldOffset        = big.NewInt(1 << 4)
+)
+
+// Input parameters
+type ListNativeInvoicesParams struct {
+	CompanyID     *string               `json:"company_id,omitempty" url:"company_id,omitempty"`
+	ContractID    *string               `json:"contract_id,omitempty" url:"contract_id,omitempty"`
+	DocumentState *InvoiceDocumentState `json:"document_state,omitempty" url:"document_state,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListNativeInvoicesParams) GetCompanyID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.CompanyID
+}
+
+func (l *ListNativeInvoicesParams) GetContractID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.ContractID
+}
+
+func (l *ListNativeInvoicesParams) GetDocumentState() *InvoiceDocumentState {
+	if l == nil {
+		return nil
+	}
+	return l.DocumentState
+}
+
+func (l *ListNativeInvoicesParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListNativeInvoicesParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListNativeInvoicesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListNativeInvoicesParams) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesParams) SetCompanyID(companyID *string) {
+	l.CompanyID = companyID
+	l.require(listNativeInvoicesParamsFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesParams) SetContractID(contractID *string) {
+	l.ContractID = contractID
+	l.require(listNativeInvoicesParamsFieldContractID)
+}
+
+// SetDocumentState sets the DocumentState field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesParams) SetDocumentState(documentState *InvoiceDocumentState) {
+	l.DocumentState = documentState
+	l.require(listNativeInvoicesParamsFieldDocumentState)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listNativeInvoicesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listNativeInvoicesParamsFieldOffset)
+}
+
+func (l *ListNativeInvoicesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListNativeInvoicesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListNativeInvoicesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListNativeInvoicesParams) MarshalJSON() ([]byte, error) {
+	type embed ListNativeInvoicesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListNativeInvoicesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listNativeInvoicesResponseFieldData   = big.NewInt(1 << 0)
+	listNativeInvoicesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListNativeInvoicesResponse struct {
+	Data []*BillingInvoiceResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListNativeInvoicesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListNativeInvoicesResponse) GetData() []*BillingInvoiceResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListNativeInvoicesResponse) GetParams() *ListNativeInvoicesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListNativeInvoicesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListNativeInvoicesResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesResponse) SetData(data []*BillingInvoiceResponseData) {
+	l.Data = data
+	l.require(listNativeInvoicesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListNativeInvoicesResponse) SetParams(params *ListNativeInvoicesParams) {
+	l.Params = params
+	l.require(listNativeInvoicesResponseFieldParams)
+}
+
+func (l *ListNativeInvoicesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListNativeInvoicesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListNativeInvoicesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListNativeInvoicesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListNativeInvoicesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListNativeInvoicesResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
 	listPaymentMethodsParamsFieldCompanyID          = big.NewInt(1 << 0)
 	listPaymentMethodsParamsFieldCustomerExternalID = big.NewInt(1 << 1)
 	listPaymentMethodsParamsFieldLimit              = big.NewInt(1 << 2)
@@ -7552,6 +10013,109 @@ func (l *ListPaymentMethodsResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	markNativeInvoicePaidResponseFieldData   = big.NewInt(1 << 0)
+	markNativeInvoicePaidResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type MarkNativeInvoicePaidResponse struct {
+	Data *BillingInvoiceDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *MarkNativeInvoicePaidResponse) GetData() *BillingInvoiceDetailResponseData {
+	if m == nil {
+		return nil
+	}
+	return m.Data
+}
+
+func (m *MarkNativeInvoicePaidResponse) GetParams() map[string]any {
+	if m == nil {
+		return nil
+	}
+	return m.Params
+}
+
+func (m *MarkNativeInvoicePaidResponse) GetExtraProperties() map[string]interface{} {
+	if m == nil {
+		return nil
+	}
+	return m.extraProperties
+}
+
+func (m *MarkNativeInvoicePaidResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if m.explicitFields != nil {
+		next.Set(m.explicitFields)
+	}
+	next.Or(next, field)
+	m.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MarkNativeInvoicePaidResponse) SetData(data *BillingInvoiceDetailResponseData) {
+	m.Data = data
+	m.require(markNativeInvoicePaidResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *MarkNativeInvoicePaidResponse) SetParams(params map[string]any) {
+	m.Params = params
+	m.require(markNativeInvoicePaidResponseFieldParams)
+}
+
+func (m *MarkNativeInvoicePaidResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler MarkNativeInvoicePaidResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = MarkNativeInvoicePaidResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *MarkNativeInvoicePaidResponse) MarshalJSON() ([]byte, error) {
+	type embed MarkNativeInvoicePaidResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*m),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (m *MarkNativeInvoicePaidResponse) String() string {
+	if m == nil {
+		return "<nil>"
+	}
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
 }
 
 var (
@@ -8582,6 +11146,109 @@ func (u *UpsertPaymentMethodResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	voidNativeInvoiceResponseFieldData   = big.NewInt(1 << 0)
+	voidNativeInvoiceResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type VoidNativeInvoiceResponse struct {
+	Data *BillingInvoiceDetailResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (v *VoidNativeInvoiceResponse) GetData() *BillingInvoiceDetailResponseData {
+	if v == nil {
+		return nil
+	}
+	return v.Data
+}
+
+func (v *VoidNativeInvoiceResponse) GetParams() map[string]any {
+	if v == nil {
+		return nil
+	}
+	return v.Params
+}
+
+func (v *VoidNativeInvoiceResponse) GetExtraProperties() map[string]interface{} {
+	if v == nil {
+		return nil
+	}
+	return v.extraProperties
+}
+
+func (v *VoidNativeInvoiceResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if v.explicitFields != nil {
+		next.Set(v.explicitFields)
+	}
+	next.Or(next, field)
+	v.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (v *VoidNativeInvoiceResponse) SetData(data *BillingInvoiceDetailResponseData) {
+	v.Data = data
+	v.require(voidNativeInvoiceResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (v *VoidNativeInvoiceResponse) SetParams(params map[string]any) {
+	v.Params = params
+	v.require(voidNativeInvoiceResponseFieldParams)
+}
+
+func (v *VoidNativeInvoiceResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler VoidNativeInvoiceResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*v = VoidNativeInvoiceResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *v)
+	if err != nil {
+		return err
+	}
+	v.extraProperties = extraProperties
+	v.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (v *VoidNativeInvoiceResponse) MarshalJSON() ([]byte, error) {
+	type embed VoidNativeInvoiceResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*v),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, v.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (v *VoidNativeInvoiceResponse) String() string {
+	if v == nil {
+		return "<nil>"
+	}
+	if len(v.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(v.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(v); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", v)
 }
 
 var (

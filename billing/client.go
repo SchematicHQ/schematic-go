@@ -4,6 +4,7 @@ package billing
 
 import (
 	context "context"
+	io "io"
 
 	schematichq "github.com/schematichq/schematic-go"
 	core "github.com/schematichq/schematic-go/core"
@@ -1027,6 +1028,201 @@ func (c *Client) UpsertBillingSubscription(
 	opts ...option.RequestOption,
 ) (*schematichq.UpsertBillingSubscriptionResponse, error) {
 	response, err := c.WithRawResponse.UpsertBillingSubscription(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.ListNativeInvoicesRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    ContractID: schematichq.String(
+//	        "contract_id",
+//	    ),
+//	    DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.ListNativeInvoices(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListNativeInvoices(
+	ctx context.Context,
+	request *schematichq.ListNativeInvoicesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListNativeInvoicesResponse, error) {
+	response, err := c.WithRawResponse.ListNativeInvoices(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Billing.GetNativeInvoice(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) GetNativeInvoice(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetNativeInvoiceResponse, error) {
+	response, err := c.WithRawResponse.GetNativeInvoice(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Billing.ExportNativeInvoice(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) ExportNativeInvoice(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (io.Reader, error) {
+	response, err := c.WithRawResponse.ExportNativeInvoice(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Billing.FinalizeNativeInvoice(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) FinalizeNativeInvoice(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (*schematichq.FinalizeNativeInvoiceResponse, error) {
+	response, err := c.WithRawResponse.FinalizeNativeInvoice(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.MarkInvoicePaidRequestBody{
+//	    IdempotencyKey: "idempotency_key",
+//	}
+//	client.Billing.MarkNativeInvoicePaid(
+//	    context.TODO(),
+//	    "invoice_id",
+//	    request,
+//	)
+func (c *Client) MarkNativeInvoicePaid(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	request *schematichq.MarkInvoicePaidRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.MarkNativeInvoicePaidResponse, error) {
+	response, err := c.WithRawResponse.MarkNativeInvoicePaid(
+		ctx,
+		invoiceID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Billing.VoidNativeInvoice(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) VoidNativeInvoice(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (*schematichq.VoidNativeInvoiceResponse, error) {
+	response, err := c.WithRawResponse.VoidNativeInvoice(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.CountNativeInvoicesRequest{
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
+//	    ContractID: schematichq.String(
+//	        "contract_id",
+//	    ),
+//	    DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	client.Billing.CountNativeInvoices(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) CountNativeInvoices(
+	ctx context.Context,
+	request *schematichq.CountNativeInvoicesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.CountNativeInvoicesResponse, error) {
+	response, err := c.WithRawResponse.CountNativeInvoices(
 		ctx,
 		request,
 		opts...,

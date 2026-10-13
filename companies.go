@@ -65,7 +65,7 @@ type CountCompaniesRequest struct {
 	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
 	// Filter companies that have an entitlement (plan entitlement or company override) for the specified feature ID
 	WithEntitlementFor *string `json:"-" url:"with_entitlement_for,omitempty"`
-	// Filter out companies that already have a company override for the specified feature ID
+	// Filter out companies that have an unexpired company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
@@ -1039,7 +1039,7 @@ type ListCompaniesRequest struct {
 	SubscriptionTypes []*SubscriptionType `json:"-" url:"subscription_types,omitempty"`
 	// Filter companies that have an entitlement (plan entitlement or company override) for the specified feature ID
 	WithEntitlementFor *string `json:"-" url:"with_entitlement_for,omitempty"`
-	// Filter out companies that already have a company override for the specified feature ID
+	// Filter out companies that have an unexpired company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"-" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"-" url:"without_plan,omitempty"`
@@ -5437,7 +5437,7 @@ type CountCompaniesParams struct {
 	WithEntitlementFor *string `json:"with_entitlement_for,omitempty" url:"with_entitlement_for,omitempty"`
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
-	// Filter out companies that already have a company override for the specified feature ID
+	// Filter out companies that have an unexpired company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`
@@ -10254,7 +10254,7 @@ type ListCompaniesParams struct {
 	WithEntitlementFor *string `json:"with_entitlement_for,omitempty" url:"with_entitlement_for,omitempty"`
 	// Filter companies that have a subscription
 	WithSubscription *bool `json:"with_subscription,omitempty" url:"with_subscription,omitempty"`
-	// Filter out companies that already have a company override for the specified feature ID
+	// Filter out companies that have an unexpired company override for the specified feature ID
 	WithoutFeatureOverrideFor *string `json:"without_feature_override_for,omitempty" url:"without_feature_override_for,omitempty"`
 	// Filter out companies that have a plan
 	WithoutPlan *bool `json:"without_plan,omitempty" url:"without_plan,omitempty"`

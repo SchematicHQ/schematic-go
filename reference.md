@@ -4337,6 +4337,437 @@ client.Billing.UpsertBillingSubscription(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.ListNativeInvoices() -> *schematichq.ListNativeInvoicesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListNativeInvoicesRequest{
+    CompanyID: schematichq.String(
+        "company_id",
+    ),
+    ContractID: schematichq.String(
+        "contract_id",
+    ),
+    DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+client.Billing.ListNativeInvoices(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**contractID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentState:** `*schematichq.InvoiceDocumentState` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.GetNativeInvoice(InvoiceID) -> *schematichq.GetNativeInvoiceResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.GetNativeInvoice(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.ExportNativeInvoice(InvoiceID) -> string</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.ExportNativeInvoice(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.FinalizeNativeInvoice(InvoiceID) -> *schematichq.FinalizeNativeInvoiceResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.FinalizeNativeInvoice(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.MarkNativeInvoicePaid(InvoiceID, request) -> *schematichq.MarkNativeInvoicePaidResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.MarkInvoicePaidRequestBody{
+    IdempotencyKey: "idempotency_key",
+}
+client.Billing.MarkNativeInvoicePaid(
+    context.TODO(),
+    "invoice_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**amount:** `*int64` — Amount paid, in minor units of the invoice's currency. Leave empty to mark the whole remaining amount as paid.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**idempotencyKey:** `string` — A retry with the same key records the payment once.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**reference:** `*string` — A note that identifies the payment, such as a bank transfer reference.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**settledAt:** `*time.Time` — When the payment arrived. Defaults to now, and cannot be in the future.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.VoidNativeInvoice(InvoiceID) -> *schematichq.VoidNativeInvoiceResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.VoidNativeInvoice(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.CountNativeInvoices() -> *schematichq.CountNativeInvoicesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CountNativeInvoicesRequest{
+    CompanyID: schematichq.String(
+        "company_id",
+    ),
+    ContractID: schematichq.String(
+        "contract_id",
+    ),
+    DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+client.Billing.CountNativeInvoices(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**contractID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**documentState:** `*schematichq.InvoiceDocumentState` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## credits
 <details><summary><code>client.Credits.ListBillingCredits() -> *schematichq.ListBillingCreditsResponse</code></summary>
 <dl>
@@ -9310,7 +9741,7 @@ client.Companies.ListCompanies(
 <dl>
 <dd>
 
-**withoutFeatureOverrideFor:** `*string` — Filter out companies that already have a company override for the specified feature ID
+**withoutFeatureOverrideFor:** `*string` — Filter out companies that have an unexpired company override for the specified feature ID
     
 </dd>
 </dl>
@@ -9743,7 +10174,7 @@ client.Companies.CountCompanies(
 <dl>
 <dd>
 
-**withoutFeatureOverrideFor:** `*string` — Filter out companies that already have a company override for the specified feature ID
+**withoutFeatureOverrideFor:** `*string` — Filter out companies that have an unexpired company override for the specified feature ID
     
 </dd>
 </dl>
@@ -17414,7 +17845,57 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**activationStrategy:** `*schematichq.CustomPlanActivationStrategy` — When the company gets the plan. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
+**request:** `*schematichq.PublishPlanVersionRequestBody` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Plans.PreviewPublishPlanVersion(PlanVersionID, request) -> *schematichq.PreviewPublishPlanVersionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.PublishPlanVersionRequestBody{
+    ExcludedCompanyIDs: []string{
+        "excluded_company_ids",
+    },
+    MigrationStrategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
+}
+client.Plans.PreviewPublishPlanVersion(
+    context.TODO(),
+    "plan_version_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planVersionID:** `string` — plan_version_id
     
 </dd>
 </dl>
@@ -17422,135 +17903,7 @@ client.Plans.PublishPlanVersion(
 <dl>
 <dd>
 
-**address:** `*schematichq.CustomerBillingAddress` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**billingCycleAnchor:** `*time.Time` — The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**billingStartDate:** `*time.Time` — The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**collectionMethod:** `*schematichq.BillingCollectionMethod` — How the invoice a custom-plan republish raises today is collected. send_invoice (the default) issues it for the company to pay; charge_automatically charges the default payment method straight away. Only accepted on a custom-plan republish with migration_strategy immediate and proration_behavior always_invoice.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**couponExternalID:** `*string` — A Stripe coupon to apply. On a custom-plan republish it discounts the amendment invoice and is only used when that invoice is raised today; it must exist in Stripe. It is attached to the subscription, so a repeating or forever coupon also discounts the renewals that follow.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**customFieldValues:** `[]*schematichq.CheckoutFieldValue` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**customerEmail:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**daysUntilDue:** `*int64` — Payment terms in days. On a custom-plan republish they apply to the amendment invoice only, leave the subscription's renewal terms unchanged, and are only used when that invoice is raised today and sent rather than charged. Defaults to the subscription's terms.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**excludedCompanyIDs:** `[]string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**migrationStrategy:** `schematichq.PlanVersionMigrationStrategy` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**phone:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**prorateFirstPeriod:** `*bool` — When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**prorationBehavior:** `*schematichq.MigrationProrationBehavior` — How Stripe handles the price difference when companies are migrated. With migration_strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none. Not accepted with leave.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requireNoMigration:** `*bool` — Refuse the publish if any company would be migrated onto the new version
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**scheduledAt:** `*time.Time` — When every company moves, for migration_strategy scheduled. Must be in the future; the migration runs within about a minute of this time. Not accepted with other strategies.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**sendInvoice:** `*bool` — Whether Stripe emails the invoice when it is finalized. Defaults to true.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**taxID:** `*schematichq.TaxIDInput` 
+**request:** `*schematichq.PublishPlanVersionRequestBody` 
     
 </dd>
 </dl>
@@ -19142,7 +19495,7 @@ client.Features.ListFeatures(
 <dl>
 <dd>
 
-**withoutCompanyOverrideFor:** `*string` — Filter out features that already have a company override for the specified company ID
+**withoutCompanyOverrideFor:** `*string` — Filter out features that have an unexpired company override for the specified company ID
     
 </dd>
 </dl>
@@ -19806,7 +20159,7 @@ client.Features.CountFeatures(
 <dl>
 <dd>
 
-**withoutCompanyOverrideFor:** `*string` — Filter out features that already have a company override for the specified company ID
+**withoutCompanyOverrideFor:** `*string` — Filter out features that have an unexpired company override for the specified company ID
     
 </dd>
 </dl>

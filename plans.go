@@ -857,234 +857,6 @@ func (l *ListPlansRequest) SetOffset(offset *int64) {
 }
 
 var (
-	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
-	publishPlanVersionRequestBodyFieldAddress            = big.NewInt(1 << 1)
-	publishPlanVersionRequestBodyFieldBillingCycleAnchor = big.NewInt(1 << 2)
-	publishPlanVersionRequestBodyFieldBillingStartDate   = big.NewInt(1 << 3)
-	publishPlanVersionRequestBodyFieldCollectionMethod   = big.NewInt(1 << 4)
-	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 5)
-	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
-	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 7)
-	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 8)
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 9)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 10)
-	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 11)
-	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 12)
-	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 13)
-	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 14)
-	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 15)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 16)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 17)
-)
-
-type PublishPlanVersionRequestBody struct {
-	// When the company gets the plan. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
-	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"-"`
-	Address            *CustomerBillingAddress       `json:"address,omitempty" url:"-"`
-	// The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
-	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"-"`
-	// The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
-	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"-"`
-	// How the invoice a custom-plan republish raises today is collected. send_invoice (the default) issues it for the company to pay; charge_automatically charges the default payment method straight away. Only accepted on a custom-plan republish with migration_strategy immediate and proration_behavior always_invoice.
-	CollectionMethod *BillingCollectionMethod `json:"collection_method,omitempty" url:"-"`
-	// A Stripe coupon to apply. On a custom-plan republish it discounts the amendment invoice and is only used when that invoice is raised today; it must exist in Stripe. It is attached to the subscription, so a repeating or forever coupon also discounts the renewals that follow.
-	CouponExternalID  *string               `json:"coupon_external_id,omitempty" url:"-"`
-	CustomFieldValues []*CheckoutFieldValue `json:"custom_field_values,omitempty" url:"-"`
-	CustomerEmail     *string               `json:"customer_email,omitempty" url:"-"`
-	// Payment terms in days. On a custom-plan republish they apply to the amendment invoice only, leave the subscription's renewal terms unchanged, and are only used when that invoice is raised today and sent rather than charged. Defaults to the subscription's terms.
-	DaysUntilDue       *int64                       `json:"days_until_due,omitempty" url:"-"`
-	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"-"`
-	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"-"`
-	Phone              *string                      `json:"phone,omitempty" url:"-"`
-	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
-	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"-"`
-	// How Stripe handles the price difference when companies are migrated. With migration_strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none. Not accepted with leave.
-	ProrationBehavior *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"-"`
-	// Refuse the publish if any company would be migrated onto the new version
-	RequireNoMigration *bool `json:"require_no_migration,omitempty" url:"-"`
-	// When every company moves, for migration_strategy scheduled. Must be in the future; the migration runs within about a minute of this time. Not accepted with other strategies.
-	ScheduledAt *time.Time `json:"scheduled_at,omitempty" url:"-"`
-	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
-	SendInvoice *bool       `json:"send_invoice,omitempty" url:"-"`
-	TaxID       *TaxIDInput `json:"tax_id,omitempty" url:"-"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-}
-
-func (p *PublishPlanVersionRequestBody) require(field *big.Int) {
-	next := new(big.Int)
-	if p.explicitFields != nil {
-		next.Set(p.explicitFields)
-	}
-	next.Or(next, field)
-	p.explicitFields = next
-}
-
-// SetActivationStrategy sets the ActivationStrategy field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetActivationStrategy(activationStrategy *CustomPlanActivationStrategy) {
-	p.ActivationStrategy = activationStrategy
-	p.require(publishPlanVersionRequestBodyFieldActivationStrategy)
-}
-
-// SetAddress sets the Address field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetAddress(address *CustomerBillingAddress) {
-	p.Address = address
-	p.require(publishPlanVersionRequestBodyFieldAddress)
-}
-
-// SetBillingCycleAnchor sets the BillingCycleAnchor field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
-	p.BillingCycleAnchor = billingCycleAnchor
-	p.require(publishPlanVersionRequestBodyFieldBillingCycleAnchor)
-}
-
-// SetBillingStartDate sets the BillingStartDate field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetBillingStartDate(billingStartDate *time.Time) {
-	p.BillingStartDate = billingStartDate
-	p.require(publishPlanVersionRequestBodyFieldBillingStartDate)
-}
-
-// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetCollectionMethod(collectionMethod *BillingCollectionMethod) {
-	p.CollectionMethod = collectionMethod
-	p.require(publishPlanVersionRequestBodyFieldCollectionMethod)
-}
-
-// SetCouponExternalID sets the CouponExternalID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetCouponExternalID(couponExternalID *string) {
-	p.CouponExternalID = couponExternalID
-	p.require(publishPlanVersionRequestBodyFieldCouponExternalID)
-}
-
-// SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetCustomFieldValues(customFieldValues []*CheckoutFieldValue) {
-	p.CustomFieldValues = customFieldValues
-	p.require(publishPlanVersionRequestBodyFieldCustomFieldValues)
-}
-
-// SetCustomerEmail sets the CustomerEmail field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetCustomerEmail(customerEmail *string) {
-	p.CustomerEmail = customerEmail
-	p.require(publishPlanVersionRequestBodyFieldCustomerEmail)
-}
-
-// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
-	p.DaysUntilDue = daysUntilDue
-	p.require(publishPlanVersionRequestBodyFieldDaysUntilDue)
-}
-
-// SetExcludedCompanyIDs sets the ExcludedCompanyIDs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs []string) {
-	p.ExcludedCompanyIDs = excludedCompanyIDs
-	p.require(publishPlanVersionRequestBodyFieldExcludedCompanyIDs)
-}
-
-// SetMigrationStrategy sets the MigrationStrategy field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy PlanVersionMigrationStrategy) {
-	p.MigrationStrategy = migrationStrategy
-	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
-}
-
-// SetPhone sets the Phone field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetPhone(phone *string) {
-	p.Phone = phone
-	p.require(publishPlanVersionRequestBodyFieldPhone)
-}
-
-// SetProrateFirstPeriod sets the ProrateFirstPeriod field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetProrateFirstPeriod(prorateFirstPeriod *bool) {
-	p.ProrateFirstPeriod = prorateFirstPeriod
-	p.require(publishPlanVersionRequestBodyFieldProrateFirstPeriod)
-}
-
-// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
-	p.ProrationBehavior = prorationBehavior
-	p.require(publishPlanVersionRequestBodyFieldProrationBehavior)
-}
-
-// SetRequireNoMigration sets the RequireNoMigration field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetRequireNoMigration(requireNoMigration *bool) {
-	p.RequireNoMigration = requireNoMigration
-	p.require(publishPlanVersionRequestBodyFieldRequireNoMigration)
-}
-
-// SetScheduledAt sets the ScheduledAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetScheduledAt(scheduledAt *time.Time) {
-	p.ScheduledAt = scheduledAt
-	p.require(publishPlanVersionRequestBodyFieldScheduledAt)
-}
-
-// SetSendInvoice sets the SendInvoice field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetSendInvoice(sendInvoice *bool) {
-	p.SendInvoice = sendInvoice
-	p.require(publishPlanVersionRequestBodyFieldSendInvoice)
-}
-
-// SetTaxID sets the TaxID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (p *PublishPlanVersionRequestBody) SetTaxID(taxID *TaxIDInput) {
-	p.TaxID = taxID
-	p.require(publishPlanVersionRequestBodyFieldTaxID)
-}
-
-func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
-	type embed PublishPlanVersionRequestBody
-	var body = struct {
-		embed
-		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
-		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
-		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
-	}{
-		embed: embed(*p),
-	}
-	if err := json.Unmarshal(data, &body); err != nil {
-		return err
-	}
-	*p = PublishPlanVersionRequestBody(body.embed)
-	p.BillingCycleAnchor = body.BillingCycleAnchor.TimePtr()
-	p.BillingStartDate = body.BillingStartDate.TimePtr()
-	p.ScheduledAt = body.ScheduledAt.TimePtr()
-	return nil
-}
-
-func (p *PublishPlanVersionRequestBody) MarshalJSON() ([]byte, error) {
-	type embed PublishPlanVersionRequestBody
-	var marshaler = struct {
-		embed
-		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
-		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
-		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
-	}{
-		embed:              embed(*p),
-		BillingCycleAnchor: internal.NewOptionalDateTime(p.BillingCycleAnchor),
-		BillingStartDate:   internal.NewOptionalDateTime(p.BillingStartDate),
-		ScheduledAt:        internal.NewOptionalDateTime(p.ScheduledAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-var (
 	retryCustomPlanBillingRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
 	retryCustomPlanBillingRequestBodyFieldBillingCycleAnchor = big.NewInt(1 << 1)
 	retryCustomPlanBillingRequestBodyFieldBillingStartDate   = big.NewInt(1 << 2)
@@ -1200,6 +972,31 @@ func (r *RetryCustomPlanBillingRequestBody) MarshalJSON() ([]byte, error) {
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
 	return json.Marshal(explicitMarshaler)
+}
+
+type AmendmentProrationLandsOn string
+
+const (
+	AmendmentProrationLandsOnImmediateInvoice AmendmentProrationLandsOn = "immediate_invoice"
+	AmendmentProrationLandsOnNextInvoice      AmendmentProrationLandsOn = "next_invoice"
+	AmendmentProrationLandsOnNone             AmendmentProrationLandsOn = "none"
+)
+
+func NewAmendmentProrationLandsOnFromString(s string) (AmendmentProrationLandsOn, error) {
+	switch s {
+	case "immediate_invoice":
+		return AmendmentProrationLandsOnImmediateInvoice, nil
+	case "next_invoice":
+		return AmendmentProrationLandsOnNextInvoice, nil
+	case "none":
+		return AmendmentProrationLandsOnNone, nil
+	}
+	var t AmendmentProrationLandsOn
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AmendmentProrationLandsOn) Ptr() *AmendmentProrationLandsOn {
+	return &a
 }
 
 type MarkCustomPlanBillingPaidRequestBody = map[string]any
@@ -2105,6 +1902,1307 @@ func (p *PlanVersionPriceChangeResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PlanVersionPriceChangeResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
+	publishPlanVersionRequestBodyFieldAddress            = big.NewInt(1 << 1)
+	publishPlanVersionRequestBodyFieldBillingCycleAnchor = big.NewInt(1 << 2)
+	publishPlanVersionRequestBodyFieldBillingStartDate   = big.NewInt(1 << 3)
+	publishPlanVersionRequestBodyFieldCollectionMethod   = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 5)
+	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
+	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 7)
+	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 8)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 9)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 12)
+	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 13)
+	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 14)
+	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 15)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 16)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 17)
+)
+
+type PublishPlanVersionRequestBody struct {
+	// When the company gets the plan. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
+	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"activation_strategy,omitempty"`
+	Address            *CustomerBillingAddress       `json:"address,omitempty" url:"address,omitempty"`
+	// The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
+	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
+	// The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
+	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
+	// How the invoice a custom-plan republish raises today is collected. send_invoice (the default) issues it for the company to pay; charge_automatically charges the default payment method straight away. Only accepted on a custom-plan republish with migration_strategy immediate and proration_behavior always_invoice.
+	CollectionMethod *BillingCollectionMethod `json:"collection_method,omitempty" url:"collection_method,omitempty"`
+	// A Stripe coupon to apply. On a custom-plan republish it discounts the amendment invoice and is only used when that invoice is raised today; it must exist in Stripe. It is attached to the subscription, so a repeating or forever coupon also discounts the renewals that follow.
+	CouponExternalID  *string               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
+	CustomFieldValues []*CheckoutFieldValue `json:"custom_field_values,omitempty" url:"custom_field_values,omitempty"`
+	CustomerEmail     *string               `json:"customer_email,omitempty" url:"customer_email,omitempty"`
+	// Payment terms in days. On a custom-plan republish they apply to the amendment invoice only, leave the subscription's renewal terms unchanged, and are only used when that invoice is raised today and sent rather than charged. Defaults to the subscription's terms.
+	DaysUntilDue       *int64                       `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"excluded_company_ids"`
+	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"migration_strategy"`
+	Phone              *string                      `json:"phone,omitempty" url:"phone,omitempty"`
+	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
+	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"prorate_first_period,omitempty"`
+	// How Stripe handles the price difference when companies are migrated. With migration_strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none. Not accepted with leave.
+	ProrationBehavior *MigrationProrationBehavior `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
+	// Refuse the publish if any company would be migrated onto the new version
+	RequireNoMigration *bool `json:"require_no_migration,omitempty" url:"require_no_migration,omitempty"`
+	// When every company moves, for migration_strategy scheduled. Must be in the future; the migration runs within about a minute of this time. Not accepted with other strategies.
+	ScheduledAt *time.Time `json:"scheduled_at,omitempty" url:"scheduled_at,omitempty"`
+	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
+	SendInvoice *bool       `json:"send_invoice,omitempty" url:"send_invoice,omitempty"`
+	TaxID       *TaxIDInput `json:"tax_id,omitempty" url:"tax_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublishPlanVersionRequestBody) GetActivationStrategy() *CustomPlanActivationStrategy {
+	if p == nil {
+		return nil
+	}
+	return p.ActivationStrategy
+}
+
+func (p *PublishPlanVersionRequestBody) GetAddress() *CustomerBillingAddress {
+	if p == nil {
+		return nil
+	}
+	return p.Address
+}
+
+func (p *PublishPlanVersionRequestBody) GetBillingCycleAnchor() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.BillingCycleAnchor
+}
+
+func (p *PublishPlanVersionRequestBody) GetBillingStartDate() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.BillingStartDate
+}
+
+func (p *PublishPlanVersionRequestBody) GetCollectionMethod() *BillingCollectionMethod {
+	if p == nil {
+		return nil
+	}
+	return p.CollectionMethod
+}
+
+func (p *PublishPlanVersionRequestBody) GetCouponExternalID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CouponExternalID
+}
+
+func (p *PublishPlanVersionRequestBody) GetCustomFieldValues() []*CheckoutFieldValue {
+	if p == nil {
+		return nil
+	}
+	return p.CustomFieldValues
+}
+
+func (p *PublishPlanVersionRequestBody) GetCustomerEmail() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CustomerEmail
+}
+
+func (p *PublishPlanVersionRequestBody) GetDaysUntilDue() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.DaysUntilDue
+}
+
+func (p *PublishPlanVersionRequestBody) GetExcludedCompanyIDs() []string {
+	if p == nil {
+		return nil
+	}
+	return p.ExcludedCompanyIDs
+}
+
+func (p *PublishPlanVersionRequestBody) GetMigrationStrategy() PlanVersionMigrationStrategy {
+	if p == nil {
+		return ""
+	}
+	return p.MigrationStrategy
+}
+
+func (p *PublishPlanVersionRequestBody) GetPhone() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Phone
+}
+
+func (p *PublishPlanVersionRequestBody) GetProrateFirstPeriod() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.ProrateFirstPeriod
+}
+
+func (p *PublishPlanVersionRequestBody) GetProrationBehavior() *MigrationProrationBehavior {
+	if p == nil {
+		return nil
+	}
+	return p.ProrationBehavior
+}
+
+func (p *PublishPlanVersionRequestBody) GetRequireNoMigration() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.RequireNoMigration
+}
+
+func (p *PublishPlanVersionRequestBody) GetScheduledAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.ScheduledAt
+}
+
+func (p *PublishPlanVersionRequestBody) GetSendInvoice() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.SendInvoice
+}
+
+func (p *PublishPlanVersionRequestBody) GetTaxID() *TaxIDInput {
+	if p == nil {
+		return nil
+	}
+	return p.TaxID
+}
+
+func (p *PublishPlanVersionRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PublishPlanVersionRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetActivationStrategy sets the ActivationStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetActivationStrategy(activationStrategy *CustomPlanActivationStrategy) {
+	p.ActivationStrategy = activationStrategy
+	p.require(publishPlanVersionRequestBodyFieldActivationStrategy)
+}
+
+// SetAddress sets the Address field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetAddress(address *CustomerBillingAddress) {
+	p.Address = address
+	p.require(publishPlanVersionRequestBodyFieldAddress)
+}
+
+// SetBillingCycleAnchor sets the BillingCycleAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
+	p.BillingCycleAnchor = billingCycleAnchor
+	p.require(publishPlanVersionRequestBodyFieldBillingCycleAnchor)
+}
+
+// SetBillingStartDate sets the BillingStartDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetBillingStartDate(billingStartDate *time.Time) {
+	p.BillingStartDate = billingStartDate
+	p.require(publishPlanVersionRequestBodyFieldBillingStartDate)
+}
+
+// SetCollectionMethod sets the CollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCollectionMethod(collectionMethod *BillingCollectionMethod) {
+	p.CollectionMethod = collectionMethod
+	p.require(publishPlanVersionRequestBodyFieldCollectionMethod)
+}
+
+// SetCouponExternalID sets the CouponExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCouponExternalID(couponExternalID *string) {
+	p.CouponExternalID = couponExternalID
+	p.require(publishPlanVersionRequestBodyFieldCouponExternalID)
+}
+
+// SetCustomFieldValues sets the CustomFieldValues field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCustomFieldValues(customFieldValues []*CheckoutFieldValue) {
+	p.CustomFieldValues = customFieldValues
+	p.require(publishPlanVersionRequestBodyFieldCustomFieldValues)
+}
+
+// SetCustomerEmail sets the CustomerEmail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetCustomerEmail(customerEmail *string) {
+	p.CustomerEmail = customerEmail
+	p.require(publishPlanVersionRequestBodyFieldCustomerEmail)
+}
+
+// SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
+	p.DaysUntilDue = daysUntilDue
+	p.require(publishPlanVersionRequestBodyFieldDaysUntilDue)
+}
+
+// SetExcludedCompanyIDs sets the ExcludedCompanyIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs []string) {
+	p.ExcludedCompanyIDs = excludedCompanyIDs
+	p.require(publishPlanVersionRequestBodyFieldExcludedCompanyIDs)
+}
+
+// SetMigrationStrategy sets the MigrationStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy PlanVersionMigrationStrategy) {
+	p.MigrationStrategy = migrationStrategy
+	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
+}
+
+// SetPhone sets the Phone field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetPhone(phone *string) {
+	p.Phone = phone
+	p.require(publishPlanVersionRequestBodyFieldPhone)
+}
+
+// SetProrateFirstPeriod sets the ProrateFirstPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetProrateFirstPeriod(prorateFirstPeriod *bool) {
+	p.ProrateFirstPeriod = prorateFirstPeriod
+	p.require(publishPlanVersionRequestBodyFieldProrateFirstPeriod)
+}
+
+// SetProrationBehavior sets the ProrationBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetProrationBehavior(prorationBehavior *MigrationProrationBehavior) {
+	p.ProrationBehavior = prorationBehavior
+	p.require(publishPlanVersionRequestBodyFieldProrationBehavior)
+}
+
+// SetRequireNoMigration sets the RequireNoMigration field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetRequireNoMigration(requireNoMigration *bool) {
+	p.RequireNoMigration = requireNoMigration
+	p.require(publishPlanVersionRequestBodyFieldRequireNoMigration)
+}
+
+// SetScheduledAt sets the ScheduledAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetScheduledAt(scheduledAt *time.Time) {
+	p.ScheduledAt = scheduledAt
+	p.require(publishPlanVersionRequestBodyFieldScheduledAt)
+}
+
+// SetSendInvoice sets the SendInvoice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetSendInvoice(sendInvoice *bool) {
+	p.SendInvoice = sendInvoice
+	p.require(publishPlanVersionRequestBodyFieldSendInvoice)
+}
+
+// SetTaxID sets the TaxID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetTaxID(taxID *TaxIDInput) {
+	p.TaxID = taxID
+	p.require(publishPlanVersionRequestBodyFieldTaxID)
+}
+
+func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
+	type embed PublishPlanVersionRequestBody
+	var unmarshaler = struct {
+		embed
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PublishPlanVersionRequestBody(unmarshaler.embed)
+	p.BillingCycleAnchor = unmarshaler.BillingCycleAnchor.TimePtr()
+	p.BillingStartDate = unmarshaler.BillingStartDate.TimePtr()
+	p.ScheduledAt = unmarshaler.ScheduledAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublishPlanVersionRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PublishPlanVersionRequestBody
+	var marshaler = struct {
+		embed
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
+	}{
+		embed:              embed(*p),
+		BillingCycleAnchor: internal.NewOptionalDateTime(p.BillingCycleAnchor),
+		BillingStartDate:   internal.NewOptionalDateTime(p.BillingStartDate),
+		ScheduledAt:        internal.NewOptionalDateTime(p.ScheduledAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublishPlanVersionRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	publishPreviewPayInAdvanceResponseDataFieldCommittedQuantity = big.NewInt(1 << 0)
+	publishPreviewPayInAdvanceResponseDataFieldCurrentQuantity   = big.NewInt(1 << 1)
+	publishPreviewPayInAdvanceResponseDataFieldEffectiveQuantity = big.NewInt(1 << 2)
+	publishPreviewPayInAdvanceResponseDataFieldFeatureID         = big.NewInt(1 << 3)
+)
+
+type PublishPreviewPayInAdvanceResponseData struct {
+	CommittedQuantity int64 `json:"committed_quantity" url:"committed_quantity"`
+	// Null when the subscription has no item for the feature.
+	CurrentQuantity *int64 `json:"current_quantity,omitempty" url:"current_quantity,omitempty"`
+	// The quantity after finalizing. Finalizing raises an item to the committed quantity and never lowers it. Zero when the subscription will hold no item for the feature.
+	EffectiveQuantity int64  `json:"effective_quantity" url:"effective_quantity"`
+	FeatureID         string `json:"feature_id" url:"feature_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) GetCommittedQuantity() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.CommittedQuantity
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) GetCurrentQuantity() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.CurrentQuantity
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) GetEffectiveQuantity() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.EffectiveQuantity
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) GetFeatureID() string {
+	if p == nil {
+		return ""
+	}
+	return p.FeatureID
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetCommittedQuantity sets the CommittedQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPayInAdvanceResponseData) SetCommittedQuantity(committedQuantity int64) {
+	p.CommittedQuantity = committedQuantity
+	p.require(publishPreviewPayInAdvanceResponseDataFieldCommittedQuantity)
+}
+
+// SetCurrentQuantity sets the CurrentQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPayInAdvanceResponseData) SetCurrentQuantity(currentQuantity *int64) {
+	p.CurrentQuantity = currentQuantity
+	p.require(publishPreviewPayInAdvanceResponseDataFieldCurrentQuantity)
+}
+
+// SetEffectiveQuantity sets the EffectiveQuantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPayInAdvanceResponseData) SetEffectiveQuantity(effectiveQuantity int64) {
+	p.EffectiveQuantity = effectiveQuantity
+	p.require(publishPreviewPayInAdvanceResponseDataFieldEffectiveQuantity)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPayInAdvanceResponseData) SetFeatureID(featureID string) {
+	p.FeatureID = featureID
+	p.require(publishPreviewPayInAdvanceResponseDataFieldFeatureID)
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PublishPreviewPayInAdvanceResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PublishPreviewPayInAdvanceResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) MarshalJSON() ([]byte, error) {
+	type embed PublishPreviewPayInAdvanceResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublishPreviewPayInAdvanceResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	publishPreviewPaymentMethodResponseDataFieldCardBrand         = big.NewInt(1 << 0)
+	publishPreviewPaymentMethodResponseDataFieldCardLast4         = big.NewInt(1 << 1)
+	publishPreviewPaymentMethodResponseDataFieldHasDefault        = big.NewInt(1 << 2)
+	publishPreviewPaymentMethodResponseDataFieldPaymentMethodType = big.NewInt(1 << 3)
+)
+
+type PublishPreviewPaymentMethodResponseData struct {
+	CardBrand         *string `json:"card_brand,omitempty" url:"card_brand,omitempty"`
+	CardLast4         *string `json:"card_last4,omitempty" url:"card_last4,omitempty"`
+	HasDefault        bool    `json:"has_default" url:"has_default"`
+	PaymentMethodType *string `json:"payment_method_type,omitempty" url:"payment_method_type,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) GetCardBrand() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CardBrand
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) GetCardLast4() *string {
+	if p == nil {
+		return nil
+	}
+	return p.CardLast4
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) GetHasDefault() bool {
+	if p == nil {
+		return false
+	}
+	return p.HasDefault
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) GetPaymentMethodType() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PaymentMethodType
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetCardBrand sets the CardBrand field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPaymentMethodResponseData) SetCardBrand(cardBrand *string) {
+	p.CardBrand = cardBrand
+	p.require(publishPreviewPaymentMethodResponseDataFieldCardBrand)
+}
+
+// SetCardLast4 sets the CardLast4 field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPaymentMethodResponseData) SetCardLast4(cardLast4 *string) {
+	p.CardLast4 = cardLast4
+	p.require(publishPreviewPaymentMethodResponseDataFieldCardLast4)
+}
+
+// SetHasDefault sets the HasDefault field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPaymentMethodResponseData) SetHasDefault(hasDefault bool) {
+	p.HasDefault = hasDefault
+	p.require(publishPreviewPaymentMethodResponseDataFieldHasDefault)
+}
+
+// SetPaymentMethodType sets the PaymentMethodType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewPaymentMethodResponseData) SetPaymentMethodType(paymentMethodType *string) {
+	p.PaymentMethodType = paymentMethodType
+	p.require(publishPreviewPaymentMethodResponseDataFieldPaymentMethodType)
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PublishPreviewPaymentMethodResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PublishPreviewPaymentMethodResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) MarshalJSON() ([]byte, error) {
+	type embed PublishPreviewPaymentMethodResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublishPreviewPaymentMethodResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	publishPreviewProrationLineResponseDataFieldAmount          = big.NewInt(1 << 0)
+	publishPreviewProrationLineResponseDataFieldDescription     = big.NewInt(1 << 1)
+	publishPreviewProrationLineResponseDataFieldPeriodEnd       = big.NewInt(1 << 2)
+	publishPreviewProrationLineResponseDataFieldPeriodStart     = big.NewInt(1 << 3)
+	publishPreviewProrationLineResponseDataFieldPriceExternalID = big.NewInt(1 << 4)
+	publishPreviewProrationLineResponseDataFieldQuantity        = big.NewInt(1 << 5)
+)
+
+type PublishPreviewProrationLineResponseData struct {
+	Amount          int64     `json:"amount" url:"amount"`
+	Description     string    `json:"description" url:"description"`
+	PeriodEnd       time.Time `json:"period_end" url:"period_end"`
+	PeriodStart     time.Time `json:"period_start" url:"period_start"`
+	PriceExternalID *string   `json:"price_external_id,omitempty" url:"price_external_id,omitempty"`
+	Quantity        int64     `json:"quantity" url:"quantity"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetAmount() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Amount
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetDescription() string {
+	if p == nil {
+		return ""
+	}
+	return p.Description
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetPeriodEnd() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.PeriodEnd
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetPeriodStart() time.Time {
+	if p == nil {
+		return time.Time{}
+	}
+	return p.PeriodStart
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetPriceExternalID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PriceExternalID
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetQuantity() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Quantity
+}
+
+func (p *PublishPreviewProrationLineResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PublishPreviewProrationLineResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewProrationLineResponseData) SetAmount(amount int64) {
+	p.Amount = amount
+	p.require(publishPreviewProrationLineResponseDataFieldAmount)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewProrationLineResponseData) SetDescription(description string) {
+	p.Description = description
+	p.require(publishPreviewProrationLineResponseDataFieldDescription)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewProrationLineResponseData) SetPeriodEnd(periodEnd time.Time) {
+	p.PeriodEnd = periodEnd
+	p.require(publishPreviewProrationLineResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewProrationLineResponseData) SetPeriodStart(periodStart time.Time) {
+	p.PeriodStart = periodStart
+	p.require(publishPreviewProrationLineResponseDataFieldPeriodStart)
+}
+
+// SetPriceExternalID sets the PriceExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewProrationLineResponseData) SetPriceExternalID(priceExternalID *string) {
+	p.PriceExternalID = priceExternalID
+	p.require(publishPreviewProrationLineResponseDataFieldPriceExternalID)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewProrationLineResponseData) SetQuantity(quantity int64) {
+	p.Quantity = quantity
+	p.require(publishPreviewProrationLineResponseDataFieldQuantity)
+}
+
+func (p *PublishPreviewProrationLineResponseData) UnmarshalJSON(data []byte) error {
+	type embed PublishPreviewProrationLineResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PublishPreviewProrationLineResponseData(unmarshaler.embed)
+	p.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	p.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublishPreviewProrationLineResponseData) MarshalJSON() ([]byte, error) {
+	type embed PublishPreviewProrationLineResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*p),
+		PeriodEnd:   internal.NewDateTime(p.PeriodEnd),
+		PeriodStart: internal.NewDateTime(p.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublishPreviewProrationLineResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	publishPreviewResponseDataFieldBillingEmail            = big.NewInt(1 << 0)
+	publishPreviewResponseDataFieldCurrency                = big.NewInt(1 << 1)
+	publishPreviewResponseDataFieldCurrentPeriodEnd        = big.NewInt(1 << 2)
+	publishPreviewResponseDataFieldCurrentPeriodStart      = big.NewInt(1 << 3)
+	publishPreviewResponseDataFieldDefaultCollectionMethod = big.NewInt(1 << 4)
+	publishPreviewResponseDataFieldDefaultDaysUntilDue     = big.NewInt(1 << 5)
+	publishPreviewResponseDataFieldDefaultSendInvoice      = big.NewInt(1 << 6)
+	publishPreviewResponseDataFieldEffectiveAt             = big.NewInt(1 << 7)
+	publishPreviewResponseDataFieldHasBillingChanges       = big.NewInt(1 << 8)
+	publishPreviewResponseDataFieldImmediateInvoiceAmount  = big.NewInt(1 << 9)
+	publishPreviewResponseDataFieldLandsOn                 = big.NewInt(1 << 10)
+	publishPreviewResponseDataFieldNewRecurringAmount      = big.NewInt(1 << 11)
+	publishPreviewResponseDataFieldNextInvoiceAmount       = big.NewInt(1 << 12)
+	publishPreviewResponseDataFieldNextInvoiceAt           = big.NewInt(1 << 13)
+	publishPreviewResponseDataFieldNote                    = big.NewInt(1 << 14)
+	publishPreviewResponseDataFieldPayInAdvance            = big.NewInt(1 << 15)
+	publishPreviewResponseDataFieldPaymentMethod           = big.NewInt(1 << 16)
+	publishPreviewResponseDataFieldProrationCharge         = big.NewInt(1 << 17)
+	publishPreviewResponseDataFieldProrationCredit         = big.NewInt(1 << 18)
+	publishPreviewResponseDataFieldProrationLines          = big.NewInt(1 << 19)
+	publishPreviewResponseDataFieldProrationTotal          = big.NewInt(1 << 20)
+	publishPreviewResponseDataFieldWillUpdateSubscription  = big.NewInt(1 << 21)
+	publishPreviewResponseDataFieldWouldFail               = big.NewInt(1 << 22)
+)
+
+type PublishPreviewResponseData struct {
+	BillingEmail       *string    `json:"billing_email,omitempty" url:"billing_email,omitempty"`
+	Currency           *Currency  `json:"currency,omitempty" url:"currency,omitempty"`
+	CurrentPeriodEnd   *time.Time `json:"current_period_end,omitempty" url:"current_period_end,omitempty"`
+	CurrentPeriodStart *time.Time `json:"current_period_start,omitempty" url:"current_period_start,omitempty"`
+	// How the amendment invoice is collected when the publish request leaves collection_method out.
+	DefaultCollectionMethod BillingCollectionMethod `json:"default_collection_method" url:"default_collection_method"`
+	// Payment terms the amendment invoice gets when the publish request leaves days_until_due out.
+	DefaultDaysUntilDue int64 `json:"default_days_until_due" url:"default_days_until_due"`
+	// Whether the amendment invoice is emailed when the publish request leaves send_invoice out.
+	DefaultSendInvoice bool `json:"default_send_invoice" url:"default_send_invoice"`
+	// When the company moves to the new version. Null when no date can be named yet: the company's only subscription is in dunning or scheduled to cancel.
+	EffectiveAt       *time.Time `json:"effective_at,omitempty" url:"effective_at,omitempty"`
+	HasBillingChanges bool       `json:"has_billing_changes" url:"has_billing_changes"`
+	// What the amendment's own invoice bills, in cents, when lands_on is immediate_invoice, after discounts and tax. Includes pending invoice items Stripe adds to the same invoice. Negative for a downgrade: Stripe raises a credit invoice with nothing due, and the credit goes to the customer's balance against later invoices.
+	ImmediateInvoiceAmount *int64                    `json:"immediate_invoice_amount,omitempty" url:"immediate_invoice_amount,omitempty"`
+	LandsOn                AmendmentProrationLandsOn `json:"lands_on" url:"lands_on"`
+	// What the subscription's items bill per period once the new version is in place, in cents: unit price times quantity over its licensed recurring items, before discounts and tax, the way the subscription's total_price counts its items today. Null when the change is not priced, including a change with no billing impact.
+	NewRecurringAmount *int64 `json:"new_recurring_amount,omitempty" url:"new_recurring_amount,omitempty"`
+	// The next renewal invoice with the change applied, in cents, before any customer balance is applied. A downgrade invoiced now leaves a credit on that balance, so the amount due can be lower. Null when the change is not priced: it lands at the end of the period, or on a date without proration.
+	NextInvoiceAmount *int64                                    `json:"next_invoice_amount,omitempty" url:"next_invoice_amount,omitempty"`
+	NextInvoiceAt     *time.Time                                `json:"next_invoice_at,omitempty" url:"next_invoice_at,omitempty"`
+	Note              *string                                   `json:"note,omitempty" url:"note,omitempty"`
+	PayInAdvance      []*PublishPreviewPayInAdvanceResponseData `json:"pay_in_advance" url:"pay_in_advance"`
+	PaymentMethod     *PublishPreviewPaymentMethodResponseData  `json:"payment_method" url:"payment_method"`
+	// Sum of the positive proration lines, in cents.
+	ProrationCharge int64 `json:"proration_charge" url:"proration_charge"`
+	// Sum of the negative proration lines, in cents.
+	ProrationCredit int64                                      `json:"proration_credit" url:"proration_credit"`
+	ProrationLines  []*PublishPreviewProrationLineResponseData `json:"proration_lines" url:"proration_lines"`
+	// proration_charge plus proration_credit, in cents, before tax.
+	ProrationTotal         int64 `json:"proration_total" url:"proration_total"`
+	WillUpdateSubscription bool  `json:"will_update_subscription" url:"will_update_subscription"`
+	WouldFail              bool  `json:"would_fail" url:"would_fail"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublishPreviewResponseData) GetBillingEmail() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BillingEmail
+}
+
+func (p *PublishPreviewResponseData) GetCurrency() *Currency {
+	if p == nil {
+		return nil
+	}
+	return p.Currency
+}
+
+func (p *PublishPreviewResponseData) GetCurrentPeriodEnd() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.CurrentPeriodEnd
+}
+
+func (p *PublishPreviewResponseData) GetCurrentPeriodStart() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.CurrentPeriodStart
+}
+
+func (p *PublishPreviewResponseData) GetDefaultCollectionMethod() BillingCollectionMethod {
+	if p == nil {
+		return ""
+	}
+	return p.DefaultCollectionMethod
+}
+
+func (p *PublishPreviewResponseData) GetDefaultDaysUntilDue() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.DefaultDaysUntilDue
+}
+
+func (p *PublishPreviewResponseData) GetDefaultSendInvoice() bool {
+	if p == nil {
+		return false
+	}
+	return p.DefaultSendInvoice
+}
+
+func (p *PublishPreviewResponseData) GetEffectiveAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.EffectiveAt
+}
+
+func (p *PublishPreviewResponseData) GetHasBillingChanges() bool {
+	if p == nil {
+		return false
+	}
+	return p.HasBillingChanges
+}
+
+func (p *PublishPreviewResponseData) GetImmediateInvoiceAmount() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.ImmediateInvoiceAmount
+}
+
+func (p *PublishPreviewResponseData) GetLandsOn() AmendmentProrationLandsOn {
+	if p == nil {
+		return ""
+	}
+	return p.LandsOn
+}
+
+func (p *PublishPreviewResponseData) GetNewRecurringAmount() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.NewRecurringAmount
+}
+
+func (p *PublishPreviewResponseData) GetNextInvoiceAmount() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.NextInvoiceAmount
+}
+
+func (p *PublishPreviewResponseData) GetNextInvoiceAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.NextInvoiceAt
+}
+
+func (p *PublishPreviewResponseData) GetNote() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Note
+}
+
+func (p *PublishPreviewResponseData) GetPayInAdvance() []*PublishPreviewPayInAdvanceResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.PayInAdvance
+}
+
+func (p *PublishPreviewResponseData) GetPaymentMethod() *PublishPreviewPaymentMethodResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.PaymentMethod
+}
+
+func (p *PublishPreviewResponseData) GetProrationCharge() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.ProrationCharge
+}
+
+func (p *PublishPreviewResponseData) GetProrationCredit() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.ProrationCredit
+}
+
+func (p *PublishPreviewResponseData) GetProrationLines() []*PublishPreviewProrationLineResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.ProrationLines
+}
+
+func (p *PublishPreviewResponseData) GetProrationTotal() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.ProrationTotal
+}
+
+func (p *PublishPreviewResponseData) GetWillUpdateSubscription() bool {
+	if p == nil {
+		return false
+	}
+	return p.WillUpdateSubscription
+}
+
+func (p *PublishPreviewResponseData) GetWouldFail() bool {
+	if p == nil {
+		return false
+	}
+	return p.WouldFail
+}
+
+func (p *PublishPreviewResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PublishPreviewResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetBillingEmail sets the BillingEmail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetBillingEmail(billingEmail *string) {
+	p.BillingEmail = billingEmail
+	p.require(publishPreviewResponseDataFieldBillingEmail)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetCurrency(currency *Currency) {
+	p.Currency = currency
+	p.require(publishPreviewResponseDataFieldCurrency)
+}
+
+// SetCurrentPeriodEnd sets the CurrentPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetCurrentPeriodEnd(currentPeriodEnd *time.Time) {
+	p.CurrentPeriodEnd = currentPeriodEnd
+	p.require(publishPreviewResponseDataFieldCurrentPeriodEnd)
+}
+
+// SetCurrentPeriodStart sets the CurrentPeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetCurrentPeriodStart(currentPeriodStart *time.Time) {
+	p.CurrentPeriodStart = currentPeriodStart
+	p.require(publishPreviewResponseDataFieldCurrentPeriodStart)
+}
+
+// SetDefaultCollectionMethod sets the DefaultCollectionMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetDefaultCollectionMethod(defaultCollectionMethod BillingCollectionMethod) {
+	p.DefaultCollectionMethod = defaultCollectionMethod
+	p.require(publishPreviewResponseDataFieldDefaultCollectionMethod)
+}
+
+// SetDefaultDaysUntilDue sets the DefaultDaysUntilDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetDefaultDaysUntilDue(defaultDaysUntilDue int64) {
+	p.DefaultDaysUntilDue = defaultDaysUntilDue
+	p.require(publishPreviewResponseDataFieldDefaultDaysUntilDue)
+}
+
+// SetDefaultSendInvoice sets the DefaultSendInvoice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetDefaultSendInvoice(defaultSendInvoice bool) {
+	p.DefaultSendInvoice = defaultSendInvoice
+	p.require(publishPreviewResponseDataFieldDefaultSendInvoice)
+}
+
+// SetEffectiveAt sets the EffectiveAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetEffectiveAt(effectiveAt *time.Time) {
+	p.EffectiveAt = effectiveAt
+	p.require(publishPreviewResponseDataFieldEffectiveAt)
+}
+
+// SetHasBillingChanges sets the HasBillingChanges field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetHasBillingChanges(hasBillingChanges bool) {
+	p.HasBillingChanges = hasBillingChanges
+	p.require(publishPreviewResponseDataFieldHasBillingChanges)
+}
+
+// SetImmediateInvoiceAmount sets the ImmediateInvoiceAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetImmediateInvoiceAmount(immediateInvoiceAmount *int64) {
+	p.ImmediateInvoiceAmount = immediateInvoiceAmount
+	p.require(publishPreviewResponseDataFieldImmediateInvoiceAmount)
+}
+
+// SetLandsOn sets the LandsOn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetLandsOn(landsOn AmendmentProrationLandsOn) {
+	p.LandsOn = landsOn
+	p.require(publishPreviewResponseDataFieldLandsOn)
+}
+
+// SetNewRecurringAmount sets the NewRecurringAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetNewRecurringAmount(newRecurringAmount *int64) {
+	p.NewRecurringAmount = newRecurringAmount
+	p.require(publishPreviewResponseDataFieldNewRecurringAmount)
+}
+
+// SetNextInvoiceAmount sets the NextInvoiceAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetNextInvoiceAmount(nextInvoiceAmount *int64) {
+	p.NextInvoiceAmount = nextInvoiceAmount
+	p.require(publishPreviewResponseDataFieldNextInvoiceAmount)
+}
+
+// SetNextInvoiceAt sets the NextInvoiceAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetNextInvoiceAt(nextInvoiceAt *time.Time) {
+	p.NextInvoiceAt = nextInvoiceAt
+	p.require(publishPreviewResponseDataFieldNextInvoiceAt)
+}
+
+// SetNote sets the Note field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetNote(note *string) {
+	p.Note = note
+	p.require(publishPreviewResponseDataFieldNote)
+}
+
+// SetPayInAdvance sets the PayInAdvance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetPayInAdvance(payInAdvance []*PublishPreviewPayInAdvanceResponseData) {
+	p.PayInAdvance = payInAdvance
+	p.require(publishPreviewResponseDataFieldPayInAdvance)
+}
+
+// SetPaymentMethod sets the PaymentMethod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetPaymentMethod(paymentMethod *PublishPreviewPaymentMethodResponseData) {
+	p.PaymentMethod = paymentMethod
+	p.require(publishPreviewResponseDataFieldPaymentMethod)
+}
+
+// SetProrationCharge sets the ProrationCharge field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetProrationCharge(prorationCharge int64) {
+	p.ProrationCharge = prorationCharge
+	p.require(publishPreviewResponseDataFieldProrationCharge)
+}
+
+// SetProrationCredit sets the ProrationCredit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetProrationCredit(prorationCredit int64) {
+	p.ProrationCredit = prorationCredit
+	p.require(publishPreviewResponseDataFieldProrationCredit)
+}
+
+// SetProrationLines sets the ProrationLines field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetProrationLines(prorationLines []*PublishPreviewProrationLineResponseData) {
+	p.ProrationLines = prorationLines
+	p.require(publishPreviewResponseDataFieldProrationLines)
+}
+
+// SetProrationTotal sets the ProrationTotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetProrationTotal(prorationTotal int64) {
+	p.ProrationTotal = prorationTotal
+	p.require(publishPreviewResponseDataFieldProrationTotal)
+}
+
+// SetWillUpdateSubscription sets the WillUpdateSubscription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetWillUpdateSubscription(willUpdateSubscription bool) {
+	p.WillUpdateSubscription = willUpdateSubscription
+	p.require(publishPreviewResponseDataFieldWillUpdateSubscription)
+}
+
+// SetWouldFail sets the WouldFail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetWouldFail(wouldFail bool) {
+	p.WouldFail = wouldFail
+	p.require(publishPreviewResponseDataFieldWouldFail)
+}
+
+func (p *PublishPreviewResponseData) UnmarshalJSON(data []byte) error {
+	type embed PublishPreviewResponseData
+	var unmarshaler = struct {
+		embed
+		CurrentPeriodEnd   *internal.DateTime `json:"current_period_end,omitempty"`
+		CurrentPeriodStart *internal.DateTime `json:"current_period_start,omitempty"`
+		EffectiveAt        *internal.DateTime `json:"effective_at,omitempty"`
+		NextInvoiceAt      *internal.DateTime `json:"next_invoice_at,omitempty"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PublishPreviewResponseData(unmarshaler.embed)
+	p.CurrentPeriodEnd = unmarshaler.CurrentPeriodEnd.TimePtr()
+	p.CurrentPeriodStart = unmarshaler.CurrentPeriodStart.TimePtr()
+	p.EffectiveAt = unmarshaler.EffectiveAt.TimePtr()
+	p.NextInvoiceAt = unmarshaler.NextInvoiceAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublishPreviewResponseData) MarshalJSON() ([]byte, error) {
+	type embed PublishPreviewResponseData
+	var marshaler = struct {
+		embed
+		CurrentPeriodEnd   *internal.DateTime `json:"current_period_end,omitempty"`
+		CurrentPeriodStart *internal.DateTime `json:"current_period_start,omitempty"`
+		EffectiveAt        *internal.DateTime `json:"effective_at,omitempty"`
+		NextInvoiceAt      *internal.DateTime `json:"next_invoice_at,omitempty"`
+	}{
+		embed:              embed(*p),
+		CurrentPeriodEnd:   internal.NewOptionalDateTime(p.CurrentPeriodEnd),
+		CurrentPeriodStart: internal.NewOptionalDateTime(p.CurrentPeriodStart),
+		EffectiveAt:        internal.NewOptionalDateTime(p.EffectiveAt),
+		NextInvoiceAt:      internal.NewOptionalDateTime(p.NextInvoiceAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublishPreviewResponseData) String() string {
 	if p == nil {
 		return "<nil>"
 	}
@@ -5106,6 +6204,109 @@ func (m *MarkCustomPlanBillingPaidResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", m)
+}
+
+var (
+	previewPublishPlanVersionResponseFieldData   = big.NewInt(1 << 0)
+	previewPublishPlanVersionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type PreviewPublishPlanVersionResponse struct {
+	Data *PublishPreviewResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewPublishPlanVersionResponse) GetData() *PublishPreviewResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Data
+}
+
+func (p *PreviewPublishPlanVersionResponse) GetParams() map[string]any {
+	if p == nil {
+		return nil
+	}
+	return p.Params
+}
+
+func (p *PreviewPublishPlanVersionResponse) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreviewPublishPlanVersionResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewPublishPlanVersionResponse) SetData(data *PublishPreviewResponseData) {
+	p.Data = data
+	p.require(previewPublishPlanVersionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewPublishPlanVersionResponse) SetParams(params map[string]any) {
+	p.Params = params
+	p.require(previewPublishPlanVersionResponseFieldParams)
+}
+
+func (p *PreviewPublishPlanVersionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreviewPublishPlanVersionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreviewPublishPlanVersionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewPublishPlanVersionResponse) MarshalJSON() ([]byte, error) {
+	type embed PreviewPublishPlanVersionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreviewPublishPlanVersionResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 var (

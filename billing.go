@@ -3842,6 +3842,858 @@ func (b *BillingMeterResponseData) String() string {
 }
 
 var (
+	billingNativeSubscriptionChangeResponseDataFieldAction      = big.NewInt(1 << 0)
+	billingNativeSubscriptionChangeResponseDataFieldEffectiveAt = big.NewInt(1 << 1)
+	billingNativeSubscriptionChangeResponseDataFieldLine        = big.NewInt(1 << 2)
+	billingNativeSubscriptionChangeResponseDataFieldReplaces    = big.NewInt(1 << 3)
+)
+
+type BillingNativeSubscriptionChangeResponseData struct {
+	Action      SubscriptionChangeAction `json:"action" url:"action"`
+	EffectiveAt time.Time                `json:"effective_at" url:"effective_at"`
+	// The line added, or the line removed. Null on a cancellation.
+	Line *BillingNativeSubscriptionLineResponseData `json:"line,omitempty" url:"line,omitempty"`
+	// The line a replacement ends. Null unless the action is replace.
+	Replaces *BillingNativeSubscriptionLineResponseData `json:"replaces,omitempty" url:"replaces,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) GetAction() SubscriptionChangeAction {
+	if b == nil {
+		return ""
+	}
+	return b.Action
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) GetEffectiveAt() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.EffectiveAt
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) GetLine() *BillingNativeSubscriptionLineResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Line
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) GetReplaces() *BillingNativeSubscriptionLineResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Replaces
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAction sets the Action field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionChangeResponseData) SetAction(action SubscriptionChangeAction) {
+	b.Action = action
+	b.require(billingNativeSubscriptionChangeResponseDataFieldAction)
+}
+
+// SetEffectiveAt sets the EffectiveAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionChangeResponseData) SetEffectiveAt(effectiveAt time.Time) {
+	b.EffectiveAt = effectiveAt
+	b.require(billingNativeSubscriptionChangeResponseDataFieldEffectiveAt)
+}
+
+// SetLine sets the Line field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionChangeResponseData) SetLine(line *BillingNativeSubscriptionLineResponseData) {
+	b.Line = line
+	b.require(billingNativeSubscriptionChangeResponseDataFieldLine)
+}
+
+// SetReplaces sets the Replaces field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionChangeResponseData) SetReplaces(replaces *BillingNativeSubscriptionLineResponseData) {
+	b.Replaces = replaces
+	b.require(billingNativeSubscriptionChangeResponseDataFieldReplaces)
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingNativeSubscriptionChangeResponseData
+	var unmarshaler = struct {
+		embed
+		EffectiveAt *internal.DateTime `json:"effective_at"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingNativeSubscriptionChangeResponseData(unmarshaler.embed)
+	b.EffectiveAt = unmarshaler.EffectiveAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingNativeSubscriptionChangeResponseData
+	var marshaler = struct {
+		embed
+		EffectiveAt *internal.DateTime `json:"effective_at"`
+	}{
+		embed:       embed(*b),
+		EffectiveAt: internal.NewDateTime(b.EffectiveAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingNativeSubscriptionChangeResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingNativeSubscriptionLineResponseDataFieldAnchor             = big.NewInt(1 << 0)
+	billingNativeSubscriptionLineResponseDataFieldAnchorDay          = big.NewInt(1 << 1)
+	billingNativeSubscriptionLineResponseDataFieldBase               = big.NewInt(1 << 2)
+	billingNativeSubscriptionLineResponseDataFieldCadenceCount       = big.NewInt(1 << 3)
+	billingNativeSubscriptionLineResponseDataFieldCadenceUnit        = big.NewInt(1 << 4)
+	billingNativeSubscriptionLineResponseDataFieldCurrency           = big.NewInt(1 << 5)
+	billingNativeSubscriptionLineResponseDataFieldCurrentPeriodEnd   = big.NewInt(1 << 6)
+	billingNativeSubscriptionLineResponseDataFieldCurrentPeriodStart = big.NewInt(1 << 7)
+	billingNativeSubscriptionLineResponseDataFieldEffectiveFrom      = big.NewInt(1 << 8)
+	billingNativeSubscriptionLineResponseDataFieldEffectiveTo        = big.NewInt(1 << 9)
+	billingNativeSubscriptionLineResponseDataFieldID                 = big.NewInt(1 << 10)
+	billingNativeSubscriptionLineResponseDataFieldKind               = big.NewInt(1 << 11)
+	billingNativeSubscriptionLineResponseDataFieldQuantity           = big.NewInt(1 << 12)
+	billingNativeSubscriptionLineResponseDataFieldSourceID           = big.NewInt(1 << 13)
+	billingNativeSubscriptionLineResponseDataFieldSourceName         = big.NewInt(1 << 14)
+	billingNativeSubscriptionLineResponseDataFieldSourcePlanType     = big.NewInt(1 << 15)
+	billingNativeSubscriptionLineResponseDataFieldTaxable            = big.NewInt(1 << 16)
+	billingNativeSubscriptionLineResponseDataFieldTiersMode          = big.NewInt(1 << 17)
+	billingNativeSubscriptionLineResponseDataFieldTiming             = big.NewInt(1 << 18)
+	billingNativeSubscriptionLineResponseDataFieldUnitAmount         = big.NewInt(1 << 19)
+)
+
+type BillingNativeSubscriptionLineResponseData struct {
+	Anchor time.Time `json:"anchor" url:"anchor"`
+	// The day of the month the line's periods start on.
+	AnchorDay int64 `json:"anchor_day" url:"anchor_day"`
+	// Whether the subscription takes its billing period from this line.
+	Base         bool                        `json:"base" url:"base"`
+	CadenceCount int64                       `json:"cadence_count" url:"cadence_count"`
+	CadenceUnit  BillingProductPriceInterval `json:"cadence_unit" url:"cadence_unit"`
+	Currency     Currency                    `json:"currency" url:"currency"`
+	// Null on a line that hasn't started.
+	CurrentPeriodEnd *time.Time `json:"current_period_end,omitempty" url:"current_period_end,omitempty"`
+	// Null on a line that hasn't started.
+	CurrentPeriodStart *time.Time `json:"current_period_start,omitempty" url:"current_period_start,omitempty"`
+	EffectiveFrom      time.Time  `json:"effective_from" url:"effective_from"`
+	EffectiveTo        *time.Time `json:"effective_to,omitempty" url:"effective_to,omitempty"`
+	ID                 string     `json:"id" url:"id"`
+	Kind               LineKind   `json:"kind" url:"kind"`
+	Quantity           int64      `json:"quantity" url:"quantity"`
+	// The plan, add-on or plan credit grant the line compiles from.
+	SourceID string `json:"source_id" url:"source_id"`
+	// The name of the plan, add-on or credit the line compiles from.
+	SourceName *string `json:"source_name,omitempty" url:"source_name,omitempty"`
+	// Set when the line compiles from a plan or add-on.
+	SourcePlanType *PlanType         `json:"source_plan_type,omitempty" url:"source_plan_type,omitempty"`
+	Taxable        bool              `json:"taxable" url:"taxable"`
+	TiersMode      *BillingTiersMode `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
+	Timing         ChargeTiming      `json:"timing" url:"timing"`
+	// In minor units. Null on a rate line or a tiered price.
+	UnitAmount *int64 `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetAnchor() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.Anchor
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetAnchorDay() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AnchorDay
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetBase() bool {
+	if b == nil {
+		return false
+	}
+	return b.Base
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetCadenceCount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.CadenceCount
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetCadenceUnit() BillingProductPriceInterval {
+	if b == nil {
+		return ""
+	}
+	return b.CadenceUnit
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetCurrentPeriodEnd() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.CurrentPeriodEnd
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetCurrentPeriodStart() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.CurrentPeriodStart
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetEffectiveFrom() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.EffectiveFrom
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetEffectiveTo() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.EffectiveTo
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetKind() LineKind {
+	if b == nil {
+		return ""
+	}
+	return b.Kind
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetQuantity() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Quantity
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetSourceID() string {
+	if b == nil {
+		return ""
+	}
+	return b.SourceID
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetSourceName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SourceName
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetSourcePlanType() *PlanType {
+	if b == nil {
+		return nil
+	}
+	return b.SourcePlanType
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetTaxable() bool {
+	if b == nil {
+		return false
+	}
+	return b.Taxable
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetTiersMode() *BillingTiersMode {
+	if b == nil {
+		return nil
+	}
+	return b.TiersMode
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetTiming() ChargeTiming {
+	if b == nil {
+		return ""
+	}
+	return b.Timing
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetUnitAmount() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.UnitAmount
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAnchor sets the Anchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetAnchor(anchor time.Time) {
+	b.Anchor = anchor
+	b.require(billingNativeSubscriptionLineResponseDataFieldAnchor)
+}
+
+// SetAnchorDay sets the AnchorDay field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetAnchorDay(anchorDay int64) {
+	b.AnchorDay = anchorDay
+	b.require(billingNativeSubscriptionLineResponseDataFieldAnchorDay)
+}
+
+// SetBase sets the Base field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetBase(base bool) {
+	b.Base = base
+	b.require(billingNativeSubscriptionLineResponseDataFieldBase)
+}
+
+// SetCadenceCount sets the CadenceCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetCadenceCount(cadenceCount int64) {
+	b.CadenceCount = cadenceCount
+	b.require(billingNativeSubscriptionLineResponseDataFieldCadenceCount)
+}
+
+// SetCadenceUnit sets the CadenceUnit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetCadenceUnit(cadenceUnit BillingProductPriceInterval) {
+	b.CadenceUnit = cadenceUnit
+	b.require(billingNativeSubscriptionLineResponseDataFieldCadenceUnit)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingNativeSubscriptionLineResponseDataFieldCurrency)
+}
+
+// SetCurrentPeriodEnd sets the CurrentPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetCurrentPeriodEnd(currentPeriodEnd *time.Time) {
+	b.CurrentPeriodEnd = currentPeriodEnd
+	b.require(billingNativeSubscriptionLineResponseDataFieldCurrentPeriodEnd)
+}
+
+// SetCurrentPeriodStart sets the CurrentPeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetCurrentPeriodStart(currentPeriodStart *time.Time) {
+	b.CurrentPeriodStart = currentPeriodStart
+	b.require(billingNativeSubscriptionLineResponseDataFieldCurrentPeriodStart)
+}
+
+// SetEffectiveFrom sets the EffectiveFrom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetEffectiveFrom(effectiveFrom time.Time) {
+	b.EffectiveFrom = effectiveFrom
+	b.require(billingNativeSubscriptionLineResponseDataFieldEffectiveFrom)
+}
+
+// SetEffectiveTo sets the EffectiveTo field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetEffectiveTo(effectiveTo *time.Time) {
+	b.EffectiveTo = effectiveTo
+	b.require(billingNativeSubscriptionLineResponseDataFieldEffectiveTo)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingNativeSubscriptionLineResponseDataFieldID)
+}
+
+// SetKind sets the Kind field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetKind(kind LineKind) {
+	b.Kind = kind
+	b.require(billingNativeSubscriptionLineResponseDataFieldKind)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetQuantity(quantity int64) {
+	b.Quantity = quantity
+	b.require(billingNativeSubscriptionLineResponseDataFieldQuantity)
+}
+
+// SetSourceID sets the SourceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetSourceID(sourceID string) {
+	b.SourceID = sourceID
+	b.require(billingNativeSubscriptionLineResponseDataFieldSourceID)
+}
+
+// SetSourceName sets the SourceName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetSourceName(sourceName *string) {
+	b.SourceName = sourceName
+	b.require(billingNativeSubscriptionLineResponseDataFieldSourceName)
+}
+
+// SetSourcePlanType sets the SourcePlanType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetSourcePlanType(sourcePlanType *PlanType) {
+	b.SourcePlanType = sourcePlanType
+	b.require(billingNativeSubscriptionLineResponseDataFieldSourcePlanType)
+}
+
+// SetTaxable sets the Taxable field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetTaxable(taxable bool) {
+	b.Taxable = taxable
+	b.require(billingNativeSubscriptionLineResponseDataFieldTaxable)
+}
+
+// SetTiersMode sets the TiersMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetTiersMode(tiersMode *BillingTiersMode) {
+	b.TiersMode = tiersMode
+	b.require(billingNativeSubscriptionLineResponseDataFieldTiersMode)
+}
+
+// SetTiming sets the Timing field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetTiming(timing ChargeTiming) {
+	b.Timing = timing
+	b.require(billingNativeSubscriptionLineResponseDataFieldTiming)
+}
+
+// SetUnitAmount sets the UnitAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetUnitAmount(unitAmount *int64) {
+	b.UnitAmount = unitAmount
+	b.require(billingNativeSubscriptionLineResponseDataFieldUnitAmount)
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingNativeSubscriptionLineResponseData
+	var unmarshaler = struct {
+		embed
+		Anchor             *internal.DateTime `json:"anchor"`
+		CurrentPeriodEnd   *internal.DateTime `json:"current_period_end,omitempty"`
+		CurrentPeriodStart *internal.DateTime `json:"current_period_start,omitempty"`
+		EffectiveFrom      *internal.DateTime `json:"effective_from"`
+		EffectiveTo        *internal.DateTime `json:"effective_to,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingNativeSubscriptionLineResponseData(unmarshaler.embed)
+	b.Anchor = unmarshaler.Anchor.Time()
+	b.CurrentPeriodEnd = unmarshaler.CurrentPeriodEnd.TimePtr()
+	b.CurrentPeriodStart = unmarshaler.CurrentPeriodStart.TimePtr()
+	b.EffectiveFrom = unmarshaler.EffectiveFrom.Time()
+	b.EffectiveTo = unmarshaler.EffectiveTo.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingNativeSubscriptionLineResponseData
+	var marshaler = struct {
+		embed
+		Anchor             *internal.DateTime `json:"anchor"`
+		CurrentPeriodEnd   *internal.DateTime `json:"current_period_end,omitempty"`
+		CurrentPeriodStart *internal.DateTime `json:"current_period_start,omitempty"`
+		EffectiveFrom      *internal.DateTime `json:"effective_from"`
+		EffectiveTo        *internal.DateTime `json:"effective_to,omitempty"`
+	}{
+		embed:              embed(*b),
+		Anchor:             internal.NewDateTime(b.Anchor),
+		CurrentPeriodEnd:   internal.NewOptionalDateTime(b.CurrentPeriodEnd),
+		CurrentPeriodStart: internal.NewOptionalDateTime(b.CurrentPeriodStart),
+		EffectiveFrom:      internal.NewDateTime(b.EffectiveFrom),
+		EffectiveTo:        internal.NewOptionalDateTime(b.EffectiveTo),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingNativeSubscriptionResponseDataFieldCancelAt         = big.NewInt(1 << 0)
+	billingNativeSubscriptionResponseDataFieldCompanyID        = big.NewInt(1 << 1)
+	billingNativeSubscriptionResponseDataFieldCurrency         = big.NewInt(1 << 2)
+	billingNativeSubscriptionResponseDataFieldID               = big.NewInt(1 << 3)
+	billingNativeSubscriptionResponseDataFieldLines            = big.NewInt(1 << 4)
+	billingNativeSubscriptionResponseDataFieldPeriodEnd        = big.NewInt(1 << 5)
+	billingNativeSubscriptionResponseDataFieldPeriodStart      = big.NewInt(1 << 6)
+	billingNativeSubscriptionResponseDataFieldScheduledChanges = big.NewInt(1 << 7)
+	billingNativeSubscriptionResponseDataFieldStartedAt        = big.NewInt(1 << 8)
+	billingNativeSubscriptionResponseDataFieldStatement        = big.NewInt(1 << 9)
+	billingNativeSubscriptionResponseDataFieldStatus           = big.NewInt(1 << 10)
+	billingNativeSubscriptionResponseDataFieldTerms            = big.NewInt(1 << 11)
+)
+
+type BillingNativeSubscriptionResponseData struct {
+	CancelAt  *time.Time `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CompanyID string     `json:"company_id" url:"company_id"`
+	Currency  Currency   `json:"currency" url:"currency"`
+	ID        string     `json:"id" url:"id"`
+	// The lines in effect now.
+	Lines       []*BillingNativeSubscriptionLineResponseData `json:"lines" url:"lines"`
+	PeriodEnd   time.Time                                    `json:"period_end" url:"period_end"`
+	PeriodStart time.Time                                    `json:"period_start" url:"period_start"`
+	// Changes that take effect later, earliest first.
+	ScheduledChanges []*BillingNativeSubscriptionChangeResponseData `json:"scheduled_changes" url:"scheduled_changes"`
+	StartedAt        *time.Time                                     `json:"started_at,omitempty" url:"started_at,omitempty"`
+	// The charges not yet invoiced on the company's contract. Null when the company has no billing profile.
+	Statement *BillingStatementResponseData `json:"statement,omitempty" url:"statement,omitempty"`
+	Status    SubscriptionStatus            `json:"status" url:"status"`
+	// The contract terms in force. Null when the company has no billing profile.
+	Terms *BillingInvoiceTermsResponseData `json:"terms,omitempty" url:"terms,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetCancelAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.CancelAt
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetCompanyID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CompanyID
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetLines() []*BillingNativeSubscriptionLineResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Lines
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetPeriodEnd() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetPeriodStart() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetScheduledChanges() []*BillingNativeSubscriptionChangeResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.ScheduledChanges
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetStartedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.StartedAt
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetStatement() *BillingStatementResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Statement
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetStatus() SubscriptionStatus {
+	if b == nil {
+		return ""
+	}
+	return b.Status
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetTerms() *BillingInvoiceTermsResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Terms
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingNativeSubscriptionResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetCancelAt sets the CancelAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetCancelAt(cancelAt *time.Time) {
+	b.CancelAt = cancelAt
+	b.require(billingNativeSubscriptionResponseDataFieldCancelAt)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetCompanyID(companyID string) {
+	b.CompanyID = companyID
+	b.require(billingNativeSubscriptionResponseDataFieldCompanyID)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingNativeSubscriptionResponseDataFieldCurrency)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingNativeSubscriptionResponseDataFieldID)
+}
+
+// SetLines sets the Lines field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetLines(lines []*BillingNativeSubscriptionLineResponseData) {
+	b.Lines = lines
+	b.require(billingNativeSubscriptionResponseDataFieldLines)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetPeriodEnd(periodEnd time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingNativeSubscriptionResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetPeriodStart(periodStart time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingNativeSubscriptionResponseDataFieldPeriodStart)
+}
+
+// SetScheduledChanges sets the ScheduledChanges field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetScheduledChanges(scheduledChanges []*BillingNativeSubscriptionChangeResponseData) {
+	b.ScheduledChanges = scheduledChanges
+	b.require(billingNativeSubscriptionResponseDataFieldScheduledChanges)
+}
+
+// SetStartedAt sets the StartedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetStartedAt(startedAt *time.Time) {
+	b.StartedAt = startedAt
+	b.require(billingNativeSubscriptionResponseDataFieldStartedAt)
+}
+
+// SetStatement sets the Statement field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetStatement(statement *BillingStatementResponseData) {
+	b.Statement = statement
+	b.require(billingNativeSubscriptionResponseDataFieldStatement)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetStatus(status SubscriptionStatus) {
+	b.Status = status
+	b.require(billingNativeSubscriptionResponseDataFieldStatus)
+}
+
+// SetTerms sets the Terms field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetTerms(terms *BillingInvoiceTermsResponseData) {
+	b.Terms = terms
+	b.require(billingNativeSubscriptionResponseDataFieldTerms)
+}
+
+func (b *BillingNativeSubscriptionResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingNativeSubscriptionResponseData
+	var unmarshaler = struct {
+		embed
+		CancelAt    *internal.DateTime `json:"cancel_at,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingNativeSubscriptionResponseData(unmarshaler.embed)
+	b.CancelAt = unmarshaler.CancelAt.TimePtr()
+	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	b.PeriodStart = unmarshaler.PeriodStart.Time()
+	b.StartedAt = unmarshaler.StartedAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingNativeSubscriptionResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingNativeSubscriptionResponseData
+	var marshaler = struct {
+		embed
+		CancelAt    *internal.DateTime `json:"cancel_at,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
+	}{
+		embed:       embed(*b),
+		CancelAt:    internal.NewOptionalDateTime(b.CancelAt),
+		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewDateTime(b.PeriodStart),
+		StartedAt:   internal.NewOptionalDateTime(b.StartedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingNativeSubscriptionResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
 	billingProductPricingFieldBillingThreshold           = big.NewInt(1 << 0)
 	billingProductPricingFieldCurrency                   = big.NewInt(1 << 1)
 	billingProductPricingFieldInterval                   = big.NewInt(1 << 2)
@@ -4175,6 +5027,381 @@ func (b *BillingSettingsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingSettingsResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingStatementLineResponseDataFieldAmount             = big.NewInt(1 << 0)
+	billingStatementLineResponseDataFieldKind               = big.NewInt(1 << 1)
+	billingStatementLineResponseDataFieldPeriodEnd          = big.NewInt(1 << 2)
+	billingStatementLineResponseDataFieldPeriodStart        = big.NewInt(1 << 3)
+	billingStatementLineResponseDataFieldQuantity           = big.NewInt(1 << 4)
+	billingStatementLineResponseDataFieldSubscriptionLineID = big.NewInt(1 << 5)
+	billingStatementLineResponseDataFieldUnitAmount         = big.NewInt(1 << 6)
+)
+
+type BillingStatementLineResponseData struct {
+	// In minor units of the statement's currency.
+	Amount             int64           `json:"amount" url:"amount"`
+	Kind               InvoiceLineKind `json:"kind" url:"kind"`
+	PeriodEnd          *time.Time      `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart        *time.Time      `json:"period_start,omitempty" url:"period_start,omitempty"`
+	Quantity           *int64          `json:"quantity,omitempty" url:"quantity,omitempty"`
+	SubscriptionLineID *string         `json:"subscription_line_id,omitempty" url:"subscription_line_id,omitempty"`
+	UnitAmount         *int64          `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingStatementLineResponseData) GetAmount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Amount
+}
+
+func (b *BillingStatementLineResponseData) GetKind() InvoiceLineKind {
+	if b == nil {
+		return ""
+	}
+	return b.Kind
+}
+
+func (b *BillingStatementLineResponseData) GetPeriodEnd() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingStatementLineResponseData) GetPeriodStart() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingStatementLineResponseData) GetQuantity() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.Quantity
+}
+
+func (b *BillingStatementLineResponseData) GetSubscriptionLineID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.SubscriptionLineID
+}
+
+func (b *BillingStatementLineResponseData) GetUnitAmount() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.UnitAmount
+}
+
+func (b *BillingStatementLineResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingStatementLineResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetAmount(amount int64) {
+	b.Amount = amount
+	b.require(billingStatementLineResponseDataFieldAmount)
+}
+
+// SetKind sets the Kind field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetKind(kind InvoiceLineKind) {
+	b.Kind = kind
+	b.require(billingStatementLineResponseDataFieldKind)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetPeriodEnd(periodEnd *time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingStatementLineResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetPeriodStart(periodStart *time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingStatementLineResponseDataFieldPeriodStart)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetQuantity(quantity *int64) {
+	b.Quantity = quantity
+	b.require(billingStatementLineResponseDataFieldQuantity)
+}
+
+// SetSubscriptionLineID sets the SubscriptionLineID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetSubscriptionLineID(subscriptionLineID *string) {
+	b.SubscriptionLineID = subscriptionLineID
+	b.require(billingStatementLineResponseDataFieldSubscriptionLineID)
+}
+
+// SetUnitAmount sets the UnitAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetUnitAmount(unitAmount *int64) {
+	b.UnitAmount = unitAmount
+	b.require(billingStatementLineResponseDataFieldUnitAmount)
+}
+
+func (b *BillingStatementLineResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingStatementLineResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingStatementLineResponseData(unmarshaler.embed)
+	b.PeriodEnd = unmarshaler.PeriodEnd.TimePtr()
+	b.PeriodStart = unmarshaler.PeriodStart.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingStatementLineResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingStatementLineResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed:       embed(*b),
+		PeriodEnd:   internal.NewOptionalDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewOptionalDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingStatementLineResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingStatementResponseDataFieldCurrency    = big.NewInt(1 << 0)
+	billingStatementResponseDataFieldLines       = big.NewInt(1 << 1)
+	billingStatementResponseDataFieldPeriodEnd   = big.NewInt(1 << 2)
+	billingStatementResponseDataFieldPeriodStart = big.NewInt(1 << 3)
+	billingStatementResponseDataFieldSubtotal    = big.NewInt(1 << 4)
+	billingStatementResponseDataFieldTotal       = big.NewInt(1 << 5)
+)
+
+type BillingStatementResponseData struct {
+	Currency Currency                            `json:"currency" url:"currency"`
+	Lines    []*BillingStatementLineResponseData `json:"lines" url:"lines"`
+	// When the statement was read; it keeps growing until the period closes.
+	PeriodEnd time.Time `json:"period_end" url:"period_end"`
+	// The earliest open charge, or period_end when there is none.
+	PeriodStart time.Time `json:"period_start" url:"period_start"`
+	Subtotal    int64     `json:"subtotal" url:"subtotal"`
+	Total       int64     `json:"total" url:"total"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingStatementResponseData) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingStatementResponseData) GetLines() []*BillingStatementLineResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.Lines
+}
+
+func (b *BillingStatementResponseData) GetPeriodEnd() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingStatementResponseData) GetPeriodStart() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingStatementResponseData) GetSubtotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Subtotal
+}
+
+func (b *BillingStatementResponseData) GetTotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Total
+}
+
+func (b *BillingStatementResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingStatementResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementResponseData) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingStatementResponseDataFieldCurrency)
+}
+
+// SetLines sets the Lines field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementResponseData) SetLines(lines []*BillingStatementLineResponseData) {
+	b.Lines = lines
+	b.require(billingStatementResponseDataFieldLines)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementResponseData) SetPeriodEnd(periodEnd time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingStatementResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementResponseData) SetPeriodStart(periodStart time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingStatementResponseDataFieldPeriodStart)
+}
+
+// SetSubtotal sets the Subtotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementResponseData) SetSubtotal(subtotal int64) {
+	b.Subtotal = subtotal
+	b.require(billingStatementResponseDataFieldSubtotal)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementResponseData) SetTotal(total int64) {
+	b.Total = total
+	b.require(billingStatementResponseDataFieldTotal)
+}
+
+func (b *BillingStatementResponseData) UnmarshalJSON(data []byte) error {
+	type embed BillingStatementResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingStatementResponseData(unmarshaler.embed)
+	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	b.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingStatementResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingStatementResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*b),
+		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingStatementResponseData) String() string {
 	if b == nil {
 		return "<nil>"
 	}
@@ -4785,28 +6012,25 @@ func (b *BillingSubscriptionResponseData) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
-type Collector string
+type ChargeTiming string
 
 const (
-	CollectorExternal       Collector = "external"
-	CollectorStripeInvoice  Collector = "stripe_invoice"
-	CollectorStripePayments Collector = "stripe_payments"
+	ChargeTimingInAdvance ChargeTiming = "in_advance"
+	ChargeTimingInArrears ChargeTiming = "in_arrears"
 )
 
-func NewCollectorFromString(s string) (Collector, error) {
+func NewChargeTimingFromString(s string) (ChargeTiming, error) {
 	switch s {
-	case "external":
-		return CollectorExternal, nil
-	case "stripe_invoice":
-		return CollectorStripeInvoice, nil
-	case "stripe_payments":
-		return CollectorStripePayments, nil
+	case "in_advance":
+		return ChargeTimingInAdvance, nil
+	case "in_arrears":
+		return ChargeTimingInArrears, nil
 	}
-	var t Collector
+	var t ChargeTiming
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (c Collector) Ptr() *Collector {
+func (c ChargeTiming) Ptr() *ChargeTiming {
 	return &c
 }
 
@@ -5072,26 +6296,57 @@ func (i InvoiceLineKind) Ptr() *InvoiceLineKind {
 	return &i
 }
 
-type PaymentGating string
+type LineKind string
 
 const (
-	PaymentGatingKeepServing PaymentGating = "keep_serving"
-	PaymentGatingRevokeAfter PaymentGating = "revoke_after"
+	LineKindAllowance LineKind = "allowance"
+	LineKindCapacity  LineKind = "capacity"
+	LineKindRate      LineKind = "rate"
 )
 
-func NewPaymentGatingFromString(s string) (PaymentGating, error) {
+func NewLineKindFromString(s string) (LineKind, error) {
 	switch s {
-	case "keep_serving":
-		return PaymentGatingKeepServing, nil
-	case "revoke_after":
-		return PaymentGatingRevokeAfter, nil
+	case "allowance":
+		return LineKindAllowance, nil
+	case "capacity":
+		return LineKindCapacity, nil
+	case "rate":
+		return LineKindRate, nil
 	}
-	var t PaymentGating
+	var t LineKind
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (p PaymentGating) Ptr() *PaymentGating {
-	return &p
+func (l LineKind) Ptr() *LineKind {
+	return &l
+}
+
+type SubscriptionChangeAction string
+
+const (
+	SubscriptionChangeActionAdd     SubscriptionChangeAction = "add"
+	SubscriptionChangeActionCancel  SubscriptionChangeAction = "cancel"
+	SubscriptionChangeActionRemove  SubscriptionChangeAction = "remove"
+	SubscriptionChangeActionReplace SubscriptionChangeAction = "replace"
+)
+
+func NewSubscriptionChangeActionFromString(s string) (SubscriptionChangeAction, error) {
+	switch s {
+	case "add":
+		return SubscriptionChangeActionAdd, nil
+	case "cancel":
+		return SubscriptionChangeActionCancel, nil
+	case "remove":
+		return SubscriptionChangeActionRemove, nil
+	case "replace":
+		return SubscriptionChangeActionReplace, nil
+	}
+	var t SubscriptionChangeAction
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SubscriptionChangeAction) Ptr() *SubscriptionChangeAction {
+	return &s
 }
 
 var (
@@ -6822,6 +8077,109 @@ func (g *GetBillingSettingsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetBillingSettingsResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getCompanyNativeSubscriptionResponseFieldData   = big.NewInt(1 << 0)
+	getCompanyNativeSubscriptionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetCompanyNativeSubscriptionResponse struct {
+	Data *BillingNativeSubscriptionResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) GetData() *BillingNativeSubscriptionResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyNativeSubscriptionResponse) SetData(data *BillingNativeSubscriptionResponseData) {
+	g.Data = data
+	g.require(getCompanyNativeSubscriptionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyNativeSubscriptionResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getCompanyNativeSubscriptionResponseFieldParams)
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetCompanyNativeSubscriptionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetCompanyNativeSubscriptionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) MarshalJSON() ([]byte, error) {
+	type embed GetCompanyNativeSubscriptionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCompanyNativeSubscriptionResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}

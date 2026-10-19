@@ -4112,49 +4112,6 @@ func (p *PlanVersionSnapshotView) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
-type SubscriptionStatus string
-
-const (
-	SubscriptionStatusActive            SubscriptionStatus = "active"
-	SubscriptionStatusCanceled          SubscriptionStatus = "canceled"
-	SubscriptionStatusExpired           SubscriptionStatus = "expired"
-	SubscriptionStatusIncomplete        SubscriptionStatus = "incomplete"
-	SubscriptionStatusIncompleteExpired SubscriptionStatus = "incomplete_expired"
-	SubscriptionStatusPastDue           SubscriptionStatus = "past_due"
-	SubscriptionStatusPaused            SubscriptionStatus = "paused"
-	SubscriptionStatusTrialing          SubscriptionStatus = "trialing"
-	SubscriptionStatusUnpaid            SubscriptionStatus = "unpaid"
-)
-
-func NewSubscriptionStatusFromString(s string) (SubscriptionStatus, error) {
-	switch s {
-	case "active":
-		return SubscriptionStatusActive, nil
-	case "canceled":
-		return SubscriptionStatusCanceled, nil
-	case "expired":
-		return SubscriptionStatusExpired, nil
-	case "incomplete":
-		return SubscriptionStatusIncomplete, nil
-	case "incomplete_expired":
-		return SubscriptionStatusIncompleteExpired, nil
-	case "past_due":
-		return SubscriptionStatusPastDue, nil
-	case "paused":
-		return SubscriptionStatusPaused, nil
-	case "trialing":
-		return SubscriptionStatusTrialing, nil
-	case "unpaid":
-		return SubscriptionStatusUnpaid, nil
-	}
-	var t SubscriptionStatus
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (s SubscriptionStatus) Ptr() *SubscriptionStatus {
-	return &s
-}
-
 var (
 	subscriptionTraitUpdateFieldFeatureID = big.NewInt(1 << 0)
 	subscriptionTraitUpdateFieldHierarchy = big.NewInt(1 << 1)

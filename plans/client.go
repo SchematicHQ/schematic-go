@@ -74,7 +74,13 @@ func (c *Client) UpdateCompanyPlans(
 //	    PlanID: schematichq.String(
 //	        "plan_id",
 //	    ),
+//	    PlanVersionID: schematichq.String(
+//	        "plan_version_id",
+//	    ),
 //	    PlanBillingSource: schematichq.PlanBillingSourceAmendment.Ptr(),
+//	    PlanBillingSources: []*schematichq.PlanBillingSource{
+//	        schematichq.PlanBillingSourceAmendment.Ptr(),
+//	    },
 //	    Status: schematichq.CustomPlanBillingStatusActive.Ptr(),
 //	    Statuses: []*schematichq.CustomPlanBillingStatus{
 //	        schematichq.CustomPlanBillingStatusActive.Ptr(),

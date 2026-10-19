@@ -8627,6 +8627,31 @@ func (c CheckoutProblemSource) Ptr() *CheckoutProblemSource {
 	return &c
 }
 
+type Collector string
+
+const (
+	CollectorExternal       Collector = "external"
+	CollectorStripeInvoice  Collector = "stripe_invoice"
+	CollectorStripePayments Collector = "stripe_payments"
+)
+
+func NewCollectorFromString(s string) (Collector, error) {
+	switch s {
+	case "external":
+		return CollectorExternal, nil
+	case "stripe_invoice":
+		return CollectorStripeInvoice, nil
+	case "stripe_payments":
+		return CollectorStripePayments, nil
+	}
+	var t Collector
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c Collector) Ptr() *Collector {
+	return &c
+}
+
 var (
 	companyBillingDetailsViewFieldAddress          = big.NewInt(1 << 0)
 	companyBillingDetailsViewFieldCheckoutSettings = big.NewInt(1 << 1)
@@ -8797,33 +8822,45 @@ var (
 	companyBillingProfileResponseDataFieldAccountID         = big.NewInt(1 << 0)
 	companyBillingProfileResponseDataFieldBillingCustomerID = big.NewInt(1 << 1)
 	companyBillingProfileResponseDataFieldCollectionMethod  = big.NewInt(1 << 2)
-	companyBillingProfileResponseDataFieldCompanyID         = big.NewInt(1 << 3)
-	companyBillingProfileResponseDataFieldCreatedAt         = big.NewInt(1 << 4)
-	companyBillingProfileResponseDataFieldDaysUntilDue      = big.NewInt(1 << 5)
-	companyBillingProfileResponseDataFieldEnvironmentID     = big.NewInt(1 << 6)
-	companyBillingProfileResponseDataFieldID                = big.NewInt(1 << 7)
-	companyBillingProfileResponseDataFieldIsDefault         = big.NewInt(1 << 8)
-	companyBillingProfileResponseDataFieldName              = big.NewInt(1 << 9)
-	companyBillingProfileResponseDataFieldPaymentMethodID   = big.NewInt(1 << 10)
-	companyBillingProfileResponseDataFieldProrationBehavior = big.NewInt(1 << 11)
-	companyBillingProfileResponseDataFieldProviderType      = big.NewInt(1 << 12)
-	companyBillingProfileResponseDataFieldUpdatedAt         = big.NewInt(1 << 13)
+	companyBillingProfileResponseDataFieldCollector         = big.NewInt(1 << 3)
+	companyBillingProfileResponseDataFieldCompanyID         = big.NewInt(1 << 4)
+	companyBillingProfileResponseDataFieldCreatedAt         = big.NewInt(1 << 5)
+	companyBillingProfileResponseDataFieldCurrency          = big.NewInt(1 << 6)
+	companyBillingProfileResponseDataFieldDaysUntilDue      = big.NewInt(1 << 7)
+	companyBillingProfileResponseDataFieldEnvironmentID     = big.NewInt(1 << 8)
+	companyBillingProfileResponseDataFieldGatingDays        = big.NewInt(1 << 9)
+	companyBillingProfileResponseDataFieldID                = big.NewInt(1 << 10)
+	companyBillingProfileResponseDataFieldIsDefault         = big.NewInt(1 << 11)
+	companyBillingProfileResponseDataFieldName              = big.NewInt(1 << 12)
+	companyBillingProfileResponseDataFieldOverdraftLimit    = big.NewInt(1 << 13)
+	companyBillingProfileResponseDataFieldPaymentGating     = big.NewInt(1 << 14)
+	companyBillingProfileResponseDataFieldPaymentMethodID   = big.NewInt(1 << 15)
+	companyBillingProfileResponseDataFieldProrationBehavior = big.NewInt(1 << 16)
+	companyBillingProfileResponseDataFieldProviderType      = big.NewInt(1 << 17)
+	companyBillingProfileResponseDataFieldPurchaseOrder     = big.NewInt(1 << 18)
+	companyBillingProfileResponseDataFieldUpdatedAt         = big.NewInt(1 << 19)
 )
 
 type CompanyBillingProfileResponseData struct {
 	AccountID         string                  `json:"account_id" url:"account_id"`
 	BillingCustomerID *string                 `json:"billing_customer_id,omitempty" url:"billing_customer_id,omitempty"`
 	CollectionMethod  BillingCollectionMethod `json:"collection_method" url:"collection_method"`
+	Collector         *Collector              `json:"collector,omitempty" url:"collector,omitempty"`
 	CompanyID         string                  `json:"company_id" url:"company_id"`
 	CreatedAt         time.Time               `json:"created_at" url:"created_at"`
+	Currency          *Currency               `json:"currency,omitempty" url:"currency,omitempty"`
 	DaysUntilDue      *int64                  `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
 	EnvironmentID     string                  `json:"environment_id" url:"environment_id"`
+	GatingDays        int64                   `json:"gating_days" url:"gating_days"`
 	ID                string                  `json:"id" url:"id"`
 	IsDefault         bool                    `json:"is_default" url:"is_default"`
 	Name              *string                 `json:"name,omitempty" url:"name,omitempty"`
+	OverdraftLimit    *int64                  `json:"overdraft_limit,omitempty" url:"overdraft_limit,omitempty"`
+	PaymentGating     PaymentGating           `json:"payment_gating" url:"payment_gating"`
 	PaymentMethodID   *string                 `json:"payment_method_id,omitempty" url:"payment_method_id,omitempty"`
 	ProrationBehavior *ProrationBehavior      `json:"proration_behavior,omitempty" url:"proration_behavior,omitempty"`
 	ProviderType      BillingProviderType     `json:"provider_type" url:"provider_type"`
+	PurchaseOrder     *string                 `json:"purchase_order,omitempty" url:"purchase_order,omitempty"`
 	UpdatedAt         time.Time               `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -8854,6 +8891,13 @@ func (c *CompanyBillingProfileResponseData) GetCollectionMethod() BillingCollect
 	return c.CollectionMethod
 }
 
+func (c *CompanyBillingProfileResponseData) GetCollector() *Collector {
+	if c == nil {
+		return nil
+	}
+	return c.Collector
+}
+
 func (c *CompanyBillingProfileResponseData) GetCompanyID() string {
 	if c == nil {
 		return ""
@@ -8868,6 +8912,13 @@ func (c *CompanyBillingProfileResponseData) GetCreatedAt() time.Time {
 	return c.CreatedAt
 }
 
+func (c *CompanyBillingProfileResponseData) GetCurrency() *Currency {
+	if c == nil {
+		return nil
+	}
+	return c.Currency
+}
+
 func (c *CompanyBillingProfileResponseData) GetDaysUntilDue() *int64 {
 	if c == nil {
 		return nil
@@ -8880,6 +8931,13 @@ func (c *CompanyBillingProfileResponseData) GetEnvironmentID() string {
 		return ""
 	}
 	return c.EnvironmentID
+}
+
+func (c *CompanyBillingProfileResponseData) GetGatingDays() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.GatingDays
 }
 
 func (c *CompanyBillingProfileResponseData) GetID() string {
@@ -8903,6 +8961,20 @@ func (c *CompanyBillingProfileResponseData) GetName() *string {
 	return c.Name
 }
 
+func (c *CompanyBillingProfileResponseData) GetOverdraftLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.OverdraftLimit
+}
+
+func (c *CompanyBillingProfileResponseData) GetPaymentGating() PaymentGating {
+	if c == nil {
+		return ""
+	}
+	return c.PaymentGating
+}
+
 func (c *CompanyBillingProfileResponseData) GetPaymentMethodID() *string {
 	if c == nil {
 		return nil
@@ -8922,6 +8994,13 @@ func (c *CompanyBillingProfileResponseData) GetProviderType() BillingProviderTyp
 		return ""
 	}
 	return c.ProviderType
+}
+
+func (c *CompanyBillingProfileResponseData) GetPurchaseOrder() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PurchaseOrder
 }
 
 func (c *CompanyBillingProfileResponseData) GetUpdatedAt() time.Time {
@@ -8968,6 +9047,13 @@ func (c *CompanyBillingProfileResponseData) SetCollectionMethod(collectionMethod
 	c.require(companyBillingProfileResponseDataFieldCollectionMethod)
 }
 
+// SetCollector sets the Collector field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetCollector(collector *Collector) {
+	c.Collector = collector
+	c.require(companyBillingProfileResponseDataFieldCollector)
+}
+
 // SetCompanyID sets the CompanyID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyBillingProfileResponseData) SetCompanyID(companyID string) {
@@ -8982,6 +9068,13 @@ func (c *CompanyBillingProfileResponseData) SetCreatedAt(createdAt time.Time) {
 	c.require(companyBillingProfileResponseDataFieldCreatedAt)
 }
 
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetCurrency(currency *Currency) {
+	c.Currency = currency
+	c.require(companyBillingProfileResponseDataFieldCurrency)
+}
+
 // SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyBillingProfileResponseData) SetDaysUntilDue(daysUntilDue *int64) {
@@ -8994,6 +9087,13 @@ func (c *CompanyBillingProfileResponseData) SetDaysUntilDue(daysUntilDue *int64)
 func (c *CompanyBillingProfileResponseData) SetEnvironmentID(environmentID string) {
 	c.EnvironmentID = environmentID
 	c.require(companyBillingProfileResponseDataFieldEnvironmentID)
+}
+
+// SetGatingDays sets the GatingDays field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetGatingDays(gatingDays int64) {
+	c.GatingDays = gatingDays
+	c.require(companyBillingProfileResponseDataFieldGatingDays)
 }
 
 // SetID sets the ID field and marks it as non-optional;
@@ -9017,6 +9117,20 @@ func (c *CompanyBillingProfileResponseData) SetName(name *string) {
 	c.require(companyBillingProfileResponseDataFieldName)
 }
 
+// SetOverdraftLimit sets the OverdraftLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetOverdraftLimit(overdraftLimit *int64) {
+	c.OverdraftLimit = overdraftLimit
+	c.require(companyBillingProfileResponseDataFieldOverdraftLimit)
+}
+
+// SetPaymentGating sets the PaymentGating field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetPaymentGating(paymentGating PaymentGating) {
+	c.PaymentGating = paymentGating
+	c.require(companyBillingProfileResponseDataFieldPaymentGating)
+}
+
 // SetPaymentMethodID sets the PaymentMethodID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyBillingProfileResponseData) SetPaymentMethodID(paymentMethodID *string) {
@@ -9036,6 +9150,13 @@ func (c *CompanyBillingProfileResponseData) SetProrationBehavior(prorationBehavi
 func (c *CompanyBillingProfileResponseData) SetProviderType(providerType BillingProviderType) {
 	c.ProviderType = providerType
 	c.require(companyBillingProfileResponseDataFieldProviderType)
+}
+
+// SetPurchaseOrder sets the PurchaseOrder field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingProfileResponseData) SetPurchaseOrder(purchaseOrder *string) {
+	c.PurchaseOrder = purchaseOrder
+	c.require(companyBillingProfileResponseDataFieldPurchaseOrder)
 }
 
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
@@ -25520,8 +25641,9 @@ var (
 )
 
 type FlagDetailResponseData struct {
-	CreatedAt                 time.Time                  `json:"created_at" url:"created_at"`
-	DefaultValue              bool                       `json:"default_value" url:"default_value"`
+	CreatedAt time.Time `json:"created_at" url:"created_at"`
+	// Deprecated. The value a check returns in the requesting environment when no other rule matches: its default rule, or the flag's seed value while it has none. Read the default rule instead
+	DefaultValue              *bool                      `json:"default_value,omitempty" url:"default_value,omitempty"`
 	Description               string                     `json:"description" url:"description"`
 	Feature                   *FeatureResponseData       `json:"feature,omitempty" url:"feature,omitempty"`
 	FeatureID                 *string                    `json:"feature_id,omitempty" url:"feature_id,omitempty"`
@@ -25549,9 +25671,9 @@ func (f *FlagDetailResponseData) GetCreatedAt() time.Time {
 	return f.CreatedAt
 }
 
-func (f *FlagDetailResponseData) GetDefaultValue() bool {
+func (f *FlagDetailResponseData) GetDefaultValue() *bool {
 	if f == nil {
-		return false
+		return nil
 	}
 	return f.DefaultValue
 }
@@ -25658,7 +25780,7 @@ func (f *FlagDetailResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FlagDetailResponseData) SetDefaultValue(defaultValue bool) {
+func (f *FlagDetailResponseData) SetDefaultValue(defaultValue *bool) {
 	f.DefaultValue = defaultValue
 	f.require(flagDetailResponseDataFieldDefaultValue)
 }
@@ -25822,8 +25944,9 @@ var (
 )
 
 type FlagInPlanResponseData struct {
-	CreatedAt                 time.Time                 `json:"created_at" url:"created_at"`
-	DefaultValue              bool                      `json:"default_value" url:"default_value"`
+	CreatedAt time.Time `json:"created_at" url:"created_at"`
+	// Deprecated. The value a check returns in the requesting environment when no other rule matches: its default rule, or the flag's seed value while it has none. Read the default rule instead
+	DefaultValue              *bool                     `json:"default_value,omitempty" url:"default_value,omitempty"`
 	Description               string                    `json:"description" url:"description"`
 	Feature                   *FeatureResponseData      `json:"feature,omitempty" url:"feature,omitempty"`
 	FeatureID                 *string                   `json:"feature_id,omitempty" url:"feature_id,omitempty"`
@@ -25850,9 +25973,9 @@ func (f *FlagInPlanResponseData) GetCreatedAt() time.Time {
 	return f.CreatedAt
 }
 
-func (f *FlagInPlanResponseData) GetDefaultValue() bool {
+func (f *FlagInPlanResponseData) GetDefaultValue() *bool {
 	if f == nil {
-		return false
+		return nil
 	}
 	return f.DefaultValue
 }
@@ -25952,7 +26075,7 @@ func (f *FlagInPlanResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FlagInPlanResponseData) SetDefaultValue(defaultValue bool) {
+func (f *FlagInPlanResponseData) SetDefaultValue(defaultValue *bool) {
 	f.DefaultValue = defaultValue
 	f.require(flagInPlanResponseDataFieldDefaultValue)
 }
@@ -27715,6 +27838,28 @@ func NewMigrationProrationBehaviorFromString(s string) (MigrationProrationBehavi
 
 func (m MigrationProrationBehavior) Ptr() *MigrationProrationBehavior {
 	return &m
+}
+
+type PaymentGating string
+
+const (
+	PaymentGatingKeepServing PaymentGating = "keep_serving"
+	PaymentGatingRevokeAfter PaymentGating = "revoke_after"
+)
+
+func NewPaymentGatingFromString(s string) (PaymentGating, error) {
+	switch s {
+	case "keep_serving":
+		return PaymentGatingKeepServing, nil
+	case "revoke_after":
+		return PaymentGatingRevokeAfter, nil
+	}
+	var t PaymentGating
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p PaymentGating) Ptr() *PaymentGating {
+	return &p
 }
 
 var (
@@ -36794,18 +36939,21 @@ func (r *RulesengineCreditPostpaidConfig) String() string {
 }
 
 var (
-	rulesengineCreditSpendPolicyFieldConsumed = big.NewInt(1 << 0)
-	rulesengineCreditSpendPolicyFieldCreditID = big.NewInt(1 << 1)
-	rulesengineCreditSpendPolicyFieldID       = big.NewInt(1 << 2)
-	rulesengineCreditSpendPolicyFieldKind     = big.NewInt(1 << 3)
-	rulesengineCreditSpendPolicyFieldLabel    = big.NewInt(1 << 4)
-	rulesengineCreditSpendPolicyFieldLimit    = big.NewInt(1 << 5)
-	rulesengineCreditSpendPolicyFieldResetsAt = big.NewInt(1 << 6)
-	rulesengineCreditSpendPolicyFieldScope    = big.NewInt(1 << 7)
-	rulesengineCreditSpendPolicyFieldWindow   = big.NewInt(1 << 8)
+	rulesengineCreditSpendPolicyFieldCompanyID = big.NewInt(1 << 0)
+	rulesengineCreditSpendPolicyFieldConsumed  = big.NewInt(1 << 1)
+	rulesengineCreditSpendPolicyFieldCreditID  = big.NewInt(1 << 2)
+	rulesengineCreditSpendPolicyFieldID        = big.NewInt(1 << 3)
+	rulesengineCreditSpendPolicyFieldKind      = big.NewInt(1 << 4)
+	rulesengineCreditSpendPolicyFieldLabel     = big.NewInt(1 << 5)
+	rulesengineCreditSpendPolicyFieldLimit     = big.NewInt(1 << 6)
+	rulesengineCreditSpendPolicyFieldResetsAt  = big.NewInt(1 << 7)
+	rulesengineCreditSpendPolicyFieldScope     = big.NewInt(1 << 8)
+	rulesengineCreditSpendPolicyFieldWindow    = big.NewInt(1 << 9)
 )
 
 type RulesengineCreditSpendPolicy struct {
+	// For a user policy, the company it applies in
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// How much of the limit is already spent in the current period
 	Consumed *float64 `json:"consumed,omitempty" url:"consumed,omitempty"`
 	// The credit the policy limits
@@ -36830,6 +36978,13 @@ type RulesengineCreditSpendPolicy struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (r *RulesengineCreditSpendPolicy) GetCompanyID() *string {
+	if r == nil {
+		return nil
+	}
+	return r.CompanyID
 }
 
 func (r *RulesengineCreditSpendPolicy) GetConsumed() *float64 {
@@ -36909,6 +37064,13 @@ func (r *RulesengineCreditSpendPolicy) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	r.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RulesengineCreditSpendPolicy) SetCompanyID(companyID *string) {
+	r.CompanyID = companyID
+	r.require(rulesengineCreditSpendPolicyFieldCompanyID)
 }
 
 // SetConsumed sets the Consumed field and marks it as non-optional;
@@ -39047,6 +39209,49 @@ func NewSortDirectionFromString(s string) (SortDirection, error) {
 }
 
 func (s SortDirection) Ptr() *SortDirection {
+	return &s
+}
+
+type SubscriptionStatus string
+
+const (
+	SubscriptionStatusActive            SubscriptionStatus = "active"
+	SubscriptionStatusCanceled          SubscriptionStatus = "canceled"
+	SubscriptionStatusExpired           SubscriptionStatus = "expired"
+	SubscriptionStatusIncomplete        SubscriptionStatus = "incomplete"
+	SubscriptionStatusIncompleteExpired SubscriptionStatus = "incomplete_expired"
+	SubscriptionStatusPastDue           SubscriptionStatus = "past_due"
+	SubscriptionStatusPaused            SubscriptionStatus = "paused"
+	SubscriptionStatusTrialing          SubscriptionStatus = "trialing"
+	SubscriptionStatusUnpaid            SubscriptionStatus = "unpaid"
+)
+
+func NewSubscriptionStatusFromString(s string) (SubscriptionStatus, error) {
+	switch s {
+	case "active":
+		return SubscriptionStatusActive, nil
+	case "canceled":
+		return SubscriptionStatusCanceled, nil
+	case "expired":
+		return SubscriptionStatusExpired, nil
+	case "incomplete":
+		return SubscriptionStatusIncomplete, nil
+	case "incomplete_expired":
+		return SubscriptionStatusIncompleteExpired, nil
+	case "past_due":
+		return SubscriptionStatusPastDue, nil
+	case "paused":
+		return SubscriptionStatusPaused, nil
+	case "trialing":
+		return SubscriptionStatusTrialing, nil
+	case "unpaid":
+		return SubscriptionStatusUnpaid, nil
+	}
+	var t SubscriptionStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SubscriptionStatus) Ptr() *SubscriptionStatus {
 	return &s
 }
 

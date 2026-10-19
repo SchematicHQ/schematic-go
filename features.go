@@ -21,13 +21,13 @@ var (
 
 type CheckAndReserveFlagRequestBody struct {
 	Company map[string]string `json:"company,omitempty" url:"-"`
-	// When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+	// When the hold lapses if no track or inference event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
 	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
 	// A caller-chosen key for safe retries: a second request with the same key returns the original reservation instead of taking another hold
 	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`
-	// Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise the hold is the entitlement's consumption rate times quantity, or, when quantity is omitted, times the usage stated here
+	// Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise, when event_quantities names the entitlement's event subtype, the hold is that event priced at the entitlement's consumption rate and quantity rates, and quantity is ignored; otherwise the hold is the entitlement's consumption rate times quantity, or, when quantity is omitted, times the usage stated here
 	Preflight *PreflightRequestBody `json:"preflight,omitempty" url:"-"`
-	// Units of the feature the operation will consume. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event. When it is omitted the units come from preflight.event_usage.quantity, if that event subtype is the entitlement's, else from preflight.usage, else 1
+	// Units of the feature the operation will consume. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event. When it is omitted the units come from preflight.event_usage.quantity, if that event subtype is the entitlement's, else from preflight.usage, else 1. Ignored when preflight.event_quantities names the entitlement's event subtype, whose quantity is used instead
 	Quantity *float64          `json:"quantity,omitempty" url:"-"`
 	User     map[string]string `json:"user,omitempty" url:"-"`
 
@@ -719,7 +719,7 @@ type CheckAndReserveFlagResponseData struct {
 	FlagID *string `json:"flag_id,omitempty" url:"flag_id,omitempty"`
 	// A human-readable explanation of the result
 	Reason string `json:"reason" url:"reason"`
-	// The hold taken on the company's credit balance for this operation, when the flag allowed it and the feature is credit-metered. Settle it by sending a track event carrying its ID as reservation_id; the unspent hold is refunded at expires_at otherwise
+	// The hold taken on the company's credit balance for this operation, when the flag allowed it and the feature is credit-metered. Settle it by sending a track or inference event carrying its ID as reservation_id; the unspent hold is refunded at expires_at otherwise
 	Reservation *FlagCheckReservationResponseData `json:"reservation,omitempty" url:"reservation,omitempty"`
 	// If a rule was found, its ID
 	RuleID *string `json:"rule_id,omitempty" url:"rule_id,omitempty"`
@@ -1702,12 +1702,18 @@ func (c *CheckFlagsResponseData) String() string {
 }
 
 var (
-	companyCreditBalanceFieldRemaining = big.NewInt(1 << 0)
-	companyCreditBalanceFieldReserved  = big.NewInt(1 << 1)
-	companyCreditBalanceFieldSettled   = big.NewInt(1 << 2)
+	companyCreditBalanceFieldOverdraftLimit = big.NewInt(1 << 0)
+	companyCreditBalanceFieldPostpaid       = big.NewInt(1 << 1)
+	companyCreditBalanceFieldRemaining      = big.NewInt(1 << 2)
+	companyCreditBalanceFieldReserved       = big.NewInt(1 << 3)
+	companyCreditBalanceFieldSettled        = big.NewInt(1 << 4)
 )
 
 type CompanyCreditBalance struct {
+	// For a postpaid credit, how far below zero the balance may run. Absent when the credit is not postpaid or postpaid has no limit
+	OverdraftLimit *float64 `json:"overdraft_limit,omitempty" url:"overdraft_limit,omitempty"`
+	// Whether consumption may continue past a zero balance. When true and overdraft_limit is absent, the balance has no floor
+	Postpaid bool `json:"postpaid" url:"postpaid"`
 	// Remaining credit, excluding any open lease hold (the value SDKs gate on)
 	Remaining float64 `json:"remaining" url:"remaining"`
 	// Amount held by the company's open credit lease, 0 when none is open
@@ -1720,6 +1726,20 @@ type CompanyCreditBalance struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CompanyCreditBalance) GetOverdraftLimit() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.OverdraftLimit
+}
+
+func (c *CompanyCreditBalance) GetPostpaid() bool {
+	if c == nil {
+		return false
+	}
+	return c.Postpaid
 }
 
 func (c *CompanyCreditBalance) GetRemaining() float64 {
@@ -1757,6 +1777,20 @@ func (c *CompanyCreditBalance) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetOverdraftLimit sets the OverdraftLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalance) SetOverdraftLimit(overdraftLimit *float64) {
+	c.OverdraftLimit = overdraftLimit
+	c.require(companyCreditBalanceFieldOverdraftLimit)
+}
+
+// SetPostpaid sets the Postpaid field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyCreditBalance) SetPostpaid(postpaid bool) {
+	c.Postpaid = postpaid
+	c.require(companyCreditBalanceFieldPostpaid)
 }
 
 // SetRemaining sets the Remaining field and marks it as non-optional;
@@ -1833,7 +1867,8 @@ var (
 )
 
 type CreateFlagRequestBody struct {
-	DefaultValue              bool     `json:"default_value" url:"default_value"`
+	// Deprecated. On create, the value a check returns in every environment until that environment has a default rule. Ignored on update: flags are account-wide and rules are per environment, so set an environment's default through its default rule via the flag rules endpoint
+	DefaultValue              *bool    `json:"default_value,omitempty" url:"default_value,omitempty"`
 	Description               string   `json:"description" url:"description"`
 	FeatureID                 *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FlagType                  FlagType `json:"flag_type" url:"flag_type"`
@@ -1848,9 +1883,9 @@ type CreateFlagRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreateFlagRequestBody) GetDefaultValue() bool {
+func (c *CreateFlagRequestBody) GetDefaultValue() *bool {
 	if c == nil {
-		return false
+		return nil
 	}
 	return c.DefaultValue
 }
@@ -1908,7 +1943,7 @@ func (c *CreateFlagRequestBody) require(field *big.Int) {
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateFlagRequestBody) SetDefaultValue(defaultValue bool) {
+func (c *CreateFlagRequestBody) SetDefaultValue(defaultValue *bool) {
 	c.DefaultValue = defaultValue
 	c.require(createFlagRequestBodyFieldDefaultValue)
 }
@@ -2415,7 +2450,8 @@ var (
 )
 
 type CreateOrUpdateFlagRequestBody struct {
-	DefaultValue              bool     `json:"default_value" url:"default_value"`
+	// Deprecated. On create, the value a check returns in every environment until that environment has a default rule. Ignored on update: flags are account-wide and rules are per environment, so set an environment's default through its default rule via the flag rules endpoint
+	DefaultValue              *bool    `json:"default_value,omitempty" url:"default_value,omitempty"`
 	Description               string   `json:"description" url:"description"`
 	FeatureID                 *string  `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FlagType                  FlagType `json:"flag_type" url:"flag_type"`
@@ -2431,9 +2467,9 @@ type CreateOrUpdateFlagRequestBody struct {
 	rawJSON         json.RawMessage
 }
 
-func (c *CreateOrUpdateFlagRequestBody) GetDefaultValue() bool {
+func (c *CreateOrUpdateFlagRequestBody) GetDefaultValue() *bool {
 	if c == nil {
-		return false
+		return nil
 	}
 	return c.DefaultValue
 }
@@ -2498,7 +2534,7 @@ func (c *CreateOrUpdateFlagRequestBody) require(field *big.Int) {
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CreateOrUpdateFlagRequestBody) SetDefaultValue(defaultValue bool) {
+func (c *CreateOrUpdateFlagRequestBody) SetDefaultValue(defaultValue *bool) {
 	c.DefaultValue = defaultValue
 	c.require(createOrUpdateFlagRequestBodyFieldDefaultValue)
 }
@@ -2777,18 +2813,21 @@ func (c *CreateOrUpdateRuleRequestBody) String() string {
 }
 
 var (
-	creditSpendPolicyFieldConsumed = big.NewInt(1 << 0)
-	creditSpendPolicyFieldCreditID = big.NewInt(1 << 1)
-	creditSpendPolicyFieldID       = big.NewInt(1 << 2)
-	creditSpendPolicyFieldKind     = big.NewInt(1 << 3)
-	creditSpendPolicyFieldLabel    = big.NewInt(1 << 4)
-	creditSpendPolicyFieldLimit    = big.NewInt(1 << 5)
-	creditSpendPolicyFieldResetsAt = big.NewInt(1 << 6)
-	creditSpendPolicyFieldScope    = big.NewInt(1 << 7)
-	creditSpendPolicyFieldWindow   = big.NewInt(1 << 8)
+	creditSpendPolicyFieldCompanyID = big.NewInt(1 << 0)
+	creditSpendPolicyFieldConsumed  = big.NewInt(1 << 1)
+	creditSpendPolicyFieldCreditID  = big.NewInt(1 << 2)
+	creditSpendPolicyFieldID        = big.NewInt(1 << 3)
+	creditSpendPolicyFieldKind      = big.NewInt(1 << 4)
+	creditSpendPolicyFieldLabel     = big.NewInt(1 << 5)
+	creditSpendPolicyFieldLimit     = big.NewInt(1 << 6)
+	creditSpendPolicyFieldResetsAt  = big.NewInt(1 << 7)
+	creditSpendPolicyFieldScope     = big.NewInt(1 << 8)
+	creditSpendPolicyFieldWindow    = big.NewInt(1 << 9)
 )
 
 type CreditSpendPolicy struct {
+	// For a user policy, the company it applies in
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// How much of the limit is already spent in the current period
 	Consumed *float64 `json:"consumed,omitempty" url:"consumed,omitempty"`
 	// The credit the policy limits
@@ -2813,6 +2852,13 @@ type CreditSpendPolicy struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CreditSpendPolicy) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
 }
 
 func (c *CreditSpendPolicy) GetConsumed() *float64 {
@@ -2892,6 +2938,13 @@ func (c *CreditSpendPolicy) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditSpendPolicy) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(creditSpendPolicyFieldCompanyID)
 }
 
 // SetConsumed sets the Consumed field and marks it as non-optional;
@@ -3271,9 +3324,9 @@ type FlagCheckReservationResponseData struct {
 	CreditTypeID    string  `json:"credit_type_id" url:"credit_type_id"`
 	// Credits held from the company's balance
 	CreditsReserved float64 `json:"credits_reserved" url:"credits_reserved"`
-	// The event subtype the settling track event should carry
+	// The event subtype the settling track event should carry, or the event name of a settling inference event
 	EventSubtype *string `json:"event_subtype,omitempty" url:"event_subtype,omitempty"`
-	// When the unspent hold is refunded if no track event settles it
+	// When the unspent hold is refunded if no track or inference event settles it
 	ExpiresAt time.Time `json:"expires_at" url:"expires_at"`
 	ID        string    `json:"id" url:"id"`
 	// Units of usage the hold covers, as requested
@@ -3478,8 +3531,9 @@ var (
 )
 
 type FlagResponseData struct {
-	CreatedAt                 time.Time `json:"created_at" url:"created_at"`
-	DefaultValue              bool      `json:"default_value" url:"default_value"`
+	CreatedAt time.Time `json:"created_at" url:"created_at"`
+	// Deprecated. The value a check returns in the requesting environment when no other rule matches: its default rule, or the flag's seed value while it has none. Read the default rule instead
+	DefaultValue              *bool     `json:"default_value,omitempty" url:"default_value,omitempty"`
 	Description               string    `json:"description" url:"description"`
 	FeatureID                 *string   `json:"feature_id,omitempty" url:"feature_id,omitempty"`
 	FlagType                  FlagType  `json:"flag_type" url:"flag_type"`
@@ -3503,9 +3557,9 @@ func (f *FlagResponseData) GetCreatedAt() time.Time {
 	return f.CreatedAt
 }
 
-func (f *FlagResponseData) GetDefaultValue() bool {
+func (f *FlagResponseData) GetDefaultValue() *bool {
 	if f == nil {
-		return false
+		return nil
 	}
 	return f.DefaultValue
 }
@@ -3584,7 +3638,7 @@ func (f *FlagResponseData) SetCreatedAt(createdAt time.Time) {
 
 // SetDefaultValue sets the DefaultValue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
-func (f *FlagResponseData) SetDefaultValue(defaultValue bool) {
+func (f *FlagResponseData) SetDefaultValue(defaultValue *bool) {
 	f.DefaultValue = defaultValue
 	f.require(flagResponseDataFieldDefaultValue)
 }
@@ -3700,6 +3754,127 @@ func (f *FlagResponseData) String() string {
 }
 
 var (
+	preflightEventQuantitiesRequestBodyFieldEventSubtype = big.NewInt(1 << 0)
+	preflightEventQuantitiesRequestBodyFieldQuantities   = big.NewInt(1 << 1)
+	preflightEventQuantitiesRequestBodyFieldQuantity     = big.NewInt(1 << 2)
+)
+
+type PreflightEventQuantitiesRequestBody struct {
+	// The event subtype the event would be recorded under
+	EventSubtype string `json:"event_subtype" url:"event_subtype"`
+	// Named quantities the event would carry, keyed by quantity key, each priced at its rate in the entitlement's quantity rates. For an inference call these are the token counts as the provider reports them: input_tokens includes the cached_input_tokens and cache_creation_input_tokens subsets. Keys the entitlement does not rate cost nothing
+	Quantities map[string]float64 `json:"quantities,omitempty" url:"quantities,omitempty"`
+	// Base units of the event, priced at the entitlement's consumption rate; the request count for an inference call. Absent or zero means one
+	Quantity *float64 `json:"quantity,omitempty" url:"quantity,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreflightEventQuantitiesRequestBody) GetEventSubtype() string {
+	if p == nil {
+		return ""
+	}
+	return p.EventSubtype
+}
+
+func (p *PreflightEventQuantitiesRequestBody) GetQuantities() map[string]float64 {
+	if p == nil {
+		return nil
+	}
+	return p.Quantities
+}
+
+func (p *PreflightEventQuantitiesRequestBody) GetQuantity() *float64 {
+	if p == nil {
+		return nil
+	}
+	return p.Quantity
+}
+
+func (p *PreflightEventQuantitiesRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreflightEventQuantitiesRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetEventSubtype sets the EventSubtype field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightEventQuantitiesRequestBody) SetEventSubtype(eventSubtype string) {
+	p.EventSubtype = eventSubtype
+	p.require(preflightEventQuantitiesRequestBodyFieldEventSubtype)
+}
+
+// SetQuantities sets the Quantities field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightEventQuantitiesRequestBody) SetQuantities(quantities map[string]float64) {
+	p.Quantities = quantities
+	p.require(preflightEventQuantitiesRequestBodyFieldQuantities)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightEventQuantitiesRequestBody) SetQuantity(quantity *float64) {
+	p.Quantity = quantity
+	p.require(preflightEventQuantitiesRequestBodyFieldQuantity)
+}
+
+func (p *PreflightEventQuantitiesRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PreflightEventQuantitiesRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PreflightEventQuantitiesRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreflightEventQuantitiesRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PreflightEventQuantitiesRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreflightEventQuantitiesRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
 	preflightEventUsageRequestBodyFieldEventSubtype = big.NewInt(1 << 0)
 	preflightEventUsageRequestBodyFieldQuantity     = big.NewInt(1 << 1)
 )
@@ -3804,14 +3979,17 @@ func (p *PreflightEventUsageRequestBody) String() string {
 }
 
 var (
-	preflightRequestBodyFieldCreditCost = big.NewInt(1 << 0)
-	preflightRequestBodyFieldEventUsage = big.NewInt(1 << 1)
-	preflightRequestBodyFieldUsage      = big.NewInt(1 << 2)
+	preflightRequestBodyFieldCreditCost      = big.NewInt(1 << 0)
+	preflightRequestBodyFieldEventQuantities = big.NewInt(1 << 1)
+	preflightRequestBodyFieldEventUsage      = big.NewInt(1 << 2)
+	preflightRequestBodyFieldUsage           = big.NewInt(1 << 3)
 )
 
 type PreflightRequestBody struct {
-	// Cost in credits of the action, keyed by credit ID, for callers that have already computed it. Takes precedence over usage and event_usage on credit balance conditions for the same credit. A cost of zero means the action is free, not that the input is absent
+	// Cost in credits of the action, keyed by credit ID, for callers that have already computed it. Takes precedence over event_quantities, event_usage and usage on credit balance conditions for the same credit. A cost of zero means the action is free, not that the input is absent
 	CreditCost map[string]float64 `json:"credit_cost,omitempty" url:"credit_cost,omitempty"`
+	// An event of a specific subtype, priced the way it would burn credits: quantity at the entitlement's consumption rate, plus each of quantities at its rate in the entitlement's quantity rates. Use it to preflight an inference call by its request and token counts. Applies only to credit balance conditions whose event subtype matches, where it takes precedence over event_usage and usage; credit_cost for the same credit still wins
+	EventQuantities *PreflightEventQuantitiesRequestBody `json:"event_quantities,omitempty" url:"event_quantities,omitempty"`
 	// Usage of a specific event subtype. Preferred over usage when the subtype is known, since it only affects conditions measuring that subtype
 	EventUsage *PreflightEventUsageRequestBody `json:"event_usage,omitempty" url:"event_usage,omitempty"`
 	// Quantity of usage to simulate against any numeric condition encountered while evaluating the flag. Zero has no effect
@@ -3829,6 +4007,13 @@ func (p *PreflightRequestBody) GetCreditCost() map[string]float64 {
 		return nil
 	}
 	return p.CreditCost
+}
+
+func (p *PreflightRequestBody) GetEventQuantities() *PreflightEventQuantitiesRequestBody {
+	if p == nil {
+		return nil
+	}
+	return p.EventQuantities
 }
 
 func (p *PreflightRequestBody) GetEventUsage() *PreflightEventUsageRequestBody {
@@ -3866,6 +4051,13 @@ func (p *PreflightRequestBody) require(field *big.Int) {
 func (p *PreflightRequestBody) SetCreditCost(creditCost map[string]float64) {
 	p.CreditCost = creditCost
 	p.require(preflightRequestBodyFieldCreditCost)
+}
+
+// SetEventQuantities sets the EventQuantities field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreflightRequestBody) SetEventQuantities(eventQuantities *PreflightEventQuantitiesRequestBody) {
+	p.EventQuantities = eventQuantities
+	p.require(preflightRequestBodyFieldEventQuantities)
 }
 
 // SetEventUsage sets the EventUsage field and marks it as non-optional;

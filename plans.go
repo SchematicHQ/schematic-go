@@ -518,13 +518,15 @@ func (l *ListBillingProductMatchCompaniesRequest) SetOffset(offset *int64) {
 }
 
 var (
-	listCustomPlanBillingsRequestFieldCompanyID         = big.NewInt(1 << 0)
-	listCustomPlanBillingsRequestFieldPlanID            = big.NewInt(1 << 1)
-	listCustomPlanBillingsRequestFieldPlanBillingSource = big.NewInt(1 << 2)
-	listCustomPlanBillingsRequestFieldStatus            = big.NewInt(1 << 3)
-	listCustomPlanBillingsRequestFieldStatuses          = big.NewInt(1 << 4)
-	listCustomPlanBillingsRequestFieldLimit             = big.NewInt(1 << 5)
-	listCustomPlanBillingsRequestFieldOffset            = big.NewInt(1 << 6)
+	listCustomPlanBillingsRequestFieldCompanyID          = big.NewInt(1 << 0)
+	listCustomPlanBillingsRequestFieldPlanID             = big.NewInt(1 << 1)
+	listCustomPlanBillingsRequestFieldPlanVersionID      = big.NewInt(1 << 2)
+	listCustomPlanBillingsRequestFieldPlanBillingSource  = big.NewInt(1 << 3)
+	listCustomPlanBillingsRequestFieldPlanBillingSources = big.NewInt(1 << 4)
+	listCustomPlanBillingsRequestFieldStatus             = big.NewInt(1 << 5)
+	listCustomPlanBillingsRequestFieldStatuses           = big.NewInt(1 << 6)
+	listCustomPlanBillingsRequestFieldLimit              = big.NewInt(1 << 7)
+	listCustomPlanBillingsRequestFieldOffset             = big.NewInt(1 << 8)
 )
 
 type ListCustomPlanBillingsRequest struct {
@@ -532,8 +534,12 @@ type ListCustomPlanBillingsRequest struct {
 	CompanyID *string `json:"-" url:"company_id,omitempty"`
 	// Filter by plan ID
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
-	// Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan.
+	// Filter by the plan version the billing record was created for
+	PlanVersionID *string `json:"-" url:"plan_version_id,omitempty"`
+	// Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan unless plan_billing_sources is set.
 	PlanBillingSource *PlanBillingSource `json:"-" url:"plan_billing_source,omitempty"`
+	// Filter by multiple billing sources. Takes precedence over plan_billing_source.
+	PlanBillingSources []*PlanBillingSource `json:"-" url:"plan_billing_sources,omitempty"`
 	// Filter by billing status
 	Status *CustomPlanBillingStatus `json:"-" url:"status,omitempty"`
 	// Filter by multiple billing statuses
@@ -570,11 +576,25 @@ func (l *ListCustomPlanBillingsRequest) SetPlanID(planID *string) {
 	l.require(listCustomPlanBillingsRequestFieldPlanID)
 }
 
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCustomPlanBillingsRequest) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listCustomPlanBillingsRequestFieldPlanVersionID)
+}
+
 // SetPlanBillingSource sets the PlanBillingSource field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListCustomPlanBillingsRequest) SetPlanBillingSource(planBillingSource *PlanBillingSource) {
 	l.PlanBillingSource = planBillingSource
 	l.require(listCustomPlanBillingsRequestFieldPlanBillingSource)
+}
+
+// SetPlanBillingSources sets the PlanBillingSources field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCustomPlanBillingsRequest) SetPlanBillingSources(planBillingSources []*PlanBillingSource) {
+	l.PlanBillingSources = planBillingSources
+	l.require(listCustomPlanBillingsRequestFieldPlanBillingSources)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -1329,7 +1349,7 @@ type PlanVersionDiffResponseData struct {
 	From *PlanVersionResponseData `json:"from,omitempty" url:"from,omitempty"`
 	// Whether moving a subscription from the compared version to this one changes its billing.
 	HasBillingChanges bool `json:"has_billing_changes" url:"has_billing_changes"`
-	// Plan-level fields that changed: name, description, icon, and charge_type.
+	// Plan-level fields that changed: name, description, icon, charge_type, billing_strategy, is_trialable, and trial_days.
 	PlanFields []*PlanVersionFieldChangeResponseData `json:"plan_fields" url:"plan_fields"`
 	// Base prices that changed, one entry per currency and cadence.
 	Prices []*PlanVersionPriceChangeResponseData `json:"prices" url:"prices"`
@@ -1938,14 +1958,14 @@ var (
 )
 
 type PublishPlanVersionRequestBody struct {
-	// When the company gets the plan. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
+	// When the company gets the plan. On a custom-plan first publish, charging the default payment method always activates on payment. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"activation_strategy,omitempty"`
 	Address            *CustomerBillingAddress       `json:"address,omitempty" url:"address,omitempty"`
 	// The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
 	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
 	// The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
 	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
-	// How the invoice a custom-plan republish raises today is collected. send_invoice (the default) issues it for the company to pay; charge_automatically charges the default payment method straight away. Only accepted on a custom-plan republish with migration_strategy immediate and proration_behavior always_invoice.
+	// How a custom plan's invoice is collected. send_invoice issues it for the company to pay; charge_automatically charges the default payment method straight away. On a first publish, omitted charges the default payment method when the company has one and the first period is billed, and sends the invoice otherwise. On a republish, omitted means send_invoice, and it is only accepted with migration_strategy immediate and proration_behavior always_invoice.
 	CollectionMethod *BillingCollectionMethod `json:"collection_method,omitempty" url:"collection_method,omitempty"`
 	// A Stripe coupon to apply. On a custom-plan republish it discounts the amendment invoice and is only used when that invoice is raised today; it must exist in Stripe. It is attached to the subscription, so a repeating or forever coupon also discounts the renewals that follow.
 	CouponExternalID  *string               `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
@@ -5094,13 +5114,15 @@ func (l *ListBillingProductMatchCompaniesResponse) String() string {
 }
 
 var (
-	listCustomPlanBillingsParamsFieldCompanyID         = big.NewInt(1 << 0)
-	listCustomPlanBillingsParamsFieldLimit             = big.NewInt(1 << 1)
-	listCustomPlanBillingsParamsFieldOffset            = big.NewInt(1 << 2)
-	listCustomPlanBillingsParamsFieldPlanBillingSource = big.NewInt(1 << 3)
-	listCustomPlanBillingsParamsFieldPlanID            = big.NewInt(1 << 4)
-	listCustomPlanBillingsParamsFieldStatus            = big.NewInt(1 << 5)
-	listCustomPlanBillingsParamsFieldStatuses          = big.NewInt(1 << 6)
+	listCustomPlanBillingsParamsFieldCompanyID          = big.NewInt(1 << 0)
+	listCustomPlanBillingsParamsFieldLimit              = big.NewInt(1 << 1)
+	listCustomPlanBillingsParamsFieldOffset             = big.NewInt(1 << 2)
+	listCustomPlanBillingsParamsFieldPlanBillingSource  = big.NewInt(1 << 3)
+	listCustomPlanBillingsParamsFieldPlanBillingSources = big.NewInt(1 << 4)
+	listCustomPlanBillingsParamsFieldPlanID             = big.NewInt(1 << 5)
+	listCustomPlanBillingsParamsFieldPlanVersionID      = big.NewInt(1 << 6)
+	listCustomPlanBillingsParamsFieldStatus             = big.NewInt(1 << 7)
+	listCustomPlanBillingsParamsFieldStatuses           = big.NewInt(1 << 8)
 )
 
 // Input parameters
@@ -5111,10 +5133,14 @@ type ListCustomPlanBillingsParams struct {
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
 	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
-	// Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan.
+	// Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan unless plan_billing_sources is set.
 	PlanBillingSource *PlanBillingSource `json:"plan_billing_source,omitempty" url:"plan_billing_source,omitempty"`
+	// Filter by multiple billing sources. Takes precedence over plan_billing_source.
+	PlanBillingSources []PlanBillingSource `json:"plan_billing_sources,omitempty" url:"plan_billing_sources,omitempty"`
 	// Filter by plan ID
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Filter by the plan version the billing record was created for
+	PlanVersionID *string `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
 	// Filter by billing status
 	Status *CustomPlanBillingStatus `json:"status,omitempty" url:"status,omitempty"`
 	// Filter by multiple billing statuses
@@ -5155,11 +5181,25 @@ func (l *ListCustomPlanBillingsParams) GetPlanBillingSource() *PlanBillingSource
 	return l.PlanBillingSource
 }
 
+func (l *ListCustomPlanBillingsParams) GetPlanBillingSources() []PlanBillingSource {
+	if l == nil {
+		return nil
+	}
+	return l.PlanBillingSources
+}
+
 func (l *ListCustomPlanBillingsParams) GetPlanID() *string {
 	if l == nil {
 		return nil
 	}
 	return l.PlanID
+}
+
+func (l *ListCustomPlanBillingsParams) GetPlanVersionID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.PlanVersionID
 }
 
 func (l *ListCustomPlanBillingsParams) GetStatus() *CustomPlanBillingStatus {
@@ -5220,11 +5260,25 @@ func (l *ListCustomPlanBillingsParams) SetPlanBillingSource(planBillingSource *P
 	l.require(listCustomPlanBillingsParamsFieldPlanBillingSource)
 }
 
+// SetPlanBillingSources sets the PlanBillingSources field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCustomPlanBillingsParams) SetPlanBillingSources(planBillingSources []PlanBillingSource) {
+	l.PlanBillingSources = planBillingSources
+	l.require(listCustomPlanBillingsParamsFieldPlanBillingSources)
+}
+
 // SetPlanID sets the PlanID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (l *ListCustomPlanBillingsParams) SetPlanID(planID *string) {
 	l.PlanID = planID
 	l.require(listCustomPlanBillingsParamsFieldPlanID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCustomPlanBillingsParams) SetPlanVersionID(planVersionID *string) {
+	l.PlanVersionID = planVersionID
+	l.require(listCustomPlanBillingsParamsFieldPlanVersionID)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;

@@ -4337,6 +4337,49 @@ client.Billing.UpsertBillingSubscription(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.GetCompanyNativeSubscription(CompanyID) -> *schematichq.GetCompanyNativeSubscriptionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.GetCompanyNativeSubscription(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Billing.ListNativeInvoices() -> *schematichq.ListNativeInvoicesResponse</code></summary>
 <dl>
 <dd>
@@ -4624,6 +4667,49 @@ client.Billing.MarkNativeInvoicePaid(
 <dd>
 
 **settledAt:** `*time.Time` — When the payment arrived. Defaults to now, and cannot be in the future.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.DownloadNativeInvoicePdf(InvoiceID) -> string</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Billing.DownloadNativeInvoicePdf(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
     
 </dd>
 </dl>
@@ -7482,7 +7568,7 @@ client.Credits.CreateCreditSpendPolicy(
 <dl>
 <dd>
 
-**companyID:** `*string` — The company the cap applies to. Set exactly one of company_id and user_id.
+**companyID:** `*string` — The company the cap applies in. Alone, it caps the whole company. With user_id, it caps that user's spend in this company. Required with user_id when the user belongs to more than one company.
     
 </dd>
 </dl>
@@ -7506,7 +7592,7 @@ client.Credits.CreateCreditSpendPolicy(
 <dl>
 <dd>
 
-**userID:** `*string` — The user the cap applies to. Set exactly one of company_id and user_id.
+**userID:** `*string` — The user the cap applies to. The user must belong to company_id, and with no company_id, to exactly one company.
     
 </dd>
 </dl>
@@ -16266,7 +16352,13 @@ request := &schematichq.ListCustomPlanBillingsRequest{
     PlanID: schematichq.String(
         "plan_id",
     ),
+    PlanVersionID: schematichq.String(
+        "plan_version_id",
+    ),
     PlanBillingSource: schematichq.PlanBillingSourceAmendment.Ptr(),
+    PlanBillingSources: []*schematichq.PlanBillingSource{
+        schematichq.PlanBillingSourceAmendment.Ptr(),
+    },
     Status: schematichq.CustomPlanBillingStatusActive.Ptr(),
     Statuses: []*schematichq.CustomPlanBillingStatus{
         schematichq.CustomPlanBillingStatusActive.Ptr(),
@@ -16312,7 +16404,23 @@ client.Plans.ListCustomPlanBillings(
 <dl>
 <dd>
 
-**planBillingSource:** `*schematichq.PlanBillingSource` — Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan.
+**planVersionID:** `*string` — Filter by the plan version the billing record was created for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planBillingSource:** `*schematichq.PlanBillingSource` — Filter by the flow that created the billing record: custom_plan for a first publish, amendment for a republish, manage_plan for a standard plan assigned by invoice. Defaults to custom_plan unless plan_billing_sources is set.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planBillingSources:** `*schematichq.PlanBillingSource` — Filter by multiple billing sources. Takes precedence over plan_billing_source.
     
 </dd>
 </dl>
@@ -20303,7 +20411,6 @@ client.Features.ListFlags(
 
 ```go
 request := &schematichq.CreateFlagRequestBody{
-    DefaultValue: true,
     Description: "description",
     FlagType: schematichq.FlagType(
         "boolean",
@@ -20398,7 +20505,6 @@ client.Features.GetFlag(
 
 ```go
 request := &schematichq.CreateFlagRequestBody{
-    DefaultValue: true,
     Description: "description",
     FlagType: schematichq.FlagType(
         "boolean",
@@ -20673,7 +20779,7 @@ client.Features.CheckAndReserveFlag(
 <dl>
 <dd>
 
-**expiresAt:** `*time.Time` — When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+**expiresAt:** `*time.Time` — When the hold lapses if no track or inference event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
     
 </dd>
 </dl>
@@ -20689,7 +20795,7 @@ client.Features.CheckAndReserveFlag(
 <dl>
 <dd>
 
-**preflight:** `*schematichq.PreflightRequestBody` — Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise the hold is the entitlement's consumption rate times quantity, or, when quantity is omitted, times the usage stated here
+**preflight:** `*schematichq.PreflightRequestBody` — Hypothetical usage to evaluate the flag against. When credit_cost names the entitlement's credit, that cost is what gets held; otherwise, when event_quantities names the entitlement's event subtype, the hold is that event priced at the entitlement's consumption rate and quantity rates, and quantity is ignored; otherwise the hold is the entitlement's consumption rate times quantity, or, when quantity is omitted, times the usage stated here
     
 </dd>
 </dl>
@@ -20697,7 +20803,7 @@ client.Features.CheckAndReserveFlag(
 <dl>
 <dd>
 
-**quantity:** `*float64` — Units of the feature the operation will consume. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event. When it is omitted the units come from preflight.event_usage.quantity, if that event subtype is the entitlement's, else from preflight.usage, else 1
+**quantity:** `*float64` — Units of the feature the operation will consume. Sets the hold size together with the entitlement's consumption rate, and is echoed back on the reservation for the settling track event. When it is omitted the units come from preflight.event_usage.quantity, if that event subtype is the entitlement's, else from preflight.usage, else 1. Ignored when preflight.event_quantities names the entitlement's event subtype, whose quantity is used instead
     
 </dd>
 </dl>

@@ -315,7 +315,6 @@ func (c *Client) ListFlags(
 // Example:
 //
 //	request := &schematichq.CreateFlagRequestBody{
-//	    DefaultValue: true,
 //	    Description: "description",
 //	    FlagType: schematichq.FlagType(
 //	        "boolean",
@@ -369,7 +368,6 @@ func (c *Client) GetFlag(
 // Example:
 //
 //	request := &schematichq.CreateFlagRequestBody{
-//	    DefaultValue: true,
 //	    Description: "description",
 //	    FlagType: schematichq.FlagType(
 //	        "boolean",

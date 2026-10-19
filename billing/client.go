@@ -1040,6 +1040,29 @@ func (c *Client) UpsertBillingSubscription(
 
 // Example:
 //
+//	client.Billing.GetCompanyNativeSubscription(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) GetCompanyNativeSubscription(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyNativeSubscriptionResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyNativeSubscription(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListNativeInvoicesRequest{
 //	    CompanyID: schematichq.String(
 //	        "company_id",
@@ -1165,6 +1188,29 @@ func (c *Client) MarkNativeInvoicePaid(
 		ctx,
 		invoiceID,
 		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Billing.DownloadNativeInvoicePdf(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) DownloadNativeInvoicePdf(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (io.Reader, error) {
+	response, err := c.WithRawResponse.DownloadNativeInvoicePdf(
+		ctx,
+		invoiceID,
 		opts...,
 	)
 	if err != nil {

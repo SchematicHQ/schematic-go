@@ -447,7 +447,7 @@ func (e *EventBody) UnmarshalJSON(data []byte) error {
 			return nil
 		}
 	}
-	if internal.MatchesObjectKeys(data, []string{"cache_creation_input_tokens", "cached_input_tokens", "company", "cost", "currency", "event", "input_tokens", "operation", "output_tokens", "provider", "reasoning_tokens", "request_model", "requests", "response_model", "user"}, []string{"company", "input_tokens", "output_tokens", "provider", "response_model"}) {
+	if internal.MatchesObjectKeys(data, []string{"cache_creation_input_tokens", "cached_input_tokens", "company", "cost", "currency", "event", "input_tokens", "lease_id", "operation", "output_tokens", "provider", "reasoning_tokens", "request_model", "requests", "reservation_id", "response_model", "user"}, []string{"company", "input_tokens", "output_tokens", "provider", "response_model"}) {
 		valueEventBodyInference := new(EventBodyInference)
 		if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
 			e.typ = "EventBodyInference"
@@ -1078,14 +1078,16 @@ var (
 	eventBodyInferenceFieldCurrency                 = big.NewInt(1 << 4)
 	eventBodyInferenceFieldEvent                    = big.NewInt(1 << 5)
 	eventBodyInferenceFieldInputTokens              = big.NewInt(1 << 6)
-	eventBodyInferenceFieldOperation                = big.NewInt(1 << 7)
-	eventBodyInferenceFieldOutputTokens             = big.NewInt(1 << 8)
-	eventBodyInferenceFieldProvider                 = big.NewInt(1 << 9)
-	eventBodyInferenceFieldReasoningTokens          = big.NewInt(1 << 10)
-	eventBodyInferenceFieldRequestModel             = big.NewInt(1 << 11)
-	eventBodyInferenceFieldRequests                 = big.NewInt(1 << 12)
-	eventBodyInferenceFieldResponseModel            = big.NewInt(1 << 13)
-	eventBodyInferenceFieldUser                     = big.NewInt(1 << 14)
+	eventBodyInferenceFieldLeaseID                  = big.NewInt(1 << 7)
+	eventBodyInferenceFieldOperation                = big.NewInt(1 << 8)
+	eventBodyInferenceFieldOutputTokens             = big.NewInt(1 << 9)
+	eventBodyInferenceFieldProvider                 = big.NewInt(1 << 10)
+	eventBodyInferenceFieldReasoningTokens          = big.NewInt(1 << 11)
+	eventBodyInferenceFieldRequestModel             = big.NewInt(1 << 12)
+	eventBodyInferenceFieldRequests                 = big.NewInt(1 << 13)
+	eventBodyInferenceFieldReservationID            = big.NewInt(1 << 14)
+	eventBodyInferenceFieldResponseModel            = big.NewInt(1 << 15)
+	eventBodyInferenceFieldUser                     = big.NewInt(1 << 16)
 )
 
 type EventBodyInference struct {
@@ -1103,6 +1105,8 @@ type EventBodyInference struct {
 	Event *string `json:"event,omitempty" url:"event,omitempty"`
 	// Total number of input tokens for the inference request, including those served from and written to a prompt cache
 	InputTokens int64 `json:"input_tokens" url:"input_tokens"`
+	// Credit lease ID this inference event's credit burn is redeeming against
+	LeaseID *string `json:"lease_id,omitempty" url:"lease_id,omitempty"`
 	// The inference operation; defaults to 'chat'
 	Operation *string `json:"operation,omitempty" url:"operation,omitempty"`
 	// Number of output tokens for the inference request
@@ -1115,6 +1119,8 @@ type EventBodyInference struct {
 	RequestModel *string `json:"request_model,omitempty" url:"request_model,omitempty"`
 	// Number of requests represented by this event; defaults to 1
 	Requests *int64 `json:"requests,omitempty" url:"requests,omitempty"`
+	// Credit reservation ID this inference event's credit burn settles. lease_id takes precedence when both are set
+	ReservationID *string `json:"reservation_id,omitempty" url:"reservation_id,omitempty"`
 	// The model that served the inference response
 	ResponseModel string `json:"response_model" url:"response_model"`
 	// Key-value pairs to identify the user associated with the inference event
@@ -1176,6 +1182,13 @@ func (e *EventBodyInference) GetInputTokens() int64 {
 	return e.InputTokens
 }
 
+func (e *EventBodyInference) GetLeaseID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.LeaseID
+}
+
 func (e *EventBodyInference) GetOperation() *string {
 	if e == nil {
 		return nil
@@ -1216,6 +1229,13 @@ func (e *EventBodyInference) GetRequests() *int64 {
 		return nil
 	}
 	return e.Requests
+}
+
+func (e *EventBodyInference) GetReservationID() *string {
+	if e == nil {
+		return nil
+	}
+	return e.ReservationID
 }
 
 func (e *EventBodyInference) GetResponseModel() string {
@@ -1297,6 +1317,13 @@ func (e *EventBodyInference) SetInputTokens(inputTokens int64) {
 	e.require(eventBodyInferenceFieldInputTokens)
 }
 
+// SetLeaseID sets the LeaseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetLeaseID(leaseID *string) {
+	e.LeaseID = leaseID
+	e.require(eventBodyInferenceFieldLeaseID)
+}
+
 // SetOperation sets the Operation field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (e *EventBodyInference) SetOperation(operation *string) {
@@ -1337,6 +1364,13 @@ func (e *EventBodyInference) SetRequestModel(requestModel *string) {
 func (e *EventBodyInference) SetRequests(requests *int64) {
 	e.Requests = requests
 	e.require(eventBodyInferenceFieldRequests)
+}
+
+// SetReservationID sets the ReservationID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventBodyInference) SetReservationID(reservationID *string) {
+	e.ReservationID = reservationID
+	e.require(eventBodyInferenceFieldReservationID)
 }
 
 // SetResponseModel sets the ResponseModel field and marks it as non-optional;

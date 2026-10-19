@@ -947,12 +947,12 @@ var (
 
 type CreateCreditSpendPolicyRequestBody struct {
 	BillingCreditID string `json:"billing_credit_id" url:"-"`
-	// The company the cap applies to. Set exactly one of company_id and user_id.
+	// The company the cap applies in. Alone, it caps the whole company. With user_id, it caps that user's spend in this company. Required with user_id when the user belongs to more than one company.
 	CompanyID *string `json:"company_id,omitempty" url:"-"`
 	Label     *string `json:"label,omitempty" url:"-"`
 	// The largest number of credits a single draw may spend. Set either this or window_amount.
 	MaxPerDraw *float64 `json:"max_per_draw,omitempty" url:"-"`
-	// The user the cap applies to. Set exactly one of company_id and user_id.
+	// The user the cap applies to. The user must belong to company_id, and with no company_id, to exactly one company.
 	UserID *string `json:"user_id,omitempty" url:"-"`
 	// The number of credits the company or user may spend in one window. Set either this or max_per_draw.
 	WindowAmount *float64 `json:"window_amount,omitempty" url:"-"`
@@ -5381,8 +5381,9 @@ var (
 )
 
 type CreditSpendPolicyResponseData struct {
-	BillingCreditID string  `json:"billing_credit_id" url:"billing_credit_id"`
-	CompanyID       *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	BillingCreditID string `json:"billing_credit_id" url:"billing_credit_id"`
+	// The company the policy applies in
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
 	// Credits spent in the current window. Set only by the usage route, and only for a window cap.
 	Consumed  *float64  `json:"consumed,omitempty" url:"consumed,omitempty"`
 	CreatedAt time.Time `json:"created_at" url:"created_at"`
@@ -5392,9 +5393,10 @@ type CreditSpendPolicyResponseData struct {
 	Label      *string  `json:"label,omitempty" url:"label,omitempty"`
 	MaxPerDraw *float64 `json:"max_per_draw,omitempty" url:"max_per_draw,omitempty"`
 	// When the current window ends. Set only by the usage route, and only for a window cap.
-	ResetsAt     *time.Time             `json:"resets_at,omitempty" url:"resets_at,omitempty"`
-	ScopeType    CreditSpendPolicyScope `json:"scope_type" url:"scope_type"`
-	UpdatedAt    time.Time              `json:"updated_at" url:"updated_at"`
+	ResetsAt  *time.Time             `json:"resets_at,omitempty" url:"resets_at,omitempty"`
+	ScopeType CreditSpendPolicyScope `json:"scope_type" url:"scope_type"`
+	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`
+	// For a user policy, the user whose spend in the company it limits
 	UserID       *string                `json:"user_id,omitempty" url:"user_id,omitempty"`
 	WindowAmount *float64               `json:"window_amount,omitempty" url:"window_amount,omitempty"`
 	WindowCount  int64                  `json:"window_count" url:"window_count"`

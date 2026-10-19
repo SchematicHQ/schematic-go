@@ -139,6 +139,14 @@ func (c *SchematicClient) useDataStream() bool {
 	return c.datastreamClient != nil
 }
 
+// useDataStreamCache reports whether a flag check should be evaluated from the
+// datastream cache. Single and bulk flag checks both ask this, so they cannot
+// drift apart. In replicator mode the cache is read only once the replicator
+// reports it ready; until then flag checks take the API path.
+func (c *SchematicClient) useDataStreamCache() bool {
+	return c.useDataStream() && c.datastreamClient.IsCacheReady()
+}
+
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	ctx, span := c.startSpan(ctx, "Schematic.CheckFlag")
 	defer span.End()
@@ -199,7 +207,7 @@ func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx 
 		}, nil
 	}
 
-	if c.useDataStream() {
+	if c.useDataStreamCache() {
 		resp, err := c.datastreamClient.CheckFlag(ctx, evalCtx, flagKey)
 		if err != nil {
 			c.logger.Debug(ctx, fmt.Sprintf("Datastream flag check failed (%v), falling back to API", err))
@@ -243,7 +251,8 @@ func (c *SchematicClient) checkFlagWithEntitlement(ctx context.Context, evalCtx 
 //
 // When keys are provided:
 //   - In offline mode, each key resolves to its configured default.
-//   - If datastream is enabled and connected, all keys are evaluated locally
+//   - If datastream is enabled and its cache is ready (in replicator mode,
+//     once the replicator reports ready), all keys are evaluated locally
 //     in one crossing into the rules engine; any failure causes a fallback to
 //     the API for the entire batch.
 //   - Otherwise, cached values are returned only when every requested key is
@@ -291,7 +300,7 @@ func (c *SchematicClient) CheckFlags(ctx context.Context, evalCtx *schematicgo.C
 	}
 
 	// Datastream path: evaluate all keys locally if possible.
-	if c.useDataStream() && len(keys) > 0 {
+	if c.useDataStreamCache() && len(keys) > 0 {
 		if dsResults, ok := c.checkFlagsViaDataStream(ctx, evalCtx, keys); ok {
 			recordSource(ctx, tracing.SourceDataStream)
 			return dsResults

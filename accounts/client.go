@@ -171,31 +171,6 @@ func (c *Client) ListAPIKeys(
 
 // Example:
 //
-//	request := &schematichq.CreateAPIKeyRequestBody{
-//	    Name: "name",
-//	}
-//	client.Accounts.CreateAPIKey(
-//	    context.TODO(),
-//	    request,
-//	)
-func (c *Client) CreateAPIKey(
-	ctx context.Context,
-	request *schematichq.CreateAPIKeyRequestBody,
-	opts ...option.RequestOption,
-) (*schematichq.CreateAPIKeyResponse, error) {
-	response, err := c.WithRawResponse.CreateAPIKey(
-		ctx,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-// Example:
-//
 //	client.Accounts.GetAPIKey(
 //	    context.TODO(),
 //	    "api_key_id",
@@ -207,56 +182,6 @@ func (c *Client) GetAPIKey(
 	opts ...option.RequestOption,
 ) (*schematichq.GetAPIKeyResponse, error) {
 	response, err := c.WithRawResponse.GetAPIKey(
-		ctx,
-		apiKeyID,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-// Example:
-//
-//	request := &schematichq.UpdateAPIKeyRequestBody{}
-//	client.Accounts.UpdateAPIKey(
-//	    context.TODO(),
-//	    "api_key_id",
-//	    request,
-//	)
-func (c *Client) UpdateAPIKey(
-	ctx context.Context,
-	// api_key_id
-	apiKeyID string,
-	request *schematichq.UpdateAPIKeyRequestBody,
-	opts ...option.RequestOption,
-) (*schematichq.UpdateAPIKeyResponse, error) {
-	response, err := c.WithRawResponse.UpdateAPIKey(
-		ctx,
-		apiKeyID,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-// Example:
-//
-//	client.Accounts.DeleteAPIKey(
-//	    context.TODO(),
-//	    "api_key_id",
-//	)
-func (c *Client) DeleteAPIKey(
-	ctx context.Context,
-	// api_key_id
-	apiKeyID string,
-	opts ...option.RequestOption,
-) (*schematichq.DeleteAPIKeyResponse, error) {
-	response, err := c.WithRawResponse.DeleteAPIKey(
 		ctx,
 		apiKeyID,
 		opts...,
@@ -455,32 +380,6 @@ func (c *Client) ListEnvironments(
 
 // Example:
 //
-//	request := &schematichq.CreateEnvironmentRequestBody{
-//	    EnvironmentType: schematichq.EnvironmentTypeDevelopment,
-//	    Name: "name",
-//	}
-//	client.Accounts.CreateEnvironment(
-//	    context.TODO(),
-//	    request,
-//	)
-func (c *Client) CreateEnvironment(
-	ctx context.Context,
-	request *schematichq.CreateEnvironmentRequestBody,
-	opts ...option.RequestOption,
-) (*schematichq.CreateEnvironmentResponse, error) {
-	response, err := c.WithRawResponse.CreateEnvironment(
-		ctx,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-// Example:
-//
 //	client.Accounts.GetEnvironment(
 //	    context.TODO(),
 //	    "environment_id",
@@ -492,56 +391,6 @@ func (c *Client) GetEnvironment(
 	opts ...option.RequestOption,
 ) (*schematichq.GetEnvironmentResponse, error) {
 	response, err := c.WithRawResponse.GetEnvironment(
-		ctx,
-		environmentID,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-// Example:
-//
-//	request := &schematichq.UpdateEnvironmentRequestBody{}
-//	client.Accounts.UpdateEnvironment(
-//	    context.TODO(),
-//	    "environment_id",
-//	    request,
-//	)
-func (c *Client) UpdateEnvironment(
-	ctx context.Context,
-	// environment_id
-	environmentID string,
-	request *schematichq.UpdateEnvironmentRequestBody,
-	opts ...option.RequestOption,
-) (*schematichq.UpdateEnvironmentResponse, error) {
-	response, err := c.WithRawResponse.UpdateEnvironment(
-		ctx,
-		environmentID,
-		request,
-		opts...,
-	)
-	if err != nil {
-		return nil, err
-	}
-	return response.Body, nil
-}
-
-// Example:
-//
-//	client.Accounts.DeleteEnvironment(
-//	    context.TODO(),
-//	    "environment_id",
-//	)
-func (c *Client) DeleteEnvironment(
-	ctx context.Context,
-	// environment_id
-	environmentID string,
-	opts ...option.RequestOption,
-) (*schematichq.DeleteEnvironmentResponse, error) {
-	response, err := c.WithRawResponse.DeleteEnvironment(
 		ctx,
 		environmentID,
 		opts...,

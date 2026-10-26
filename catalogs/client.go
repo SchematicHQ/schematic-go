@@ -394,3 +394,45 @@ func (c *Client) RemovePlan(
 	}
 	return nil
 }
+
+// Example:
+//
+//	client.Catalogs.GetPublicCatalog(
+//	    context.TODO(),
+//	)
+func (c *Client) GetPublicCatalog(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetPublicCatalogResponse, error) {
+	response, err := c.WithRawResponse.GetPublicCatalog(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	client.Catalogs.GetPublicCatalogByID(
+//	    context.TODO(),
+//	    "catalog_id",
+//	)
+func (c *Client) GetPublicCatalogByID(
+	ctx context.Context,
+	// catalog_id
+	catalogID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetPublicCatalogByIDResponse, error) {
+	response, err := c.WithRawResponse.GetPublicCatalogByID(
+		ctx,
+		catalogID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}

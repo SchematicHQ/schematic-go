@@ -992,19 +992,22 @@ var (
 	planVersionMigrationPreviewCompanyResponseDataFieldHasBillingChanges      = big.NewInt(1 << 1)
 	planVersionMigrationPreviewCompanyResponseDataFieldHasCustomPricing       = big.NewInt(1 << 2)
 	planVersionMigrationPreviewCompanyResponseDataFieldNote                   = big.NewInt(1 << 3)
-	planVersionMigrationPreviewCompanyResponseDataFieldPlanVersionIDFrom      = big.NewInt(1 << 4)
-	planVersionMigrationPreviewCompanyResponseDataFieldWillUpdateSubscription = big.NewInt(1 << 5)
-	planVersionMigrationPreviewCompanyResponseDataFieldWouldFail              = big.NewInt(1 << 6)
+	planVersionMigrationPreviewCompanyResponseDataFieldNotes                  = big.NewInt(1 << 4)
+	planVersionMigrationPreviewCompanyResponseDataFieldPlanVersionIDFrom      = big.NewInt(1 << 5)
+	planVersionMigrationPreviewCompanyResponseDataFieldWillUpdateSubscription = big.NewInt(1 << 6)
+	planVersionMigrationPreviewCompanyResponseDataFieldWouldFail              = big.NewInt(1 << 7)
 )
 
 type PlanVersionMigrationPreviewCompanyResponseData struct {
-	CompanyID              string  `json:"company_id" url:"company_id"`
-	HasBillingChanges      bool    `json:"has_billing_changes" url:"has_billing_changes"`
-	HasCustomPricing       bool    `json:"has_custom_pricing" url:"has_custom_pricing"`
-	Note                   *string `json:"note,omitempty" url:"note,omitempty"`
-	PlanVersionIDFrom      *string `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
-	WillUpdateSubscription bool    `json:"will_update_subscription" url:"will_update_subscription"`
-	WouldFail              bool    `json:"would_fail" url:"would_fail"`
+	CompanyID         string `json:"company_id" url:"company_id"`
+	HasBillingChanges bool   `json:"has_billing_changes" url:"has_billing_changes"`
+	HasCustomPricing  bool   `json:"has_custom_pricing" url:"has_custom_pricing"`
+	// The message of the first blocking note, or of the first note when none is blocking. Kept for clients that read a single note; prefer notes.
+	Note                   *string                                        `json:"note,omitempty" url:"note,omitempty"`
+	Notes                  []*PlanVersionMigrationPreviewNoteResponseData `json:"notes" url:"notes"`
+	PlanVersionIDFrom      *string                                        `json:"plan_version_id_from,omitempty" url:"plan_version_id_from,omitempty"`
+	WillUpdateSubscription bool                                           `json:"will_update_subscription" url:"will_update_subscription"`
+	WouldFail              bool                                           `json:"would_fail" url:"would_fail"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1039,6 +1042,13 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) GetNote() *string {
 		return nil
 	}
 	return p.Note
+}
+
+func (p *PlanVersionMigrationPreviewCompanyResponseData) GetNotes() []*PlanVersionMigrationPreviewNoteResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Notes
 }
 
 func (p *PlanVersionMigrationPreviewCompanyResponseData) GetPlanVersionIDFrom() *string {
@@ -1106,6 +1116,13 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) SetNote(note *string) {
 	p.require(planVersionMigrationPreviewCompanyResponseDataFieldNote)
 }
 
+// SetNotes sets the Notes field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewCompanyResponseData) SetNotes(notes []*PlanVersionMigrationPreviewNoteResponseData) {
+	p.Notes = notes
+	p.require(planVersionMigrationPreviewCompanyResponseDataFieldNotes)
+}
+
 // SetPlanVersionIDFrom sets the PlanVersionIDFrom field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanVersionMigrationPreviewCompanyResponseData) SetPlanVersionIDFrom(planVersionIDFrom *string) {
@@ -1155,6 +1172,126 @@ func (p *PlanVersionMigrationPreviewCompanyResponseData) MarshalJSON() ([]byte, 
 }
 
 func (p *PlanVersionMigrationPreviewCompanyResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	planVersionMigrationPreviewNoteResponseDataFieldBlocking = big.NewInt(1 << 0)
+	planVersionMigrationPreviewNoteResponseDataFieldCode     = big.NewInt(1 << 1)
+	planVersionMigrationPreviewNoteResponseDataFieldMessage  = big.NewInt(1 << 2)
+)
+
+type PlanVersionMigrationPreviewNoteResponseData struct {
+	// Whether this note predicts that the company's migration would fail.
+	Blocking bool `json:"blocking" url:"blocking"`
+	// The error code the company's migration would fail or be skipped with. Null for a note that is only informational.
+	Code    *MigrationErrorCode `json:"code,omitempty" url:"code,omitempty"`
+	Message string              `json:"message" url:"message"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) GetBlocking() bool {
+	if p == nil {
+		return false
+	}
+	return p.Blocking
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) GetCode() *MigrationErrorCode {
+	if p == nil {
+		return nil
+	}
+	return p.Code
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) GetMessage() string {
+	if p == nil {
+		return ""
+	}
+	return p.Message
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetBlocking sets the Blocking field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewNoteResponseData) SetBlocking(blocking bool) {
+	p.Blocking = blocking
+	p.require(planVersionMigrationPreviewNoteResponseDataFieldBlocking)
+}
+
+// SetCode sets the Code field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewNoteResponseData) SetCode(code *MigrationErrorCode) {
+	p.Code = code
+	p.require(planVersionMigrationPreviewNoteResponseDataFieldCode)
+}
+
+// SetMessage sets the Message field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionMigrationPreviewNoteResponseData) SetMessage(message string) {
+	p.Message = message
+	p.require(planVersionMigrationPreviewNoteResponseDataFieldMessage)
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanVersionMigrationPreviewNoteResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanVersionMigrationPreviewNoteResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) MarshalJSON() ([]byte, error) {
+	type embed PlanVersionMigrationPreviewNoteResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanVersionMigrationPreviewNoteResponseData) String() string {
 	if p == nil {
 		return "<nil>"
 	}

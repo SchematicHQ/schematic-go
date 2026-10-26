@@ -125,6 +125,227 @@ func (l *ListCatalogsRequest) SetOffset(offset *int64) {
 }
 
 var (
+	catalogBundleCurrencyPriceResponseDataFieldCurrency  = big.NewInt(1 << 0)
+	catalogBundleCurrencyPriceResponseDataFieldPrice     = big.NewInt(1 << 1)
+	catalogBundleCurrencyPriceResponseDataFieldUnitPrice = big.NewInt(1 << 2)
+)
+
+type CatalogBundleCurrencyPriceResponseData struct {
+	Currency  Currency                  `json:"currency" url:"currency"`
+	Price     *CatalogPriceResponseData `json:"price,omitempty" url:"price,omitempty"`
+	UnitPrice *CatalogPriceResponseData `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) GetCurrency() Currency {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) GetPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Price
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) GetUnitPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.UnitPrice
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogBundleCurrencyPriceResponseData) SetCurrency(currency Currency) {
+	c.Currency = currency
+	c.require(catalogBundleCurrencyPriceResponseDataFieldCurrency)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogBundleCurrencyPriceResponseData) SetPrice(price *CatalogPriceResponseData) {
+	c.Price = price
+	c.require(catalogBundleCurrencyPriceResponseDataFieldPrice)
+}
+
+// SetUnitPrice sets the UnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogBundleCurrencyPriceResponseData) SetUnitPrice(unitPrice *CatalogPriceResponseData) {
+	c.UnitPrice = unitPrice
+	c.require(catalogBundleCurrencyPriceResponseDataFieldUnitPrice)
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogBundleCurrencyPriceResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogBundleCurrencyPriceResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogBundleCurrencyPriceResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogBundleCurrencyPriceResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogCapabilitiesResponseDataFieldBadgeVisibility = big.NewInt(1 << 0)
+	catalogCapabilitiesResponseDataFieldCheckout        = big.NewInt(1 << 1)
+)
+
+type CatalogCapabilitiesResponseData struct {
+	// Whether the consumer may hide the 'powered by Schematic' badge (the account's badge-hideable entitlement); false means the badge must be shown.
+	BadgeVisibility bool `json:"badge_visibility" url:"badge_visibility"`
+	Checkout        bool `json:"checkout" url:"checkout"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogCapabilitiesResponseData) GetBadgeVisibility() bool {
+	if c == nil {
+		return false
+	}
+	return c.BadgeVisibility
+}
+
+func (c *CatalogCapabilitiesResponseData) GetCheckout() bool {
+	if c == nil {
+		return false
+	}
+	return c.Checkout
+}
+
+func (c *CatalogCapabilitiesResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogCapabilitiesResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBadgeVisibility sets the BadgeVisibility field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCapabilitiesResponseData) SetBadgeVisibility(badgeVisibility bool) {
+	c.BadgeVisibility = badgeVisibility
+	c.require(catalogCapabilitiesResponseDataFieldBadgeVisibility)
+}
+
+// SetCheckout sets the Checkout field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCapabilitiesResponseData) SetCheckout(checkout bool) {
+	c.Checkout = checkout
+	c.require(catalogCapabilitiesResponseDataFieldCheckout)
+}
+
+func (c *CatalogCapabilitiesResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogCapabilitiesResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogCapabilitiesResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogCapabilitiesResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogCapabilitiesResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogCapabilitiesResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	catalogConfigOrderedBundleFieldBundleID = big.NewInt(1 << 0)
 )
 
@@ -1273,6 +1494,843 @@ func (c *CatalogCreditBundleIDsResponseData) String() string {
 }
 
 var (
+	catalogCreditBundleResponseDataFieldBundleType         = big.NewInt(1 << 0)
+	catalogCreditBundleResponseDataFieldCompatiblePlanIDs  = big.NewInt(1 << 1)
+	catalogCreditBundleResponseDataFieldCreditIcon         = big.NewInt(1 << 2)
+	catalogCreditBundleResponseDataFieldCreditID           = big.NewInt(1 << 3)
+	catalogCreditBundleResponseDataFieldCreditName         = big.NewInt(1 << 4)
+	catalogCreditBundleResponseDataFieldCreditPluralName   = big.NewInt(1 << 5)
+	catalogCreditBundleResponseDataFieldCreditSingularName = big.NewInt(1 << 6)
+	catalogCreditBundleResponseDataFieldCurrencyPrices     = big.NewInt(1 << 7)
+	catalogCreditBundleResponseDataFieldExpiryType         = big.NewInt(1 << 8)
+	catalogCreditBundleResponseDataFieldExpiryUnit         = big.NewInt(1 << 9)
+	catalogCreditBundleResponseDataFieldExpiryUnitCount    = big.NewInt(1 << 10)
+	catalogCreditBundleResponseDataFieldID                 = big.NewInt(1 << 11)
+	catalogCreditBundleResponseDataFieldName               = big.NewInt(1 << 12)
+	catalogCreditBundleResponseDataFieldPrice              = big.NewInt(1 << 13)
+	catalogCreditBundleResponseDataFieldQuantity           = big.NewInt(1 << 14)
+	catalogCreditBundleResponseDataFieldUnitPrice          = big.NewInt(1 << 15)
+)
+
+type CatalogCreditBundleResponseData struct {
+	BundleType BillingCreditBundleType `json:"bundle_type" url:"bundle_type"`
+	// The plans whose companies may purchase this bundle. Null means compatible with every plan.
+	CompatiblePlanIDs  []string                                  `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
+	CreditIcon         *string                                   `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID           string                                    `json:"credit_id" url:"credit_id"`
+	CreditName         string                                    `json:"credit_name" url:"credit_name"`
+	CreditPluralName   *string                                   `json:"credit_plural_name,omitempty" url:"credit_plural_name,omitempty"`
+	CreditSingularName *string                                   `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
+	CurrencyPrices     []*CatalogBundleCurrencyPriceResponseData `json:"currency_prices" url:"currency_prices"`
+	ExpiryType         BillingCreditExpiryType                   `json:"expiry_type" url:"expiry_type"`
+	ExpiryUnit         BillingCreditExpiryUnit                   `json:"expiry_unit" url:"expiry_unit"`
+	ExpiryUnitCount    *int64                                    `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	ID                 string                                    `json:"id" url:"id"`
+	Name               string                                    `json:"name" url:"name"`
+	Price              *CatalogPriceResponseData                 `json:"price,omitempty" url:"price,omitempty"`
+	// Credits granted per purchase; null means the buyer chooses a custom quantity priced via unit_price.
+	Quantity  *int64                    `json:"quantity,omitempty" url:"quantity,omitempty"`
+	UnitPrice *CatalogPriceResponseData `json:"unit_price,omitempty" url:"unit_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogCreditBundleResponseData) GetCompatiblePlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CompatiblePlanIDs
+}
+
+func (c *CatalogCreditBundleResponseData) GetCreditIcon() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditIcon
+}
+
+func (c *CatalogCreditBundleResponseData) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CatalogCreditBundleResponseData) GetCreditName() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditName
+}
+
+func (c *CatalogCreditBundleResponseData) GetCreditPluralName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditPluralName
+}
+
+func (c *CatalogCreditBundleResponseData) GetCreditSingularName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditSingularName
+}
+
+func (c *CatalogCreditBundleResponseData) GetCurrencyPrices() []*CatalogBundleCurrencyPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CurrencyPrices
+}
+
+func (c *CatalogCreditBundleResponseData) GetExpiryType() BillingCreditExpiryType {
+	if c == nil {
+		return ""
+	}
+	return c.ExpiryType
+}
+
+func (c *CatalogCreditBundleResponseData) GetExpiryUnit() BillingCreditExpiryUnit {
+	if c == nil {
+		return ""
+	}
+	return c.ExpiryUnit
+}
+
+func (c *CatalogCreditBundleResponseData) GetExpiryUnitCount() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.ExpiryUnitCount
+}
+
+func (c *CatalogCreditBundleResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CatalogCreditBundleResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CatalogCreditBundleResponseData) GetPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Price
+}
+
+func (c *CatalogCreditBundleResponseData) GetQuantity() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.Quantity
+}
+
+func (c *CatalogCreditBundleResponseData) GetUnitPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.UnitPrice
+}
+
+func (c *CatalogCreditBundleResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogCreditBundleResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBundleType sets the BundleType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetBundleType(bundleType BillingCreditBundleType) {
+	c.BundleType = bundleType
+	c.require(catalogCreditBundleResponseDataFieldBundleType)
+}
+
+// SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
+	c.CompatiblePlanIDs = compatiblePlanIDs
+	c.require(catalogCreditBundleResponseDataFieldCompatiblePlanIDs)
+}
+
+// SetCreditIcon sets the CreditIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCreditIcon(creditIcon *string) {
+	c.CreditIcon = creditIcon
+	c.require(catalogCreditBundleResponseDataFieldCreditIcon)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(catalogCreditBundleResponseDataFieldCreditID)
+}
+
+// SetCreditName sets the CreditName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCreditName(creditName string) {
+	c.CreditName = creditName
+	c.require(catalogCreditBundleResponseDataFieldCreditName)
+}
+
+// SetCreditPluralName sets the CreditPluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCreditPluralName(creditPluralName *string) {
+	c.CreditPluralName = creditPluralName
+	c.require(catalogCreditBundleResponseDataFieldCreditPluralName)
+}
+
+// SetCreditSingularName sets the CreditSingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCreditSingularName(creditSingularName *string) {
+	c.CreditSingularName = creditSingularName
+	c.require(catalogCreditBundleResponseDataFieldCreditSingularName)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetCurrencyPrices(currencyPrices []*CatalogBundleCurrencyPriceResponseData) {
+	c.CurrencyPrices = currencyPrices
+	c.require(catalogCreditBundleResponseDataFieldCurrencyPrices)
+}
+
+// SetExpiryType sets the ExpiryType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetExpiryType(expiryType BillingCreditExpiryType) {
+	c.ExpiryType = expiryType
+	c.require(catalogCreditBundleResponseDataFieldExpiryType)
+}
+
+// SetExpiryUnit sets the ExpiryUnit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetExpiryUnit(expiryUnit BillingCreditExpiryUnit) {
+	c.ExpiryUnit = expiryUnit
+	c.require(catalogCreditBundleResponseDataFieldExpiryUnit)
+}
+
+// SetExpiryUnitCount sets the ExpiryUnitCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetExpiryUnitCount(expiryUnitCount *int64) {
+	c.ExpiryUnitCount = expiryUnitCount
+	c.require(catalogCreditBundleResponseDataFieldExpiryUnitCount)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetID(id string) {
+	c.ID = id
+	c.require(catalogCreditBundleResponseDataFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetName(name string) {
+	c.Name = name
+	c.require(catalogCreditBundleResponseDataFieldName)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetPrice(price *CatalogPriceResponseData) {
+	c.Price = price
+	c.require(catalogCreditBundleResponseDataFieldPrice)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetQuantity(quantity *int64) {
+	c.Quantity = quantity
+	c.require(catalogCreditBundleResponseDataFieldQuantity)
+}
+
+// SetUnitPrice sets the UnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditBundleResponseData) SetUnitPrice(unitPrice *CatalogPriceResponseData) {
+	c.UnitPrice = unitPrice
+	c.require(catalogCreditBundleResponseDataFieldUnitPrice)
+}
+
+func (c *CatalogCreditBundleResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogCreditBundleResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogCreditBundleResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogCreditBundleResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogCreditBundleResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogCreditBundleResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogCreditGrantResponseDataFieldCompanyCreditAmount = big.NewInt(1 << 0)
+	catalogCreditGrantResponseDataFieldCreditAmount        = big.NewInt(1 << 1)
+	catalogCreditGrantResponseDataFieldCreditIcon          = big.NewInt(1 << 2)
+	catalogCreditGrantResponseDataFieldCreditID            = big.NewInt(1 << 3)
+	catalogCreditGrantResponseDataFieldCreditName          = big.NewInt(1 << 4)
+	catalogCreditGrantResponseDataFieldCreditPluralName    = big.NewInt(1 << 5)
+	catalogCreditGrantResponseDataFieldCreditSingularName  = big.NewInt(1 << 6)
+	catalogCreditGrantResponseDataFieldID                  = big.NewInt(1 << 7)
+	catalogCreditGrantResponseDataFieldLicenseID           = big.NewInt(1 << 8)
+	catalogCreditGrantResponseDataFieldResetCadence        = big.NewInt(1 << 9)
+	catalogCreditGrantResponseDataFieldScaling             = big.NewInt(1 << 10)
+)
+
+type CatalogCreditGrantResponseData struct {
+	// Flat credit amount granted to the company regardless of scaling.
+	CompanyCreditAmount int64 `json:"company_credit_amount" url:"company_credit_amount"`
+	// Credits granted; for per_license scaling this is the amount per license unit.
+	CreditAmount       int64                               `json:"credit_amount" url:"credit_amount"`
+	CreditIcon         *string                             `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID           string                              `json:"credit_id" url:"credit_id"`
+	CreditName         string                              `json:"credit_name" url:"credit_name"`
+	CreditPluralName   *string                             `json:"credit_plural_name,omitempty" url:"credit_plural_name,omitempty"`
+	CreditSingularName *string                             `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
+	ID                 string                              `json:"id" url:"id"`
+	LicenseID          *string                             `json:"license_id,omitempty" url:"license_id,omitempty"`
+	ResetCadence       *BillingPlanCreditGrantResetCadence `json:"reset_cadence,omitempty" url:"reset_cadence,omitempty"`
+	Scaling            PlanCreditGrantScaling              `json:"scaling" url:"scaling"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogCreditGrantResponseData) GetCompanyCreditAmount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.CompanyCreditAmount
+}
+
+func (c *CatalogCreditGrantResponseData) GetCreditAmount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.CreditAmount
+}
+
+func (c *CatalogCreditGrantResponseData) GetCreditIcon() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditIcon
+}
+
+func (c *CatalogCreditGrantResponseData) GetCreditID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditID
+}
+
+func (c *CatalogCreditGrantResponseData) GetCreditName() string {
+	if c == nil {
+		return ""
+	}
+	return c.CreditName
+}
+
+func (c *CatalogCreditGrantResponseData) GetCreditPluralName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditPluralName
+}
+
+func (c *CatalogCreditGrantResponseData) GetCreditSingularName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditSingularName
+}
+
+func (c *CatalogCreditGrantResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CatalogCreditGrantResponseData) GetLicenseID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LicenseID
+}
+
+func (c *CatalogCreditGrantResponseData) GetResetCadence() *BillingPlanCreditGrantResetCadence {
+	if c == nil {
+		return nil
+	}
+	return c.ResetCadence
+}
+
+func (c *CatalogCreditGrantResponseData) GetScaling() PlanCreditGrantScaling {
+	if c == nil {
+		return ""
+	}
+	return c.Scaling
+}
+
+func (c *CatalogCreditGrantResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogCreditGrantResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyCreditAmount sets the CompanyCreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCompanyCreditAmount(companyCreditAmount int64) {
+	c.CompanyCreditAmount = companyCreditAmount
+	c.require(catalogCreditGrantResponseDataFieldCompanyCreditAmount)
+}
+
+// SetCreditAmount sets the CreditAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCreditAmount(creditAmount int64) {
+	c.CreditAmount = creditAmount
+	c.require(catalogCreditGrantResponseDataFieldCreditAmount)
+}
+
+// SetCreditIcon sets the CreditIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCreditIcon(creditIcon *string) {
+	c.CreditIcon = creditIcon
+	c.require(catalogCreditGrantResponseDataFieldCreditIcon)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCreditID(creditID string) {
+	c.CreditID = creditID
+	c.require(catalogCreditGrantResponseDataFieldCreditID)
+}
+
+// SetCreditName sets the CreditName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCreditName(creditName string) {
+	c.CreditName = creditName
+	c.require(catalogCreditGrantResponseDataFieldCreditName)
+}
+
+// SetCreditPluralName sets the CreditPluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCreditPluralName(creditPluralName *string) {
+	c.CreditPluralName = creditPluralName
+	c.require(catalogCreditGrantResponseDataFieldCreditPluralName)
+}
+
+// SetCreditSingularName sets the CreditSingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetCreditSingularName(creditSingularName *string) {
+	c.CreditSingularName = creditSingularName
+	c.require(catalogCreditGrantResponseDataFieldCreditSingularName)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetID(id string) {
+	c.ID = id
+	c.require(catalogCreditGrantResponseDataFieldID)
+}
+
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetLicenseID(licenseID *string) {
+	c.LicenseID = licenseID
+	c.require(catalogCreditGrantResponseDataFieldLicenseID)
+}
+
+// SetResetCadence sets the ResetCadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetResetCadence(resetCadence *BillingPlanCreditGrantResetCadence) {
+	c.ResetCadence = resetCadence
+	c.require(catalogCreditGrantResponseDataFieldResetCadence)
+}
+
+// SetScaling sets the Scaling field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetScaling(scaling PlanCreditGrantScaling) {
+	c.Scaling = scaling
+	c.require(catalogCreditGrantResponseDataFieldScaling)
+}
+
+func (c *CatalogCreditGrantResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogCreditGrantResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogCreditGrantResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogCreditGrantResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogCreditGrantResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogCreditGrantResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogCurrencyPricesResponseDataFieldCurrency       = big.NewInt(1 << 0)
+	catalogCurrencyPricesResponseDataFieldMonthlyPrice   = big.NewInt(1 << 1)
+	catalogCurrencyPricesResponseDataFieldOneTimePrice   = big.NewInt(1 << 2)
+	catalogCurrencyPricesResponseDataFieldQuarterlyPrice = big.NewInt(1 << 3)
+	catalogCurrencyPricesResponseDataFieldYearlyPrice    = big.NewInt(1 << 4)
+)
+
+type CatalogCurrencyPricesResponseData struct {
+	Currency       Currency                  `json:"currency" url:"currency"`
+	MonthlyPrice   *CatalogPriceResponseData `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	OneTimePrice   *CatalogPriceResponseData `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	QuarterlyPrice *CatalogPriceResponseData `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	YearlyPrice    *CatalogPriceResponseData `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogCurrencyPricesResponseData) GetCurrency() Currency {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CatalogCurrencyPricesResponseData) GetMonthlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MonthlyPrice
+}
+
+func (c *CatalogCurrencyPricesResponseData) GetOneTimePrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.OneTimePrice
+}
+
+func (c *CatalogCurrencyPricesResponseData) GetQuarterlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyPrice
+}
+
+func (c *CatalogCurrencyPricesResponseData) GetYearlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.YearlyPrice
+}
+
+func (c *CatalogCurrencyPricesResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogCurrencyPricesResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCurrencyPricesResponseData) SetCurrency(currency Currency) {
+	c.Currency = currency
+	c.require(catalogCurrencyPricesResponseDataFieldCurrency)
+}
+
+// SetMonthlyPrice sets the MonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCurrencyPricesResponseData) SetMonthlyPrice(monthlyPrice *CatalogPriceResponseData) {
+	c.MonthlyPrice = monthlyPrice
+	c.require(catalogCurrencyPricesResponseDataFieldMonthlyPrice)
+}
+
+// SetOneTimePrice sets the OneTimePrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCurrencyPricesResponseData) SetOneTimePrice(oneTimePrice *CatalogPriceResponseData) {
+	c.OneTimePrice = oneTimePrice
+	c.require(catalogCurrencyPricesResponseDataFieldOneTimePrice)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCurrencyPricesResponseData) SetQuarterlyPrice(quarterlyPrice *CatalogPriceResponseData) {
+	c.QuarterlyPrice = quarterlyPrice
+	c.require(catalogCurrencyPricesResponseDataFieldQuarterlyPrice)
+}
+
+// SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCurrencyPricesResponseData) SetYearlyPrice(yearlyPrice *CatalogPriceResponseData) {
+	c.YearlyPrice = yearlyPrice
+	c.require(catalogCurrencyPricesResponseDataFieldYearlyPrice)
+}
+
+func (c *CatalogCurrencyPricesResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogCurrencyPricesResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogCurrencyPricesResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogCurrencyPricesResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogCurrencyPricesResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogCurrencyPricesResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogCustomPlanCtaResponseDataFieldCtaText   = big.NewInt(1 << 0)
+	catalogCustomPlanCtaResponseDataFieldCtaURL    = big.NewInt(1 << 1)
+	catalogCustomPlanCtaResponseDataFieldPriceText = big.NewInt(1 << 2)
+)
+
+type CatalogCustomPlanCtaResponseData struct {
+	CtaText   *string `json:"cta_text,omitempty" url:"cta_text,omitempty"`
+	CtaURL    *string `json:"cta_url,omitempty" url:"cta_url,omitempty"`
+	PriceText *string `json:"price_text,omitempty" url:"price_text,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogCustomPlanCtaResponseData) GetCtaText() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CtaText
+}
+
+func (c *CatalogCustomPlanCtaResponseData) GetCtaURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CtaURL
+}
+
+func (c *CatalogCustomPlanCtaResponseData) GetPriceText() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PriceText
+}
+
+func (c *CatalogCustomPlanCtaResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogCustomPlanCtaResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCtaText sets the CtaText field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCustomPlanCtaResponseData) SetCtaText(ctaText *string) {
+	c.CtaText = ctaText
+	c.require(catalogCustomPlanCtaResponseDataFieldCtaText)
+}
+
+// SetCtaURL sets the CtaURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCustomPlanCtaResponseData) SetCtaURL(ctaURL *string) {
+	c.CtaURL = ctaURL
+	c.require(catalogCustomPlanCtaResponseDataFieldCtaURL)
+}
+
+// SetPriceText sets the PriceText field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCustomPlanCtaResponseData) SetPriceText(priceText *string) {
+	c.PriceText = priceText
+	c.require(catalogCustomPlanCtaResponseDataFieldPriceText)
+}
+
+func (c *CatalogCustomPlanCtaResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogCustomPlanCtaResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogCustomPlanCtaResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogCustomPlanCtaResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogCustomPlanCtaResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogCustomPlanCtaResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	catalogDerivedFeatureResponseDataFieldIcon = big.NewInt(1 << 0)
 	catalogDerivedFeatureResponseDataFieldID   = big.NewInt(1 << 1)
 	catalogDerivedFeatureResponseDataFieldName = big.NewInt(1 << 2)
@@ -1477,6 +2535,527 @@ func (c *CatalogDerivedFeaturesResponseData) String() string {
 }
 
 var (
+	catalogPlanEntitlementResponseDataFieldConsumptionRate        = big.NewInt(1 << 0)
+	catalogPlanEntitlementResponseDataFieldCreditEquivalentLimit  = big.NewInt(1 << 1)
+	catalogPlanEntitlementResponseDataFieldCreditIcon             = big.NewInt(1 << 2)
+	catalogPlanEntitlementResponseDataFieldCreditID               = big.NewInt(1 << 3)
+	catalogPlanEntitlementResponseDataFieldCreditName             = big.NewInt(1 << 4)
+	catalogPlanEntitlementResponseDataFieldCreditPluralName       = big.NewInt(1 << 5)
+	catalogPlanEntitlementResponseDataFieldCreditSingularName     = big.NewInt(1 << 6)
+	catalogPlanEntitlementResponseDataFieldCurrencyPrices         = big.NewInt(1 << 7)
+	catalogPlanEntitlementResponseDataFieldFeatureDescription     = big.NewInt(1 << 8)
+	catalogPlanEntitlementResponseDataFieldFeatureIcon            = big.NewInt(1 << 9)
+	catalogPlanEntitlementResponseDataFieldFeatureID              = big.NewInt(1 << 10)
+	catalogPlanEntitlementResponseDataFieldFeatureName            = big.NewInt(1 << 11)
+	catalogPlanEntitlementResponseDataFieldFeaturePluralName      = big.NewInt(1 << 12)
+	catalogPlanEntitlementResponseDataFieldFeatureSingularName    = big.NewInt(1 << 13)
+	catalogPlanEntitlementResponseDataFieldFeatureType            = big.NewInt(1 << 14)
+	catalogPlanEntitlementResponseDataFieldID                     = big.NewInt(1 << 15)
+	catalogPlanEntitlementResponseDataFieldLicenseID              = big.NewInt(1 << 16)
+	catalogPlanEntitlementResponseDataFieldMeteredMonthlyPrice    = big.NewInt(1 << 17)
+	catalogPlanEntitlementResponseDataFieldMeteredQuarterlyPrice  = big.NewInt(1 << 18)
+	catalogPlanEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 19)
+	catalogPlanEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 20)
+	catalogPlanEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 21)
+	catalogPlanEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 22)
+	catalogPlanEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 23)
+	catalogPlanEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 24)
+	catalogPlanEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 25)
+	catalogPlanEntitlementResponseDataFieldValueType              = big.NewInt(1 << 26)
+	catalogPlanEntitlementResponseDataFieldWarningThreshold       = big.NewInt(1 << 27)
+)
+
+type CatalogPlanEntitlementResponseData struct {
+	// Credits consumed per unit of usage, for credit-burndown entitlements.
+	ConsumptionRate *float64 `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	// How many units of usage the plan's fixed included credit grants cover (⌊granted credits ÷ consumption rate⌋). Null when there is no fixed grant or the grant scales per license.
+	CreditEquivalentLimit  *int64                               `json:"credit_equivalent_limit,omitempty" url:"credit_equivalent_limit,omitempty"`
+	CreditIcon             *string                              `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID               *string                              `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	CreditName             *string                              `json:"credit_name,omitempty" url:"credit_name,omitempty"`
+	CreditPluralName       *string                              `json:"credit_plural_name,omitempty" url:"credit_plural_name,omitempty"`
+	CreditSingularName     *string                              `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
+	CurrencyPrices         []*CatalogCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
+	FeatureDescription     string                               `json:"feature_description" url:"feature_description"`
+	FeatureIcon            string                               `json:"feature_icon" url:"feature_icon"`
+	FeatureID              string                               `json:"feature_id" url:"feature_id"`
+	FeatureName            string                               `json:"feature_name" url:"feature_name"`
+	FeaturePluralName      *string                              `json:"feature_plural_name,omitempty" url:"feature_plural_name,omitempty"`
+	FeatureSingularName    *string                              `json:"feature_singular_name,omitempty" url:"feature_singular_name,omitempty"`
+	FeatureType            FeatureType                          `json:"feature_type" url:"feature_type"`
+	ID                     string                               `json:"id" url:"id"`
+	LicenseID              *string                              `json:"license_id,omitempty" url:"license_id,omitempty"`
+	MeteredMonthlyPrice    *CatalogPriceResponseData            `json:"metered_monthly_price,omitempty" url:"metered_monthly_price,omitempty"`
+	MeteredQuarterlyPrice  *CatalogPriceResponseData            `json:"metered_quarterly_price,omitempty" url:"metered_quarterly_price,omitempty"`
+	MeteredYearlyPrice     *CatalogPriceResponseData            `json:"metered_yearly_price,omitempty" url:"metered_yearly_price,omitempty"`
+	MetricPeriod           *MetricPeriod                        `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset              `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	PriceBehavior          *EntitlementPriceBehavior            `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	SoftLimit              *int64                               `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	ValueBool              *bool                                `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueNumeric           *int64                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueType              EntitlementValueType                 `json:"value_type" url:"value_type"`
+	// The default warning-tier value, when configured.
+	WarningThreshold *int64 `json:"warning_threshold,omitempty" url:"warning_threshold,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.ConsumptionRate
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCreditEquivalentLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditEquivalentLimit
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCreditIcon() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditIcon
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditID
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCreditName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditName
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCreditPluralName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditPluralName
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCreditSingularName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditSingularName
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetCurrencyPrices() []*CatalogCurrencyPricesResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CurrencyPrices
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeatureDescription() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureDescription
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeatureIcon() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureIcon
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeatureID() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureID
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeatureName() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureName
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeaturePluralName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeaturePluralName
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeatureSingularName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureSingularName
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetFeatureType() FeatureType {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureType
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetLicenseID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LicenseID
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetMeteredMonthlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MeteredMonthlyPrice
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetMeteredQuarterlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MeteredQuarterlyPrice
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetMeteredYearlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MeteredYearlyPrice
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetMetricPeriod() *MetricPeriod {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetMetricPeriodMonthReset() *MetricPeriodMonthReset {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetPriceBehavior() *EntitlementPriceBehavior {
+	if c == nil {
+		return nil
+	}
+	return c.PriceBehavior
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetSoftLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.SoftLimit
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetValueBool() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ValueBool
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetValueNumeric() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.ValueNumeric
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetValueType() EntitlementValueType {
+	if c == nil {
+		return ""
+	}
+	return c.ValueType
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetWarningThreshold() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.WarningThreshold
+}
+
+func (c *CatalogPlanEntitlementResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogPlanEntitlementResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetConsumptionRate(consumptionRate *float64) {
+	c.ConsumptionRate = consumptionRate
+	c.require(catalogPlanEntitlementResponseDataFieldConsumptionRate)
+}
+
+// SetCreditEquivalentLimit sets the CreditEquivalentLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCreditEquivalentLimit(creditEquivalentLimit *int64) {
+	c.CreditEquivalentLimit = creditEquivalentLimit
+	c.require(catalogPlanEntitlementResponseDataFieldCreditEquivalentLimit)
+}
+
+// SetCreditIcon sets the CreditIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCreditIcon(creditIcon *string) {
+	c.CreditIcon = creditIcon
+	c.require(catalogPlanEntitlementResponseDataFieldCreditIcon)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCreditID(creditID *string) {
+	c.CreditID = creditID
+	c.require(catalogPlanEntitlementResponseDataFieldCreditID)
+}
+
+// SetCreditName sets the CreditName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCreditName(creditName *string) {
+	c.CreditName = creditName
+	c.require(catalogPlanEntitlementResponseDataFieldCreditName)
+}
+
+// SetCreditPluralName sets the CreditPluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCreditPluralName(creditPluralName *string) {
+	c.CreditPluralName = creditPluralName
+	c.require(catalogPlanEntitlementResponseDataFieldCreditPluralName)
+}
+
+// SetCreditSingularName sets the CreditSingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCreditSingularName(creditSingularName *string) {
+	c.CreditSingularName = creditSingularName
+	c.require(catalogPlanEntitlementResponseDataFieldCreditSingularName)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetCurrencyPrices(currencyPrices []*CatalogCurrencyPricesResponseData) {
+	c.CurrencyPrices = currencyPrices
+	c.require(catalogPlanEntitlementResponseDataFieldCurrencyPrices)
+}
+
+// SetFeatureDescription sets the FeatureDescription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeatureDescription(featureDescription string) {
+	c.FeatureDescription = featureDescription
+	c.require(catalogPlanEntitlementResponseDataFieldFeatureDescription)
+}
+
+// SetFeatureIcon sets the FeatureIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeatureIcon(featureIcon string) {
+	c.FeatureIcon = featureIcon
+	c.require(catalogPlanEntitlementResponseDataFieldFeatureIcon)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeatureID(featureID string) {
+	c.FeatureID = featureID
+	c.require(catalogPlanEntitlementResponseDataFieldFeatureID)
+}
+
+// SetFeatureName sets the FeatureName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeatureName(featureName string) {
+	c.FeatureName = featureName
+	c.require(catalogPlanEntitlementResponseDataFieldFeatureName)
+}
+
+// SetFeaturePluralName sets the FeaturePluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeaturePluralName(featurePluralName *string) {
+	c.FeaturePluralName = featurePluralName
+	c.require(catalogPlanEntitlementResponseDataFieldFeaturePluralName)
+}
+
+// SetFeatureSingularName sets the FeatureSingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeatureSingularName(featureSingularName *string) {
+	c.FeatureSingularName = featureSingularName
+	c.require(catalogPlanEntitlementResponseDataFieldFeatureSingularName)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetFeatureType(featureType FeatureType) {
+	c.FeatureType = featureType
+	c.require(catalogPlanEntitlementResponseDataFieldFeatureType)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetID(id string) {
+	c.ID = id
+	c.require(catalogPlanEntitlementResponseDataFieldID)
+}
+
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetLicenseID(licenseID *string) {
+	c.LicenseID = licenseID
+	c.require(catalogPlanEntitlementResponseDataFieldLicenseID)
+}
+
+// SetMeteredMonthlyPrice sets the MeteredMonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetMeteredMonthlyPrice(meteredMonthlyPrice *CatalogPriceResponseData) {
+	c.MeteredMonthlyPrice = meteredMonthlyPrice
+	c.require(catalogPlanEntitlementResponseDataFieldMeteredMonthlyPrice)
+}
+
+// SetMeteredQuarterlyPrice sets the MeteredQuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetMeteredQuarterlyPrice(meteredQuarterlyPrice *CatalogPriceResponseData) {
+	c.MeteredQuarterlyPrice = meteredQuarterlyPrice
+	c.require(catalogPlanEntitlementResponseDataFieldMeteredQuarterlyPrice)
+}
+
+// SetMeteredYearlyPrice sets the MeteredYearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetMeteredYearlyPrice(meteredYearlyPrice *CatalogPriceResponseData) {
+	c.MeteredYearlyPrice = meteredYearlyPrice
+	c.require(catalogPlanEntitlementResponseDataFieldMeteredYearlyPrice)
+}
+
+// SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetMetricPeriod(metricPeriod *MetricPeriod) {
+	c.MetricPeriod = metricPeriod
+	c.require(catalogPlanEntitlementResponseDataFieldMetricPeriod)
+}
+
+// SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
+	c.MetricPeriodMonthReset = metricPeriodMonthReset
+	c.require(catalogPlanEntitlementResponseDataFieldMetricPeriodMonthReset)
+}
+
+// SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
+	c.PriceBehavior = priceBehavior
+	c.require(catalogPlanEntitlementResponseDataFieldPriceBehavior)
+}
+
+// SetSoftLimit sets the SoftLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetSoftLimit(softLimit *int64) {
+	c.SoftLimit = softLimit
+	c.require(catalogPlanEntitlementResponseDataFieldSoftLimit)
+}
+
+// SetValueBool sets the ValueBool field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetValueBool(valueBool *bool) {
+	c.ValueBool = valueBool
+	c.require(catalogPlanEntitlementResponseDataFieldValueBool)
+}
+
+// SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetValueNumeric(valueNumeric *int64) {
+	c.ValueNumeric = valueNumeric
+	c.require(catalogPlanEntitlementResponseDataFieldValueNumeric)
+}
+
+// SetValueType sets the ValueType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetValueType(valueType EntitlementValueType) {
+	c.ValueType = valueType
+	c.require(catalogPlanEntitlementResponseDataFieldValueType)
+}
+
+// SetWarningThreshold sets the WarningThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanEntitlementResponseData) SetWarningThreshold(warningThreshold *int64) {
+	c.WarningThreshold = warningThreshold
+	c.require(catalogPlanEntitlementResponseDataFieldWarningThreshold)
+}
+
+func (c *CatalogPlanEntitlementResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogPlanEntitlementResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogPlanEntitlementResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogPlanEntitlementResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogPlanEntitlementResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogPlanEntitlementResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	catalogPlanIDsResponseDataFieldPlanIDs = big.NewInt(1 << 0)
 )
 
@@ -1548,6 +3127,749 @@ func (c *CatalogPlanIDsResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CatalogPlanIDsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogPlanResponseDataFieldAvailablePeriods     = big.NewInt(1 << 0)
+	catalogPlanResponseDataFieldBillingStrategy      = big.NewInt(1 << 1)
+	catalogPlanResponseDataFieldChargeType           = big.NewInt(1 << 2)
+	catalogPlanResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 3)
+	catalogPlanResponseDataFieldCurrencyPrices       = big.NewInt(1 << 4)
+	catalogPlanResponseDataFieldDescription          = big.NewInt(1 << 5)
+	catalogPlanResponseDataFieldEntitlements         = big.NewInt(1 << 6)
+	catalogPlanResponseDataFieldIcon                 = big.NewInt(1 << 7)
+	catalogPlanResponseDataFieldID                   = big.NewInt(1 << 8)
+	catalogPlanResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 9)
+	catalogPlanResponseDataFieldIsTrialable          = big.NewInt(1 << 10)
+	catalogPlanResponseDataFieldMonthlyPrice         = big.NewInt(1 << 11)
+	catalogPlanResponseDataFieldName                 = big.NewInt(1 << 12)
+	catalogPlanResponseDataFieldOneTimePrice         = big.NewInt(1 << 13)
+	catalogPlanResponseDataFieldQuarterlyPrice       = big.NewInt(1 << 14)
+	catalogPlanResponseDataFieldTrialDays            = big.NewInt(1 << 15)
+	catalogPlanResponseDataFieldYearlyPrice          = big.NewInt(1 << 16)
+)
+
+type CatalogPlanResponseData struct {
+	AvailablePeriods []PlanPriceCadence `json:"available_periods" url:"available_periods"`
+	BillingStrategy  BillingStrategy    `json:"billing_strategy" url:"billing_strategy"`
+	ChargeType       ChargeType         `json:"charge_type" url:"charge_type"`
+	// For add-ons, the plans this add-on may be purchased with. Null means compatible with every plan.
+	CompatiblePlanIDs    []string                              `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
+	CurrencyPrices       []*CatalogCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
+	Description          string                                `json:"description" url:"description"`
+	Entitlements         []*CatalogPlanEntitlementResponseData `json:"entitlements" url:"entitlements"`
+	Icon                 string                                `json:"icon" url:"icon"`
+	ID                   string                                `json:"id" url:"id"`
+	IncludedCreditGrants []*CatalogCreditGrantResponseData     `json:"included_credit_grants" url:"included_credit_grants"`
+	IsTrialable          bool                                  `json:"is_trialable" url:"is_trialable"`
+	MonthlyPrice         *CatalogPriceResponseData             `json:"monthly_price,omitempty" url:"monthly_price,omitempty"`
+	Name                 string                                `json:"name" url:"name"`
+	OneTimePrice         *CatalogPriceResponseData             `json:"one_time_price,omitempty" url:"one_time_price,omitempty"`
+	QuarterlyPrice       *CatalogPriceResponseData             `json:"quarterly_price,omitempty" url:"quarterly_price,omitempty"`
+	TrialDays            *int64                                `json:"trial_days,omitempty" url:"trial_days,omitempty"`
+	YearlyPrice          *CatalogPriceResponseData             `json:"yearly_price,omitempty" url:"yearly_price,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogPlanResponseData) GetAvailablePeriods() []PlanPriceCadence {
+	if c == nil {
+		return nil
+	}
+	return c.AvailablePeriods
+}
+
+func (c *CatalogPlanResponseData) GetBillingStrategy() BillingStrategy {
+	if c == nil {
+		return ""
+	}
+	return c.BillingStrategy
+}
+
+func (c *CatalogPlanResponseData) GetChargeType() ChargeType {
+	if c == nil {
+		return ""
+	}
+	return c.ChargeType
+}
+
+func (c *CatalogPlanResponseData) GetCompatiblePlanIDs() []string {
+	if c == nil {
+		return nil
+	}
+	return c.CompatiblePlanIDs
+}
+
+func (c *CatalogPlanResponseData) GetCurrencyPrices() []*CatalogCurrencyPricesResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CurrencyPrices
+}
+
+func (c *CatalogPlanResponseData) GetDescription() string {
+	if c == nil {
+		return ""
+	}
+	return c.Description
+}
+
+func (c *CatalogPlanResponseData) GetEntitlements() []*CatalogPlanEntitlementResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Entitlements
+}
+
+func (c *CatalogPlanResponseData) GetIcon() string {
+	if c == nil {
+		return ""
+	}
+	return c.Icon
+}
+
+func (c *CatalogPlanResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CatalogPlanResponseData) GetIncludedCreditGrants() []*CatalogCreditGrantResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.IncludedCreditGrants
+}
+
+func (c *CatalogPlanResponseData) GetIsTrialable() bool {
+	if c == nil {
+		return false
+	}
+	return c.IsTrialable
+}
+
+func (c *CatalogPlanResponseData) GetMonthlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MonthlyPrice
+}
+
+func (c *CatalogPlanResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CatalogPlanResponseData) GetOneTimePrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.OneTimePrice
+}
+
+func (c *CatalogPlanResponseData) GetQuarterlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.QuarterlyPrice
+}
+
+func (c *CatalogPlanResponseData) GetTrialDays() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.TrialDays
+}
+
+func (c *CatalogPlanResponseData) GetYearlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.YearlyPrice
+}
+
+func (c *CatalogPlanResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogPlanResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetAvailablePeriods sets the AvailablePeriods field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetAvailablePeriods(availablePeriods []PlanPriceCadence) {
+	c.AvailablePeriods = availablePeriods
+	c.require(catalogPlanResponseDataFieldAvailablePeriods)
+}
+
+// SetBillingStrategy sets the BillingStrategy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetBillingStrategy(billingStrategy BillingStrategy) {
+	c.BillingStrategy = billingStrategy
+	c.require(catalogPlanResponseDataFieldBillingStrategy)
+}
+
+// SetChargeType sets the ChargeType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetChargeType(chargeType ChargeType) {
+	c.ChargeType = chargeType
+	c.require(catalogPlanResponseDataFieldChargeType)
+}
+
+// SetCompatiblePlanIDs sets the CompatiblePlanIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []string) {
+	c.CompatiblePlanIDs = compatiblePlanIDs
+	c.require(catalogPlanResponseDataFieldCompatiblePlanIDs)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetCurrencyPrices(currencyPrices []*CatalogCurrencyPricesResponseData) {
+	c.CurrencyPrices = currencyPrices
+	c.require(catalogPlanResponseDataFieldCurrencyPrices)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetDescription(description string) {
+	c.Description = description
+	c.require(catalogPlanResponseDataFieldDescription)
+}
+
+// SetEntitlements sets the Entitlements field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetEntitlements(entitlements []*CatalogPlanEntitlementResponseData) {
+	c.Entitlements = entitlements
+	c.require(catalogPlanResponseDataFieldEntitlements)
+}
+
+// SetIcon sets the Icon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetIcon(icon string) {
+	c.Icon = icon
+	c.require(catalogPlanResponseDataFieldIcon)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetID(id string) {
+	c.ID = id
+	c.require(catalogPlanResponseDataFieldID)
+}
+
+// SetIncludedCreditGrants sets the IncludedCreditGrants field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetIncludedCreditGrants(includedCreditGrants []*CatalogCreditGrantResponseData) {
+	c.IncludedCreditGrants = includedCreditGrants
+	c.require(catalogPlanResponseDataFieldIncludedCreditGrants)
+}
+
+// SetIsTrialable sets the IsTrialable field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetIsTrialable(isTrialable bool) {
+	c.IsTrialable = isTrialable
+	c.require(catalogPlanResponseDataFieldIsTrialable)
+}
+
+// SetMonthlyPrice sets the MonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetMonthlyPrice(monthlyPrice *CatalogPriceResponseData) {
+	c.MonthlyPrice = monthlyPrice
+	c.require(catalogPlanResponseDataFieldMonthlyPrice)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetName(name string) {
+	c.Name = name
+	c.require(catalogPlanResponseDataFieldName)
+}
+
+// SetOneTimePrice sets the OneTimePrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetOneTimePrice(oneTimePrice *CatalogPriceResponseData) {
+	c.OneTimePrice = oneTimePrice
+	c.require(catalogPlanResponseDataFieldOneTimePrice)
+}
+
+// SetQuarterlyPrice sets the QuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetQuarterlyPrice(quarterlyPrice *CatalogPriceResponseData) {
+	c.QuarterlyPrice = quarterlyPrice
+	c.require(catalogPlanResponseDataFieldQuarterlyPrice)
+}
+
+// SetTrialDays sets the TrialDays field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetTrialDays(trialDays *int64) {
+	c.TrialDays = trialDays
+	c.require(catalogPlanResponseDataFieldTrialDays)
+}
+
+// SetYearlyPrice sets the YearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetYearlyPrice(yearlyPrice *CatalogPriceResponseData) {
+	c.YearlyPrice = yearlyPrice
+	c.require(catalogPlanResponseDataFieldYearlyPrice)
+}
+
+func (c *CatalogPlanResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogPlanResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogPlanResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogPlanResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogPlanResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogPlanResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogPriceResponseDataFieldCurrency                = big.NewInt(1 << 0)
+	catalogPriceResponseDataFieldID                      = big.NewInt(1 << 1)
+	catalogPriceResponseDataFieldInterval                = big.NewInt(1 << 2)
+	catalogPriceResponseDataFieldIntervalCount           = big.NewInt(1 << 3)
+	catalogPriceResponseDataFieldOverageUnitPriceDecimal = big.NewInt(1 << 4)
+	catalogPriceResponseDataFieldPackageSize             = big.NewInt(1 << 5)
+	catalogPriceResponseDataFieldPrice                   = big.NewInt(1 << 6)
+	catalogPriceResponseDataFieldPriceDecimal            = big.NewInt(1 << 7)
+	catalogPriceResponseDataFieldPriceTiers              = big.NewInt(1 << 8)
+	catalogPriceResponseDataFieldScheme                  = big.NewInt(1 << 9)
+	catalogPriceResponseDataFieldTiersMode               = big.NewInt(1 << 10)
+)
+
+type CatalogPriceResponseData struct {
+	Currency      Currency                    `json:"currency" url:"currency"`
+	ID            string                      `json:"id" url:"id"`
+	Interval      BillingProductPriceInterval `json:"interval" url:"interval"`
+	IntervalCount int64                       `json:"interval_count" url:"interval_count"`
+	// Per-unit price of the final tier, precomputed for overage display.
+	OverageUnitPriceDecimal *string `json:"overage_unit_price_decimal,omitempty" url:"overage_unit_price_decimal,omitempty"`
+	// Units covered per priced package; a price of $10 with package_size 1000 charges $10 per 1000 units.
+	PackageSize  int64                           `json:"package_size" url:"package_size"`
+	Price        int64                           `json:"price" url:"price"`
+	PriceDecimal *string                         `json:"price_decimal,omitempty" url:"price_decimal,omitempty"`
+	PriceTiers   []*CatalogPriceTierResponseData `json:"price_tiers" url:"price_tiers"`
+	Scheme       BillingPriceScheme              `json:"scheme" url:"scheme"`
+	TiersMode    *BillingTiersMode               `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogPriceResponseData) GetCurrency() Currency {
+	if c == nil {
+		return ""
+	}
+	return c.Currency
+}
+
+func (c *CatalogPriceResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CatalogPriceResponseData) GetInterval() BillingProductPriceInterval {
+	if c == nil {
+		return ""
+	}
+	return c.Interval
+}
+
+func (c *CatalogPriceResponseData) GetIntervalCount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.IntervalCount
+}
+
+func (c *CatalogPriceResponseData) GetOverageUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.OverageUnitPriceDecimal
+}
+
+func (c *CatalogPriceResponseData) GetPackageSize() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.PackageSize
+}
+
+func (c *CatalogPriceResponseData) GetPrice() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.Price
+}
+
+func (c *CatalogPriceResponseData) GetPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PriceDecimal
+}
+
+func (c *CatalogPriceResponseData) GetPriceTiers() []*CatalogPriceTierResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.PriceTiers
+}
+
+func (c *CatalogPriceResponseData) GetScheme() BillingPriceScheme {
+	if c == nil {
+		return ""
+	}
+	return c.Scheme
+}
+
+func (c *CatalogPriceResponseData) GetTiersMode() *BillingTiersMode {
+	if c == nil {
+		return nil
+	}
+	return c.TiersMode
+}
+
+func (c *CatalogPriceResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogPriceResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetCurrency(currency Currency) {
+	c.Currency = currency
+	c.require(catalogPriceResponseDataFieldCurrency)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetID(id string) {
+	c.ID = id
+	c.require(catalogPriceResponseDataFieldID)
+}
+
+// SetInterval sets the Interval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetInterval(interval BillingProductPriceInterval) {
+	c.Interval = interval
+	c.require(catalogPriceResponseDataFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetIntervalCount(intervalCount int64) {
+	c.IntervalCount = intervalCount
+	c.require(catalogPriceResponseDataFieldIntervalCount)
+}
+
+// SetOverageUnitPriceDecimal sets the OverageUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetOverageUnitPriceDecimal(overageUnitPriceDecimal *string) {
+	c.OverageUnitPriceDecimal = overageUnitPriceDecimal
+	c.require(catalogPriceResponseDataFieldOverageUnitPriceDecimal)
+}
+
+// SetPackageSize sets the PackageSize field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetPackageSize(packageSize int64) {
+	c.PackageSize = packageSize
+	c.require(catalogPriceResponseDataFieldPackageSize)
+}
+
+// SetPrice sets the Price field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetPrice(price int64) {
+	c.Price = price
+	c.require(catalogPriceResponseDataFieldPrice)
+}
+
+// SetPriceDecimal sets the PriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetPriceDecimal(priceDecimal *string) {
+	c.PriceDecimal = priceDecimal
+	c.require(catalogPriceResponseDataFieldPriceDecimal)
+}
+
+// SetPriceTiers sets the PriceTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetPriceTiers(priceTiers []*CatalogPriceTierResponseData) {
+	c.PriceTiers = priceTiers
+	c.require(catalogPriceResponseDataFieldPriceTiers)
+}
+
+// SetScheme sets the Scheme field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetScheme(scheme BillingPriceScheme) {
+	c.Scheme = scheme
+	c.require(catalogPriceResponseDataFieldScheme)
+}
+
+// SetTiersMode sets the TiersMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceResponseData) SetTiersMode(tiersMode *BillingTiersMode) {
+	c.TiersMode = tiersMode
+	c.require(catalogPriceResponseDataFieldTiersMode)
+}
+
+func (c *CatalogPriceResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogPriceResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogPriceResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogPriceResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogPriceResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogPriceResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogPriceTierResponseDataFieldFlatPrice           = big.NewInt(1 << 0)
+	catalogPriceTierResponseDataFieldFrom                = big.NewInt(1 << 1)
+	catalogPriceTierResponseDataFieldPerUnitPrice        = big.NewInt(1 << 2)
+	catalogPriceTierResponseDataFieldPerUnitPriceDecimal = big.NewInt(1 << 3)
+	catalogPriceTierResponseDataFieldTo                  = big.NewInt(1 << 4)
+)
+
+type CatalogPriceTierResponseData struct {
+	FlatPrice *int64 `json:"flat_price,omitempty" url:"flat_price,omitempty"`
+	// Lower bound of the tier (inclusive).
+	From                int64   `json:"from" url:"from"`
+	PerUnitPrice        *int64  `json:"per_unit_price,omitempty" url:"per_unit_price,omitempty"`
+	PerUnitPriceDecimal *string `json:"per_unit_price_decimal,omitempty" url:"per_unit_price_decimal,omitempty"`
+	// Upper bound of the tier (inclusive); null means unbounded.
+	To *int64 `json:"to,omitempty" url:"to,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogPriceTierResponseData) GetFlatPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.FlatPrice
+}
+
+func (c *CatalogPriceTierResponseData) GetFrom() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.From
+}
+
+func (c *CatalogPriceTierResponseData) GetPerUnitPrice() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitPrice
+}
+
+func (c *CatalogPriceTierResponseData) GetPerUnitPriceDecimal() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PerUnitPriceDecimal
+}
+
+func (c *CatalogPriceTierResponseData) GetTo() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.To
+}
+
+func (c *CatalogPriceTierResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogPriceTierResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetFlatPrice sets the FlatPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceTierResponseData) SetFlatPrice(flatPrice *int64) {
+	c.FlatPrice = flatPrice
+	c.require(catalogPriceTierResponseDataFieldFlatPrice)
+}
+
+// SetFrom sets the From field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceTierResponseData) SetFrom(from int64) {
+	c.From = from
+	c.require(catalogPriceTierResponseDataFieldFrom)
+}
+
+// SetPerUnitPrice sets the PerUnitPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceTierResponseData) SetPerUnitPrice(perUnitPrice *int64) {
+	c.PerUnitPrice = perUnitPrice
+	c.require(catalogPriceTierResponseDataFieldPerUnitPrice)
+}
+
+// SetPerUnitPriceDecimal sets the PerUnitPriceDecimal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceTierResponseData) SetPerUnitPriceDecimal(perUnitPriceDecimal *string) {
+	c.PerUnitPriceDecimal = perUnitPriceDecimal
+	c.require(catalogPriceTierResponseDataFieldPerUnitPriceDecimal)
+}
+
+// SetTo sets the To field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPriceTierResponseData) SetTo(to *int64) {
+	c.To = to
+	c.require(catalogPriceTierResponseDataFieldTo)
+}
+
+func (c *CatalogPriceTierResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogPriceTierResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogPriceTierResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogPriceTierResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogPriceTierResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogPriceTierResponseData) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -1850,6 +4172,254 @@ func (c *CatalogResponseData) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	publicCatalogResponseDataFieldAddOns          = big.NewInt(1 << 0)
+	publicCatalogResponseDataFieldCapabilities    = big.NewInt(1 << 1)
+	publicCatalogResponseDataFieldCreditBundles   = big.NewInt(1 << 2)
+	publicCatalogResponseDataFieldCustomPlanCta   = big.NewInt(1 << 3)
+	publicCatalogResponseDataFieldDefaultCurrency = big.NewInt(1 << 4)
+	publicCatalogResponseDataFieldDescription     = big.NewInt(1 << 5)
+	publicCatalogResponseDataFieldID              = big.NewInt(1 << 6)
+	publicCatalogResponseDataFieldName            = big.NewInt(1 << 7)
+	publicCatalogResponseDataFieldPlans           = big.NewInt(1 << 8)
+	publicCatalogResponseDataFieldPricingModel    = big.NewInt(1 << 9)
+	publicCatalogResponseDataFieldPricingURL      = big.NewInt(1 << 10)
+)
+
+type PublicCatalogResponseData struct {
+	AddOns        []*CatalogPlanResponseData         `json:"add_ons" url:"add_ons"`
+	Capabilities  *CatalogCapabilitiesResponseData   `json:"capabilities" url:"capabilities"`
+	CreditBundles []*CatalogCreditBundleResponseData `json:"credit_bundles" url:"credit_bundles"`
+	// Present when the catalog offers a custom plan; absent when custom plans are hidden.
+	CustomPlanCta *CatalogCustomPlanCtaResponseData `json:"custom_plan_cta,omitempty" url:"custom_plan_cta,omitempty"`
+	// ISO 4217 currency of every top-level price slot; currency_prices carries the others.
+	DefaultCurrency Currency                   `json:"default_currency" url:"default_currency"`
+	Description     *string                    `json:"description,omitempty" url:"description,omitempty"`
+	ID              string                     `json:"id" url:"id"`
+	Name            string                     `json:"name" url:"name"`
+	Plans           []*CatalogPlanResponseData `json:"plans" url:"plans"`
+	PricingModel    *string                    `json:"pricing_model,omitempty" url:"pricing_model,omitempty"`
+	PricingURL      *string                    `json:"pricing_url,omitempty" url:"pricing_url,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PublicCatalogResponseData) GetAddOns() []*CatalogPlanResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.AddOns
+}
+
+func (p *PublicCatalogResponseData) GetCapabilities() *CatalogCapabilitiesResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Capabilities
+}
+
+func (p *PublicCatalogResponseData) GetCreditBundles() []*CatalogCreditBundleResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CreditBundles
+}
+
+func (p *PublicCatalogResponseData) GetCustomPlanCta() *CatalogCustomPlanCtaResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.CustomPlanCta
+}
+
+func (p *PublicCatalogResponseData) GetDefaultCurrency() Currency {
+	if p == nil {
+		return ""
+	}
+	return p.DefaultCurrency
+}
+
+func (p *PublicCatalogResponseData) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PublicCatalogResponseData) GetID() string {
+	if p == nil {
+		return ""
+	}
+	return p.ID
+}
+
+func (p *PublicCatalogResponseData) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PublicCatalogResponseData) GetPlans() []*CatalogPlanResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Plans
+}
+
+func (p *PublicCatalogResponseData) GetPricingModel() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PricingModel
+}
+
+func (p *PublicCatalogResponseData) GetPricingURL() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PricingURL
+}
+
+func (p *PublicCatalogResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PublicCatalogResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetAddOns sets the AddOns field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetAddOns(addOns []*CatalogPlanResponseData) {
+	p.AddOns = addOns
+	p.require(publicCatalogResponseDataFieldAddOns)
+}
+
+// SetCapabilities sets the Capabilities field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetCapabilities(capabilities *CatalogCapabilitiesResponseData) {
+	p.Capabilities = capabilities
+	p.require(publicCatalogResponseDataFieldCapabilities)
+}
+
+// SetCreditBundles sets the CreditBundles field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetCreditBundles(creditBundles []*CatalogCreditBundleResponseData) {
+	p.CreditBundles = creditBundles
+	p.require(publicCatalogResponseDataFieldCreditBundles)
+}
+
+// SetCustomPlanCta sets the CustomPlanCta field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetCustomPlanCta(customPlanCta *CatalogCustomPlanCtaResponseData) {
+	p.CustomPlanCta = customPlanCta
+	p.require(publicCatalogResponseDataFieldCustomPlanCta)
+}
+
+// SetDefaultCurrency sets the DefaultCurrency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetDefaultCurrency(defaultCurrency Currency) {
+	p.DefaultCurrency = defaultCurrency
+	p.require(publicCatalogResponseDataFieldDefaultCurrency)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetDescription(description *string) {
+	p.Description = description
+	p.require(publicCatalogResponseDataFieldDescription)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetID(id string) {
+	p.ID = id
+	p.require(publicCatalogResponseDataFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetName(name string) {
+	p.Name = name
+	p.require(publicCatalogResponseDataFieldName)
+}
+
+// SetPlans sets the Plans field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetPlans(plans []*CatalogPlanResponseData) {
+	p.Plans = plans
+	p.require(publicCatalogResponseDataFieldPlans)
+}
+
+// SetPricingModel sets the PricingModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetPricingModel(pricingModel *string) {
+	p.PricingModel = pricingModel
+	p.require(publicCatalogResponseDataFieldPricingModel)
+}
+
+// SetPricingURL sets the PricingURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublicCatalogResponseData) SetPricingURL(pricingURL *string) {
+	p.PricingURL = pricingURL
+	p.require(publicCatalogResponseDataFieldPricingURL)
+}
+
+func (p *PublicCatalogResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler PublicCatalogResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PublicCatalogResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PublicCatalogResponseData) MarshalJSON() ([]byte, error) {
+	type embed PublicCatalogResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PublicCatalogResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 var (
@@ -2559,6 +5129,212 @@ func (g *GetPlansInCatalogResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetPlansInCatalogResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getPublicCatalogByIDResponseFieldData   = big.NewInt(1 << 0)
+	getPublicCatalogByIDResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetPublicCatalogByIDResponse struct {
+	Data *PublicCatalogResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPublicCatalogByIDResponse) GetData() *PublicCatalogResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetPublicCatalogByIDResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetPublicCatalogByIDResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetPublicCatalogByIDResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPublicCatalogByIDResponse) SetData(data *PublicCatalogResponseData) {
+	g.Data = data
+	g.require(getPublicCatalogByIDResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPublicCatalogByIDResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getPublicCatalogByIDResponseFieldParams)
+}
+
+func (g *GetPublicCatalogByIDResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetPublicCatalogByIDResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetPublicCatalogByIDResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetPublicCatalogByIDResponse) MarshalJSON() ([]byte, error) {
+	type embed GetPublicCatalogByIDResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetPublicCatalogByIDResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getPublicCatalogResponseFieldData   = big.NewInt(1 << 0)
+	getPublicCatalogResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetPublicCatalogResponse struct {
+	Data *PublicCatalogResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetPublicCatalogResponse) GetData() *PublicCatalogResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetPublicCatalogResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetPublicCatalogResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetPublicCatalogResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPublicCatalogResponse) SetData(data *PublicCatalogResponseData) {
+	g.Data = data
+	g.require(getPublicCatalogResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetPublicCatalogResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getPublicCatalogResponseFieldParams)
+}
+
+func (g *GetPublicCatalogResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetPublicCatalogResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetPublicCatalogResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetPublicCatalogResponse) MarshalJSON() ([]byte, error) {
+	type embed GetPublicCatalogResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetPublicCatalogResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}

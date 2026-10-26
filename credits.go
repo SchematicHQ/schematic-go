@@ -453,9 +453,10 @@ var (
 	countCreditEventLedgerRequestFieldEndTime         = big.NewInt(1 << 2)
 	countCreditEventLedgerRequestFieldEventType       = big.NewInt(1 << 3)
 	countCreditEventLedgerRequestFieldFeatureID       = big.NewInt(1 << 4)
-	countCreditEventLedgerRequestFieldStartTime       = big.NewInt(1 << 5)
-	countCreditEventLedgerRequestFieldLimit           = big.NewInt(1 << 6)
-	countCreditEventLedgerRequestFieldOffset          = big.NewInt(1 << 7)
+	countCreditEventLedgerRequestFieldSourceEventID   = big.NewInt(1 << 5)
+	countCreditEventLedgerRequestFieldStartTime       = big.NewInt(1 << 6)
+	countCreditEventLedgerRequestFieldLimit           = big.NewInt(1 << 7)
+	countCreditEventLedgerRequestFieldOffset          = big.NewInt(1 << 8)
 )
 
 type CountCreditEventLedgerRequest struct {
@@ -464,7 +465,9 @@ type CountCreditEventLedgerRequest struct {
 	EndTime         *string          `json:"-" url:"end_time,omitempty"`
 	EventType       *CreditEventType `json:"-" url:"event_type,omitempty"`
 	FeatureID       *string          `json:"-" url:"feature_id,omitempty"`
-	StartTime       *string          `json:"-" url:"start_time,omitempty"`
+	// Return only entries drawn by this track or inference event. Pass the event ID that POST /events returned for it.
+	SourceEventID *string `json:"-" url:"source_event_id,omitempty"`
+	StartTime     *string `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -516,6 +519,13 @@ func (c *CountCreditEventLedgerRequest) SetEventType(eventType *CreditEventType)
 func (c *CountCreditEventLedgerRequest) SetFeatureID(featureID *string) {
 	c.FeatureID = featureID
 	c.require(countCreditEventLedgerRequestFieldFeatureID)
+}
+
+// SetSourceEventID sets the SourceEventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerRequest) SetSourceEventID(sourceEventID *string) {
+	c.SourceEventID = sourceEventID
+	c.require(countCreditEventLedgerRequestFieldSourceEventID)
 }
 
 // SetStartTime sets the StartTime field and marks it as non-optional;
@@ -956,7 +966,7 @@ type CreateCreditSpendPolicyRequestBody struct {
 	UserID *string `json:"user_id,omitempty" url:"-"`
 	// The number of credits the company or user may spend in one window. Set either this or max_per_draw.
 	WindowAmount *float64 `json:"window_amount,omitempty" url:"-"`
-	// The window that window_amount applies to: one UTC hour or one UTC day. Required with window_amount.
+	// The window that window_amount applies to: one UTC hour, one UTC day, one week from Monday 00:00 UTC, one calendar month from the 1st 00:00 UTC, or the company's current billing period. billing_period applies to company policies only, and a company without an active subscription falls back to the calendar month. Required with window_amount.
 	WindowUnit *CreditSpendWindowUnit `json:"window_unit,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
@@ -1738,9 +1748,10 @@ var (
 	listCreditEventLedgerRequestFieldEndTime         = big.NewInt(1 << 2)
 	listCreditEventLedgerRequestFieldEventType       = big.NewInt(1 << 3)
 	listCreditEventLedgerRequestFieldFeatureID       = big.NewInt(1 << 4)
-	listCreditEventLedgerRequestFieldStartTime       = big.NewInt(1 << 5)
-	listCreditEventLedgerRequestFieldLimit           = big.NewInt(1 << 6)
-	listCreditEventLedgerRequestFieldOffset          = big.NewInt(1 << 7)
+	listCreditEventLedgerRequestFieldSourceEventID   = big.NewInt(1 << 5)
+	listCreditEventLedgerRequestFieldStartTime       = big.NewInt(1 << 6)
+	listCreditEventLedgerRequestFieldLimit           = big.NewInt(1 << 7)
+	listCreditEventLedgerRequestFieldOffset          = big.NewInt(1 << 8)
 )
 
 type ListCreditEventLedgerRequest struct {
@@ -1749,7 +1760,9 @@ type ListCreditEventLedgerRequest struct {
 	EndTime         *string          `json:"-" url:"end_time,omitempty"`
 	EventType       *CreditEventType `json:"-" url:"event_type,omitempty"`
 	FeatureID       *string          `json:"-" url:"feature_id,omitempty"`
-	StartTime       *string          `json:"-" url:"start_time,omitempty"`
+	// Return only entries drawn by this track or inference event. Pass the event ID that POST /events returned for it.
+	SourceEventID *string `json:"-" url:"source_event_id,omitempty"`
+	StartTime     *string `json:"-" url:"start_time,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1801,6 +1814,13 @@ func (l *ListCreditEventLedgerRequest) SetEventType(eventType *CreditEventType) 
 func (l *ListCreditEventLedgerRequest) SetFeatureID(featureID *string) {
 	l.FeatureID = featureID
 	l.require(listCreditEventLedgerRequestFieldFeatureID)
+}
+
+// SetSourceEventID sets the SourceEventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerRequest) SetSourceEventID(sourceEventID *string) {
+	l.SourceEventID = sourceEventID
+	l.require(listCreditEventLedgerRequestFieldSourceEventID)
 }
 
 // SetStartTime sets the StartTime field and marks it as non-optional;
@@ -5698,6 +5718,8 @@ type CreditSpendWindowUnit string
 const (
 	CreditSpendWindowUnitHour          CreditSpendWindowUnit = "hour"
 	CreditSpendWindowUnitDay           CreditSpendWindowUnit = "day"
+	CreditSpendWindowUnitWeek          CreditSpendWindowUnit = "week"
+	CreditSpendWindowUnitMonth         CreditSpendWindowUnit = "month"
 	CreditSpendWindowUnitBillingPeriod CreditSpendWindowUnit = "billing_period"
 )
 
@@ -5707,6 +5729,10 @@ func NewCreditSpendWindowUnitFromString(s string) (CreditSpendWindowUnit, error)
 		return CreditSpendWindowUnitHour, nil
 	case "day":
 		return CreditSpendWindowUnitDay, nil
+	case "week":
+		return CreditSpendWindowUnitWeek, nil
+	case "month":
+		return CreditSpendWindowUnitMonth, nil
 	case "billing_period":
 		return CreditSpendWindowUnitBillingPeriod, nil
 	}
@@ -7510,7 +7536,8 @@ var (
 	countCreditEventLedgerParamsFieldFeatureID       = big.NewInt(1 << 4)
 	countCreditEventLedgerParamsFieldLimit           = big.NewInt(1 << 5)
 	countCreditEventLedgerParamsFieldOffset          = big.NewInt(1 << 6)
-	countCreditEventLedgerParamsFieldStartTime       = big.NewInt(1 << 7)
+	countCreditEventLedgerParamsFieldSourceEventID   = big.NewInt(1 << 7)
+	countCreditEventLedgerParamsFieldStartTime       = big.NewInt(1 << 8)
 )
 
 // Input parameters
@@ -7523,8 +7550,10 @@ type CountCreditEventLedgerParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int64  `json:"offset,omitempty" url:"offset,omitempty"`
-	StartTime *string `json:"start_time,omitempty" url:"start_time,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Return only entries drawn by this track or inference event. Pass the event ID that POST /events returned for it.
+	SourceEventID *string `json:"source_event_id,omitempty" url:"source_event_id,omitempty"`
+	StartTime     *string `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -7580,6 +7609,13 @@ func (c *CountCreditEventLedgerParams) GetOffset() *int64 {
 		return nil
 	}
 	return c.Offset
+}
+
+func (c *CountCreditEventLedgerParams) GetSourceEventID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SourceEventID
 }
 
 func (c *CountCreditEventLedgerParams) GetStartTime() *string {
@@ -7652,6 +7688,13 @@ func (c *CountCreditEventLedgerParams) SetLimit(limit *int64) {
 func (c *CountCreditEventLedgerParams) SetOffset(offset *int64) {
 	c.Offset = offset
 	c.require(countCreditEventLedgerParamsFieldOffset)
+}
+
+// SetSourceEventID sets the SourceEventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCreditEventLedgerParams) SetSourceEventID(sourceEventID *string) {
+	c.SourceEventID = sourceEventID
+	c.require(countCreditEventLedgerParamsFieldSourceEventID)
 }
 
 // SetStartTime sets the StartTime field and marks it as non-optional;
@@ -9344,6 +9387,109 @@ func (g *GetCreditBundleResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetCreditBundleResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getCreditEventLedgerEntryResponseFieldData   = big.NewInt(1 << 0)
+	getCreditEventLedgerEntryResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetCreditEventLedgerEntryResponse struct {
+	Data *CreditEventLedgerResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCreditEventLedgerEntryResponse) GetData() *CreditEventLedgerResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCreditEventLedgerEntryResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetCreditEventLedgerEntryResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCreditEventLedgerEntryResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCreditEventLedgerEntryResponse) SetData(data *CreditEventLedgerResponseData) {
+	g.Data = data
+	g.require(getCreditEventLedgerEntryResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCreditEventLedgerEntryResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getCreditEventLedgerEntryResponseFieldParams)
+}
+
+func (g *GetCreditEventLedgerEntryResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetCreditEventLedgerEntryResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetCreditEventLedgerEntryResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCreditEventLedgerEntryResponse) MarshalJSON() ([]byte, error) {
+	type embed GetCreditEventLedgerEntryResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCreditEventLedgerEntryResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -11255,7 +11401,8 @@ var (
 	listCreditEventLedgerParamsFieldFeatureID       = big.NewInt(1 << 4)
 	listCreditEventLedgerParamsFieldLimit           = big.NewInt(1 << 5)
 	listCreditEventLedgerParamsFieldOffset          = big.NewInt(1 << 6)
-	listCreditEventLedgerParamsFieldStartTime       = big.NewInt(1 << 7)
+	listCreditEventLedgerParamsFieldSourceEventID   = big.NewInt(1 << 7)
+	listCreditEventLedgerParamsFieldStartTime       = big.NewInt(1 << 8)
 )
 
 // Input parameters
@@ -11268,8 +11415,10 @@ type ListCreditEventLedgerParams struct {
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
-	Offset    *int64  `json:"offset,omitempty" url:"offset,omitempty"`
-	StartTime *string `json:"start_time,omitempty" url:"start_time,omitempty"`
+	Offset *int64 `json:"offset,omitempty" url:"offset,omitempty"`
+	// Return only entries drawn by this track or inference event. Pass the event ID that POST /events returned for it.
+	SourceEventID *string `json:"source_event_id,omitempty" url:"source_event_id,omitempty"`
+	StartTime     *string `json:"start_time,omitempty" url:"start_time,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -11325,6 +11474,13 @@ func (l *ListCreditEventLedgerParams) GetOffset() *int64 {
 		return nil
 	}
 	return l.Offset
+}
+
+func (l *ListCreditEventLedgerParams) GetSourceEventID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.SourceEventID
 }
 
 func (l *ListCreditEventLedgerParams) GetStartTime() *string {
@@ -11397,6 +11553,13 @@ func (l *ListCreditEventLedgerParams) SetLimit(limit *int64) {
 func (l *ListCreditEventLedgerParams) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listCreditEventLedgerParamsFieldOffset)
+}
+
+// SetSourceEventID sets the SourceEventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCreditEventLedgerParams) SetSourceEventID(sourceEventID *string) {
+	l.SourceEventID = sourceEventID
+	l.require(listCreditEventLedgerParamsFieldSourceEventID)
 }
 
 // SetStartTime sets the StartTime field and marks it as non-optional;

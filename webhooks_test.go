@@ -6658,6 +6658,13 @@ func TestEnumWebhookRequestType(t *testing.T) {
 		assert.Equal(t, WebhookRequestType("credit.purchase.success"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_credit_usage_warning_reached", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewWebhookRequestTypeFromString("credit.usage_warning_reached")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, WebhookRequestType("credit.usage_warning_reached"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_entitlement_limit_reached", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewWebhookRequestTypeFromString("entitlement.limit.reached")

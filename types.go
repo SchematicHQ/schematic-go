@@ -3166,6 +3166,7 @@ var (
 	billingPlanCreditGrantResponseDataFieldUnitPrice                  = big.NewInt(1 << 43)
 	billingPlanCreditGrantResponseDataFieldUnitPriceDecimal           = big.NewInt(1 << 44)
 	billingPlanCreditGrantResponseDataFieldUpdatedAt                  = big.NewInt(1 << 45)
+	billingPlanCreditGrantResponseDataFieldWarningTiers               = big.NewInt(1 << 46)
 )
 
 type BillingPlanCreditGrantResponseData struct {
@@ -3238,6 +3239,8 @@ type BillingPlanCreditGrantResponseData struct {
 	// Price per credit as a decimal in the plan currency's smallest unit. Set only when billing_mode is billed and the rate is below one cent.
 	UnitPriceDecimal *string   `json:"unit_price_decimal,omitempty" url:"unit_price_decimal,omitempty"`
 	UpdatedAt        time.Time `json:"updated_at" url:"updated_at"`
+	// Usage-warning thresholds, in credits remaining in the company's balance, highest first. Schematic sends a credit.usage_warning_reached webhook when the balance drops to each one. Empty when none are set.
+	WarningTiers []*BillingPlanCreditGrantWarningTierResponseData `json:"warning_tiers" url:"warning_tiers"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3566,6 +3569,13 @@ func (b *BillingPlanCreditGrantResponseData) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return b.UpdatedAt
+}
+
+func (b *BillingPlanCreditGrantResponseData) GetWarningTiers() []*BillingPlanCreditGrantWarningTierResponseData {
+	if b == nil {
+		return nil
+	}
+	return b.WarningTiers
 }
 
 func (b *BillingPlanCreditGrantResponseData) GetExtraProperties() map[string]interface{} {
@@ -3906,6 +3916,13 @@ func (b *BillingPlanCreditGrantResponseData) SetUpdatedAt(updatedAt time.Time) {
 	b.require(billingPlanCreditGrantResponseDataFieldUpdatedAt)
 }
 
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantResponseData) SetWarningTiers(warningTiers []*BillingPlanCreditGrantWarningTierResponseData) {
+	b.WarningTiers = warningTiers
+	b.require(billingPlanCreditGrantResponseDataFieldWarningTiers)
+}
+
 func (b *BillingPlanCreditGrantResponseData) UnmarshalJSON(data []byte) error {
 	type embed BillingPlanCreditGrantResponseData
 	var unmarshaler = struct {
@@ -3946,6 +3963,125 @@ func (b *BillingPlanCreditGrantResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingPlanCreditGrantResponseData) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingPlanCreditGrantWarningTierResponseDataFieldID    = big.NewInt(1 << 0)
+	billingPlanCreditGrantWarningTierResponseDataFieldKey   = big.NewInt(1 << 1)
+	billingPlanCreditGrantWarningTierResponseDataFieldValue = big.NewInt(1 << 2)
+)
+
+type BillingPlanCreditGrantWarningTierResponseData struct {
+	ID  string `json:"id" url:"id"`
+	Key string `json:"key" url:"key"`
+	// Credits remaining in the company's balance at which this warning is reached.
+	Value int64 `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) GetKey() string {
+	if b == nil {
+		return ""
+	}
+	return b.Key
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) GetValue() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Value
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantWarningTierResponseData) SetID(id string) {
+	b.ID = id
+	b.require(billingPlanCreditGrantWarningTierResponseDataFieldID)
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantWarningTierResponseData) SetKey(key string) {
+	b.Key = key
+	b.require(billingPlanCreditGrantWarningTierResponseDataFieldKey)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingPlanCreditGrantWarningTierResponseData) SetValue(value int64) {
+	b.Value = value
+	b.require(billingPlanCreditGrantWarningTierResponseDataFieldValue)
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler BillingPlanCreditGrantWarningTierResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*b = BillingPlanCreditGrantWarningTierResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) MarshalJSON() ([]byte, error) {
+	type embed BillingPlanCreditGrantWarningTierResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*b),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingPlanCreditGrantWarningTierResponseData) String() string {
 	if b == nil {
 		return "<nil>"
 	}
@@ -7560,6 +7696,711 @@ func (c *CaptureRawEventBatch) String() string {
 }
 
 var (
+	catalogDetailResponseDataFieldCapabilities    = big.NewInt(1 << 0)
+	catalogDetailResponseDataFieldCustomPlanCta   = big.NewInt(1 << 1)
+	catalogDetailResponseDataFieldDefaultCurrency = big.NewInt(1 << 2)
+	catalogDetailResponseDataFieldDescription     = big.NewInt(1 << 3)
+	catalogDetailResponseDataFieldID              = big.NewInt(1 << 4)
+	catalogDetailResponseDataFieldName            = big.NewInt(1 << 5)
+	catalogDetailResponseDataFieldPricingModel    = big.NewInt(1 << 6)
+	catalogDetailResponseDataFieldPricingURL      = big.NewInt(1 << 7)
+)
+
+type CatalogDetailResponseData struct {
+	Capabilities *CatalogCapabilitiesResponseData `json:"capabilities" url:"capabilities"`
+	// Present when the catalog offers a custom plan; absent when custom plans are hidden.
+	CustomPlanCta *CatalogCustomPlanCtaResponseData `json:"custom_plan_cta,omitempty" url:"custom_plan_cta,omitempty"`
+	// ISO 4217 currency of every top-level price slot; currency_prices carries the others.
+	DefaultCurrency Currency `json:"default_currency" url:"default_currency"`
+	Description     *string  `json:"description,omitempty" url:"description,omitempty"`
+	ID              string   `json:"id" url:"id"`
+	Name            string   `json:"name" url:"name"`
+	PricingModel    *string  `json:"pricing_model,omitempty" url:"pricing_model,omitempty"`
+	PricingURL      *string  `json:"pricing_url,omitempty" url:"pricing_url,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogDetailResponseData) GetCapabilities() *CatalogCapabilitiesResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Capabilities
+}
+
+func (c *CatalogDetailResponseData) GetCustomPlanCta() *CatalogCustomPlanCtaResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CustomPlanCta
+}
+
+func (c *CatalogDetailResponseData) GetDefaultCurrency() Currency {
+	if c == nil {
+		return ""
+	}
+	return c.DefaultCurrency
+}
+
+func (c *CatalogDetailResponseData) GetDescription() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Description
+}
+
+func (c *CatalogDetailResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CatalogDetailResponseData) GetName() string {
+	if c == nil {
+		return ""
+	}
+	return c.Name
+}
+
+func (c *CatalogDetailResponseData) GetPricingModel() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PricingModel
+}
+
+func (c *CatalogDetailResponseData) GetPricingURL() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PricingURL
+}
+
+func (c *CatalogDetailResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogDetailResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCapabilities sets the Capabilities field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetCapabilities(capabilities *CatalogCapabilitiesResponseData) {
+	c.Capabilities = capabilities
+	c.require(catalogDetailResponseDataFieldCapabilities)
+}
+
+// SetCustomPlanCta sets the CustomPlanCta field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetCustomPlanCta(customPlanCta *CatalogCustomPlanCtaResponseData) {
+	c.CustomPlanCta = customPlanCta
+	c.require(catalogDetailResponseDataFieldCustomPlanCta)
+}
+
+// SetDefaultCurrency sets the DefaultCurrency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetDefaultCurrency(defaultCurrency Currency) {
+	c.DefaultCurrency = defaultCurrency
+	c.require(catalogDetailResponseDataFieldDefaultCurrency)
+}
+
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetDescription(description *string) {
+	c.Description = description
+	c.require(catalogDetailResponseDataFieldDescription)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetID(id string) {
+	c.ID = id
+	c.require(catalogDetailResponseDataFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetName(name string) {
+	c.Name = name
+	c.require(catalogDetailResponseDataFieldName)
+}
+
+// SetPricingModel sets the PricingModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetPricingModel(pricingModel *string) {
+	c.PricingModel = pricingModel
+	c.require(catalogDetailResponseDataFieldPricingModel)
+}
+
+// SetPricingURL sets the PricingURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogDetailResponseData) SetPricingURL(pricingURL *string) {
+	c.PricingURL = pricingURL
+	c.require(catalogDetailResponseDataFieldPricingURL)
+}
+
+func (c *CatalogDetailResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogDetailResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogDetailResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogDetailResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogDetailResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogDetailResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	catalogEntitlementResponseDataFieldConsumptionRate        = big.NewInt(1 << 0)
+	catalogEntitlementResponseDataFieldCreditEquivalentLimit  = big.NewInt(1 << 1)
+	catalogEntitlementResponseDataFieldCreditIcon             = big.NewInt(1 << 2)
+	catalogEntitlementResponseDataFieldCreditID               = big.NewInt(1 << 3)
+	catalogEntitlementResponseDataFieldCreditName             = big.NewInt(1 << 4)
+	catalogEntitlementResponseDataFieldCreditPluralName       = big.NewInt(1 << 5)
+	catalogEntitlementResponseDataFieldCreditSingularName     = big.NewInt(1 << 6)
+	catalogEntitlementResponseDataFieldCurrencyPrices         = big.NewInt(1 << 7)
+	catalogEntitlementResponseDataFieldFeatureDescription     = big.NewInt(1 << 8)
+	catalogEntitlementResponseDataFieldFeatureIcon            = big.NewInt(1 << 9)
+	catalogEntitlementResponseDataFieldFeatureID              = big.NewInt(1 << 10)
+	catalogEntitlementResponseDataFieldFeatureName            = big.NewInt(1 << 11)
+	catalogEntitlementResponseDataFieldFeaturePluralName      = big.NewInt(1 << 12)
+	catalogEntitlementResponseDataFieldFeatureSingularName    = big.NewInt(1 << 13)
+	catalogEntitlementResponseDataFieldFeatureType            = big.NewInt(1 << 14)
+	catalogEntitlementResponseDataFieldLicenseID              = big.NewInt(1 << 15)
+	catalogEntitlementResponseDataFieldMeteredMonthlyPrice    = big.NewInt(1 << 16)
+	catalogEntitlementResponseDataFieldMeteredQuarterlyPrice  = big.NewInt(1 << 17)
+	catalogEntitlementResponseDataFieldMeteredYearlyPrice     = big.NewInt(1 << 18)
+	catalogEntitlementResponseDataFieldMetricPeriod           = big.NewInt(1 << 19)
+	catalogEntitlementResponseDataFieldMetricPeriodMonthReset = big.NewInt(1 << 20)
+	catalogEntitlementResponseDataFieldPriceBehavior          = big.NewInt(1 << 21)
+	catalogEntitlementResponseDataFieldSoftLimit              = big.NewInt(1 << 22)
+	catalogEntitlementResponseDataFieldValueBool              = big.NewInt(1 << 23)
+	catalogEntitlementResponseDataFieldValueNumeric           = big.NewInt(1 << 24)
+	catalogEntitlementResponseDataFieldValueType              = big.NewInt(1 << 25)
+	catalogEntitlementResponseDataFieldWarningThreshold       = big.NewInt(1 << 26)
+)
+
+type CatalogEntitlementResponseData struct {
+	// Credits consumed per unit of usage, for credit-burndown entitlements.
+	ConsumptionRate *float64 `json:"consumption_rate,omitempty" url:"consumption_rate,omitempty"`
+	// How many units of usage the plan's fixed included credit grants cover (⌊granted credits ÷ consumption rate⌋). Null when there is no fixed grant or the grant scales per license.
+	CreditEquivalentLimit  *int64                               `json:"credit_equivalent_limit,omitempty" url:"credit_equivalent_limit,omitempty"`
+	CreditIcon             *string                              `json:"credit_icon,omitempty" url:"credit_icon,omitempty"`
+	CreditID               *string                              `json:"credit_id,omitempty" url:"credit_id,omitempty"`
+	CreditName             *string                              `json:"credit_name,omitempty" url:"credit_name,omitempty"`
+	CreditPluralName       *string                              `json:"credit_plural_name,omitempty" url:"credit_plural_name,omitempty"`
+	CreditSingularName     *string                              `json:"credit_singular_name,omitempty" url:"credit_singular_name,omitempty"`
+	CurrencyPrices         []*CatalogCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
+	FeatureDescription     string                               `json:"feature_description" url:"feature_description"`
+	FeatureIcon            string                               `json:"feature_icon" url:"feature_icon"`
+	FeatureID              string                               `json:"feature_id" url:"feature_id"`
+	FeatureName            string                               `json:"feature_name" url:"feature_name"`
+	FeaturePluralName      *string                              `json:"feature_plural_name,omitempty" url:"feature_plural_name,omitempty"`
+	FeatureSingularName    *string                              `json:"feature_singular_name,omitempty" url:"feature_singular_name,omitempty"`
+	FeatureType            FeatureType                          `json:"feature_type" url:"feature_type"`
+	LicenseID              *string                              `json:"license_id,omitempty" url:"license_id,omitempty"`
+	MeteredMonthlyPrice    *CatalogPriceResponseData            `json:"metered_monthly_price,omitempty" url:"metered_monthly_price,omitempty"`
+	MeteredQuarterlyPrice  *CatalogPriceResponseData            `json:"metered_quarterly_price,omitempty" url:"metered_quarterly_price,omitempty"`
+	MeteredYearlyPrice     *CatalogPriceResponseData            `json:"metered_yearly_price,omitempty" url:"metered_yearly_price,omitempty"`
+	MetricPeriod           *MetricPeriod                        `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset              `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	PriceBehavior          *EntitlementPriceBehavior            `json:"price_behavior,omitempty" url:"price_behavior,omitempty"`
+	SoftLimit              *int64                               `json:"soft_limit,omitempty" url:"soft_limit,omitempty"`
+	ValueBool              *bool                                `json:"value_bool,omitempty" url:"value_bool,omitempty"`
+	ValueNumeric           *int64                               `json:"value_numeric,omitempty" url:"value_numeric,omitempty"`
+	ValueType              EntitlementValueType                 `json:"value_type" url:"value_type"`
+	// The default warning-tier value, when configured.
+	WarningThreshold *int64 `json:"warning_threshold,omitempty" url:"warning_threshold,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CatalogEntitlementResponseData) GetConsumptionRate() *float64 {
+	if c == nil {
+		return nil
+	}
+	return c.ConsumptionRate
+}
+
+func (c *CatalogEntitlementResponseData) GetCreditEquivalentLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.CreditEquivalentLimit
+}
+
+func (c *CatalogEntitlementResponseData) GetCreditIcon() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditIcon
+}
+
+func (c *CatalogEntitlementResponseData) GetCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditID
+}
+
+func (c *CatalogEntitlementResponseData) GetCreditName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditName
+}
+
+func (c *CatalogEntitlementResponseData) GetCreditPluralName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditPluralName
+}
+
+func (c *CatalogEntitlementResponseData) GetCreditSingularName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CreditSingularName
+}
+
+func (c *CatalogEntitlementResponseData) GetCurrencyPrices() []*CatalogCurrencyPricesResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CurrencyPrices
+}
+
+func (c *CatalogEntitlementResponseData) GetFeatureDescription() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureDescription
+}
+
+func (c *CatalogEntitlementResponseData) GetFeatureIcon() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureIcon
+}
+
+func (c *CatalogEntitlementResponseData) GetFeatureID() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureID
+}
+
+func (c *CatalogEntitlementResponseData) GetFeatureName() string {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureName
+}
+
+func (c *CatalogEntitlementResponseData) GetFeaturePluralName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeaturePluralName
+}
+
+func (c *CatalogEntitlementResponseData) GetFeatureSingularName() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureSingularName
+}
+
+func (c *CatalogEntitlementResponseData) GetFeatureType() FeatureType {
+	if c == nil {
+		return ""
+	}
+	return c.FeatureType
+}
+
+func (c *CatalogEntitlementResponseData) GetLicenseID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.LicenseID
+}
+
+func (c *CatalogEntitlementResponseData) GetMeteredMonthlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MeteredMonthlyPrice
+}
+
+func (c *CatalogEntitlementResponseData) GetMeteredQuarterlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MeteredQuarterlyPrice
+}
+
+func (c *CatalogEntitlementResponseData) GetMeteredYearlyPrice() *CatalogPriceResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.MeteredYearlyPrice
+}
+
+func (c *CatalogEntitlementResponseData) GetMetricPeriod() *MetricPeriod {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriod
+}
+
+func (c *CatalogEntitlementResponseData) GetMetricPeriodMonthReset() *MetricPeriodMonthReset {
+	if c == nil {
+		return nil
+	}
+	return c.MetricPeriodMonthReset
+}
+
+func (c *CatalogEntitlementResponseData) GetPriceBehavior() *EntitlementPriceBehavior {
+	if c == nil {
+		return nil
+	}
+	return c.PriceBehavior
+}
+
+func (c *CatalogEntitlementResponseData) GetSoftLimit() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.SoftLimit
+}
+
+func (c *CatalogEntitlementResponseData) GetValueBool() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.ValueBool
+}
+
+func (c *CatalogEntitlementResponseData) GetValueNumeric() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.ValueNumeric
+}
+
+func (c *CatalogEntitlementResponseData) GetValueType() EntitlementValueType {
+	if c == nil {
+		return ""
+	}
+	return c.ValueType
+}
+
+func (c *CatalogEntitlementResponseData) GetWarningThreshold() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.WarningThreshold
+}
+
+func (c *CatalogEntitlementResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CatalogEntitlementResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetConsumptionRate sets the ConsumptionRate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetConsumptionRate(consumptionRate *float64) {
+	c.ConsumptionRate = consumptionRate
+	c.require(catalogEntitlementResponseDataFieldConsumptionRate)
+}
+
+// SetCreditEquivalentLimit sets the CreditEquivalentLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCreditEquivalentLimit(creditEquivalentLimit *int64) {
+	c.CreditEquivalentLimit = creditEquivalentLimit
+	c.require(catalogEntitlementResponseDataFieldCreditEquivalentLimit)
+}
+
+// SetCreditIcon sets the CreditIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCreditIcon(creditIcon *string) {
+	c.CreditIcon = creditIcon
+	c.require(catalogEntitlementResponseDataFieldCreditIcon)
+}
+
+// SetCreditID sets the CreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCreditID(creditID *string) {
+	c.CreditID = creditID
+	c.require(catalogEntitlementResponseDataFieldCreditID)
+}
+
+// SetCreditName sets the CreditName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCreditName(creditName *string) {
+	c.CreditName = creditName
+	c.require(catalogEntitlementResponseDataFieldCreditName)
+}
+
+// SetCreditPluralName sets the CreditPluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCreditPluralName(creditPluralName *string) {
+	c.CreditPluralName = creditPluralName
+	c.require(catalogEntitlementResponseDataFieldCreditPluralName)
+}
+
+// SetCreditSingularName sets the CreditSingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCreditSingularName(creditSingularName *string) {
+	c.CreditSingularName = creditSingularName
+	c.require(catalogEntitlementResponseDataFieldCreditSingularName)
+}
+
+// SetCurrencyPrices sets the CurrencyPrices field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetCurrencyPrices(currencyPrices []*CatalogCurrencyPricesResponseData) {
+	c.CurrencyPrices = currencyPrices
+	c.require(catalogEntitlementResponseDataFieldCurrencyPrices)
+}
+
+// SetFeatureDescription sets the FeatureDescription field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeatureDescription(featureDescription string) {
+	c.FeatureDescription = featureDescription
+	c.require(catalogEntitlementResponseDataFieldFeatureDescription)
+}
+
+// SetFeatureIcon sets the FeatureIcon field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeatureIcon(featureIcon string) {
+	c.FeatureIcon = featureIcon
+	c.require(catalogEntitlementResponseDataFieldFeatureIcon)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeatureID(featureID string) {
+	c.FeatureID = featureID
+	c.require(catalogEntitlementResponseDataFieldFeatureID)
+}
+
+// SetFeatureName sets the FeatureName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeatureName(featureName string) {
+	c.FeatureName = featureName
+	c.require(catalogEntitlementResponseDataFieldFeatureName)
+}
+
+// SetFeaturePluralName sets the FeaturePluralName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeaturePluralName(featurePluralName *string) {
+	c.FeaturePluralName = featurePluralName
+	c.require(catalogEntitlementResponseDataFieldFeaturePluralName)
+}
+
+// SetFeatureSingularName sets the FeatureSingularName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeatureSingularName(featureSingularName *string) {
+	c.FeatureSingularName = featureSingularName
+	c.require(catalogEntitlementResponseDataFieldFeatureSingularName)
+}
+
+// SetFeatureType sets the FeatureType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetFeatureType(featureType FeatureType) {
+	c.FeatureType = featureType
+	c.require(catalogEntitlementResponseDataFieldFeatureType)
+}
+
+// SetLicenseID sets the LicenseID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetLicenseID(licenseID *string) {
+	c.LicenseID = licenseID
+	c.require(catalogEntitlementResponseDataFieldLicenseID)
+}
+
+// SetMeteredMonthlyPrice sets the MeteredMonthlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetMeteredMonthlyPrice(meteredMonthlyPrice *CatalogPriceResponseData) {
+	c.MeteredMonthlyPrice = meteredMonthlyPrice
+	c.require(catalogEntitlementResponseDataFieldMeteredMonthlyPrice)
+}
+
+// SetMeteredQuarterlyPrice sets the MeteredQuarterlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetMeteredQuarterlyPrice(meteredQuarterlyPrice *CatalogPriceResponseData) {
+	c.MeteredQuarterlyPrice = meteredQuarterlyPrice
+	c.require(catalogEntitlementResponseDataFieldMeteredQuarterlyPrice)
+}
+
+// SetMeteredYearlyPrice sets the MeteredYearlyPrice field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetMeteredYearlyPrice(meteredYearlyPrice *CatalogPriceResponseData) {
+	c.MeteredYearlyPrice = meteredYearlyPrice
+	c.require(catalogEntitlementResponseDataFieldMeteredYearlyPrice)
+}
+
+// SetMetricPeriod sets the MetricPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetMetricPeriod(metricPeriod *MetricPeriod) {
+	c.MetricPeriod = metricPeriod
+	c.require(catalogEntitlementResponseDataFieldMetricPeriod)
+}
+
+// SetMetricPeriodMonthReset sets the MetricPeriodMonthReset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
+	c.MetricPeriodMonthReset = metricPeriodMonthReset
+	c.require(catalogEntitlementResponseDataFieldMetricPeriodMonthReset)
+}
+
+// SetPriceBehavior sets the PriceBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetPriceBehavior(priceBehavior *EntitlementPriceBehavior) {
+	c.PriceBehavior = priceBehavior
+	c.require(catalogEntitlementResponseDataFieldPriceBehavior)
+}
+
+// SetSoftLimit sets the SoftLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetSoftLimit(softLimit *int64) {
+	c.SoftLimit = softLimit
+	c.require(catalogEntitlementResponseDataFieldSoftLimit)
+}
+
+// SetValueBool sets the ValueBool field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetValueBool(valueBool *bool) {
+	c.ValueBool = valueBool
+	c.require(catalogEntitlementResponseDataFieldValueBool)
+}
+
+// SetValueNumeric sets the ValueNumeric field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetValueNumeric(valueNumeric *int64) {
+	c.ValueNumeric = valueNumeric
+	c.require(catalogEntitlementResponseDataFieldValueNumeric)
+}
+
+// SetValueType sets the ValueType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetValueType(valueType EntitlementValueType) {
+	c.ValueType = valueType
+	c.require(catalogEntitlementResponseDataFieldValueType)
+}
+
+// SetWarningThreshold sets the WarningThreshold field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogEntitlementResponseData) SetWarningThreshold(warningThreshold *int64) {
+	c.WarningThreshold = warningThreshold
+	c.require(catalogEntitlementResponseDataFieldWarningThreshold)
+}
+
+func (c *CatalogEntitlementResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler CatalogEntitlementResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CatalogEntitlementResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CatalogEntitlementResponseData) MarshalJSON() ([]byte, error) {
+	type embed CatalogEntitlementResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CatalogEntitlementResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	changeSubscriptionRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
 	changeSubscriptionRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)
 	changeSubscriptionRequestBodyFieldBillingEntityID    = big.NewInt(1 << 2)
@@ -8204,6 +9045,7 @@ const (
 	CheckoutProblemCodeBillingStartDateNeedsRenewalDate         CheckoutProblemCode = "billing_start_date_needs_renewal_date"
 	CheckoutProblemCodeBillingStartDateNotBeforeRenewalDate     CheckoutProblemCode = "billing_start_date_not_before_renewal_date"
 	CheckoutProblemCodeBillingStartDateTooFarInPast             CheckoutProblemCode = "billing_start_date_too_far_in_past"
+	CheckoutProblemCodeCheckoutSuperseded                       CheckoutProblemCode = "checkout_superseded"
 	CheckoutProblemCodeCreditBundleIncompatible                 CheckoutProblemCode = "credit_bundle_incompatible"
 	CheckoutProblemCodeCreditBundleUnavailable                  CheckoutProblemCode = "credit_bundle_unavailable"
 	CheckoutProblemCodeCreditBundlesActivateOnPayment           CheckoutProblemCode = "credit_bundles_activate_on_payment"
@@ -8211,6 +9053,9 @@ const (
 	CheckoutProblemCodeCustomFieldRequired                      CheckoutProblemCode = "custom_field_required"
 	CheckoutProblemCodeDiscountIneligible                       CheckoutProblemCode = "discount_ineligible"
 	CheckoutProblemCodeDowngradeNotPermitted                    CheckoutProblemCode = "downgrade_not_permitted"
+	CheckoutProblemCodeEndDateMustBeFuture                      CheckoutProblemCode = "end_date_must_be_future"
+	CheckoutProblemCodeEndDateNeedsNewSubscription              CheckoutProblemCode = "end_date_needs_new_subscription"
+	CheckoutProblemCodeEndDateNotAfterRenewalDate               CheckoutProblemCode = "end_date_not_after_renewal_date"
 	CheckoutProblemCodeFreeFirstPeriodActivatesOnPayment        CheckoutProblemCode = "free_first_period_activates_on_payment"
 	CheckoutProblemCodeInvoiceEmailRequired                     CheckoutProblemCode = "invoice_email_required"
 	CheckoutProblemCodeInvoicedSubscriptionConflictsWithTrial   CheckoutProblemCode = "invoiced_subscription_conflicts_with_trial"
@@ -8265,6 +9110,8 @@ func NewCheckoutProblemCodeFromString(s string) (CheckoutProblemCode, error) {
 		return CheckoutProblemCodeBillingStartDateNotBeforeRenewalDate, nil
 	case "billing_start_date_too_far_in_past":
 		return CheckoutProblemCodeBillingStartDateTooFarInPast, nil
+	case "checkout_superseded":
+		return CheckoutProblemCodeCheckoutSuperseded, nil
 	case "credit_bundle_incompatible":
 		return CheckoutProblemCodeCreditBundleIncompatible, nil
 	case "credit_bundle_unavailable":
@@ -8279,6 +9126,12 @@ func NewCheckoutProblemCodeFromString(s string) (CheckoutProblemCode, error) {
 		return CheckoutProblemCodeDiscountIneligible, nil
 	case "downgrade_not_permitted":
 		return CheckoutProblemCodeDowngradeNotPermitted, nil
+	case "end_date_must_be_future":
+		return CheckoutProblemCodeEndDateMustBeFuture, nil
+	case "end_date_needs_new_subscription":
+		return CheckoutProblemCodeEndDateNeedsNewSubscription, nil
+	case "end_date_not_after_renewal_date":
+		return CheckoutProblemCodeEndDateNotAfterRenewalDate, nil
 	case "free_first_period_activates_on_payment":
 		return CheckoutProblemCodeFreeFirstPeriodActivatesOnPayment, nil
 	case "invoice_email_required":
@@ -15445,6 +16298,7 @@ var (
 	createBillingPlanCreditGrantRequestBodyFieldTierMode                   = big.NewInt(1 << 34)
 	createBillingPlanCreditGrantRequestBodyFieldUnitPrice                  = big.NewInt(1 << 35)
 	createBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal           = big.NewInt(1 << 36)
+	createBillingPlanCreditGrantRequestBodyFieldWarningTiers               = big.NewInt(1 << 37)
 )
 
 type CreateBillingPlanCreditGrantRequestBody struct {
@@ -15501,6 +16355,8 @@ type CreateBillingPlanCreditGrantRequestBody struct {
 	UnitPrice *int64 `json:"unit_price,omitempty" url:"unit_price,omitempty"`
 	// Price per credit as a decimal in the plan currency's smallest unit, for prices below one cent.
 	UnitPriceDecimal *string `json:"unit_price_decimal,omitempty" url:"unit_price_decimal,omitempty"`
+	// Usage-warning thresholds, in credits remaining in the company's balance (grant, rollover, top-ups and bundles together). Each value must be below the grant amount, and values must be unique. Schematic sends a credit.usage_warning_reached webhook once when the balance drops to each threshold, and again after the balance rises back above it. Omit to leave the thresholds as they are; send an empty list to remove them. At most 5.
+	WarningTiers []*PlanCreditGrantWarningTierRequestBody `json:"warning_tiers,omitempty" url:"warning_tiers,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -15759,6 +16615,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) GetUnitPriceDecimal() *string 
 		return nil
 	}
 	return c.UnitPriceDecimal
+}
+
+func (c *CreateBillingPlanCreditGrantRequestBody) GetWarningTiers() []*PlanCreditGrantWarningTierRequestBody {
+	if c == nil {
+		return nil
+	}
+	return c.WarningTiers
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
@@ -16034,6 +16897,13 @@ func (c *CreateBillingPlanCreditGrantRequestBody) SetUnitPrice(unitPrice *int64)
 func (c *CreateBillingPlanCreditGrantRequestBody) SetUnitPriceDecimal(unitPriceDecimal *string) {
 	c.UnitPriceDecimal = unitPriceDecimal
 	c.require(createBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal)
+}
+
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingPlanCreditGrantRequestBody) SetWarningTiers(warningTiers []*PlanCreditGrantWarningTierRequestBody) {
+	c.WarningTiers = warningTiers
+	c.require(createBillingPlanCreditGrantRequestBodyFieldWarningTiers)
 }
 
 func (c *CreateBillingPlanCreditGrantRequestBody) UnmarshalJSON(data []byte) error {
@@ -19147,19 +20017,20 @@ var (
 	customPlanBillingResponseDataFieldCompanyID          = big.NewInt(1 << 4)
 	customPlanBillingResponseDataFieldCreatedAt          = big.NewInt(1 << 5)
 	customPlanBillingResponseDataFieldDaysUntilDue       = big.NewInt(1 << 6)
-	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 7)
-	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 8)
-	customPlanBillingResponseDataFieldMigrationID        = big.NewInt(1 << 9)
-	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 10)
-	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 11)
-	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 12)
-	customPlanBillingResponseDataFieldProblems           = big.NewInt(1 << 13)
-	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 14)
-	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 15)
-	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 16)
-	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 17)
-	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 18)
-	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 19)
+	customPlanBillingResponseDataFieldEndDate            = big.NewInt(1 << 7)
+	customPlanBillingResponseDataFieldExternalInvoiceID  = big.NewInt(1 << 8)
+	customPlanBillingResponseDataFieldID                 = big.NewInt(1 << 9)
+	customPlanBillingResponseDataFieldMigrationID        = big.NewInt(1 << 10)
+	customPlanBillingResponseDataFieldPaidAt             = big.NewInt(1 << 11)
+	customPlanBillingResponseDataFieldPlanBillingSource  = big.NewInt(1 << 12)
+	customPlanBillingResponseDataFieldPlanID             = big.NewInt(1 << 13)
+	customPlanBillingResponseDataFieldProblems           = big.NewInt(1 << 14)
+	customPlanBillingResponseDataFieldProrateFirstPeriod = big.NewInt(1 << 15)
+	customPlanBillingResponseDataFieldPublishedAt        = big.NewInt(1 << 16)
+	customPlanBillingResponseDataFieldSendInvoice        = big.NewInt(1 << 17)
+	customPlanBillingResponseDataFieldStatus             = big.NewInt(1 << 18)
+	customPlanBillingResponseDataFieldStripeInvoiceURL   = big.NewInt(1 << 19)
+	customPlanBillingResponseDataFieldUpdatedAt          = big.NewInt(1 << 20)
 )
 
 type CustomPlanBillingResponseData struct {
@@ -19169,12 +20040,14 @@ type CustomPlanBillingResponseData struct {
 	// The date the contract term starts, when the operator pinned one. A past date was backdated onto the subscription so the first period runs from the contract date rather than from finalization.
 	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
 	// The checkout this billing record was created from, when it was created from one.
-	CheckoutID        *string   `json:"checkout_id,omitempty" url:"checkout_id,omitempty"`
-	CompanyID         string    `json:"company_id" url:"company_id"`
-	CreatedAt         time.Time `json:"created_at" url:"created_at"`
-	DaysUntilDue      int64     `json:"days_until_due" url:"days_until_due"`
-	ExternalInvoiceID *string   `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
-	ID                string    `json:"id" url:"id"`
+	CheckoutID   *string   `json:"checkout_id,omitempty" url:"checkout_id,omitempty"`
+	CompanyID    string    `json:"company_id" url:"company_id"`
+	CreatedAt    time.Time `json:"created_at" url:"created_at"`
+	DaysUntilDue int64     `json:"days_until_due" url:"days_until_due"`
+	// When a custom plan that doesn't renew ends: the renewal the subscription stops on and the company moves to the default plan. Null for a plan that renews.
+	EndDate           *time.Time `json:"end_date,omitempty" url:"end_date,omitempty"`
+	ExternalInvoiceID *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
+	ID                string     `json:"id" url:"id"`
 	// The plan version migration this amendment invoice belongs to. Null for a first publish or a plan assigned through Manage Plan.
 	MigrationID *string    `json:"migration_id,omitempty" url:"migration_id,omitempty"`
 	PaidAt      *time.Time `json:"paid_at,omitempty" url:"paid_at,omitempty"`
@@ -19245,6 +20118,13 @@ func (c *CustomPlanBillingResponseData) GetDaysUntilDue() int64 {
 		return 0
 	}
 	return c.DaysUntilDue
+}
+
+func (c *CustomPlanBillingResponseData) GetEndDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.EndDate
 }
 
 func (c *CustomPlanBillingResponseData) GetExternalInvoiceID() *string {
@@ -19403,6 +20283,13 @@ func (c *CustomPlanBillingResponseData) SetDaysUntilDue(daysUntilDue int64) {
 	c.require(customPlanBillingResponseDataFieldDaysUntilDue)
 }
 
+// SetEndDate sets the EndDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CustomPlanBillingResponseData) SetEndDate(endDate *time.Time) {
+	c.EndDate = endDate
+	c.require(customPlanBillingResponseDataFieldEndDate)
+}
+
 // SetExternalInvoiceID sets the ExternalInvoiceID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CustomPlanBillingResponseData) SetExternalInvoiceID(externalInvoiceID *string) {
@@ -19501,6 +20388,7 @@ func (c *CustomPlanBillingResponseData) UnmarshalJSON(data []byte) error {
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
 		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
 		CreatedAt          *internal.DateTime `json:"created_at"`
+		EndDate            *internal.DateTime `json:"end_date,omitempty"`
 		PaidAt             *internal.DateTime `json:"paid_at,omitempty"`
 		PublishedAt        *internal.DateTime `json:"published_at,omitempty"`
 		UpdatedAt          *internal.DateTime `json:"updated_at"`
@@ -19514,6 +20402,7 @@ func (c *CustomPlanBillingResponseData) UnmarshalJSON(data []byte) error {
 	c.BillingCycleAnchor = unmarshaler.BillingCycleAnchor.TimePtr()
 	c.BillingStartDate = unmarshaler.BillingStartDate.TimePtr()
 	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.EndDate = unmarshaler.EndDate.TimePtr()
 	c.PaidAt = unmarshaler.PaidAt.TimePtr()
 	c.PublishedAt = unmarshaler.PublishedAt.TimePtr()
 	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
@@ -19533,6 +20422,7 @@ func (c *CustomPlanBillingResponseData) MarshalJSON() ([]byte, error) {
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
 		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
 		CreatedAt          *internal.DateTime `json:"created_at"`
+		EndDate            *internal.DateTime `json:"end_date,omitempty"`
 		PaidAt             *internal.DateTime `json:"paid_at,omitempty"`
 		PublishedAt        *internal.DateTime `json:"published_at,omitempty"`
 		UpdatedAt          *internal.DateTime `json:"updated_at"`
@@ -19541,6 +20431,7 @@ func (c *CustomPlanBillingResponseData) MarshalJSON() ([]byte, error) {
 		BillingCycleAnchor: internal.NewOptionalDateTime(c.BillingCycleAnchor),
 		BillingStartDate:   internal.NewOptionalDateTime(c.BillingStartDate),
 		CreatedAt:          internal.NewDateTime(c.CreatedAt),
+		EndDate:            internal.NewOptionalDateTime(c.EndDate),
 		PaidAt:             internal.NewOptionalDateTime(c.PaidAt),
 		PublishedAt:        internal.NewOptionalDateTime(c.PublishedAt),
 		UpdatedAt:          internal.NewDateTime(c.UpdatedAt),
@@ -20440,6 +21331,7 @@ type EntitlementType string
 
 const (
 	EntitlementTypeCompanyOverride EntitlementType = "company_override"
+	EntitlementTypePlanCreditGrant EntitlementType = "plan_credit_grant"
 	EntitlementTypePlanEntitlement EntitlementType = "plan_entitlement"
 	EntitlementTypeUnknown         EntitlementType = "unknown"
 )
@@ -20448,6 +21340,8 @@ func NewEntitlementTypeFromString(s string) (EntitlementType, error) {
 	switch s {
 	case "company_override":
 		return EntitlementTypeCompanyOverride, nil
+	case "plan_credit_grant":
+		return EntitlementTypePlanCreditGrant, nil
 	case "plan_entitlement":
 		return EntitlementTypePlanEntitlement, nil
 	case "unknown":
@@ -29649,6 +30543,110 @@ func (p *PlanCreditGrantView) String() string {
 }
 
 var (
+	planCreditGrantWarningTierRequestBodyFieldKey   = big.NewInt(1 << 0)
+	planCreditGrantWarningTierRequestBodyFieldValue = big.NewInt(1 << 1)
+)
+
+type PlanCreditGrantWarningTierRequestBody struct {
+	// Identifier for the threshold, unique within the grant.
+	Key string `json:"key" url:"key"`
+	// Credits remaining in the company's balance at which the warning is reached.
+	Value int64 `json:"value" url:"value"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) GetKey() string {
+	if p == nil {
+		return ""
+	}
+	return p.Key
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) GetValue() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Value
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetKey sets the Key field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantWarningTierRequestBody) SetKey(key string) {
+	p.Key = key
+	p.require(planCreditGrantWarningTierRequestBodyFieldKey)
+}
+
+// SetValue sets the Value field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanCreditGrantWarningTierRequestBody) SetValue(value int64) {
+	p.Value = value
+	p.require(planCreditGrantWarningTierRequestBodyFieldValue)
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler PlanCreditGrantWarningTierRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PlanCreditGrantWarningTierRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) MarshalJSON() ([]byte, error) {
+	type embed PlanCreditGrantWarningTierRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PlanCreditGrantWarningTierRequestBody) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
 	planCreditVisibilityFieldCreditID = big.NewInt(1 << 0)
 	planCreditVisibilityFieldVisible  = big.NewInt(1 << 1)
 )
@@ -32565,9 +33563,10 @@ var (
 	planVersionResponseDataFieldName           = big.NewInt(1 << 5)
 	planVersionResponseDataFieldOriginalPlanID = big.NewInt(1 << 6)
 	planVersionResponseDataFieldPlanType       = big.NewInt(1 << 7)
-	planVersionResponseDataFieldStatus         = big.NewInt(1 << 8)
-	planVersionResponseDataFieldUpdatedAt      = big.NewInt(1 << 9)
-	planVersionResponseDataFieldVersion        = big.NewInt(1 << 10)
+	planVersionResponseDataFieldRenewalPolicy  = big.NewInt(1 << 8)
+	planVersionResponseDataFieldStatus         = big.NewInt(1 << 9)
+	planVersionResponseDataFieldUpdatedAt      = big.NewInt(1 << 10)
+	planVersionResponseDataFieldVersion        = big.NewInt(1 << 11)
 )
 
 type PlanVersionResponseData struct {
@@ -32579,6 +33578,7 @@ type PlanVersionResponseData struct {
 	Name           string            `json:"name" url:"name"`
 	OriginalPlanID *string           `json:"original_plan_id,omitempty" url:"original_plan_id,omitempty"`
 	PlanType       PlanType          `json:"plan_type" url:"plan_type"`
+	RenewalPolicy  RenewalPolicy     `json:"renewal_policy" url:"renewal_policy"`
 	Status         PlanVersionStatus `json:"status" url:"status"`
 	UpdatedAt      time.Time         `json:"updated_at" url:"updated_at"`
 	Version        int64             `json:"version" url:"version"`
@@ -32644,6 +33644,13 @@ func (p *PlanVersionResponseData) GetPlanType() PlanType {
 		return ""
 	}
 	return p.PlanType
+}
+
+func (p *PlanVersionResponseData) GetRenewalPolicy() RenewalPolicy {
+	if p == nil {
+		return ""
+	}
+	return p.RenewalPolicy
 }
 
 func (p *PlanVersionResponseData) GetStatus() PlanVersionStatus {
@@ -32737,6 +33744,13 @@ func (p *PlanVersionResponseData) SetOriginalPlanID(originalPlanID *string) {
 func (p *PlanVersionResponseData) SetPlanType(planType PlanType) {
 	p.PlanType = planType
 	p.require(planVersionResponseDataFieldPlanType)
+}
+
+// SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionResponseData) SetRenewalPolicy(renewalPolicy RenewalPolicy) {
+	p.RenewalPolicy = renewalPolicy
+	p.require(planVersionResponseDataFieldRenewalPolicy)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -33127,6 +34141,31 @@ func NewProrationBehaviorFromString(s string) (ProrationBehavior, error) {
 
 func (p ProrationBehavior) Ptr() *ProrationBehavior {
 	return &p
+}
+
+type RenewalPolicy string
+
+const (
+	RenewalPolicyAutoRenew       RenewalPolicy = "auto_renew"
+	RenewalPolicyExpireToDefault RenewalPolicy = "expire_to_default"
+	RenewalPolicyHoldWithGrace   RenewalPolicy = "hold_with_grace"
+)
+
+func NewRenewalPolicyFromString(s string) (RenewalPolicy, error) {
+	switch s {
+	case "auto_renew":
+		return RenewalPolicyAutoRenew, nil
+	case "expire_to_default":
+		return RenewalPolicyExpireToDefault, nil
+	case "hold_with_grace":
+		return RenewalPolicyHoldWithGrace, nil
+	}
+	var t RenewalPolicy
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RenewalPolicy) Ptr() *RenewalPolicy {
+	return &r
 }
 
 var (
@@ -39962,6 +41001,7 @@ var (
 	updateBillingPlanCreditGrantRequestBodyFieldTierMode                   = big.NewInt(1 << 31)
 	updateBillingPlanCreditGrantRequestBodyFieldUnitPrice                  = big.NewInt(1 << 32)
 	updateBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal           = big.NewInt(1 << 33)
+	updateBillingPlanCreditGrantRequestBodyFieldWarningTiers               = big.NewInt(1 << 34)
 )
 
 type UpdateBillingPlanCreditGrantRequestBody struct {
@@ -40015,6 +41055,8 @@ type UpdateBillingPlanCreditGrantRequestBody struct {
 	UnitPrice *int64 `json:"unit_price,omitempty" url:"unit_price,omitempty"`
 	// Price per credit as a decimal in the plan currency's smallest unit, for prices below one cent.
 	UnitPriceDecimal *string `json:"unit_price_decimal,omitempty" url:"unit_price_decimal,omitempty"`
+	// Usage-warning thresholds, in credits remaining in the company's balance (grant, rollover, top-ups and bundles together). Each value must be below the grant amount, and values must be unique. Schematic sends a credit.usage_warning_reached webhook once when the balance drops to each threshold, and again after the balance rises back above it. Omit to leave the thresholds as they are; send an empty list to remove them. At most 5.
+	WarningTiers []*PlanCreditGrantWarningTierRequestBody `json:"warning_tiers,omitempty" url:"warning_tiers,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -40252,6 +41294,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) GetUnitPriceDecimal() *string 
 		return nil
 	}
 	return u.UnitPriceDecimal
+}
+
+func (u *UpdateBillingPlanCreditGrantRequestBody) GetWarningTiers() []*PlanCreditGrantWarningTierRequestBody {
+	if u == nil {
+		return nil
+	}
+	return u.WarningTiers
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) GetExtraProperties() map[string]interface{} {
@@ -40506,6 +41555,13 @@ func (u *UpdateBillingPlanCreditGrantRequestBody) SetUnitPrice(unitPrice *int64)
 func (u *UpdateBillingPlanCreditGrantRequestBody) SetUnitPriceDecimal(unitPriceDecimal *string) {
 	u.UnitPriceDecimal = unitPriceDecimal
 	u.require(updateBillingPlanCreditGrantRequestBodyFieldUnitPriceDecimal)
+}
+
+// SetWarningTiers sets the WarningTiers field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingPlanCreditGrantRequestBody) SetWarningTiers(warningTiers []*PlanCreditGrantWarningTierRequestBody) {
+	u.WarningTiers = warningTiers
+	u.require(updateBillingPlanCreditGrantRequestBodyFieldWarningTiers)
 }
 
 func (u *UpdateBillingPlanCreditGrantRequestBody) UnmarshalJSON(data []byte) error {

@@ -1381,11 +1381,11 @@ func (r *RawClient) GetCompanyNativeSubscription(
 	}, nil
 }
 
-func (r *RawClient) ListNativeInvoices(
+func (r *RawClient) ListBillingInvoices(
 	ctx context.Context,
-	request *schematichq.ListNativeInvoicesRequest,
+	request *schematichq.ListBillingInvoicesRequest,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.ListNativeInvoicesResponse], error) {
+) (*core.Response[*schematichq.ListBillingInvoicesResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -1404,7 +1404,7 @@ func (r *RawClient) ListNativeInvoices(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.ListNativeInvoicesResponse
+	var response *schematichq.ListBillingInvoicesResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -1423,19 +1423,19 @@ func (r *RawClient) ListNativeInvoices(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.ListNativeInvoicesResponse]{
+	return &core.Response[*schematichq.ListBillingInvoicesResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
 	}, nil
 }
 
-func (r *RawClient) GetNativeInvoice(
+func (r *RawClient) GetBillingInvoice(
 	ctx context.Context,
 	// invoice_id
 	invoiceID string,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.GetNativeInvoiceResponse], error) {
+) (*core.Response[*schematichq.GetBillingInvoiceResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -1450,7 +1450,7 @@ func (r *RawClient) GetNativeInvoice(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.GetNativeInvoiceResponse
+	var response *schematichq.GetBillingInvoiceResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -1469,7 +1469,7 @@ func (r *RawClient) GetNativeInvoice(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.GetNativeInvoiceResponse]{
+	return &core.Response[*schematichq.GetBillingInvoiceResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
@@ -1568,13 +1568,13 @@ func (r *RawClient) FinalizeNativeInvoice(
 	}, nil
 }
 
-func (r *RawClient) MarkNativeInvoicePaid(
+func (r *RawClient) MarkBillingInvoicePaid(
 	ctx context.Context,
 	// invoice_id
 	invoiceID string,
 	request *schematichq.MarkInvoicePaidRequestBody,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.MarkNativeInvoicePaidResponse], error) {
+) (*core.Response[*schematichq.MarkBillingInvoicePaidResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -1590,7 +1590,7 @@ func (r *RawClient) MarkNativeInvoicePaid(
 		options.ToHeader(),
 	)
 	headers.Add("Content-Type", "application/json")
-	var response *schematichq.MarkNativeInvoicePaidResponse
+	var response *schematichq.MarkBillingInvoicePaidResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -1610,7 +1610,7 @@ func (r *RawClient) MarkNativeInvoicePaid(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.MarkNativeInvoicePaidResponse]{
+	return &core.Response[*schematichq.MarkBillingInvoicePaidResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,
@@ -1709,11 +1709,11 @@ func (r *RawClient) VoidNativeInvoice(
 	}, nil
 }
 
-func (r *RawClient) CountNativeInvoices(
+func (r *RawClient) CountBillingInvoices(
 	ctx context.Context,
-	request *schematichq.CountNativeInvoicesRequest,
+	request *schematichq.CountBillingInvoicesRequest,
 	opts ...option.RequestOption,
-) (*core.Response[*schematichq.CountNativeInvoicesResponse], error) {
+) (*core.Response[*schematichq.CountBillingInvoicesResponse], error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -1732,7 +1732,7 @@ func (r *RawClient) CountNativeInvoices(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
-	var response *schematichq.CountNativeInvoicesResponse
+	var response *schematichq.CountBillingInvoicesResponse
 	raw, err := r.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -1751,7 +1751,7 @@ func (r *RawClient) CountNativeInvoices(
 	if err != nil {
 		return nil, err
 	}
-	return &core.Response[*schematichq.CountNativeInvoicesResponse]{
+	return &core.Response[*schematichq.CountBillingInvoicesResponse]{
 		StatusCode: raw.StatusCode,
 		Header:     raw.Header,
 		Body:       response,

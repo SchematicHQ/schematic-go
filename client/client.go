@@ -102,6 +102,132 @@ func NewClient(opts ...option.RequestOption) *Client {
 
 // Example:
 //
+//	client.PostAPIKeys(
+//	    context.TODO(),
+//	)
+func (c *Client) PostAPIKeys(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.PostAPIKeys(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Example:
+//
+//	client.PutAPIKeysAPIKeyID(
+//	    context.TODO(),
+//	    "api_key_id",
+//	)
+func (c *Client) PutAPIKeysAPIKeyID(
+	ctx context.Context,
+	apiKeyID string,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.PutAPIKeysAPIKeyID(
+		ctx,
+		apiKeyID,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Example:
+//
+//	client.DeleteAPIKeysAPIKeyID(
+//	    context.TODO(),
+//	    "api_key_id",
+//	)
+func (c *Client) DeleteAPIKeysAPIKeyID(
+	ctx context.Context,
+	apiKeyID string,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.DeleteAPIKeysAPIKeyID(
+		ctx,
+		apiKeyID,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Example:
+//
+//	client.PostEnvironments(
+//	    context.TODO(),
+//	)
+func (c *Client) PostEnvironments(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.PostEnvironments(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Example:
+//
+//	client.PutEnvironmentsEnvironmentID(
+//	    context.TODO(),
+//	    "environment_id",
+//	)
+func (c *Client) PutEnvironmentsEnvironmentID(
+	ctx context.Context,
+	environmentID string,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.PutEnvironmentsEnvironmentID(
+		ctx,
+		environmentID,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Example:
+//
+//	client.DeleteEnvironmentsEnvironmentID(
+//	    context.TODO(),
+//	    "environment_id",
+//	)
+func (c *Client) DeleteEnvironmentsEnvironmentID(
+	ctx context.Context,
+	environmentID string,
+	opts ...option.RequestOption,
+) error {
+	_, err := c.WithRawResponse.DeleteEnvironmentsEnvironmentID(
+		ctx,
+		environmentID,
+		opts...,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Example:
+//
 //	client.GetCreditLedger(
 //	    context.TODO(),
 //	)

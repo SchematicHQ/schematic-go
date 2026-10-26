@@ -1,4 +1,230 @@
 # Reference
+<details><summary><code>client.PostAPIKeys() -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.PostAPIKeys(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.PutAPIKeysAPIKeyID(APIKeyID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.PutAPIKeysAPIKeyID(
+    context.TODO(),
+    "api_key_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**apiKeyID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.DeleteAPIKeysAPIKeyID(APIKeyID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.DeleteAPIKeysAPIKeyID(
+    context.TODO(),
+    "api_key_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**apiKeyID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.PostEnvironments() -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.PostEnvironments(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.PutEnvironmentsEnvironmentID(EnvironmentID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.PutEnvironmentsEnvironmentID(
+    context.TODO(),
+    "environment_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**environmentID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.DeleteEnvironmentsEnvironmentID(EnvironmentID) -> error</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.DeleteEnvironmentsEnvironmentID(
+    context.TODO(),
+    "environment_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**environmentID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.GetCreditLedger() -> error</code></summary>
 <dl>
 <dd>
@@ -333,84 +559,6 @@ client.Accounts.ListAPIKeys(
 </dl>
 </details>
 
-<details><summary><code>client.Accounts.CreateAPIKey(request) -> *schematichq.CreateAPIKeyResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreateAPIKeyRequestBody{
-    Name: "name",
-}
-client.Accounts.CreateAPIKey(
-    context.TODO(),
-    request,
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**description:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**environmentID:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**rateLimitPercent:** `*int64` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**readonly:** `*bool` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.Accounts.GetAPIKey(APIKeyID) -> *schematichq.GetAPIKeyResponse</code></summary>
 <dl>
 <dd>
@@ -425,118 +573,6 @@ client.Accounts.CreateAPIKey(
 
 ```go
 client.Accounts.GetAPIKey(
-    context.TODO(),
-    "api_key_id",
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**apiKeyID:** `string` — api_key_id
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Accounts.UpdateAPIKey(APIKeyID, request) -> *schematichq.UpdateAPIKeyResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.UpdateAPIKeyRequestBody{}
-client.Accounts.UpdateAPIKey(
-    context.TODO(),
-    "api_key_id",
-    request,
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**apiKeyID:** `string` — api_key_id
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**description:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**rateLimitPercent:** `*int64` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Accounts.DeleteAPIKey(APIKeyID) -> *schematichq.DeleteAPIKeyResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-client.Accounts.DeleteAPIKey(
     context.TODO(),
     "api_key_id",
 )
@@ -992,61 +1028,6 @@ client.Accounts.ListEnvironments(
 </dl>
 </details>
 
-<details><summary><code>client.Accounts.CreateEnvironment(request) -> *schematichq.CreateEnvironmentResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.CreateEnvironmentRequestBody{
-    EnvironmentType: schematichq.EnvironmentTypeDevelopment,
-    Name: "name",
-}
-client.Accounts.CreateEnvironment(
-    context.TODO(),
-    request,
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**environmentType:** `schematichq.EnvironmentType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.Accounts.GetEnvironment(EnvironmentID) -> *schematichq.GetEnvironmentResponse</code></summary>
 <dl>
 <dd>
@@ -1061,118 +1042,6 @@ client.Accounts.CreateEnvironment(
 
 ```go
 client.Accounts.GetEnvironment(
-    context.TODO(),
-    "environment_id",
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**environmentID:** `string` — environment_id
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Accounts.UpdateEnvironment(EnvironmentID, request) -> *schematichq.UpdateEnvironmentResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-request := &schematichq.UpdateEnvironmentRequestBody{}
-client.Accounts.UpdateEnvironment(
-    context.TODO(),
-    "environment_id",
-    request,
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**environmentID:** `string` — environment_id
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**environmentType:** `*schematichq.EnvironmentType` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**name:** `*string` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requireContextSignature:** `*bool` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.Accounts.DeleteEnvironment(EnvironmentID) -> *schematichq.DeleteEnvironmentResponse</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-client.Accounts.DeleteEnvironment(
     context.TODO(),
     "environment_id",
 )
@@ -2591,6 +2460,14 @@ client.Billing.UpsertPaymentMethod(
 <dd>
 
 **cardLast4:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**customerBillingDetails:** `*schematichq.PaymentMethodBillingDetailsRequestBody` 
     
 </dd>
 </dl>
@@ -4380,7 +4257,7 @@ client.Billing.GetCompanyNativeSubscription(
 </dl>
 </details>
 
-<details><summary><code>client.Billing.ListNativeInvoices() -> *schematichq.ListNativeInvoicesResponse</code></summary>
+<details><summary><code>client.Billing.ListBillingInvoices() -> *schematichq.ListBillingInvoicesResponse</code></summary>
 <dl>
 <dd>
 
@@ -4393,7 +4270,7 @@ client.Billing.GetCompanyNativeSubscription(
 <dd>
 
 ```go
-request := &schematichq.ListNativeInvoicesRequest{
+request := &schematichq.ListBillingInvoicesRequest{
     CompanyID: schematichq.String(
         "company_id",
     ),
@@ -4401,6 +4278,14 @@ request := &schematichq.ListNativeInvoicesRequest{
         "contract_id",
     ),
     DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+    PastDue: schematichq.Bool(
+        true,
+    ),
+    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+    Q: schematichq.String(
+        "q",
+    ),
+    Status: schematichq.InvoiceStatusDraft.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),
@@ -4408,7 +4293,7 @@ request := &schematichq.ListNativeInvoicesRequest{
         int64(1000000),
     ),
 }
-client.Billing.ListNativeInvoices(
+client.Billing.ListBillingInvoices(
     context.TODO(),
     request,
 )
@@ -4450,6 +4335,38 @@ client.Billing.ListNativeInvoices(
 <dl>
 <dd>
 
+**pastDue:** `*bool` — Only open invoices with an amount left to pay whose due date has passed.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` — Only invoices from this billing provider. Leave empty for invoices from Schematic and Stripe.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search by invoice number, provider invoice ID or company name.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**status:** `*schematichq.InvoiceStatus` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **limit:** `*int64` — Page limit (default 100)
     
 </dd>
@@ -4470,7 +4387,7 @@ client.Billing.ListNativeInvoices(
 </dl>
 </details>
 
-<details><summary><code>client.Billing.GetNativeInvoice(InvoiceID) -> *schematichq.GetNativeInvoiceResponse</code></summary>
+<details><summary><code>client.Billing.GetBillingInvoice(InvoiceID) -> *schematichq.GetBillingInvoiceResponse</code></summary>
 <dl>
 <dd>
 
@@ -4483,7 +4400,7 @@ client.Billing.ListNativeInvoices(
 <dd>
 
 ```go
-client.Billing.GetNativeInvoice(
+client.Billing.GetBillingInvoice(
     context.TODO(),
     "invoice_id",
 )
@@ -4599,7 +4516,7 @@ client.Billing.FinalizeNativeInvoice(
 </dl>
 </details>
 
-<details><summary><code>client.Billing.MarkNativeInvoicePaid(InvoiceID, request) -> *schematichq.MarkNativeInvoicePaidResponse</code></summary>
+<details><summary><code>client.Billing.MarkBillingInvoicePaid(InvoiceID, request) -> *schematichq.MarkBillingInvoicePaidResponse</code></summary>
 <dl>
 <dd>
 
@@ -4615,7 +4532,7 @@ client.Billing.FinalizeNativeInvoice(
 request := &schematichq.MarkInvoicePaidRequestBody{
     IdempotencyKey: "idempotency_key",
 }
-client.Billing.MarkNativeInvoicePaid(
+client.Billing.MarkBillingInvoicePaid(
     context.TODO(),
     "invoice_id",
     request,
@@ -4764,7 +4681,7 @@ client.Billing.VoidNativeInvoice(
 </dl>
 </details>
 
-<details><summary><code>client.Billing.CountNativeInvoices() -> *schematichq.CountNativeInvoicesResponse</code></summary>
+<details><summary><code>client.Billing.CountBillingInvoices() -> *schematichq.CountBillingInvoicesResponse</code></summary>
 <dl>
 <dd>
 
@@ -4777,7 +4694,7 @@ client.Billing.VoidNativeInvoice(
 <dd>
 
 ```go
-request := &schematichq.CountNativeInvoicesRequest{
+request := &schematichq.CountBillingInvoicesRequest{
     CompanyID: schematichq.String(
         "company_id",
     ),
@@ -4785,6 +4702,14 @@ request := &schematichq.CountNativeInvoicesRequest{
         "contract_id",
     ),
     DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+    PastDue: schematichq.Bool(
+        true,
+    ),
+    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+    Q: schematichq.String(
+        "q",
+    ),
+    Status: schematichq.InvoiceStatusDraft.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),
@@ -4792,7 +4717,7 @@ request := &schematichq.CountNativeInvoicesRequest{
         int64(1000000),
     ),
 }
-client.Billing.CountNativeInvoices(
+client.Billing.CountBillingInvoices(
     context.TODO(),
     request,
 )
@@ -4827,6 +4752,38 @@ client.Billing.CountNativeInvoices(
 <dd>
 
 **documentState:** `*schematichq.InvoiceDocumentState` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**pastDue:** `*bool` — Only open invoices with an amount left to pay whose due date has passed.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**providerType:** `*schematichq.BillingProviderType` — Only invoices from this billing provider. Leave empty for invoices from Schematic and Stripe.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**q:** `*string` — Search by invoice number, provider invoice ID or company name.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**status:** `*schematichq.InvoiceStatus` 
     
 </dd>
 </dl>
@@ -7608,7 +7565,7 @@ client.Credits.CreateCreditSpendPolicy(
 <dl>
 <dd>
 
-**windowUnit:** `*schematichq.CreditSpendWindowUnit` — The window that window_amount applies to: one UTC hour or one UTC day. Required with window_amount.
+**windowUnit:** `*schematichq.CreditSpendWindowUnit` — The window that window_amount applies to: one UTC hour, one UTC day, one week from Monday 00:00 UTC, one calendar month from the 1st 00:00 UTC, or the company's current billing period. billing_period applies to company policies only, and a company without an active subscription falls back to the calendar month. Required with window_amount.
     
 </dd>
 </dl>
@@ -7992,6 +7949,9 @@ request := &schematichq.ListCreditEventLedgerRequest{
     FeatureID: schematichq.String(
         "feature_id",
     ),
+    SourceEventID: schematichq.String(
+        "source_event_id",
+    ),
     StartTime: schematichq.String(
         "start_time",
     ),
@@ -8060,6 +8020,14 @@ client.Credits.ListCreditEventLedger(
 <dl>
 <dd>
 
+**sourceEventID:** `*string` — Return only entries drawn by this track or inference event. Pass the event ID that POST /events returned for it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **startTime:** `*string` 
     
 </dd>
@@ -8077,6 +8045,49 @@ client.Credits.ListCreditEventLedger(
 <dd>
 
 **offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Credits.GetCreditEventLedgerEntry(LedgerEntryID) -> *schematichq.GetCreditEventLedgerEntryResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Credits.GetCreditEventLedgerEntry(
+    context.TODO(),
+    "ledger_entry_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**ledgerEntryID:** `string` — ledger_entry_id
     
 </dd>
 </dl>
@@ -8112,6 +8123,9 @@ request := &schematichq.CountCreditEventLedgerRequest{
     EventType: schematichq.CreditEventTypeAdjustment.Ptr(),
     FeatureID: schematichq.String(
         "feature_id",
+    ),
+    SourceEventID: schematichq.String(
+        "source_event_id",
     ),
     StartTime: schematichq.String(
         "start_time",
@@ -8174,6 +8188,14 @@ client.Credits.CountCreditEventLedger(
 <dd>
 
 **featureID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sourceEventID:** `*string` — Return only entries drawn by this track or inference event. Pass the event ID that POST /events returned for it.
     
 </dd>
 </dl>
@@ -8986,6 +9008,76 @@ client.Catalogs.RemovePlan(
 <dd>
 
 **planID:** `string` — plan_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetPublicCatalog() -> *schematichq.GetPublicCatalogResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetPublicCatalog(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Catalogs.GetPublicCatalogByID(CatalogID) -> *schematichq.GetPublicCatalogByIDResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+client.Catalogs.GetPublicCatalogByID(
+    context.TODO(),
+    "catalog_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**catalogID:** `string` — catalog_id
     
 </dd>
 </dl>
@@ -16602,6 +16694,14 @@ client.Plans.RetryCustomPlanBilling(
 <dl>
 <dd>
 
+**endDate:** `*time.Time` — When a plan that doesn't renew ends. Moved back to the last renewal on or before it. When omitted, the end date set at finalize is reissued. Only honored when the retry creates a subscription.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **prorateFirstPeriod:** `*bool` — When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
     
 </dd>
@@ -18577,6 +18677,14 @@ client.Planbundle.CreateCustomPlanBundle(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**renewalPolicy:** `*schematichq.RenewalPolicy` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -18652,6 +18760,14 @@ client.Planbundle.CreatePlanBundle(
 <dd>
 
 **plan:** `*schematichq.CreatePlanRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**renewalPolicy:** `*schematichq.RenewalPolicy` 
     
 </dd>
 </dl>
@@ -18746,6 +18862,14 @@ client.Planbundle.UpdatePlanBundle(
 <dd>
 
 **planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**renewalPolicy:** `*schematichq.RenewalPolicy` 
     
 </dd>
 </dl>

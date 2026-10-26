@@ -14,6 +14,7 @@ var (
 	createCustomPlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
 	createCustomPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
 	createCustomPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
+	createCustomPlanBundleRequestBodyFieldRenewalPolicy  = big.NewInt(1 << 4)
 )
 
 type CreateCustomPlanBundleRequestBody struct {
@@ -21,6 +22,7 @@ type CreateCustomPlanBundleRequestBody struct {
 	CreditGrants   []*PlanBundleCreditGrantRequestBody    `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody    `json:"entitlements" url:"-"`
 	Plan           *CreateCustomPlanBundlePlanRequestBody `json:"plan" url:"-"`
+	RenewalPolicy  *RenewalPolicy                         `json:"renewal_policy,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -63,6 +65,13 @@ func (c *CreateCustomPlanBundleRequestBody) SetPlan(plan *CreateCustomPlanBundle
 	c.require(createCustomPlanBundleRequestBodyFieldPlan)
 }
 
+// SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleRequestBody) SetRenewalPolicy(renewalPolicy *RenewalPolicy) {
+	c.RenewalPolicy = renewalPolicy
+	c.require(createCustomPlanBundleRequestBodyFieldRenewalPolicy)
+}
+
 func (c *CreateCustomPlanBundleRequestBody) UnmarshalJSON(data []byte) error {
 	type unmarshaler CreateCustomPlanBundleRequestBody
 	var body unmarshaler
@@ -89,6 +98,7 @@ var (
 	createPlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
 	createPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
 	createPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
+	createPlanBundleRequestBodyFieldRenewalPolicy  = big.NewInt(1 << 4)
 )
 
 type CreatePlanBundleRequestBody struct {
@@ -96,6 +106,7 @@ type CreatePlanBundleRequestBody struct {
 	CreditGrants   []*PlanBundleCreditGrantRequestBody `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *CreatePlanRequestBody              `json:"plan" url:"-"`
+	RenewalPolicy  *RenewalPolicy                      `json:"renewal_policy,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -136,6 +147,13 @@ func (c *CreatePlanBundleRequestBody) SetEntitlements(entitlements []*PlanBundle
 func (c *CreatePlanBundleRequestBody) SetPlan(plan *CreatePlanRequestBody) {
 	c.Plan = plan
 	c.require(createPlanBundleRequestBodyFieldPlan)
+}
+
+// SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanBundleRequestBody) SetRenewalPolicy(renewalPolicy *RenewalPolicy) {
+	c.RenewalPolicy = renewalPolicy
+	c.require(createPlanBundleRequestBodyFieldRenewalPolicy)
 }
 
 func (c *CreatePlanBundleRequestBody) UnmarshalJSON(data []byte) error {
@@ -1804,6 +1822,7 @@ var (
 	updatePlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
 	updatePlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
 	updatePlanBundleRequestBodyFieldPlanVersionID  = big.NewInt(1 << 4)
+	updatePlanBundleRequestBodyFieldRenewalPolicy  = big.NewInt(1 << 5)
 )
 
 type UpdatePlanBundleRequestBody struct {
@@ -1812,6 +1831,7 @@ type UpdatePlanBundleRequestBody struct {
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *UpdatePlanRequestBody              `json:"plan" url:"-"`
 	PlanVersionID  *string                             `json:"plan_version_id,omitempty" url:"-"`
+	RenewalPolicy  *RenewalPolicy                      `json:"renewal_policy,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1859,6 +1879,13 @@ func (u *UpdatePlanBundleRequestBody) SetPlan(plan *UpdatePlanRequestBody) {
 func (u *UpdatePlanBundleRequestBody) SetPlanVersionID(planVersionID *string) {
 	u.PlanVersionID = planVersionID
 	u.require(updatePlanBundleRequestBodyFieldPlanVersionID)
+}
+
+// SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanBundleRequestBody) SetRenewalPolicy(renewalPolicy *RenewalPolicy) {
+	u.RenewalPolicy = renewalPolicy
+	u.require(updatePlanBundleRequestBodyFieldRenewalPolicy)
 }
 
 func (u *UpdatePlanBundleRequestBody) UnmarshalJSON(data []byte) error {

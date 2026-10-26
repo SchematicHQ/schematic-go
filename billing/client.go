@@ -1063,7 +1063,7 @@ func (c *Client) GetCompanyNativeSubscription(
 
 // Example:
 //
-//	request := &schematichq.ListNativeInvoicesRequest{
+//	request := &schematichq.ListBillingInvoicesRequest{
 //	    CompanyID: schematichq.String(
 //	        "company_id",
 //	    ),
@@ -1071,6 +1071,14 @@ func (c *Client) GetCompanyNativeSubscription(
 //	        "contract_id",
 //	    ),
 //	    DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+//	    PastDue: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Status: schematichq.InvoiceStatusDraft.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),
@@ -1078,16 +1086,16 @@ func (c *Client) GetCompanyNativeSubscription(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListNativeInvoices(
+//	client.Billing.ListBillingInvoices(
 //	    context.TODO(),
 //	    request,
 //	)
-func (c *Client) ListNativeInvoices(
+func (c *Client) ListBillingInvoices(
 	ctx context.Context,
-	request *schematichq.ListNativeInvoicesRequest,
+	request *schematichq.ListBillingInvoicesRequest,
 	opts ...option.RequestOption,
-) (*schematichq.ListNativeInvoicesResponse, error) {
-	response, err := c.WithRawResponse.ListNativeInvoices(
+) (*schematichq.ListBillingInvoicesResponse, error) {
+	response, err := c.WithRawResponse.ListBillingInvoices(
 		ctx,
 		request,
 		opts...,
@@ -1100,17 +1108,17 @@ func (c *Client) ListNativeInvoices(
 
 // Example:
 //
-//	client.Billing.GetNativeInvoice(
+//	client.Billing.GetBillingInvoice(
 //	    context.TODO(),
 //	    "invoice_id",
 //	)
-func (c *Client) GetNativeInvoice(
+func (c *Client) GetBillingInvoice(
 	ctx context.Context,
 	// invoice_id
 	invoiceID string,
 	opts ...option.RequestOption,
-) (*schematichq.GetNativeInvoiceResponse, error) {
-	response, err := c.WithRawResponse.GetNativeInvoice(
+) (*schematichq.GetBillingInvoiceResponse, error) {
+	response, err := c.WithRawResponse.GetBillingInvoice(
 		ctx,
 		invoiceID,
 		opts...,
@@ -1172,19 +1180,19 @@ func (c *Client) FinalizeNativeInvoice(
 //	request := &schematichq.MarkInvoicePaidRequestBody{
 //	    IdempotencyKey: "idempotency_key",
 //	}
-//	client.Billing.MarkNativeInvoicePaid(
+//	client.Billing.MarkBillingInvoicePaid(
 //	    context.TODO(),
 //	    "invoice_id",
 //	    request,
 //	)
-func (c *Client) MarkNativeInvoicePaid(
+func (c *Client) MarkBillingInvoicePaid(
 	ctx context.Context,
 	// invoice_id
 	invoiceID string,
 	request *schematichq.MarkInvoicePaidRequestBody,
 	opts ...option.RequestOption,
-) (*schematichq.MarkNativeInvoicePaidResponse, error) {
-	response, err := c.WithRawResponse.MarkNativeInvoicePaid(
+) (*schematichq.MarkBillingInvoicePaidResponse, error) {
+	response, err := c.WithRawResponse.MarkBillingInvoicePaid(
 		ctx,
 		invoiceID,
 		request,
@@ -1244,7 +1252,7 @@ func (c *Client) VoidNativeInvoice(
 
 // Example:
 //
-//	request := &schematichq.CountNativeInvoicesRequest{
+//	request := &schematichq.CountBillingInvoicesRequest{
 //	    CompanyID: schematichq.String(
 //	        "company_id",
 //	    ),
@@ -1252,6 +1260,14 @@ func (c *Client) VoidNativeInvoice(
 //	        "contract_id",
 //	    ),
 //	    DocumentState: schematichq.InvoiceDocumentStateCredited.Ptr(),
+//	    PastDue: schematichq.Bool(
+//	        true,
+//	    ),
+//	    ProviderType: schematichq.BillingProviderTypeMetronome.Ptr(),
+//	    Q: schematichq.String(
+//	        "q",
+//	    ),
+//	    Status: schematichq.InvoiceStatusDraft.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),
@@ -1259,16 +1275,16 @@ func (c *Client) VoidNativeInvoice(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.CountNativeInvoices(
+//	client.Billing.CountBillingInvoices(
 //	    context.TODO(),
 //	    request,
 //	)
-func (c *Client) CountNativeInvoices(
+func (c *Client) CountBillingInvoices(
 	ctx context.Context,
-	request *schematichq.CountNativeInvoicesRequest,
+	request *schematichq.CountBillingInvoicesRequest,
 	opts ...option.RequestOption,
-) (*schematichq.CountNativeInvoicesResponse, error) {
-	response, err := c.WithRawResponse.CountNativeInvoices(
+) (*schematichq.CountBillingInvoicesResponse, error) {
+	response, err := c.WithRawResponse.CountBillingInvoices(
 		ctx,
 		request,
 		opts...,

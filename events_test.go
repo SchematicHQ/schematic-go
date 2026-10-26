@@ -967,28 +967,28 @@ func TestSettersMarkExplicitCreateEventRequestBody(t *testing.T) {
 }
 
 func TestGettersEventBody(t *testing.T) {
-	t.Run("GetEventBodyTrack", func(t *testing.T) {
+	t.Run("GetEventBodyInference", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &EventBody{}
-		var expected *EventBodyTrack
-		obj.EventBodyTrack = expected
+		var expected *EventBodyInference
+		obj.EventBodyInference = expected
 
 		// Act & Assert
-		assert.Equal(t, expected, obj.GetEventBodyTrack(), "getter should return the property value")
+		assert.Equal(t, expected, obj.GetEventBodyInference(), "getter should return the property value")
 	})
 
-	t.Run("GetEventBodyTrack_NilValue", func(t *testing.T) {
+	t.Run("GetEventBodyInference_NilValue", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
 		obj := &EventBody{}
-		obj.EventBodyTrack = nil
+		obj.EventBodyInference = nil
 
 		// Act & Assert
-		assert.Nil(t, obj.GetEventBodyTrack(), "getter should return nil when property is nil")
+		assert.Nil(t, obj.GetEventBodyInference(), "getter should return nil when property is nil")
 	})
 
-	t.Run("GetEventBodyTrack_NilReceiver", func(t *testing.T) {
+	t.Run("GetEventBodyInference_NilReceiver", func(t *testing.T) {
 		t.Parallel()
 		var obj *EventBody
 		// Should not panic - getters should handle nil receiver gracefully
@@ -997,7 +997,7 @@ func TestGettersEventBody(t *testing.T) {
 				t.Errorf("Getter panicked on nil receiver: %v", r)
 			}
 		}()
-		_ = obj.GetEventBodyTrack() // Should return zero value
+		_ = obj.GetEventBodyInference() // Should return zero value
 	})
 
 	t.Run("GetEventBodyFlagCheck", func(t *testing.T) {
@@ -1033,6 +1033,39 @@ func TestGettersEventBody(t *testing.T) {
 		_ = obj.GetEventBodyFlagCheck() // Should return zero value
 	})
 
+	t.Run("GetEventBodyTrack", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &EventBody{}
+		var expected *EventBodyTrack
+		obj.EventBodyTrack = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEventBodyTrack(), "getter should return the property value")
+	})
+
+	t.Run("GetEventBodyTrack_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &EventBody{}
+		obj.EventBodyTrack = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEventBodyTrack(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEventBodyTrack_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *EventBody
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEventBodyTrack() // Should return zero value
+	})
+
 	t.Run("GetEventBodyIdentify", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -1064,39 +1097,6 @@ func TestGettersEventBody(t *testing.T) {
 			}
 		}()
 		_ = obj.GetEventBodyIdentify() // Should return zero value
-	})
-
-	t.Run("GetEventBodyInference", func(t *testing.T) {
-		t.Parallel()
-		// Arrange
-		obj := &EventBody{}
-		var expected *EventBodyInference
-		obj.EventBodyInference = expected
-
-		// Act & Assert
-		assert.Equal(t, expected, obj.GetEventBodyInference(), "getter should return the property value")
-	})
-
-	t.Run("GetEventBodyInference_NilValue", func(t *testing.T) {
-		t.Parallel()
-		// Arrange
-		obj := &EventBody{}
-		obj.EventBodyInference = nil
-
-		// Act & Assert
-		assert.Nil(t, obj.GetEventBodyInference(), "getter should return nil when property is nil")
-	})
-
-	t.Run("GetEventBodyInference_NilReceiver", func(t *testing.T) {
-		t.Parallel()
-		var obj *EventBody
-		// Should not panic - getters should handle nil receiver gracefully
-		defer func() {
-			if r := recover(); r != nil {
-				t.Errorf("Getter panicked on nil receiver: %v", r)
-			}
-		}()
-		_ = obj.GetEventBodyInference() // Should return zero value
 	})
 
 }

@@ -1884,6 +1884,52 @@ func (r *RawClient) ListCreditEventLedger(
 	}, nil
 }
 
+func (r *RawClient) GetCreditEventLedgerEntry(
+	ctx context.Context,
+	// ledger_entry_id
+	ledgerEntryID string,
+	opts ...option.RequestOption,
+) (*core.Response[*schematichq.GetCreditEventLedgerEntryResponse], error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		r.baseURL,
+		"https://api.schematichq.com",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/v2/billing/credits/ledger/%v",
+		ledgerEntryID,
+	)
+	headers := internal.MergeHeaders(
+		r.options.ToHeader(),
+		options.ToHeader(),
+	)
+	var response *schematichq.GetCreditEventLedgerEntryResponse
+	raw, err := r.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			DisableRetries:  options.DisableRetries,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+			ErrorDecoder:    internal.NewErrorDecoder(schematichq.ErrorCodes),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &core.Response[*schematichq.GetCreditEventLedgerEntryResponse]{
+		StatusCode: raw.StatusCode,
+		Header:     raw.Header,
+		Body:       response,
+	}, nil
+}
+
 func (r *RawClient) CountCreditEventLedger(
 	ctx context.Context,
 	request *schematichq.CountCreditEventLedgerRequest,

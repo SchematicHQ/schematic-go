@@ -386,33 +386,12 @@ func (c *CreateEventRequestBody) String() string {
 }
 
 type EventBody struct {
-	EventBodyTrack     *EventBodyTrack
-	EventBodyFlagCheck *EventBodyFlagCheck
-	EventBodyIdentify  *EventBodyIdentify
 	EventBodyInference *EventBodyInference
+	EventBodyFlagCheck *EventBodyFlagCheck
+	EventBodyTrack     *EventBodyTrack
+	EventBodyIdentify  *EventBodyIdentify
 
 	typ string
-}
-
-func (e *EventBody) GetEventBodyTrack() *EventBodyTrack {
-	if e == nil {
-		return nil
-	}
-	return e.EventBodyTrack
-}
-
-func (e *EventBody) GetEventBodyFlagCheck() *EventBodyFlagCheck {
-	if e == nil {
-		return nil
-	}
-	return e.EventBodyFlagCheck
-}
-
-func (e *EventBody) GetEventBodyIdentify() *EventBodyIdentify {
-	if e == nil {
-		return nil
-	}
-	return e.EventBodyIdentify
 }
 
 func (e *EventBody) GetEventBodyInference() *EventBodyInference {
@@ -422,12 +401,33 @@ func (e *EventBody) GetEventBodyInference() *EventBodyInference {
 	return e.EventBodyInference
 }
 
+func (e *EventBody) GetEventBodyFlagCheck() *EventBodyFlagCheck {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyFlagCheck
+}
+
+func (e *EventBody) GetEventBodyTrack() *EventBodyTrack {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyTrack
+}
+
+func (e *EventBody) GetEventBodyIdentify() *EventBodyIdentify {
+	if e == nil {
+		return nil
+	}
+	return e.EventBodyIdentify
+}
+
 func (e *EventBody) UnmarshalJSON(data []byte) error {
-	if internal.MatchesObjectKeys(data, []string{"company", "event", "lease_id", "quantity", "reservation_id", "traits", "user"}, []string{"event"}) {
-		valueEventBodyTrack := new(EventBodyTrack)
-		if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
-			e.typ = "EventBodyTrack"
-			e.EventBodyTrack = valueEventBodyTrack
+	if internal.MatchesObjectKeys(data, []string{"cache_creation_input_tokens", "cached_input_tokens", "company", "cost", "currency", "event", "input_tokens", "lease_id", "operation", "output_tokens", "provider", "reasoning_tokens", "request_model", "requests", "reservation_id", "response_model", "user"}, []string{"company", "input_tokens", "output_tokens", "provider", "response_model"}) {
+		valueEventBodyInference := new(EventBodyInference)
+		if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
+			e.typ = "EventBodyInference"
+			e.EventBodyInference = valueEventBodyInference
 			return nil
 		}
 	}
@@ -439,23 +439,7 @@ func (e *EventBody) UnmarshalJSON(data []byte) error {
 			return nil
 		}
 	}
-	if internal.MatchesObjectKeys(data, []string{"company", "keys", "name", "traits"}, []string{"keys"}) {
-		valueEventBodyIdentify := new(EventBodyIdentify)
-		if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
-			e.typ = "EventBodyIdentify"
-			e.EventBodyIdentify = valueEventBodyIdentify
-			return nil
-		}
-	}
-	if internal.MatchesObjectKeys(data, []string{"cache_creation_input_tokens", "cached_input_tokens", "company", "cost", "currency", "event", "input_tokens", "lease_id", "operation", "output_tokens", "provider", "reasoning_tokens", "request_model", "requests", "reservation_id", "response_model", "user"}, []string{"company", "input_tokens", "output_tokens", "provider", "response_model"}) {
-		valueEventBodyInference := new(EventBodyInference)
-		if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
-			e.typ = "EventBodyInference"
-			e.EventBodyInference = valueEventBodyInference
-			return nil
-		}
-	}
-	if internal.HasObjectKeys(data, []string{"event"}) {
+	if internal.MatchesObjectKeys(data, []string{"company", "event", "lease_id", "quantity", "reservation_id", "traits", "user"}, []string{"event"}) {
 		valueEventBodyTrack := new(EventBodyTrack)
 		if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
 			e.typ = "EventBodyTrack"
@@ -463,15 +447,7 @@ func (e *EventBody) UnmarshalJSON(data []byte) error {
 			return nil
 		}
 	}
-	if internal.HasObjectKeys(data, []string{"flag_key", "reason", "value"}) {
-		valueEventBodyFlagCheck := new(EventBodyFlagCheck)
-		if err := json.Unmarshal(data, &valueEventBodyFlagCheck); err == nil {
-			e.typ = "EventBodyFlagCheck"
-			e.EventBodyFlagCheck = valueEventBodyFlagCheck
-			return nil
-		}
-	}
-	if internal.HasObjectKeys(data, []string{"keys"}) {
+	if internal.MatchesObjectKeys(data, []string{"company", "keys", "name", "traits"}, []string{"keys"}) {
 		valueEventBodyIdentify := new(EventBodyIdentify)
 		if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
 			e.typ = "EventBodyIdentify"
@@ -487,10 +463,34 @@ func (e *EventBody) UnmarshalJSON(data []byte) error {
 			return nil
 		}
 	}
-	valueEventBodyTrack := new(EventBodyTrack)
-	if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
-		e.typ = "EventBodyTrack"
-		e.EventBodyTrack = valueEventBodyTrack
+	if internal.HasObjectKeys(data, []string{"flag_key", "reason", "value"}) {
+		valueEventBodyFlagCheck := new(EventBodyFlagCheck)
+		if err := json.Unmarshal(data, &valueEventBodyFlagCheck); err == nil {
+			e.typ = "EventBodyFlagCheck"
+			e.EventBodyFlagCheck = valueEventBodyFlagCheck
+			return nil
+		}
+	}
+	if internal.HasObjectKeys(data, []string{"event"}) {
+		valueEventBodyTrack := new(EventBodyTrack)
+		if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
+			e.typ = "EventBodyTrack"
+			e.EventBodyTrack = valueEventBodyTrack
+			return nil
+		}
+	}
+	if internal.HasObjectKeys(data, []string{"keys"}) {
+		valueEventBodyIdentify := new(EventBodyIdentify)
+		if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
+			e.typ = "EventBodyIdentify"
+			e.EventBodyIdentify = valueEventBodyIdentify
+			return nil
+		}
+	}
+	valueEventBodyInference := new(EventBodyInference)
+	if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
+		e.typ = "EventBodyInference"
+		e.EventBodyInference = valueEventBodyInference
 		return nil
 	}
 	valueEventBodyFlagCheck := new(EventBodyFlagCheck)
@@ -499,56 +499,56 @@ func (e *EventBody) UnmarshalJSON(data []byte) error {
 		e.EventBodyFlagCheck = valueEventBodyFlagCheck
 		return nil
 	}
+	valueEventBodyTrack := new(EventBodyTrack)
+	if err := json.Unmarshal(data, &valueEventBodyTrack); err == nil {
+		e.typ = "EventBodyTrack"
+		e.EventBodyTrack = valueEventBodyTrack
+		return nil
+	}
 	valueEventBodyIdentify := new(EventBodyIdentify)
 	if err := json.Unmarshal(data, &valueEventBodyIdentify); err == nil {
 		e.typ = "EventBodyIdentify"
 		e.EventBodyIdentify = valueEventBodyIdentify
 		return nil
 	}
-	valueEventBodyInference := new(EventBodyInference)
-	if err := json.Unmarshal(data, &valueEventBodyInference); err == nil {
-		e.typ = "EventBodyInference"
-		e.EventBodyInference = valueEventBodyInference
-		return nil
-	}
 	return fmt.Errorf("%s cannot be deserialized as a %T", data, e)
 }
 
 func (e EventBody) MarshalJSON() ([]byte, error) {
-	if e.typ == "EventBodyTrack" || e.EventBodyTrack != nil {
-		return json.Marshal(e.EventBodyTrack)
+	if e.typ == "EventBodyInference" || e.EventBodyInference != nil {
+		return json.Marshal(e.EventBodyInference)
 	}
 	if e.typ == "EventBodyFlagCheck" || e.EventBodyFlagCheck != nil {
 		return json.Marshal(e.EventBodyFlagCheck)
 	}
+	if e.typ == "EventBodyTrack" || e.EventBodyTrack != nil {
+		return json.Marshal(e.EventBodyTrack)
+	}
 	if e.typ == "EventBodyIdentify" || e.EventBodyIdentify != nil {
 		return json.Marshal(e.EventBodyIdentify)
-	}
-	if e.typ == "EventBodyInference" || e.EventBodyInference != nil {
-		return json.Marshal(e.EventBodyInference)
 	}
 	return nil, fmt.Errorf("type %T does not include a non-empty union type", e)
 }
 
 type EventBodyVisitor interface {
-	VisitEventBodyTrack(*EventBodyTrack) error
-	VisitEventBodyFlagCheck(*EventBodyFlagCheck) error
-	VisitEventBodyIdentify(*EventBodyIdentify) error
 	VisitEventBodyInference(*EventBodyInference) error
+	VisitEventBodyFlagCheck(*EventBodyFlagCheck) error
+	VisitEventBodyTrack(*EventBodyTrack) error
+	VisitEventBodyIdentify(*EventBodyIdentify) error
 }
 
 func (e *EventBody) Accept(visitor EventBodyVisitor) error {
-	if e.typ == "EventBodyTrack" || e.EventBodyTrack != nil {
-		return visitor.VisitEventBodyTrack(e.EventBodyTrack)
+	if e.typ == "EventBodyInference" || e.EventBodyInference != nil {
+		return visitor.VisitEventBodyInference(e.EventBodyInference)
 	}
 	if e.typ == "EventBodyFlagCheck" || e.EventBodyFlagCheck != nil {
 		return visitor.VisitEventBodyFlagCheck(e.EventBodyFlagCheck)
 	}
+	if e.typ == "EventBodyTrack" || e.EventBodyTrack != nil {
+		return visitor.VisitEventBodyTrack(e.EventBodyTrack)
+	}
 	if e.typ == "EventBodyIdentify" || e.EventBodyIdentify != nil {
 		return visitor.VisitEventBodyIdentify(e.EventBodyIdentify)
-	}
-	if e.typ == "EventBodyInference" || e.EventBodyInference != nil {
-		return visitor.VisitEventBodyInference(e.EventBodyInference)
 	}
 	return fmt.Errorf("type %T does not include a non-empty union type", e)
 }

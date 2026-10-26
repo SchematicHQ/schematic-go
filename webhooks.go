@@ -959,6 +959,7 @@ const (
 	WebhookRequestTypeCreditLimitReached          WebhookRequestType = "credit.limit.reached"
 	WebhookRequestTypeCreditLimitWarning          WebhookRequestType = "credit.limit.warning"
 	WebhookRequestTypeCreditPurchaseSuccess       WebhookRequestType = "credit.purchase.success"
+	WebhookRequestTypeCreditUsageWarningReached   WebhookRequestType = "credit.usage_warning_reached"
 	WebhookRequestTypeEntitlementLimitReached     WebhookRequestType = "entitlement.limit.reached"
 	WebhookRequestTypeEntitlementLimitWarning     WebhookRequestType = "entitlement.limit.warning"
 	WebhookRequestTypeEntitlementSoftLimitReached WebhookRequestType = "entitlement.soft_limit.reached"
@@ -1017,6 +1018,8 @@ func NewWebhookRequestTypeFromString(s string) (WebhookRequestType, error) {
 		return WebhookRequestTypeCreditLimitWarning, nil
 	case "credit.purchase.success":
 		return WebhookRequestTypeCreditPurchaseSuccess, nil
+	case "credit.usage_warning_reached":
+		return WebhookRequestTypeCreditUsageWarningReached, nil
 	case "entitlement.limit.reached":
 		return WebhookRequestTypeEntitlementLimitReached, nil
 	case "entitlement.limit.warning":

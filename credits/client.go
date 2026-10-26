@@ -1240,6 +1240,9 @@ func (c *Client) GetCreditSpendPolicyUsage(
 //	    FeatureID: schematichq.String(
 //	        "feature_id",
 //	    ),
+//	    SourceEventID: schematichq.String(
+//	        "source_event_id",
+//	    ),
 //	    StartTime: schematichq.String(
 //	        "start_time",
 //	    ),
@@ -1272,6 +1275,29 @@ func (c *Client) ListCreditEventLedger(
 
 // Example:
 //
+//	client.Credits.GetCreditEventLedgerEntry(
+//	    context.TODO(),
+//	    "ledger_entry_id",
+//	)
+func (c *Client) GetCreditEventLedgerEntry(
+	ctx context.Context,
+	// ledger_entry_id
+	ledgerEntryID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCreditEventLedgerEntryResponse, error) {
+	response, err := c.WithRawResponse.GetCreditEventLedgerEntry(
+		ctx,
+		ledgerEntryID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.CountCreditEventLedgerRequest{
 //	    BillingCreditID: schematichq.String(
 //	        "billing_credit_id",
@@ -1283,6 +1309,9 @@ func (c *Client) ListCreditEventLedger(
 //	    EventType: schematichq.CreditEventTypeAdjustment.Ptr(),
 //	    FeatureID: schematichq.String(
 //	        "feature_id",
+//	    ),
+//	    SourceEventID: schematichq.String(
+//	        "source_event_id",
 //	    ),
 //	    StartTime: schematichq.String(
 //	        "start_time",

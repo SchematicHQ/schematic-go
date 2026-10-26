@@ -882,8 +882,9 @@ var (
 	retryCustomPlanBillingRequestBodyFieldBillingStartDate   = big.NewInt(1 << 2)
 	retryCustomPlanBillingRequestBodyFieldCustomerEmail      = big.NewInt(1 << 3)
 	retryCustomPlanBillingRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 4)
-	retryCustomPlanBillingRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 5)
-	retryCustomPlanBillingRequestBodyFieldSendInvoice        = big.NewInt(1 << 6)
+	retryCustomPlanBillingRequestBodyFieldEndDate            = big.NewInt(1 << 5)
+	retryCustomPlanBillingRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 6)
+	retryCustomPlanBillingRequestBodyFieldSendInvoice        = big.NewInt(1 << 7)
 )
 
 type RetryCustomPlanBillingRequestBody struct {
@@ -894,6 +895,8 @@ type RetryCustomPlanBillingRequestBody struct {
 	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"-"`
 	CustomerEmail    string     `json:"customer_email" url:"-"`
 	DaysUntilDue     *int64     `json:"days_until_due,omitempty" url:"-"`
+	// When a plan that doesn't renew ends. Moved back to the last renewal on or before it. When omitted, the end date set at finalize is reissued. Only honored when the retry creates a subscription.
+	EndDate *time.Time `json:"end_date,omitempty" url:"-"`
 	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
 	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"-"`
 	// Whether Stripe emails the invoice when it is finalized. Defaults to true.
@@ -947,6 +950,13 @@ func (r *RetryCustomPlanBillingRequestBody) SetDaysUntilDue(daysUntilDue *int64)
 	r.require(retryCustomPlanBillingRequestBodyFieldDaysUntilDue)
 }
 
+// SetEndDate sets the EndDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RetryCustomPlanBillingRequestBody) SetEndDate(endDate *time.Time) {
+	r.EndDate = endDate
+	r.require(retryCustomPlanBillingRequestBodyFieldEndDate)
+}
+
 // SetProrateFirstPeriod sets the ProrateFirstPeriod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (r *RetryCustomPlanBillingRequestBody) SetProrateFirstPeriod(prorateFirstPeriod *bool) {
@@ -967,6 +977,7 @@ func (r *RetryCustomPlanBillingRequestBody) UnmarshalJSON(data []byte) error {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
 		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		EndDate            *internal.DateTime `json:"end_date,omitempty"`
 	}{
 		embed: embed(*r),
 	}
@@ -976,6 +987,7 @@ func (r *RetryCustomPlanBillingRequestBody) UnmarshalJSON(data []byte) error {
 	*r = RetryCustomPlanBillingRequestBody(body.embed)
 	r.BillingCycleAnchor = body.BillingCycleAnchor.TimePtr()
 	r.BillingStartDate = body.BillingStartDate.TimePtr()
+	r.EndDate = body.EndDate.TimePtr()
 	return nil
 }
 
@@ -985,10 +997,12 @@ func (r *RetryCustomPlanBillingRequestBody) MarshalJSON() ([]byte, error) {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
 		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		EndDate            *internal.DateTime `json:"end_date,omitempty"`
 	}{
 		embed:              embed(*r),
 		BillingCycleAnchor: internal.NewOptionalDateTime(r.BillingCycleAnchor),
 		BillingStartDate:   internal.NewOptionalDateTime(r.BillingStartDate),
+		EndDate:            internal.NewOptionalDateTime(r.EndDate),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -1946,15 +1960,16 @@ var (
 	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
 	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 7)
 	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 8)
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 9)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 10)
-	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 11)
-	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 12)
-	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 13)
-	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 14)
-	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 15)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 16)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 17)
+	publishPlanVersionRequestBodyFieldEndDate            = big.NewInt(1 << 9)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 12)
+	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 13)
+	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 14)
+	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 15)
+	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 16)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 17)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 18)
 )
 
 type PublishPlanVersionRequestBody struct {
@@ -1972,7 +1987,9 @@ type PublishPlanVersionRequestBody struct {
 	CustomFieldValues []*CheckoutFieldValue `json:"custom_field_values,omitempty" url:"custom_field_values,omitempty"`
 	CustomerEmail     *string               `json:"customer_email,omitempty" url:"customer_email,omitempty"`
 	// Payment terms in days. On a custom-plan republish they apply to the amendment invoice only, leave the subscription's renewal terms unchanged, and are only used when that invoice is raised today and sent rather than charged. Defaults to the subscription's terms.
-	DaysUntilDue       *int64                       `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	DaysUntilDue *int64 `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
+	// When a custom plan that doesn't renew ends: the company moves to the default plan then, and no renewal invoice is raised. Required when the version's renewal_policy is expire_to_default, and refused otherwise. Moved back to the last renewal on or before it, which must leave at least one whole billing period. Only honored on a first publish that starts a subscription.
+	EndDate            *time.Time                   `json:"end_date,omitempty" url:"end_date,omitempty"`
 	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"excluded_company_ids"`
 	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"migration_strategy"`
 	Phone              *string                      `json:"phone,omitempty" url:"phone,omitempty"`
@@ -2056,6 +2073,13 @@ func (p *PublishPlanVersionRequestBody) GetDaysUntilDue() *int64 {
 		return nil
 	}
 	return p.DaysUntilDue
+}
+
+func (p *PublishPlanVersionRequestBody) GetEndDate() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.EndDate
 }
 
 func (p *PublishPlanVersionRequestBody) GetExcludedCompanyIDs() []string {
@@ -2200,6 +2224,13 @@ func (p *PublishPlanVersionRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
 	p.require(publishPlanVersionRequestBodyFieldDaysUntilDue)
 }
 
+// SetEndDate sets the EndDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetEndDate(endDate *time.Time) {
+	p.EndDate = endDate
+	p.require(publishPlanVersionRequestBodyFieldEndDate)
+}
+
 // SetExcludedCompanyIDs sets the ExcludedCompanyIDs field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs []string) {
@@ -2269,6 +2300,7 @@ func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
 		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		EndDate            *internal.DateTime `json:"end_date,omitempty"`
 		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
 	}{
 		embed: embed(*p),
@@ -2279,6 +2311,7 @@ func (p *PublishPlanVersionRequestBody) UnmarshalJSON(data []byte) error {
 	*p = PublishPlanVersionRequestBody(unmarshaler.embed)
 	p.BillingCycleAnchor = unmarshaler.BillingCycleAnchor.TimePtr()
 	p.BillingStartDate = unmarshaler.BillingStartDate.TimePtr()
+	p.EndDate = unmarshaler.EndDate.TimePtr()
 	p.ScheduledAt = unmarshaler.ScheduledAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
@@ -2295,11 +2328,13 @@ func (p *PublishPlanVersionRequestBody) MarshalJSON() ([]byte, error) {
 		embed
 		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
 		BillingStartDate   *internal.DateTime `json:"billing_start_date,omitempty"`
+		EndDate            *internal.DateTime `json:"end_date,omitempty"`
 		ScheduledAt        *internal.DateTime `json:"scheduled_at,omitempty"`
 	}{
 		embed:              embed(*p),
 		BillingCycleAnchor: internal.NewOptionalDateTime(p.BillingCycleAnchor),
 		BillingStartDate:   internal.NewOptionalDateTime(p.BillingStartDate),
+		EndDate:            internal.NewOptionalDateTime(p.EndDate),
 		ScheduledAt:        internal.NewOptionalDateTime(p.ScheduledAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
@@ -2778,21 +2813,22 @@ var (
 	publishPreviewResponseDataFieldDefaultDaysUntilDue     = big.NewInt(1 << 5)
 	publishPreviewResponseDataFieldDefaultSendInvoice      = big.NewInt(1 << 6)
 	publishPreviewResponseDataFieldEffectiveAt             = big.NewInt(1 << 7)
-	publishPreviewResponseDataFieldHasBillingChanges       = big.NewInt(1 << 8)
-	publishPreviewResponseDataFieldImmediateInvoiceAmount  = big.NewInt(1 << 9)
-	publishPreviewResponseDataFieldLandsOn                 = big.NewInt(1 << 10)
-	publishPreviewResponseDataFieldNewRecurringAmount      = big.NewInt(1 << 11)
-	publishPreviewResponseDataFieldNextInvoiceAmount       = big.NewInt(1 << 12)
-	publishPreviewResponseDataFieldNextInvoiceAt           = big.NewInt(1 << 13)
-	publishPreviewResponseDataFieldNote                    = big.NewInt(1 << 14)
-	publishPreviewResponseDataFieldPayInAdvance            = big.NewInt(1 << 15)
-	publishPreviewResponseDataFieldPaymentMethod           = big.NewInt(1 << 16)
-	publishPreviewResponseDataFieldProrationCharge         = big.NewInt(1 << 17)
-	publishPreviewResponseDataFieldProrationCredit         = big.NewInt(1 << 18)
-	publishPreviewResponseDataFieldProrationLines          = big.NewInt(1 << 19)
-	publishPreviewResponseDataFieldProrationTotal          = big.NewInt(1 << 20)
-	publishPreviewResponseDataFieldWillUpdateSubscription  = big.NewInt(1 << 21)
-	publishPreviewResponseDataFieldWouldFail               = big.NewInt(1 << 22)
+	publishPreviewResponseDataFieldEndsAt                  = big.NewInt(1 << 8)
+	publishPreviewResponseDataFieldHasBillingChanges       = big.NewInt(1 << 9)
+	publishPreviewResponseDataFieldImmediateInvoiceAmount  = big.NewInt(1 << 10)
+	publishPreviewResponseDataFieldLandsOn                 = big.NewInt(1 << 11)
+	publishPreviewResponseDataFieldNewRecurringAmount      = big.NewInt(1 << 12)
+	publishPreviewResponseDataFieldNextInvoiceAmount       = big.NewInt(1 << 13)
+	publishPreviewResponseDataFieldNextInvoiceAt           = big.NewInt(1 << 14)
+	publishPreviewResponseDataFieldNote                    = big.NewInt(1 << 15)
+	publishPreviewResponseDataFieldPayInAdvance            = big.NewInt(1 << 16)
+	publishPreviewResponseDataFieldPaymentMethod           = big.NewInt(1 << 17)
+	publishPreviewResponseDataFieldProrationCharge         = big.NewInt(1 << 18)
+	publishPreviewResponseDataFieldProrationCredit         = big.NewInt(1 << 19)
+	publishPreviewResponseDataFieldProrationLines          = big.NewInt(1 << 20)
+	publishPreviewResponseDataFieldProrationTotal          = big.NewInt(1 << 21)
+	publishPreviewResponseDataFieldWillUpdateSubscription  = big.NewInt(1 << 22)
+	publishPreviewResponseDataFieldWouldFail               = big.NewInt(1 << 23)
 )
 
 type PublishPreviewResponseData struct {
@@ -2807,7 +2843,9 @@ type PublishPreviewResponseData struct {
 	// Whether the amendment invoice is emailed when the publish request leaves send_invoice out.
 	DefaultSendInvoice bool `json:"default_send_invoice" url:"default_send_invoice"`
 	// When the company moves to the new version. Null when no date can be named yet: the company's only subscription is in dunning or scheduled to cancel.
-	EffectiveAt       *time.Time `json:"effective_at,omitempty" url:"effective_at,omitempty"`
+	EffectiveAt *time.Time `json:"effective_at,omitempty" url:"effective_at,omitempty"`
+	// When the subscription ends instead of renewing once the amendment is finalized: the end date moved back to a renewal, or the end it already has. Null when it renews.
+	EndsAt            *time.Time `json:"ends_at,omitempty" url:"ends_at,omitempty"`
 	HasBillingChanges bool       `json:"has_billing_changes" url:"has_billing_changes"`
 	// What the amendment's own invoice bills, in cents, when lands_on is immediate_invoice, after discounts and tax. Includes pending invoice items Stripe adds to the same invoice. Negative for a downgrade: Stripe raises a credit invoice with nothing due, and the credit goes to the customer's balance against later invoices.
 	ImmediateInvoiceAmount *int64                    `json:"immediate_invoice_amount,omitempty" url:"immediate_invoice_amount,omitempty"`
@@ -2891,6 +2929,13 @@ func (p *PublishPreviewResponseData) GetEffectiveAt() *time.Time {
 		return nil
 	}
 	return p.EffectiveAt
+}
+
+func (p *PublishPreviewResponseData) GetEndsAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.EndsAt
 }
 
 func (p *PublishPreviewResponseData) GetHasBillingChanges() bool {
@@ -3070,6 +3115,13 @@ func (p *PublishPreviewResponseData) SetEffectiveAt(effectiveAt *time.Time) {
 	p.require(publishPreviewResponseDataFieldEffectiveAt)
 }
 
+// SetEndsAt sets the EndsAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetEndsAt(endsAt *time.Time) {
+	p.EndsAt = endsAt
+	p.require(publishPreviewResponseDataFieldEndsAt)
+}
+
 // SetHasBillingChanges sets the HasBillingChanges field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PublishPreviewResponseData) SetHasBillingChanges(hasBillingChanges bool) {
@@ -3182,6 +3234,7 @@ func (p *PublishPreviewResponseData) UnmarshalJSON(data []byte) error {
 		CurrentPeriodEnd   *internal.DateTime `json:"current_period_end,omitempty"`
 		CurrentPeriodStart *internal.DateTime `json:"current_period_start,omitempty"`
 		EffectiveAt        *internal.DateTime `json:"effective_at,omitempty"`
+		EndsAt             *internal.DateTime `json:"ends_at,omitempty"`
 		NextInvoiceAt      *internal.DateTime `json:"next_invoice_at,omitempty"`
 	}{
 		embed: embed(*p),
@@ -3193,6 +3246,7 @@ func (p *PublishPreviewResponseData) UnmarshalJSON(data []byte) error {
 	p.CurrentPeriodEnd = unmarshaler.CurrentPeriodEnd.TimePtr()
 	p.CurrentPeriodStart = unmarshaler.CurrentPeriodStart.TimePtr()
 	p.EffectiveAt = unmarshaler.EffectiveAt.TimePtr()
+	p.EndsAt = unmarshaler.EndsAt.TimePtr()
 	p.NextInvoiceAt = unmarshaler.NextInvoiceAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *p)
 	if err != nil {
@@ -3210,12 +3264,14 @@ func (p *PublishPreviewResponseData) MarshalJSON() ([]byte, error) {
 		CurrentPeriodEnd   *internal.DateTime `json:"current_period_end,omitempty"`
 		CurrentPeriodStart *internal.DateTime `json:"current_period_start,omitempty"`
 		EffectiveAt        *internal.DateTime `json:"effective_at,omitempty"`
+		EndsAt             *internal.DateTime `json:"ends_at,omitempty"`
 		NextInvoiceAt      *internal.DateTime `json:"next_invoice_at,omitempty"`
 	}{
 		embed:              embed(*p),
 		CurrentPeriodEnd:   internal.NewOptionalDateTime(p.CurrentPeriodEnd),
 		CurrentPeriodStart: internal.NewOptionalDateTime(p.CurrentPeriodStart),
 		EffectiveAt:        internal.NewOptionalDateTime(p.EffectiveAt),
+		EndsAt:             internal.NewOptionalDateTime(p.EndsAt),
 		NextInvoiceAt:      internal.NewOptionalDateTime(p.NextInvoiceAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)

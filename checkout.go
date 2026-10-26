@@ -455,6 +455,31 @@ func (c *ChangeSubscriptionInternalRequestBody) String() string {
 	return fmt.Sprintf("%#v", c)
 }
 
+type CheckoutChargeTiming string
+
+const (
+	CheckoutChargeTimingAtRenewal CheckoutChargeTiming = "at_renewal"
+	CheckoutChargeTimingNone      CheckoutChargeTiming = "none"
+	CheckoutChargeTimingNow       CheckoutChargeTiming = "now"
+)
+
+func NewCheckoutChargeTimingFromString(s string) (CheckoutChargeTiming, error) {
+	switch s {
+	case "at_renewal":
+		return CheckoutChargeTimingAtRenewal, nil
+	case "none":
+		return CheckoutChargeTimingNone, nil
+	case "now":
+		return CheckoutChargeTimingNow, nil
+	}
+	var t CheckoutChargeTiming
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CheckoutChargeTiming) Ptr() *CheckoutChargeTiming {
+	return &c
+}
+
 var (
 	checkoutDataResponseDataFieldActiveAddOns                   = big.NewInt(1 << 0)
 	checkoutDataResponseDataFieldActivePlan                     = big.NewInt(1 << 1)
@@ -3384,38 +3409,47 @@ func (p *PreviewSubscriptionDiscountResponseData) String() string {
 var (
 	previewSubscriptionFinanceResponseDataFieldAmountOff                = big.NewInt(1 << 0)
 	previewSubscriptionFinanceResponseDataFieldCurrency                 = big.NewInt(1 << 1)
-	previewSubscriptionFinanceResponseDataFieldDiscountAmount           = big.NewInt(1 << 2)
-	previewSubscriptionFinanceResponseDataFieldDiscounts                = big.NewInt(1 << 3)
-	previewSubscriptionFinanceResponseDataFieldDueNow                   = big.NewInt(1 << 4)
-	previewSubscriptionFinanceResponseDataFieldNewCharges               = big.NewInt(1 << 5)
-	previewSubscriptionFinanceResponseDataFieldPercentOff               = big.NewInt(1 << 6)
-	previewSubscriptionFinanceResponseDataFieldPeriodEnd                = big.NewInt(1 << 7)
-	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 8)
-	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 9)
-	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 10)
-	previewSubscriptionFinanceResponseDataFieldProrationBilledAt        = big.NewInt(1 << 11)
-	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 12)
-	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 13)
-	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 14)
-	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 15)
-	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 16)
-	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 17)
+	previewSubscriptionFinanceResponseDataFieldCustomerBalanceApplied   = big.NewInt(1 << 2)
+	previewSubscriptionFinanceResponseDataFieldCustomerBalanceRemaining = big.NewInt(1 << 3)
+	previewSubscriptionFinanceResponseDataFieldDiscountAmount           = big.NewInt(1 << 4)
+	previewSubscriptionFinanceResponseDataFieldDiscounts                = big.NewInt(1 << 5)
+	previewSubscriptionFinanceResponseDataFieldDueNow                   = big.NewInt(1 << 6)
+	previewSubscriptionFinanceResponseDataFieldNewCharges               = big.NewInt(1 << 7)
+	previewSubscriptionFinanceResponseDataFieldPercentOff               = big.NewInt(1 << 8)
+	previewSubscriptionFinanceResponseDataFieldPeriodEnd                = big.NewInt(1 << 9)
+	previewSubscriptionFinanceResponseDataFieldPeriodStart              = big.NewInt(1 << 10)
+	previewSubscriptionFinanceResponseDataFieldPromoCodeApplied         = big.NewInt(1 << 11)
+	previewSubscriptionFinanceResponseDataFieldProration                = big.NewInt(1 << 12)
+	previewSubscriptionFinanceResponseDataFieldProrationBilledAt        = big.NewInt(1 << 13)
+	previewSubscriptionFinanceResponseDataFieldProrationDetail          = big.NewInt(1 << 14)
+	previewSubscriptionFinanceResponseDataFieldTaxAmount                = big.NewInt(1 << 15)
+	previewSubscriptionFinanceResponseDataFieldTaxDisplayName           = big.NewInt(1 << 16)
+	previewSubscriptionFinanceResponseDataFieldTaxRequireBillingDetails = big.NewInt(1 << 17)
+	previewSubscriptionFinanceResponseDataFieldTotalPerBillingPeriod    = big.NewInt(1 << 18)
+	previewSubscriptionFinanceResponseDataFieldTrialEnd                 = big.NewInt(1 << 19)
+	previewSubscriptionFinanceResponseDataFieldUpcomingInvoiceLineItems = big.NewInt(1 << 20)
 )
 
 type PreviewSubscriptionFinanceResponseData struct {
 	AmountOff int64 `json:"amount_off" url:"amount_off"`
 	// ISO 4217 currency every amount in this block is denominated in.
-	Currency                 Currency                                       `json:"currency" url:"currency"`
-	DiscountAmount           int64                                          `json:"discount_amount" url:"discount_amount"`
-	Discounts                []*PreviewSubscriptionDiscountResponseData     `json:"discounts" url:"discounts"`
-	DueNow                   int64                                          `json:"due_now" url:"due_now"`
-	NewCharges               int64                                          `json:"new_charges" url:"new_charges"`
-	PercentOff               float64                                        `json:"percent_off" url:"percent_off"`
-	PeriodEnd                time.Time                                      `json:"period_end" url:"period_end"`
-	PeriodStart              time.Time                                      `json:"period_start" url:"period_start"`
-	PromoCodeApplied         bool                                           `json:"promo_code_applied" url:"promo_code_applied"`
-	Proration                int64                                          `json:"proration" url:"proration"`
-	ProrationBilledAt        *time.Time                                     `json:"proration_billed_at,omitempty" url:"proration_billed_at,omitempty"`
+	Currency Currency `json:"currency" url:"currency"`
+	// What the company's stored credit covers of this invoice, in minor units.
+	CustomerBalanceApplied int64 `json:"customer_balance_applied" url:"customer_balance_applied"`
+	// Credit left on the company's balance after this invoice, in minor units: what it did not consume, plus what a total below zero adds, which the provider applies to later invoices.
+	CustomerBalanceRemaining int64                                      `json:"customer_balance_remaining" url:"customer_balance_remaining"`
+	DiscountAmount           int64                                      `json:"discount_amount" url:"discount_amount"`
+	Discounts                []*PreviewSubscriptionDiscountResponseData `json:"discounts" url:"discounts"`
+	DueNow                   int64                                      `json:"due_now" url:"due_now"`
+	NewCharges               int64                                      `json:"new_charges" url:"new_charges"`
+	PercentOff               float64                                    `json:"percent_off" url:"percent_off"`
+	PeriodEnd                time.Time                                  `json:"period_end" url:"period_end"`
+	PeriodStart              time.Time                                  `json:"period_start" url:"period_start"`
+	PromoCodeApplied         bool                                       `json:"promo_code_applied" url:"promo_code_applied"`
+	Proration                int64                                      `json:"proration" url:"proration"`
+	ProrationBilledAt        *time.Time                                 `json:"proration_billed_at,omitempty" url:"proration_billed_at,omitempty"`
+	// The proration itemized in the cart's terms, by plan and price. Null when the change prorates nothing. upcoming_invoice_line_items stays as the billing provider reported it.
+	ProrationDetail          *PreviewSubscriptionProrationResponseData      `json:"proration_detail,omitempty" url:"proration_detail,omitempty"`
 	TaxAmount                *int64                                         `json:"tax_amount,omitempty" url:"tax_amount,omitempty"`
 	TaxDisplayName           *string                                        `json:"tax_display_name,omitempty" url:"tax_display_name,omitempty"`
 	TaxRequireBillingDetails bool                                           `json:"tax_require_billing_details" url:"tax_require_billing_details"`
@@ -3442,6 +3476,20 @@ func (p *PreviewSubscriptionFinanceResponseData) GetCurrency() Currency {
 		return ""
 	}
 	return p.Currency
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetCustomerBalanceApplied() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.CustomerBalanceApplied
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetCustomerBalanceRemaining() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.CustomerBalanceRemaining
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) GetDiscountAmount() int64 {
@@ -3512,6 +3560,13 @@ func (p *PreviewSubscriptionFinanceResponseData) GetProrationBilledAt() *time.Ti
 		return nil
 	}
 	return p.ProrationBilledAt
+}
+
+func (p *PreviewSubscriptionFinanceResponseData) GetProrationDetail() *PreviewSubscriptionProrationResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.ProrationDetail
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) GetTaxAmount() *int64 {
@@ -3586,6 +3641,20 @@ func (p *PreviewSubscriptionFinanceResponseData) SetCurrency(currency Currency) 
 	p.require(previewSubscriptionFinanceResponseDataFieldCurrency)
 }
 
+// SetCustomerBalanceApplied sets the CustomerBalanceApplied field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionFinanceResponseData) SetCustomerBalanceApplied(customerBalanceApplied int64) {
+	p.CustomerBalanceApplied = customerBalanceApplied
+	p.require(previewSubscriptionFinanceResponseDataFieldCustomerBalanceApplied)
+}
+
+// SetCustomerBalanceRemaining sets the CustomerBalanceRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionFinanceResponseData) SetCustomerBalanceRemaining(customerBalanceRemaining int64) {
+	p.CustomerBalanceRemaining = customerBalanceRemaining
+	p.require(previewSubscriptionFinanceResponseDataFieldCustomerBalanceRemaining)
+}
+
 // SetDiscountAmount sets the DiscountAmount field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PreviewSubscriptionFinanceResponseData) SetDiscountAmount(discountAmount int64) {
@@ -3654,6 +3723,13 @@ func (p *PreviewSubscriptionFinanceResponseData) SetProration(proration int64) {
 func (p *PreviewSubscriptionFinanceResponseData) SetProrationBilledAt(prorationBilledAt *time.Time) {
 	p.ProrationBilledAt = prorationBilledAt
 	p.require(previewSubscriptionFinanceResponseDataFieldProrationBilledAt)
+}
+
+// SetProrationDetail sets the ProrationDetail field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionFinanceResponseData) SetProrationDetail(prorationDetail *PreviewSubscriptionProrationResponseData) {
+	p.ProrationDetail = prorationDetail
+	p.require(previewSubscriptionFinanceResponseDataFieldProrationDetail)
 }
 
 // SetTaxAmount sets the TaxAmount field and marks it as non-optional;
@@ -3746,6 +3822,398 @@ func (p *PreviewSubscriptionFinanceResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (p *PreviewSubscriptionFinanceResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	previewSubscriptionProrationLineResponseDataFieldAmount      = big.NewInt(1 << 0)
+	previewSubscriptionProrationLineResponseDataFieldKind        = big.NewInt(1 << 1)
+	previewSubscriptionProrationLineResponseDataFieldPeriodEnd   = big.NewInt(1 << 2)
+	previewSubscriptionProrationLineResponseDataFieldPeriodStart = big.NewInt(1 << 3)
+	previewSubscriptionProrationLineResponseDataFieldPlanID      = big.NewInt(1 << 4)
+	previewSubscriptionProrationLineResponseDataFieldPriceID     = big.NewInt(1 << 5)
+	previewSubscriptionProrationLineResponseDataFieldQuantity    = big.NewInt(1 << 6)
+)
+
+type PreviewSubscriptionProrationLineResponseData struct {
+	// In minor units of the block's currency; negative on a credit.
+	Amount      int64             `json:"amount" url:"amount"`
+	Kind        ProrationLineKind `json:"kind" url:"kind"`
+	PeriodEnd   *time.Time        `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart *time.Time        `json:"period_start,omitempty" url:"period_start,omitempty"`
+	// The plan or add-on in the cart the price belongs to. Null for a price the subscription carries outside the cart.
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// The Schematic price. Null when the provider priced something Schematic does not carry.
+	PriceID  *string `json:"price_id,omitempty" url:"price_id,omitempty"`
+	Quantity *int64  `json:"quantity,omitempty" url:"quantity,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetAmount() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Amount
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetKind() ProrationLineKind {
+	if p == nil {
+		return ""
+	}
+	return p.Kind
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetPeriodEnd() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.PeriodEnd
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetPeriodStart() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.PeriodStart
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetPlanID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PlanID
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetPriceID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PriceID
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetQuantity() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.Quantity
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetAmount(amount int64) {
+	p.Amount = amount
+	p.require(previewSubscriptionProrationLineResponseDataFieldAmount)
+}
+
+// SetKind sets the Kind field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetKind(kind ProrationLineKind) {
+	p.Kind = kind
+	p.require(previewSubscriptionProrationLineResponseDataFieldKind)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetPeriodEnd(periodEnd *time.Time) {
+	p.PeriodEnd = periodEnd
+	p.require(previewSubscriptionProrationLineResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetPeriodStart(periodStart *time.Time) {
+	p.PeriodStart = periodStart
+	p.require(previewSubscriptionProrationLineResponseDataFieldPeriodStart)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetPlanID(planID *string) {
+	p.PlanID = planID
+	p.require(previewSubscriptionProrationLineResponseDataFieldPlanID)
+}
+
+// SetPriceID sets the PriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetPriceID(priceID *string) {
+	p.PriceID = priceID
+	p.require(previewSubscriptionProrationLineResponseDataFieldPriceID)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationLineResponseData) SetQuantity(quantity *int64) {
+	p.Quantity = quantity
+	p.require(previewSubscriptionProrationLineResponseDataFieldQuantity)
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) UnmarshalJSON(data []byte) error {
+	type embed PreviewSubscriptionProrationLineResponseData
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PreviewSubscriptionProrationLineResponseData(unmarshaler.embed)
+	p.PeriodEnd = unmarshaler.PeriodEnd.TimePtr()
+	p.PeriodStart = unmarshaler.PeriodStart.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) MarshalJSON() ([]byte, error) {
+	type embed PreviewSubscriptionProrationLineResponseData
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed:       embed(*p),
+		PeriodEnd:   internal.NewOptionalDateTime(p.PeriodEnd),
+		PeriodStart: internal.NewOptionalDateTime(p.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreviewSubscriptionProrationLineResponseData) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	previewSubscriptionProrationResponseDataFieldBilledAt = big.NewInt(1 << 0)
+	previewSubscriptionProrationResponseDataFieldCharge   = big.NewInt(1 << 1)
+	previewSubscriptionProrationResponseDataFieldCredit   = big.NewInt(1 << 2)
+	previewSubscriptionProrationResponseDataFieldCurrency = big.NewInt(1 << 3)
+	previewSubscriptionProrationResponseDataFieldLines    = big.NewInt(1 << 4)
+	previewSubscriptionProrationResponseDataFieldTiming   = big.NewInt(1 << 5)
+	previewSubscriptionProrationResponseDataFieldTotal    = big.NewInt(1 << 6)
+)
+
+type PreviewSubscriptionProrationResponseData struct {
+	// When the proration is charged: the change for now, the period's end for at_renewal. Null when nothing is charged.
+	BilledAt *time.Time `json:"billed_at,omitempty" url:"billed_at,omitempty"`
+	// Sum of the charge lines, in minor units, before tax.
+	Charge int64 `json:"charge" url:"charge"`
+	// Sum of the credit lines, in minor units, before tax: zero or below.
+	Credit   int64                                           `json:"credit" url:"credit"`
+	Currency Currency                                        `json:"currency" url:"currency"`
+	Lines    []*PreviewSubscriptionProrationLineResponseData `json:"lines" url:"lines"`
+	// When the proration is charged: now, at_renewal, or none when it nets to nothing.
+	Timing CheckoutChargeTiming `json:"timing" url:"timing"`
+	// credit plus charge, before tax. Equals proration.
+	Total int64 `json:"total" url:"total"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetBilledAt() *time.Time {
+	if p == nil {
+		return nil
+	}
+	return p.BilledAt
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetCharge() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Charge
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetCredit() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Credit
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetCurrency() Currency {
+	if p == nil {
+		return ""
+	}
+	return p.Currency
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetLines() []*PreviewSubscriptionProrationLineResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Lines
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetTiming() CheckoutChargeTiming {
+	if p == nil {
+		return ""
+	}
+	return p.Timing
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetTotal() int64 {
+	if p == nil {
+		return 0
+	}
+	return p.Total
+}
+
+func (p *PreviewSubscriptionProrationResponseData) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PreviewSubscriptionProrationResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetBilledAt sets the BilledAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetBilledAt(billedAt *time.Time) {
+	p.BilledAt = billedAt
+	p.require(previewSubscriptionProrationResponseDataFieldBilledAt)
+}
+
+// SetCharge sets the Charge field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetCharge(charge int64) {
+	p.Charge = charge
+	p.require(previewSubscriptionProrationResponseDataFieldCharge)
+}
+
+// SetCredit sets the Credit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetCredit(credit int64) {
+	p.Credit = credit
+	p.require(previewSubscriptionProrationResponseDataFieldCredit)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetCurrency(currency Currency) {
+	p.Currency = currency
+	p.require(previewSubscriptionProrationResponseDataFieldCurrency)
+}
+
+// SetLines sets the Lines field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetLines(lines []*PreviewSubscriptionProrationLineResponseData) {
+	p.Lines = lines
+	p.require(previewSubscriptionProrationResponseDataFieldLines)
+}
+
+// SetTiming sets the Timing field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetTiming(timing CheckoutChargeTiming) {
+	p.Timing = timing
+	p.require(previewSubscriptionProrationResponseDataFieldTiming)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionProrationResponseData) SetTotal(total int64) {
+	p.Total = total
+	p.require(previewSubscriptionProrationResponseDataFieldTotal)
+}
+
+func (p *PreviewSubscriptionProrationResponseData) UnmarshalJSON(data []byte) error {
+	type embed PreviewSubscriptionProrationResponseData
+	var unmarshaler = struct {
+		embed
+		BilledAt *internal.DateTime `json:"billed_at,omitempty"`
+	}{
+		embed: embed(*p),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*p = PreviewSubscriptionProrationResponseData(unmarshaler.embed)
+	p.BilledAt = unmarshaler.BilledAt.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PreviewSubscriptionProrationResponseData) MarshalJSON() ([]byte, error) {
+	type embed PreviewSubscriptionProrationResponseData
+	var marshaler = struct {
+		embed
+		BilledAt *internal.DateTime `json:"billed_at,omitempty"`
+	}{
+		embed:    embed(*p),
+		BilledAt: internal.NewOptionalDateTime(p.BilledAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PreviewSubscriptionProrationResponseData) String() string {
 	if p == nil {
 		return "<nil>"
 	}
@@ -3908,6 +4376,28 @@ func (p *PreviewSubscriptionUpcomingInvoiceLineItems) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+type ProrationLineKind string
+
+const (
+	ProrationLineKindCharge ProrationLineKind = "charge"
+	ProrationLineKindCredit ProrationLineKind = "credit"
+)
+
+func NewProrationLineKindFromString(s string) (ProrationLineKind, error) {
+	switch s {
+	case "charge":
+		return ProrationLineKindCharge, nil
+	case "credit":
+		return ProrationLineKindCredit, nil
+	}
+	var t ProrationLineKind
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p ProrationLineKind) Ptr() *ProrationLineKind {
+	return &p
 }
 
 var (

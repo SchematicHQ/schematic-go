@@ -53,7 +53,16 @@ type Context struct {
 type Option func(*options)
 
 type options struct {
+	issuedAt time.Time
 	lifetime time.Duration
+}
+
+// WithIssuedAt sets when the signature is valid from, in place of now, for a
+// caller that keeps its own clock. It's counted in whole seconds.
+func WithIssuedAt(issuedAt time.Time) Option {
+	return func(o *options) {
+		o.issuedAt = issuedAt
+	}
 }
 
 // WithLifetime sets how long the signature is valid for, from one second up to
@@ -64,8 +73,9 @@ func WithLifetime(lifetime time.Duration) Option {
 	}
 }
 
-// Sign returns the X-Schematic-Context-Sig value for ctx, valid from now for
-// DefaultLifetime or the lifetime WithLifetime gives. secret is the secret API
+// Sign returns the X-Schematic-Context-Sig value for ctx, valid from now, or
+// the time WithIssuedAt gives, for DefaultLifetime or the lifetime
+// WithLifetime gives. secret is the secret API
 // key for the environment the browser SDK's publishable key belongs to.
 func Sign(secret string, ctx Context, opts ...Option) (string, error) {
 	o := options{lifetime: DefaultLifetime}
@@ -76,7 +86,11 @@ func Sign(secret string, ctx Context, opts ...Option) (string, error) {
 		return "", ErrLifetimeInvalid
 	}
 
-	iat := time.Now().Unix()
+	issuedAt := o.issuedAt
+	if issuedAt.IsZero() {
+		issuedAt = time.Now()
+	}
+	iat := issuedAt.Unix()
 	return sign(secret, ctx, iat, iat+int64(o.lifetime/time.Second))
 }
 

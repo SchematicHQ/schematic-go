@@ -83,6 +83,21 @@ func TestSign(t *testing.T) {
 		assert.Equal(t, int64(MaxLifetime/time.Second), exp-iat)
 	})
 
+	t.Run("signs from the time given", func(t *testing.T) {
+		t.Parallel()
+		issuedAt := time.Unix(1_700_000_000, 0)
+		signature, err := Sign("secret", ctx, WithIssuedAt(issuedAt), WithLifetime(5*time.Minute))
+		require.NoError(t, err)
+
+		iat, exp := parseWindow(t, signature)
+		assert.Equal(t, issuedAt.Unix(), iat)
+		assert.Equal(t, issuedAt.Add(5*time.Minute).Unix(), exp)
+
+		expected, err := sign("secret", ctx, iat, exp)
+		require.NoError(t, err)
+		assert.Equal(t, expected, signature)
+	})
+
 	t.Run("refuses a lifetime the API would reject", func(t *testing.T) {
 		t.Parallel()
 		for _, lifetime := range []time.Duration{0, -time.Minute, 500 * time.Millisecond, MaxLifetime + time.Second, 24 * time.Hour} {

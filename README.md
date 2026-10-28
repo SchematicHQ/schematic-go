@@ -544,6 +544,46 @@ func yourWebhookHandler(w http.ResponseWriter, r *http.Request) {
 
 If you want to verify a webhook signature outside of the context of a web request, you can also do that using the `webhooks.VerifySignature` function.
 
+## Context Signatures
+
+A browser SDK uses a publishable key, which anyone can read from your page, so on its own it can't prove which company or user it's acting for. When an environment requires context signatures, the API only accepts a publishable-key request whose company and user your backend has signed with the environment's secret API key. The browser SDK asks your backend for the signature through its `getContextSignature` option and sends it in the `X-Schematic-Context-Sig` header.
+
+### Signing a context
+
+Sign the logged-in user's own company and user, read from your session. Don't sign whatever company or user the browser asks for, or anyone could get a signature for another company.
+
+```go
+import (
+  "encoding/json"
+  "net/http"
+  "os"
+
+  "github.com/schematichq/schematic-go/contextsig"
+)
+
+func signSchematicContext(w http.ResponseWriter, r *http.Request) {
+  session := yourSession(r) // however your app identifies the logged-in user
+  if session == nil {
+    http.Error(w, "Unauthorized", http.StatusUnauthorized)
+    return
+  }
+
+  signature, err := contextsig.Sign(os.Getenv("SCHEMATIC_SECRET_KEY"), contextsig.Context{
+    Company: map[string]string{"id": session.CompanyID},
+    User:    map[string]string{"id": session.UserID},
+  })
+  if err != nil {
+    http.Error(w, "Could not sign context", http.StatusInternalServerError)
+    return
+  }
+
+  w.Header().Set("Content-Type", "application/json")
+  json.NewEncoder(w).Encode(map[string]string{"signature": signature})
+}
+```
+
+The company and user keys must match the context you give the browser SDK exactly, or the API rejects the signature. A signature is valid for 10 minutes by default; set a different lifetime, up to an hour, with `contextsig.WithLifetime`. The browser SDK reuses a signature until shortly before it expires, then asks for a new one.
+
 ## DataStream
 
 The `DataStream` functionality in Schematic provides real-time updates for flags, companies, and users. It uses WebSocket connections to receive updates from the Schematic backend and caches the data locally or in Redis for efficient access.

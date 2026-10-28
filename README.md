@@ -877,7 +877,7 @@ Server mode needs only a TTL:
 client := schematicclient.NewSchematicClient(
   option.WithAPIKey(apiKey),
   option.WithCreditLeases(core.CreditLeaseConfig{
-    DefaultReservationTTL: time.Minute, // how long the server reserves the credits if no track settles them, max 1 hour
+    DefaultReservationTTL: time.Minute, // how long the server reserves the credits if no track settles them, max 24 hours
   }),
 )
 ```
@@ -942,7 +942,7 @@ All fields live on `core.CreditLeaseConfig`. Everything below `DefaultReservatio
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Mode` | `core.CreditLeaseMode` | `auto` | `client`, `server`, or `auto` (client when DataStream is enabled). |
-| `DefaultReservationTTL` | `time.Duration` | 1 minute | How long an unsettled reservation survives. Capped at one hour in server mode. |
+| `DefaultReservationTTL` | `time.Duration` | 1 minute | How long an unsettled reservation survives. Capped at 24 hours in server mode. |
 | `DefaultLeaseDuration` | `time.Duration` | 5 minutes | Lease lifetime requested at acquire and extend. |
 | `DefaultLeaseSize` | `float64` | 10000 | Credits requested per acquire, and the minimum extend tranche. |
 | `LowWaterMark` | `float64` | 0.25 | Extend in the background when the lease balance dips below this fraction. |

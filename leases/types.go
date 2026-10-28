@@ -41,9 +41,9 @@ const (
 
 	// MaxReservationTTL is the furthest out the API will hold credits, so a
 	// larger server-mode reservation TTL would fail every check.
-	MaxReservationTTL = time.Hour
+	MaxReservationTTL = 24 * time.Hour
 	// ReservationTTLSkewAllowance is held back from MaxReservationTTL because
-	// the API measures that hour against its own clock while the SDK computes
+	// the API measures that cap against its own clock while the SDK computes
 	// expiresAt against the caller's: a client running ahead would otherwise be
 	// rejected at exactly the cap.
 	ReservationTTLSkewAllowance = 60 * time.Second

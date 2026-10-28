@@ -928,7 +928,7 @@ func TestCreditLeaseConstructorWarnings(t *testing.T) {
 			option.WithLogger(logger),
 			option.WithCreditLeases(core.CreditLeaseConfig{
 				Mode:                  core.CreditLeaseModeServer,
-				DefaultReservationTTL: 3 * time.Hour,
+				DefaultReservationTTL: 25 * time.Hour,
 			}),
 		)
 		defer client.Close()
@@ -943,7 +943,7 @@ func TestCreditLeaseConstructorWarnings(t *testing.T) {
 			option.WithLogger(logger),
 			option.WithCreditLeases(core.CreditLeaseConfig{
 				Mode:                  core.CreditLeaseModeClient,
-				DefaultReservationTTL: 3 * time.Hour,
+				DefaultReservationTTL: 25 * time.Hour,
 			}),
 		)
 		defer client.Close()

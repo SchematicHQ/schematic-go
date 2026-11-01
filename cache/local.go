@@ -65,31 +65,24 @@ func (c *localCache[T]) Get(ctx context.Context, key string) (T, bool) {
 		return empty, false
 	}
 
-	c.mu.RLock()
-	element, exists := c.cache[key]
-	c.mu.RUnlock()
+	// Keep the item and its LRU entry stable while checking expiry and copying
+	// the value: Set can refresh both fields, or replace an evicted entry.
+	c.mu.Lock()
+	defer c.mu.Unlock()
 
+	element, exists := c.cache[key]
 	if !exists {
 		return empty, false
 	}
 
 	item := element.Value.(*cachedItem[T])
-
-	// We no longer need to check expiration here as the background cleanup will handle it
-	// However, for extra safety, we still check to avoid returning expired data
-	// This is just a quick double-check in case the cleanup routine hasn't run yet
 	if !item.expiration.IsZero() && time.Now().After(item.expiration) {
-		c.mu.Lock()
 		c.lruList.Remove(element)
 		delete(c.cache, key)
-		c.mu.Unlock()
 		return empty, false
 	}
 
-	// Move the accessed item to the front of the list
-	c.mu.Lock()
 	c.lruList.MoveToFront(element)
-	c.mu.Unlock()
 
 	return item.value, true
 }

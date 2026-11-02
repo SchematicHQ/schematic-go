@@ -809,3 +809,53 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		}
 	})
 }
+
+// Shared keys model checks racing with background cache refreshes; disjoint
+// per-worker keys cannot expose reads of an item while Set updates it.
+func TestLocalCache_ConcurrentRefresh(t *testing.T) {
+	for _, ttl := range []time.Duration{0, time.Hour} {
+		t.Run(ttl.String(), func(t *testing.T) {
+			ctx := context.Background()
+			type result struct {
+				sequence int
+				mirror   int
+			}
+			cache := NewLocalCache[result](1, ttl)
+			defer cache.Stop()
+			require.NoError(t, cache.Set(ctx, "shared", result{}, nil))
+
+			const iterations = 2000
+			start := make(chan struct{})
+			var workers sync.WaitGroup
+			workers.Add(5)
+			go func() {
+				defer workers.Done()
+				<-start
+				for i := 1; i <= iterations; i++ {
+					if err := cache.Set(ctx, "shared", result{i, i}, nil); err != nil {
+						t.Error(err)
+						return
+					}
+				}
+			}()
+			for reader := 0; reader < 4; reader++ {
+				go func() {
+					defer workers.Done()
+					<-start
+					for i := 0; i < iterations; i++ {
+						value, found := cache.Get(ctx, "shared")
+						if !found || value.sequence != value.mirror {
+							t.Errorf("refresh returned inconsistent result: %+v, found=%v", value, found)
+							return
+						}
+					}
+				}()
+			}
+			close(start)
+			workers.Wait()
+			value, found := cache.Get(ctx, "shared")
+			require.True(t, found)
+			require.Equal(t, result{iterations, iterations}, value)
+		})
+	}
+}

@@ -6756,6 +6756,34 @@ func TestEnumWebhookRequestType(t *testing.T) {
 		assert.Equal(t, WebhookRequestType("flag.updated"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_invoice_finalized", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewWebhookRequestTypeFromString("invoice.finalized")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, WebhookRequestType("invoice.finalized"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_invoice_paid", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewWebhookRequestTypeFromString("invoice.paid")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, WebhookRequestType("invoice.paid"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_invoice_past_due", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewWebhookRequestTypeFromString("invoice.past_due")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, WebhookRequestType("invoice.past_due"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_invoice_voided", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewWebhookRequestTypeFromString("invoice.voided")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, WebhookRequestType("invoice.voided"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_plan_created", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewWebhookRequestTypeFromString("plan.created")
@@ -6810,6 +6838,13 @@ func TestEnumWebhookRequestType(t *testing.T) {
 		val, err := NewWebhookRequestTypeFromString("rule.deleted")
 		assert.NoError(t, err, "valid enum value should not return error")
 		assert.Equal(t, WebhookRequestType("rule.deleted"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_subscription_period_started", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewWebhookRequestTypeFromString("subscription.period.started")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, WebhookRequestType("subscription.period.started"), val, "enum value should match expected wire value")
 	})
 
 	t.Run("NewFromString_test_send", func(t *testing.T) {

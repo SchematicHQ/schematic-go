@@ -21,7 +21,7 @@ var (
 
 type CheckAndReserveFlagRequestBody struct {
 	Company map[string]string `json:"company,omitempty" url:"-"`
-	// When the hold lapses if no track or inference event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+	// When the hold lapses if no track or inference event settles it; defaults to one minute from now and may be at most 24 hours out. The unspent hold is refunded on expiry
 	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
 	// A caller-chosen key for safe retries: a second request with the same key returns the original reservation instead of taking another hold
 	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`

@@ -11,33 +11,36 @@ import (
 )
 
 var (
-	countCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	countCompaniesRequestFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
-	countCompaniesRequestFieldIDs                       = big.NewInt(1 << 2)
-	countCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
-	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 4)
-	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
-	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
-	countCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 7)
-	countCompaniesRequestFieldPlanVersionUnpublished    = big.NewInt(1 << 8)
-	countCompaniesRequestFieldQ                         = big.NewInt(1 << 9)
-	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 10)
-	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 11)
-	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 12)
-	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 13)
-	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 14)
-	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
-	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 16)
-	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 17)
-	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 18)
-	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 19)
-	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 20)
+	countCompaniesRequestFieldCancelAtPeriodEnd         = big.NewInt(1 << 0)
+	countCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 1)
+	countCompaniesRequestFieldHasScheduledDowngrade     = big.NewInt(1 << 2)
+	countCompaniesRequestFieldIDs                       = big.NewInt(1 << 3)
+	countCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 4)
+	countCompaniesRequestFieldPlanID                    = big.NewInt(1 << 5)
+	countCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 6)
+	countCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 7)
+	countCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 8)
+	countCompaniesRequestFieldPlanVersionUnpublished    = big.NewInt(1 << 9)
+	countCompaniesRequestFieldQ                         = big.NewInt(1 << 10)
+	countCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 11)
+	countCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 12)
+	countCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 13)
+	countCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 14)
+	countCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 15)
+	countCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 16)
+	countCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 17)
+	countCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 18)
+	countCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 19)
+	countCompaniesRequestFieldLimit                     = big.NewInt(1 << 20)
+	countCompaniesRequestFieldOffset                    = big.NewInt(1 << 21)
 )
 
 type CountCompaniesRequest struct {
+	// If true, filter companies with an active subscription that is set to cancel at the end of the current period; if false, filter companies without one
+	CancelAtPeriodEnd *bool `json:"-" url:"cancel_at_period_end,omitempty"`
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
-	// Filter companies that have a pending scheduled downgrade
+	// If true, filter companies that have a pending scheduled downgrade; if false, filter companies that do not
 	HasScheduledDowngrade *bool `json:"-" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
@@ -89,6 +92,13 @@ func (c *CountCompaniesRequest) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetCancelAtPeriodEnd sets the CancelAtPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesRequest) SetCancelAtPeriodEnd(cancelAtPeriodEnd *bool) {
+	c.CancelAtPeriodEnd = cancelAtPeriodEnd
+	c.require(countCompaniesRequestFieldCancelAtPeriodEnd)
 }
 
 // SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
@@ -797,6 +807,44 @@ func (g *GetCompanyBillingEntityRequest) SetCompanyID(companyID string) {
 }
 
 var (
+	getCompanyInferenceCostRequestFieldEndTime   = big.NewInt(1 << 0)
+	getCompanyInferenceCostRequestFieldStartTime = big.NewInt(1 << 1)
+)
+
+type GetCompanyInferenceCostRequest struct {
+	// End of the window (exclusive). Pass together with start_time; when both are omitted, the company's current billing period is used
+	EndTime *time.Time `json:"-" url:"end_time,omitempty"`
+	// Start of the window (inclusive). Pass together with end_time; when both are omitted, the company's current billing period is used
+	StartTime *time.Time `json:"-" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (g *GetCompanyInferenceCostRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyInferenceCostRequest) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getCompanyInferenceCostRequestFieldEndTime)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyInferenceCostRequest) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getCompanyInferenceCostRequestFieldStartTime)
+}
+
+var (
 	getEntityTraitValuesRequestFieldDefinitionID = big.NewInt(1 << 0)
 	getEntityTraitValuesRequestFieldQ            = big.NewInt(1 << 1)
 	getEntityTraitValuesRequestFieldLimit        = big.NewInt(1 << 2)
@@ -985,33 +1033,36 @@ func (c *CreateEntityTraitDefinitionRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	listCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	listCompaniesRequestFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
-	listCompaniesRequestFieldIDs                       = big.NewInt(1 << 2)
-	listCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 3)
-	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 4)
-	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 5)
-	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 6)
-	listCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 7)
-	listCompaniesRequestFieldPlanVersionUnpublished    = big.NewInt(1 << 8)
-	listCompaniesRequestFieldQ                         = big.NewInt(1 << 9)
-	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 10)
-	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 11)
-	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 12)
-	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 13)
-	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 14)
-	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 15)
-	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 16)
-	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 17)
-	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 18)
-	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 19)
-	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 20)
+	listCompaniesRequestFieldCancelAtPeriodEnd         = big.NewInt(1 << 0)
+	listCompaniesRequestFieldCreditTypeIDs             = big.NewInt(1 << 1)
+	listCompaniesRequestFieldHasScheduledDowngrade     = big.NewInt(1 << 2)
+	listCompaniesRequestFieldIDs                       = big.NewInt(1 << 3)
+	listCompaniesRequestFieldMonetizedSubscriptions    = big.NewInt(1 << 4)
+	listCompaniesRequestFieldPlanID                    = big.NewInt(1 << 5)
+	listCompaniesRequestFieldPlanIDs                   = big.NewInt(1 << 6)
+	listCompaniesRequestFieldPlanVersionID             = big.NewInt(1 << 7)
+	listCompaniesRequestFieldPlanVersionIDs            = big.NewInt(1 << 8)
+	listCompaniesRequestFieldPlanVersionUnpublished    = big.NewInt(1 << 9)
+	listCompaniesRequestFieldQ                         = big.NewInt(1 << 10)
+	listCompaniesRequestFieldSortOrderColumn           = big.NewInt(1 << 11)
+	listCompaniesRequestFieldSortOrderDirection        = big.NewInt(1 << 12)
+	listCompaniesRequestFieldSubscriptionStatuses      = big.NewInt(1 << 13)
+	listCompaniesRequestFieldSubscriptionTypes         = big.NewInt(1 << 14)
+	listCompaniesRequestFieldWithEntitlementFor        = big.NewInt(1 << 15)
+	listCompaniesRequestFieldWithoutFeatureOverrideFor = big.NewInt(1 << 16)
+	listCompaniesRequestFieldWithoutPlan               = big.NewInt(1 << 17)
+	listCompaniesRequestFieldWithoutSubscription       = big.NewInt(1 << 18)
+	listCompaniesRequestFieldWithSubscription          = big.NewInt(1 << 19)
+	listCompaniesRequestFieldLimit                     = big.NewInt(1 << 20)
+	listCompaniesRequestFieldOffset                    = big.NewInt(1 << 21)
 )
 
 type ListCompaniesRequest struct {
+	// If true, filter companies with an active subscription that is set to cancel at the end of the current period; if false, filter companies without one
+	CancelAtPeriodEnd *bool `json:"-" url:"cancel_at_period_end,omitempty"`
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []*string `json:"-" url:"credit_type_ids,omitempty"`
-	// Filter companies that have a pending scheduled downgrade
+	// If true, filter companies that have a pending scheduled downgrade; if false, filter companies that do not
 	HasScheduledDowngrade *bool `json:"-" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []*string `json:"-" url:"ids,omitempty"`
@@ -1063,6 +1114,13 @@ func (l *ListCompaniesRequest) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	l.explicitFields = next
+}
+
+// SetCancelAtPeriodEnd sets the CancelAtPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesRequest) SetCancelAtPeriodEnd(cancelAtPeriodEnd *bool) {
+	l.CancelAtPeriodEnd = cancelAtPeriodEnd
+	l.require(listCompaniesRequestFieldCancelAtPeriodEnd)
 }
 
 // SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
@@ -2175,6 +2233,207 @@ func (c *CompanyBillingEntitySubscriptionResponseData) String() string {
 }
 
 var (
+	companyInferenceCostResponseDataFieldByModel            = big.NewInt(1 << 0)
+	companyInferenceCostResponseDataFieldCompanyID          = big.NewInt(1 << 1)
+	companyInferenceCostResponseDataFieldCosts              = big.NewInt(1 << 2)
+	companyInferenceCostResponseDataFieldEndTime            = big.NewInt(1 << 3)
+	companyInferenceCostResponseDataFieldEventCount         = big.NewInt(1 << 4)
+	companyInferenceCostResponseDataFieldStartTime          = big.NewInt(1 << 5)
+	companyInferenceCostResponseDataFieldUnpricedEventCount = big.NewInt(1 << 6)
+)
+
+type CompanyInferenceCostResponseData struct {
+	// Cost and event counts per provider and response model, busiest model first
+	ByModel []*InferenceModelCostResponseData `json:"by_model" url:"by_model"`
+	// The company the cost belongs to
+	CompanyID string `json:"company_id" url:"company_id"`
+	// Summed cost of priced inference events, one entry per currency. Amounts in different currencies are not converted or combined. Empty when no event in the window was priced
+	Costs []*InferenceCostAmountResponseData `json:"costs" url:"costs"`
+	// End of the window (exclusive)
+	EndTime time.Time `json:"end_time" url:"end_time"`
+	// Number of inference events the company sent in the window, priced or not
+	EventCount int64 `json:"event_count" url:"event_count"`
+	// Start of the window (inclusive)
+	StartTime time.Time `json:"start_time" url:"start_time"`
+	// Number of inference events in the window with no known cost: the event carried none and none could be derived from a price for its model. These add nothing to costs, so a non-zero count means the real cost is higher than reported
+	UnpricedEventCount int64 `json:"unpriced_event_count" url:"unpriced_event_count"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyInferenceCostResponseData) GetByModel() []*InferenceModelCostResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.ByModel
+}
+
+func (c *CompanyInferenceCostResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyInferenceCostResponseData) GetCosts() []*InferenceCostAmountResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Costs
+}
+
+func (c *CompanyInferenceCostResponseData) GetEndTime() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.EndTime
+}
+
+func (c *CompanyInferenceCostResponseData) GetEventCount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.EventCount
+}
+
+func (c *CompanyInferenceCostResponseData) GetStartTime() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.StartTime
+}
+
+func (c *CompanyInferenceCostResponseData) GetUnpricedEventCount() int64 {
+	if c == nil {
+		return 0
+	}
+	return c.UnpricedEventCount
+}
+
+func (c *CompanyInferenceCostResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyInferenceCostResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetByModel sets the ByModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetByModel(byModel []*InferenceModelCostResponseData) {
+	c.ByModel = byModel
+	c.require(companyInferenceCostResponseDataFieldByModel)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(companyInferenceCostResponseDataFieldCompanyID)
+}
+
+// SetCosts sets the Costs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetCosts(costs []*InferenceCostAmountResponseData) {
+	c.Costs = costs
+	c.require(companyInferenceCostResponseDataFieldCosts)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetEndTime(endTime time.Time) {
+	c.EndTime = endTime
+	c.require(companyInferenceCostResponseDataFieldEndTime)
+}
+
+// SetEventCount sets the EventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetEventCount(eventCount int64) {
+	c.EventCount = eventCount
+	c.require(companyInferenceCostResponseDataFieldEventCount)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetStartTime(startTime time.Time) {
+	c.StartTime = startTime
+	c.require(companyInferenceCostResponseDataFieldStartTime)
+}
+
+// SetUnpricedEventCount sets the UnpricedEventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyInferenceCostResponseData) SetUnpricedEventCount(unpricedEventCount int64) {
+	c.UnpricedEventCount = unpricedEventCount
+	c.require(companyInferenceCostResponseDataFieldUnpricedEventCount)
+}
+
+func (c *CompanyInferenceCostResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyInferenceCostResponseData
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyInferenceCostResponseData(unmarshaler.embed)
+	c.EndTime = unmarshaler.EndTime.Time()
+	c.StartTime = unmarshaler.StartTime.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyInferenceCostResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyInferenceCostResponseData
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed:     embed(*c),
+		EndTime:   internal.NewDateTime(c.EndTime),
+		StartTime: internal.NewDateTime(c.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyInferenceCostResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	companyMembershipDetailResponseDataFieldCompany   = big.NewInt(1 << 0)
 	companyMembershipDetailResponseDataFieldCompanyID = big.NewInt(1 << 1)
 	companyMembershipDetailResponseDataFieldCreatedAt = big.NewInt(1 << 2)
@@ -2819,6 +3078,282 @@ func (e *EntityTraitValue) String() string {
 }
 
 var (
+	inferenceCostAmountResponseDataFieldCost       = big.NewInt(1 << 0)
+	inferenceCostAmountResponseDataFieldCurrency   = big.NewInt(1 << 1)
+	inferenceCostAmountResponseDataFieldEventCount = big.NewInt(1 << 2)
+)
+
+type InferenceCostAmountResponseData struct {
+	// Summed cost as a decimal string in the currency's major unit (dollars, not cents), with up to 8 decimal places
+	Cost string `json:"cost" url:"cost"`
+	// Lowercase ISO 4217 currency code of the cost
+	Currency string `json:"currency" url:"currency"`
+	// Number of priced events summed into this cost
+	EventCount int64 `json:"event_count" url:"event_count"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InferenceCostAmountResponseData) GetCost() string {
+	if i == nil {
+		return ""
+	}
+	return i.Cost
+}
+
+func (i *InferenceCostAmountResponseData) GetCurrency() string {
+	if i == nil {
+		return ""
+	}
+	return i.Currency
+}
+
+func (i *InferenceCostAmountResponseData) GetEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.EventCount
+}
+
+func (i *InferenceCostAmountResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InferenceCostAmountResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
+	}
+	next.Or(next, field)
+	i.explicitFields = next
+}
+
+// SetCost sets the Cost field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostAmountResponseData) SetCost(cost string) {
+	i.Cost = cost
+	i.require(inferenceCostAmountResponseDataFieldCost)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostAmountResponseData) SetCurrency(currency string) {
+	i.Currency = currency
+	i.require(inferenceCostAmountResponseDataFieldCurrency)
+}
+
+// SetEventCount sets the EventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostAmountResponseData) SetEventCount(eventCount int64) {
+	i.EventCount = eventCount
+	i.require(inferenceCostAmountResponseDataFieldEventCount)
+}
+
+func (i *InferenceCostAmountResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler InferenceCostAmountResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InferenceCostAmountResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InferenceCostAmountResponseData) MarshalJSON() ([]byte, error) {
+	type embed InferenceCostAmountResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InferenceCostAmountResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
+	inferenceModelCostResponseDataFieldCosts              = big.NewInt(1 << 0)
+	inferenceModelCostResponseDataFieldEventCount         = big.NewInt(1 << 1)
+	inferenceModelCostResponseDataFieldProvider           = big.NewInt(1 << 2)
+	inferenceModelCostResponseDataFieldResponseModel      = big.NewInt(1 << 3)
+	inferenceModelCostResponseDataFieldUnpricedEventCount = big.NewInt(1 << 4)
+)
+
+type InferenceModelCostResponseData struct {
+	// Summed cost of this model's priced events, one entry per currency
+	Costs []*InferenceCostAmountResponseData `json:"costs" url:"costs"`
+	// Number of inference events for this model, priced or not
+	EventCount int64 `json:"event_count" url:"event_count"`
+	// The model provider the events reported, such as openai or anthropic
+	Provider string `json:"provider" url:"provider"`
+	// The model the provider reported answering the call
+	ResponseModel string `json:"response_model" url:"response_model"`
+	// Number of this model's events with no known cost
+	UnpricedEventCount int64 `json:"unpriced_event_count" url:"unpriced_event_count"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InferenceModelCostResponseData) GetCosts() []*InferenceCostAmountResponseData {
+	if i == nil {
+		return nil
+	}
+	return i.Costs
+}
+
+func (i *InferenceModelCostResponseData) GetEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.EventCount
+}
+
+func (i *InferenceModelCostResponseData) GetProvider() string {
+	if i == nil {
+		return ""
+	}
+	return i.Provider
+}
+
+func (i *InferenceModelCostResponseData) GetResponseModel() string {
+	if i == nil {
+		return ""
+	}
+	return i.ResponseModel
+}
+
+func (i *InferenceModelCostResponseData) GetUnpricedEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.UnpricedEventCount
+}
+
+func (i *InferenceModelCostResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InferenceModelCostResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
+	}
+	next.Or(next, field)
+	i.explicitFields = next
+}
+
+// SetCosts sets the Costs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetCosts(costs []*InferenceCostAmountResponseData) {
+	i.Costs = costs
+	i.require(inferenceModelCostResponseDataFieldCosts)
+}
+
+// SetEventCount sets the EventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetEventCount(eventCount int64) {
+	i.EventCount = eventCount
+	i.require(inferenceModelCostResponseDataFieldEventCount)
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetProvider(provider string) {
+	i.Provider = provider
+	i.require(inferenceModelCostResponseDataFieldProvider)
+}
+
+// SetResponseModel sets the ResponseModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetResponseModel(responseModel string) {
+	i.ResponseModel = responseModel
+	i.require(inferenceModelCostResponseDataFieldResponseModel)
+}
+
+// SetUnpricedEventCount sets the UnpricedEventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetUnpricedEventCount(unpricedEventCount int64) {
+	i.UnpricedEventCount = unpricedEventCount
+	i.require(inferenceModelCostResponseDataFieldUnpricedEventCount)
+}
+
+func (i *InferenceModelCostResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler InferenceModelCostResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InferenceModelCostResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InferenceModelCostResponseData) MarshalJSON() ([]byte, error) {
+	type embed InferenceModelCostResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InferenceModelCostResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
 	keysRequestBodyFieldKeys = big.NewInt(1 << 0)
 )
 
@@ -2907,10 +3442,13 @@ func (k *KeysRequestBody) String() string {
 type PlanChangeAction string
 
 const (
+	PlanChangeActionAccessReinstated          PlanChangeAction = "access_reinstated"
+	PlanChangeActionAccessRevoked             PlanChangeAction = "access_revoked"
 	PlanChangeActionAmendment                 PlanChangeAction = "amendment"
 	PlanChangeActionCheckout                  PlanChangeAction = "checkout"
 	PlanChangeActionCompanyUpsert             PlanChangeAction = "company_upsert"
 	PlanChangeActionFallbackPlan              PlanChangeAction = "fallback_plan"
+	PlanChangeActionInvoicePastDue            PlanChangeAction = "invoice_past_due"
 	PlanChangeActionManagePlan                PlanChangeAction = "manage_plan"
 	PlanChangeActionMigration                 PlanChangeAction = "migration"
 	PlanChangeActionPlanBillingProductChanged PlanChangeAction = "plan_billing_product_changed"
@@ -2923,6 +3461,10 @@ const (
 
 func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 	switch s {
+	case "access_reinstated":
+		return PlanChangeActionAccessReinstated, nil
+	case "access_revoked":
+		return PlanChangeActionAccessRevoked, nil
 	case "amendment":
 		return PlanChangeActionAmendment, nil
 	case "checkout":
@@ -2931,6 +3473,8 @@ func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 		return PlanChangeActionCompanyUpsert, nil
 	case "fallback_plan":
 		return PlanChangeActionFallbackPlan, nil
+	case "invoice_past_due":
+		return PlanChangeActionInvoicePastDue, nil
 	case "manage_plan":
 		return PlanChangeActionManagePlan, nil
 	case "migration":
@@ -5333,34 +5877,37 @@ func (u *UserDetailResponseData) String() string {
 }
 
 var (
-	countCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	countCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
-	countCompaniesParamsFieldIDs                       = big.NewInt(1 << 2)
-	countCompaniesParamsFieldLimit                     = big.NewInt(1 << 3)
-	countCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 4)
-	countCompaniesParamsFieldOffset                    = big.NewInt(1 << 5)
-	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 6)
-	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
-	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
-	countCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 9)
-	countCompaniesParamsFieldPlanVersionUnpublished    = big.NewInt(1 << 10)
-	countCompaniesParamsFieldQ                         = big.NewInt(1 << 11)
-	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 12)
-	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 13)
-	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 14)
-	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 15)
-	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 16)
-	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 17)
-	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 18)
-	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 19)
-	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 20)
+	countCompaniesParamsFieldCancelAtPeriodEnd         = big.NewInt(1 << 0)
+	countCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 1)
+	countCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 2)
+	countCompaniesParamsFieldIDs                       = big.NewInt(1 << 3)
+	countCompaniesParamsFieldLimit                     = big.NewInt(1 << 4)
+	countCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 5)
+	countCompaniesParamsFieldOffset                    = big.NewInt(1 << 6)
+	countCompaniesParamsFieldPlanID                    = big.NewInt(1 << 7)
+	countCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 8)
+	countCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 9)
+	countCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 10)
+	countCompaniesParamsFieldPlanVersionUnpublished    = big.NewInt(1 << 11)
+	countCompaniesParamsFieldQ                         = big.NewInt(1 << 12)
+	countCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 13)
+	countCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 14)
+	countCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 15)
+	countCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 16)
+	countCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 17)
+	countCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 18)
+	countCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 19)
+	countCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 20)
+	countCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 21)
 )
 
 // Input parameters
 type CountCompaniesParams struct {
+	// If true, filter companies with an active subscription that is set to cancel at the end of the current period; if false, filter companies without one
+	CancelAtPeriodEnd *bool `json:"cancel_at_period_end,omitempty" url:"cancel_at_period_end,omitempty"`
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
-	// Filter companies that have a pending scheduled downgrade
+	// If true, filter companies that have a pending scheduled downgrade; if false, filter companies that do not
 	HasScheduledDowngrade *bool `json:"has_scheduled_downgrade,omitempty" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -5406,6 +5953,13 @@ type CountCompaniesParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CountCompaniesParams) GetCancelAtPeriodEnd() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.CancelAtPeriodEnd
 }
 
 func (c *CountCompaniesParams) GetCreditTypeIDs() []string {
@@ -5569,6 +6123,13 @@ func (c *CountCompaniesParams) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetCancelAtPeriodEnd sets the CancelAtPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountCompaniesParams) SetCancelAtPeriodEnd(cancelAtPeriodEnd *bool) {
+	c.CancelAtPeriodEnd = cancelAtPeriodEnd
+	c.require(countCompaniesParamsFieldCancelAtPeriodEnd)
 }
 
 // SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;
@@ -9086,6 +9647,226 @@ func (g *GetCompanyBillingEntityResponse) String() string {
 }
 
 var (
+	getCompanyInferenceCostParamsFieldEndTime   = big.NewInt(1 << 0)
+	getCompanyInferenceCostParamsFieldStartTime = big.NewInt(1 << 1)
+)
+
+// Input parameters
+type GetCompanyInferenceCostParams struct {
+	// End of the window (exclusive). Pass together with start_time; when both are omitted, the company's current billing period is used
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Start of the window (inclusive). Pass together with end_time; when both are omitted, the company's current billing period is used
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyInferenceCostParams) GetEndTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.EndTime
+}
+
+func (g *GetCompanyInferenceCostParams) GetStartTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.StartTime
+}
+
+func (g *GetCompanyInferenceCostParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCompanyInferenceCostParams) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyInferenceCostParams) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getCompanyInferenceCostParamsFieldEndTime)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyInferenceCostParams) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getCompanyInferenceCostParamsFieldStartTime)
+}
+
+func (g *GetCompanyInferenceCostParams) UnmarshalJSON(data []byte) error {
+	type embed GetCompanyInferenceCostParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*g),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*g = GetCompanyInferenceCostParams(unmarshaler.embed)
+	g.EndTime = unmarshaler.EndTime.TimePtr()
+	g.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCompanyInferenceCostParams) MarshalJSON() ([]byte, error) {
+	type embed GetCompanyInferenceCostParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*g),
+		EndTime:   internal.NewOptionalDateTime(g.EndTime),
+		StartTime: internal.NewOptionalDateTime(g.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCompanyInferenceCostParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getCompanyInferenceCostResponseFieldData   = big.NewInt(1 << 0)
+	getCompanyInferenceCostResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetCompanyInferenceCostResponse struct {
+	Data *CompanyInferenceCostResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *GetCompanyInferenceCostParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyInferenceCostResponse) GetData() *CompanyInferenceCostResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCompanyInferenceCostResponse) GetParams() *GetCompanyInferenceCostParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetCompanyInferenceCostResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCompanyInferenceCostResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyInferenceCostResponse) SetData(data *CompanyInferenceCostResponseData) {
+	g.Data = data
+	g.require(getCompanyInferenceCostResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyInferenceCostResponse) SetParams(params *GetCompanyInferenceCostParams) {
+	g.Params = params
+	g.require(getCompanyInferenceCostResponseFieldParams)
+}
+
+func (g *GetCompanyInferenceCostResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetCompanyInferenceCostResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetCompanyInferenceCostResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCompanyInferenceCostResponse) MarshalJSON() ([]byte, error) {
+	type embed GetCompanyInferenceCostResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCompanyInferenceCostResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	getCompanyResponseFieldData   = big.NewInt(1 << 0)
 	getCompanyResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -10150,34 +10931,37 @@ func (g *GetUserResponse) String() string {
 }
 
 var (
-	listCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 0)
-	listCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 1)
-	listCompaniesParamsFieldIDs                       = big.NewInt(1 << 2)
-	listCompaniesParamsFieldLimit                     = big.NewInt(1 << 3)
-	listCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 4)
-	listCompaniesParamsFieldOffset                    = big.NewInt(1 << 5)
-	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 6)
-	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 7)
-	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 8)
-	listCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 9)
-	listCompaniesParamsFieldPlanVersionUnpublished    = big.NewInt(1 << 10)
-	listCompaniesParamsFieldQ                         = big.NewInt(1 << 11)
-	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 12)
-	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 13)
-	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 14)
-	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 15)
-	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 16)
-	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 17)
-	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 18)
-	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 19)
-	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 20)
+	listCompaniesParamsFieldCancelAtPeriodEnd         = big.NewInt(1 << 0)
+	listCompaniesParamsFieldCreditTypeIDs             = big.NewInt(1 << 1)
+	listCompaniesParamsFieldHasScheduledDowngrade     = big.NewInt(1 << 2)
+	listCompaniesParamsFieldIDs                       = big.NewInt(1 << 3)
+	listCompaniesParamsFieldLimit                     = big.NewInt(1 << 4)
+	listCompaniesParamsFieldMonetizedSubscriptions    = big.NewInt(1 << 5)
+	listCompaniesParamsFieldOffset                    = big.NewInt(1 << 6)
+	listCompaniesParamsFieldPlanID                    = big.NewInt(1 << 7)
+	listCompaniesParamsFieldPlanIDs                   = big.NewInt(1 << 8)
+	listCompaniesParamsFieldPlanVersionID             = big.NewInt(1 << 9)
+	listCompaniesParamsFieldPlanVersionIDs            = big.NewInt(1 << 10)
+	listCompaniesParamsFieldPlanVersionUnpublished    = big.NewInt(1 << 11)
+	listCompaniesParamsFieldQ                         = big.NewInt(1 << 12)
+	listCompaniesParamsFieldSortOrderColumn           = big.NewInt(1 << 13)
+	listCompaniesParamsFieldSortOrderDirection        = big.NewInt(1 << 14)
+	listCompaniesParamsFieldSubscriptionStatuses      = big.NewInt(1 << 15)
+	listCompaniesParamsFieldSubscriptionTypes         = big.NewInt(1 << 16)
+	listCompaniesParamsFieldWithEntitlementFor        = big.NewInt(1 << 17)
+	listCompaniesParamsFieldWithSubscription          = big.NewInt(1 << 18)
+	listCompaniesParamsFieldWithoutFeatureOverrideFor = big.NewInt(1 << 19)
+	listCompaniesParamsFieldWithoutPlan               = big.NewInt(1 << 20)
+	listCompaniesParamsFieldWithoutSubscription       = big.NewInt(1 << 21)
 )
 
 // Input parameters
 type ListCompaniesParams struct {
+	// If true, filter companies with an active subscription that is set to cancel at the end of the current period; if false, filter companies without one
+	CancelAtPeriodEnd *bool `json:"cancel_at_period_end,omitempty" url:"cancel_at_period_end,omitempty"`
 	// Filter companies by one or more credit type IDs (each ID starts with bcrd_)
 	CreditTypeIDs []string `json:"credit_type_ids,omitempty" url:"credit_type_ids,omitempty"`
-	// Filter companies that have a pending scheduled downgrade
+	// If true, filter companies that have a pending scheduled downgrade; if false, filter companies that do not
 	HasScheduledDowngrade *bool `json:"has_scheduled_downgrade,omitempty" url:"has_scheduled_downgrade,omitempty"`
 	// Filter companies by multiple company IDs (starts with comp_)
 	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
@@ -10223,6 +11007,13 @@ type ListCompaniesParams struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (l *ListCompaniesParams) GetCancelAtPeriodEnd() *bool {
+	if l == nil {
+		return nil
+	}
+	return l.CancelAtPeriodEnd
 }
 
 func (l *ListCompaniesParams) GetCreditTypeIDs() []string {
@@ -10386,6 +11177,13 @@ func (l *ListCompaniesParams) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	l.explicitFields = next
+}
+
+// SetCancelAtPeriodEnd sets the CancelAtPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListCompaniesParams) SetCancelAtPeriodEnd(cancelAtPeriodEnd *bool) {
+	l.CancelAtPeriodEnd = cancelAtPeriodEnd
+	l.require(listCompaniesParamsFieldCancelAtPeriodEnd)
 }
 
 // SetCreditTypeIDs sets the CreditTypeIDs field and marks it as non-optional;

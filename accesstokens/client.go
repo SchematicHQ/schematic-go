@@ -44,7 +44,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        "company",
 //	    ),
 //	}
-//	client.Accesstokens.IssueTemporaryAccessToken(
+//	_, err := client.Accesstokens.IssueTemporaryAccessToken(
 //	    context.TODO(),
 //	    request,
 //	)

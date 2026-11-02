@@ -11643,6 +11643,22 @@ func TestSettersCreditEventLedgerResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetSourceIDString", func(t *testing.T) {
+		obj := &CreditEventLedgerResponseData{}
+		var fernTestValueSourceIDString *string
+		obj.SetSourceIDString(fernTestValueSourceIDString)
+		assert.Equal(t, fernTestValueSourceIDString, obj.SourceIDString)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetSourceType", func(t *testing.T) {
+		obj := &CreditEventLedgerResponseData{}
+		var fernTestValueSourceType *CreditLedgerSourceType
+		obj.SetSourceType(fernTestValueSourceType)
+		assert.Equal(t, fernTestValueSourceType, obj.SourceType)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetToGrantID", func(t *testing.T) {
 		obj := &CreditEventLedgerResponseData{}
 		var fernTestValueToGrantID *string
@@ -12658,6 +12674,72 @@ func TestGettersCreditEventLedgerResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetSourceID() // Should return zero value
+	})
+
+	t.Run("GetSourceIDString", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		var expected *string
+		obj.SourceIDString = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetSourceIDString(), "getter should return the property value")
+	})
+
+	t.Run("GetSourceIDString_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		obj.SourceIDString = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetSourceIDString(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetSourceIDString_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditEventLedgerResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetSourceIDString() // Should return zero value
+	})
+
+	t.Run("GetSourceType", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		var expected *CreditLedgerSourceType
+		obj.SourceType = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetSourceType(), "getter should return the property value")
+	})
+
+	t.Run("GetSourceType_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		obj.SourceType = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetSourceType(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetSourceType_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CreditEventLedgerResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetSourceType() // Should return zero value
 	})
 
 	t.Run("GetToGrantID", func(t *testing.T) {
@@ -13830,6 +13912,68 @@ func TestSettersMarkExplicitCreditEventLedgerResponseData(t *testing.T) {
 
 		// Act
 		obj.SetSourceID(fernTestValueSourceID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetSourceIDString_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		var fernTestValueSourceIDString *string
+
+		// Act
+		obj.SetSourceIDString(fernTestValueSourceIDString)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetSourceType_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CreditEventLedgerResponseData{}
+		var fernTestValueSourceType *CreditLedgerSourceType
+
+		// Act
+		obj.SetSourceType(fernTestValueSourceType)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -34978,6 +35122,49 @@ func TestEnumCreditLedgerEntryKind(t *testing.T) {
 
 	t.Run("Ptr", func(t *testing.T) {
 		val, err := NewCreditLedgerEntryKindFromString("adjustment")
+		assert.NoError(t, err)
+		ptr := val.Ptr()
+		assert.NotNil(t, ptr)
+		assert.Equal(t, val, *ptr)
+	})
+}
+
+func TestEnumCreditLedgerSourceType(t *testing.T) {
+	t.Run("NewFromString_billing_charge", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditLedgerSourceTypeFromString("billing_charge")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditLedgerSourceType("billing_charge"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_billing_credit_grant", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditLedgerSourceTypeFromString("billing_credit_grant")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditLedgerSourceType("billing_credit_grant"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_billing_credit_transfer", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditLedgerSourceTypeFromString("billing_credit_transfer")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditLedgerSourceType("billing_credit_transfer"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_billing_settlement", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewCreditLedgerSourceTypeFromString("billing_settlement")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, CreditLedgerSourceType("billing_settlement"), val, "enum value should match expected wire value")
+	})
+
+	t.Run("NewFromString_Invalid", func(t *testing.T) {
+		_, err := NewCreditLedgerSourceTypeFromString("invalid_value_that_does_not_exist")
+		assert.Error(t, err)
+	})
+
+	t.Run("Ptr", func(t *testing.T) {
+		val, err := NewCreditLedgerSourceTypeFromString("billing_charge")
 		assert.NoError(t, err)
 		ptr := val.Ptr()
 		assert.NotNil(t, ptr)

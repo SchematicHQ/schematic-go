@@ -36,7 +36,7 @@ func NewClient(options *core.RequestOptions) *Client {
 
 // Example:
 //
-//	client.Integrationsapi.RunIntegration(
+//	_, err := client.Integrationsapi.RunIntegration(
 //	    context.TODO(),
 //	    "integration_id",
 //	)
@@ -80,7 +80,7 @@ func (c *Client) RunIntegration(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Integrationsapi.ListIntegrations(
+//	_, err := client.Integrationsapi.ListIntegrations(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -102,7 +102,7 @@ func (c *Client) ListIntegrations(
 
 // Example:
 //
-//	client.Integrationsapi.GetIntegrationWebhookURL(
+//	_, err := client.Integrationsapi.GetIntegrationWebhookURL(
 //	    context.TODO(),
 //	    "type",
 //	)
@@ -128,7 +128,7 @@ func (c *Client) GetIntegrationWebhookURL(
 //	request := &schematichq.InstallIntegrationRequestBody{
 //	    Type: schematichq.IntegrationTypeClerk,
 //	}
-//	client.Integrationsapi.InstallIntegration(
+//	_, err := client.Integrationsapi.InstallIntegration(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -153,7 +153,7 @@ func (c *Client) InstallIntegration(
 //	request := &schematichq.StartDataImportRequestBody{
 //	    IntegrationID: "integration_id",
 //	}
-//	client.Integrationsapi.StartDataImport(
+//	_, err := client.Integrationsapi.StartDataImport(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -175,7 +175,7 @@ func (c *Client) StartDataImport(
 
 // Example:
 //
-//	client.Integrationsapi.LoadSampleDataSet(
+//	_, err := client.Integrationsapi.LoadSampleDataSet(
 //	    context.TODO(),
 //	)
 func (c *Client) LoadSampleDataSet(
@@ -194,7 +194,7 @@ func (c *Client) LoadSampleDataSet(
 
 // Example:
 //
-//	client.Integrationsapi.GetStripeSandboxClaimLink(
+//	_, err := client.Integrationsapi.GetStripeSandboxClaimLink(
 //	    context.TODO(),
 //	)
 func (c *Client) GetStripeSandboxClaimLink(
@@ -213,7 +213,7 @@ func (c *Client) GetStripeSandboxClaimLink(
 
 // Example:
 //
-//	client.Integrationsapi.GetStripeSandboxKeys(
+//	_, err := client.Integrationsapi.GetStripeSandboxKeys(
 //	    context.TODO(),
 //	)
 func (c *Client) GetStripeSandboxKeys(
@@ -235,7 +235,7 @@ func (c *Client) GetStripeSandboxKeys(
 //	request := &schematichq.ClaimStripeSandboxKeysRequestBody{
 //	    Token: "token",
 //	}
-//	client.Integrationsapi.ClaimStripeSandboxKeys(
+//	_, err := client.Integrationsapi.ClaimStripeSandboxKeys(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -260,7 +260,7 @@ func (c *Client) ClaimStripeSandboxKeys(
 //	request := &schematichq.InstallIntegrationRequestBody{
 //	    Type: schematichq.IntegrationTypeClerk,
 //	}
-//	client.Integrationsapi.AssumeStripeInstalled(
+//	_, err := client.Integrationsapi.AssumeStripeInstalled(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -285,7 +285,7 @@ func (c *Client) AssumeStripeInstalled(
 //	request := &schematichq.InstallIntegrationRequestBody{
 //	    Type: schematichq.IntegrationTypeClerk,
 //	}
-//	client.Integrationsapi.InstallStripe(
+//	_, err := client.Integrationsapi.InstallStripe(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -310,7 +310,7 @@ func (c *Client) InstallStripe(
 //	request := &schematichq.InstallStripeSandboxRequestBody{
 //	    Email: "email",
 //	}
-//	client.Integrationsapi.InstallStripeClaimableSandbox(
+//	_, err := client.Integrationsapi.InstallStripeClaimableSandbox(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -332,7 +332,7 @@ func (c *Client) InstallStripeClaimableSandbox(
 
 // Example:
 //
-//	client.Integrationsapi.ListStripeSandboxCountries(
+//	_, err := client.Integrationsapi.ListStripeSandboxCountries(
 //	    context.TODO(),
 //	)
 func (c *Client) ListStripeSandboxCountries(
@@ -351,7 +351,7 @@ func (c *Client) ListStripeSandboxCountries(
 
 // Example:
 //
-//	client.Integrationsapi.UninstallIntegration(
+//	_, err := client.Integrationsapi.UninstallIntegration(
 //	    context.TODO(),
 //	    "integration_id",
 //	)

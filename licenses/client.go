@@ -57,7 +57,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Licenses.ListLicenses(
+//	_, err := client.Licenses.ListLicenses(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -79,7 +79,7 @@ func (c *Client) ListLicenses(
 
 // Example:
 //
-//	client.Licenses.GetSingleLicense(
+//	_, err := client.Licenses.GetSingleLicense(
 //	    context.TODO(),
 //	    "license_id",
 //	)
@@ -123,7 +123,7 @@ func (c *Client) GetSingleLicense(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Licenses.CountLicenses(
+//	_, err := client.Licenses.CountLicenses(
 //	    context.TODO(),
 //	    request,
 //	)

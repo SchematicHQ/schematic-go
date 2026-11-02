@@ -48,7 +48,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Scheduledcheckout.ListScheduledCheckouts(
+//	_, err := client.Scheduledcheckout.ListScheduledCheckouts(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -78,7 +78,7 @@ func (c *Client) ListScheduledCheckouts(
 //	    FromPlanID: "from_plan_id",
 //	    ToPlanID: "to_plan_id",
 //	}
-//	client.Scheduledcheckout.CreateScheduledCheckout(
+//	_, err := client.Scheduledcheckout.CreateScheduledCheckout(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -100,7 +100,7 @@ func (c *Client) CreateScheduledCheckout(
 
 // Example:
 //
-//	client.Scheduledcheckout.GetScheduledCheckout(
+//	_, err := client.Scheduledcheckout.GetScheduledCheckout(
 //	    context.TODO(),
 //	    "scheduled_checkout_id",
 //	)
@@ -124,7 +124,7 @@ func (c *Client) GetScheduledCheckout(
 // Example:
 //
 //	request := &schematichq.UpdateScheduledCheckoutRequest{}
-//	client.Scheduledcheckout.UpdateScheduledCheckout(
+//	_, err := client.Scheduledcheckout.UpdateScheduledCheckout(
 //	    context.TODO(),
 //	    "scheduled_checkout_id",
 //	    request,

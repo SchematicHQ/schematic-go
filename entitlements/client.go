@@ -71,7 +71,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.ListCompanyOverrides(
+//	_, err := client.Entitlements.ListCompanyOverrides(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -98,7 +98,7 @@ func (c *Client) ListCompanyOverrides(
 //	    FeatureID: "feature_id",
 //	    ValueType: schematichq.EntitlementValueTypeBoolean,
 //	}
-//	client.Entitlements.CreateCompanyOverride(
+//	_, err := client.Entitlements.CreateCompanyOverride(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -120,7 +120,7 @@ func (c *Client) CreateCompanyOverride(
 
 // Example:
 //
-//	client.Entitlements.GetCompanyOverride(
+//	_, err := client.Entitlements.GetCompanyOverride(
 //	    context.TODO(),
 //	    "company_override_id",
 //	)
@@ -146,7 +146,7 @@ func (c *Client) GetCompanyOverride(
 //	request := &schematichq.UpdateCompanyOverrideRequestBody{
 //	    ValueType: schematichq.EntitlementValueTypeBoolean,
 //	}
-//	client.Entitlements.UpdateCompanyOverride(
+//	_, err := client.Entitlements.UpdateCompanyOverride(
 //	    context.TODO(),
 //	    "company_override_id",
 //	    request,
@@ -172,7 +172,7 @@ func (c *Client) UpdateCompanyOverride(
 
 // Example:
 //
-//	client.Entitlements.DeleteCompanyOverride(
+//	_, err := client.Entitlements.DeleteCompanyOverride(
 //	    context.TODO(),
 //	    "company_override_id",
 //	)
@@ -230,7 +230,7 @@ func (c *Client) DeleteCompanyOverride(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.CountCompanyOverrides(
+//	_, err := client.Entitlements.CountCompanyOverrides(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -264,7 +264,7 @@ func (c *Client) CountCompanyOverrides(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.ListFeatureCompanies(
+//	_, err := client.Entitlements.ListFeatureCompanies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -298,7 +298,7 @@ func (c *Client) ListFeatureCompanies(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.CountFeatureCompanies(
+//	_, err := client.Entitlements.CountFeatureCompanies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -346,7 +346,7 @@ func (c *Client) CountFeatureCompanies(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.ListFeatureUsage(
+//	_, err := client.Entitlements.ListFeatureUsage(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -393,7 +393,7 @@ func (c *Client) ListFeatureUsage(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.ListFeatureUsageHistory(
+//	_, err := client.Entitlements.ListFeatureUsageHistory(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -426,7 +426,7 @@ func (c *Client) ListFeatureUsageHistory(
 //	        "2024-01-15T09:30:00Z",
 //	    ),
 //	}
-//	client.Entitlements.GetFeatureUsageTimeSeries(
+//	_, err := client.Entitlements.GetFeatureUsageTimeSeries(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -474,7 +474,7 @@ func (c *Client) GetFeatureUsageTimeSeries(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.CountFeatureUsage(
+//	_, err := client.Entitlements.CountFeatureUsage(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -508,7 +508,7 @@ func (c *Client) CountFeatureUsage(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.ListFeatureUsers(
+//	_, err := client.Entitlements.ListFeatureUsers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -542,7 +542,7 @@ func (c *Client) ListFeatureUsers(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.CountFeatureUsers(
+//	_, err := client.Entitlements.CountFeatureUsers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -607,7 +607,7 @@ func (c *Client) CountFeatureUsers(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.ListPlanEntitlements(
+//	_, err := client.Entitlements.ListPlanEntitlements(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -634,7 +634,7 @@ func (c *Client) ListPlanEntitlements(
 //	    PlanID: "plan_id",
 //	    ValueType: schematichq.EntitlementValueTypeBoolean,
 //	}
-//	client.Entitlements.CreatePlanEntitlement(
+//	_, err := client.Entitlements.CreatePlanEntitlement(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -656,7 +656,7 @@ func (c *Client) CreatePlanEntitlement(
 
 // Example:
 //
-//	client.Entitlements.GetPlanEntitlement(
+//	_, err := client.Entitlements.GetPlanEntitlement(
 //	    context.TODO(),
 //	    "plan_entitlement_id",
 //	)
@@ -682,7 +682,7 @@ func (c *Client) GetPlanEntitlement(
 //	request := &schematichq.UpdatePlanEntitlementRequestBody{
 //	    ValueType: schematichq.EntitlementValueTypeBoolean,
 //	}
-//	client.Entitlements.UpdatePlanEntitlement(
+//	_, err := client.Entitlements.UpdatePlanEntitlement(
 //	    context.TODO(),
 //	    "plan_entitlement_id",
 //	    request,
@@ -708,7 +708,7 @@ func (c *Client) UpdatePlanEntitlement(
 
 // Example:
 //
-//	client.Entitlements.DeletePlanEntitlement(
+//	_, err := client.Entitlements.DeletePlanEntitlement(
 //	    context.TODO(),
 //	    "plan_entitlement_id",
 //	)
@@ -738,7 +738,7 @@ func (c *Client) DeletePlanEntitlement(
 //	    PlanID: "plan_id",
 //	    ValueType: schematichq.EntitlementValueTypeBoolean,
 //	}
-//	client.Entitlements.UpsertPlanEntitlementForBillingProduct(
+//	_, err := client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -803,7 +803,7 @@ func (c *Client) UpsertPlanEntitlementForBillingProduct(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Entitlements.CountPlanEntitlements(
+//	_, err := client.Entitlements.CountPlanEntitlements(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -829,7 +829,7 @@ func (c *Client) CountPlanEntitlements(
 //	    SourcePlanID: "source_plan_id",
 //	    TargetPlanID: "target_plan_id",
 //	}
-//	client.Entitlements.DuplicatePlanEntitlements(
+//	_, err := client.Entitlements.DuplicatePlanEntitlements(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -856,7 +856,7 @@ func (c *Client) DuplicatePlanEntitlements(
 //	        "keys": "keys",
 //	    },
 //	}
-//	client.Entitlements.GetFeatureUsageByCompany(
+//	_, err := client.Entitlements.GetFeatureUsageByCompany(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -894,7 +894,7 @@ func (c *Client) GetFeatureUsageByCompany(
 //	        ),
 //	    ),
 //	}
-//	client.Entitlements.GetUserUsageByCompany(
+//	_, err := client.Entitlements.GetUserUsageByCompany(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -929,7 +929,7 @@ func (c *Client) GetUserUsageByCompany(
 //	        ),
 //	    ),
 //	}
-//	client.Entitlements.GetCompanyUserUsageMetrics(
+//	_, err := client.Entitlements.GetCompanyUserUsageMetrics(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -974,7 +974,7 @@ func (c *Client) GetCompanyUserUsageMetrics(
 //	        ),
 //	    ),
 //	}
-//	client.Entitlements.ListCompanyUserUsage(
+//	_, err := client.Entitlements.ListCompanyUserUsage(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1019,7 +1019,7 @@ func (c *Client) ListCompanyUserUsage(
 //	        ),
 //	    ),
 //	}
-//	client.Entitlements.CountCompanyUserUsage(
+//	_, err := client.Entitlements.CountCompanyUserUsage(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1055,7 +1055,7 @@ func (c *Client) CountCompanyUserUsage(
 //	    ),
 //	    UserID: "user_id",
 //	}
-//	client.Entitlements.GetUserUsageDetail(
+//	_, err := client.Entitlements.GetUserUsageDetail(
 //	    context.TODO(),
 //	    request,
 //	)

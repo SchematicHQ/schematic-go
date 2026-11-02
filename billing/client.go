@@ -51,7 +51,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListCoupons(
+//	_, err := client.Billing.ListCoupons(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -83,7 +83,7 @@ func (c *Client) ListCoupons(
 //	    PercentOff: 1.1,
 //	    TimesRedeemed: int64(1000000),
 //	}
-//	client.Billing.UpsertBillingCoupon(
+//	_, err := client.Billing.UpsertBillingCoupon(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -105,7 +105,7 @@ func (c *Client) UpsertBillingCoupon(
 
 // Example:
 //
-//	client.Billing.DeleteBillingCoupon(
+//	_, err := client.Billing.DeleteBillingCoupon(
 //	    context.TODO(),
 //	    "billing_id",
 //	)
@@ -128,7 +128,7 @@ func (c *Client) DeleteBillingCoupon(
 
 // Example:
 //
-//	client.Billing.DeleteBillingCustomer(
+//	_, err := client.Billing.DeleteBillingCustomer(
 //	    context.TODO(),
 //	    "billing_id",
 //	)
@@ -159,7 +159,7 @@ func (c *Client) DeleteBillingCustomer(
 //	    },
 //	    Name: "name",
 //	}
-//	client.Billing.UpsertBillingCustomer(
+//	_, err := client.Billing.UpsertBillingCustomer(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -201,7 +201,7 @@ func (c *Client) UpsertBillingCustomer(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListCustomersWithSubscriptions(
+//	_, err := client.Billing.ListCustomersWithSubscriptions(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -243,7 +243,7 @@ func (c *Client) ListCustomersWithSubscriptions(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.CountCustomers(
+//	_, err := client.Billing.CountCustomers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -278,7 +278,7 @@ func (c *Client) CountCustomers(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListInvoices(
+//	_, err := client.Billing.ListInvoices(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -309,7 +309,7 @@ func (c *Client) ListInvoices(
 //	    CustomerExternalID: "customer_external_id",
 //	    Subtotal: int64(1000000),
 //	}
-//	client.Billing.UpsertInvoice(
+//	_, err := client.Billing.UpsertInvoice(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -331,7 +331,7 @@ func (c *Client) UpsertInvoice(
 
 // Example:
 //
-//	client.Billing.DeleteBillingInvoice(
+//	_, err := client.Billing.DeleteBillingInvoice(
 //	    context.TODO(),
 //	    "billing_id",
 //	)
@@ -365,7 +365,7 @@ func (c *Client) DeleteBillingInvoice(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListMeters(
+//	_, err := client.Billing.ListMeters(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -393,7 +393,7 @@ func (c *Client) ListMeters(
 //	    EventPayloadKey: "event_payload_key",
 //	    ExternalID: "external_id",
 //	}
-//	client.Billing.UpsertBillingMeter(
+//	_, err := client.Billing.UpsertBillingMeter(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -427,7 +427,7 @@ func (c *Client) UpsertBillingMeter(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListPaymentMethods(
+//	_, err := client.Billing.ListPaymentMethods(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -454,7 +454,7 @@ func (c *Client) ListPaymentMethods(
 //	    ExternalID: "external_id",
 //	    PaymentMethodType: "payment_method_type",
 //	}
-//	client.Billing.UpsertPaymentMethod(
+//	_, err := client.Billing.UpsertPaymentMethod(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -476,7 +476,7 @@ func (c *Client) UpsertPaymentMethod(
 
 // Example:
 //
-//	client.Billing.DeletePaymentMethodByExternalID(
+//	_, err := client.Billing.DeletePaymentMethodByExternalID(
 //	    context.TODO(),
 //	    "billing_id",
 //	)
@@ -551,7 +551,7 @@ func (c *Client) DeletePaymentMethodByExternalID(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListBillingPrices(
+//	_, err := client.Billing.ListBillingPrices(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -589,7 +589,7 @@ func (c *Client) ListBillingPrices(
 //	    ProductExternalID: "product_external_id",
 //	    UsageType: schematichq.BillingPriceUsageTypeLicensed,
 //	}
-//	client.Billing.UpsertBillingPrice(
+//	_, err := client.Billing.UpsertBillingPrice(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -611,7 +611,7 @@ func (c *Client) UpsertBillingPrice(
 
 // Example:
 //
-//	client.Billing.DeleteBillingProduct(
+//	_, err := client.Billing.DeleteBillingProduct(
 //	    context.TODO(),
 //	    "billing_id",
 //	)
@@ -686,7 +686,7 @@ func (c *Client) DeleteBillingProduct(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListBillingProductPrices(
+//	_, err := client.Billing.ListBillingProductPrices(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -708,7 +708,7 @@ func (c *Client) ListBillingProductPrices(
 
 // Example:
 //
-//	client.Billing.DeleteProductPrice(
+//	_, err := client.Billing.DeleteProductPrice(
 //	    context.TODO(),
 //	    "billing_id",
 //	)
@@ -735,7 +735,7 @@ func (c *Client) DeleteProductPrice(
 //	    ExternalID: "external_id",
 //	    Price: 1.1,
 //	}
-//	client.Billing.UpsertBillingProduct(
+//	_, err := client.Billing.UpsertBillingProduct(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -796,7 +796,7 @@ func (c *Client) UpsertBillingProduct(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListBillingProducts(
+//	_, err := client.Billing.ListBillingProducts(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -857,7 +857,7 @@ func (c *Client) ListBillingProducts(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.CountBillingProducts(
+//	_, err := client.Billing.CountBillingProducts(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -894,7 +894,7 @@ func (c *Client) CountBillingProducts(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListCompanyBillingProfiles(
+//	_, err := client.Billing.ListCompanyBillingProfiles(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -919,7 +919,7 @@ func (c *Client) ListCompanyBillingProfiles(
 //	request := &schematichq.UpdateCompanyBillingProfileRequestBody{
 //	    CollectionMethod: schematichq.BillingCollectionMethodChargeAutomatically,
 //	}
-//	client.Billing.UpdateCompanyBillingProfile(
+//	_, err := client.Billing.UpdateCompanyBillingProfile(
 //	    context.TODO(),
 //	    "billing_profile_id",
 //	    request,
@@ -945,7 +945,7 @@ func (c *Client) UpdateCompanyBillingProfile(
 
 // Example:
 //
-//	client.Billing.GetBillingSettings(
+//	_, err := client.Billing.GetBillingSettings(
 //	    context.TODO(),
 //	)
 func (c *Client) GetBillingSettings(
@@ -965,7 +965,7 @@ func (c *Client) GetBillingSettings(
 // Example:
 //
 //	request := &schematichq.UpdateBillingSettingsRequestBody{}
-//	client.Billing.UpdateBillingSettings(
+//	_, err := client.Billing.UpdateBillingSettings(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1018,7 +1018,7 @@ func (c *Client) UpdateBillingSettings(
 //	    SubscriptionExternalID: "subscription_external_id",
 //	    TotalPrice: int64(1000000),
 //	}
-//	client.Billing.UpsertBillingSubscription(
+//	_, err := client.Billing.UpsertBillingSubscription(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1040,7 +1040,7 @@ func (c *Client) UpsertBillingSubscription(
 
 // Example:
 //
-//	client.Billing.GetCompanyNativeSubscription(
+//	_, err := client.Billing.GetCompanyNativeSubscription(
 //	    context.TODO(),
 //	    "company_id",
 //	)
@@ -1086,7 +1086,7 @@ func (c *Client) GetCompanyNativeSubscription(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.ListBillingInvoices(
+//	_, err := client.Billing.ListBillingInvoices(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1108,7 +1108,7 @@ func (c *Client) ListBillingInvoices(
 
 // Example:
 //
-//	client.Billing.GetBillingInvoice(
+//	_, err := client.Billing.GetBillingInvoice(
 //	    context.TODO(),
 //	    "invoice_id",
 //	)
@@ -1131,7 +1131,7 @@ func (c *Client) GetBillingInvoice(
 
 // Example:
 //
-//	client.Billing.ExportNativeInvoice(
+//	_, err := client.Billing.ExportNativeInvoice(
 //	    context.TODO(),
 //	    "invoice_id",
 //	)
@@ -1154,7 +1154,7 @@ func (c *Client) ExportNativeInvoice(
 
 // Example:
 //
-//	client.Billing.FinalizeNativeInvoice(
+//	_, err := client.Billing.FinalizeNativeInvoice(
 //	    context.TODO(),
 //	    "invoice_id",
 //	)
@@ -1180,7 +1180,7 @@ func (c *Client) FinalizeNativeInvoice(
 //	request := &schematichq.MarkInvoicePaidRequestBody{
 //	    IdempotencyKey: "idempotency_key",
 //	}
-//	client.Billing.MarkBillingInvoicePaid(
+//	_, err := client.Billing.MarkBillingInvoicePaid(
 //	    context.TODO(),
 //	    "invoice_id",
 //	    request,
@@ -1206,7 +1206,7 @@ func (c *Client) MarkBillingInvoicePaid(
 
 // Example:
 //
-//	client.Billing.DownloadNativeInvoicePdf(
+//	_, err := client.Billing.DownloadNativeInvoicePdf(
 //	    context.TODO(),
 //	    "invoice_id",
 //	)
@@ -1229,7 +1229,7 @@ func (c *Client) DownloadNativeInvoicePdf(
 
 // Example:
 //
-//	client.Billing.VoidNativeInvoice(
+//	_, err := client.Billing.VoidNativeInvoice(
 //	    context.TODO(),
 //	    "invoice_id",
 //	)
@@ -1275,7 +1275,7 @@ func (c *Client) VoidNativeInvoice(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Billing.CountBillingInvoices(
+//	_, err := client.Billing.CountBillingInvoices(
 //	    context.TODO(),
 //	    request,
 //	)

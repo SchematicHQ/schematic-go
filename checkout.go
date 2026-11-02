@@ -759,33 +759,35 @@ func (c *CheckoutDataResponseData) String() string {
 }
 
 var (
-	checkoutSubscriptionFieldApplicationID                    = big.NewInt(1 << 0)
-	checkoutSubscriptionFieldCancelAt                         = big.NewInt(1 << 1)
-	checkoutSubscriptionFieldCancelAtPeriodEnd                = big.NewInt(1 << 2)
-	checkoutSubscriptionFieldCompanyID                        = big.NewInt(1 << 3)
-	checkoutSubscriptionFieldConfirmPaymentIntentClientSecret = big.NewInt(1 << 4)
-	checkoutSubscriptionFieldConfirmPaymentIntentID           = big.NewInt(1 << 5)
-	checkoutSubscriptionFieldCreatedAt                        = big.NewInt(1 << 6)
-	checkoutSubscriptionFieldCurrency                         = big.NewInt(1 << 7)
-	checkoutSubscriptionFieldCustomerExternalID               = big.NewInt(1 << 8)
-	checkoutSubscriptionFieldDefaultPaymentMethodID           = big.NewInt(1 << 9)
-	checkoutSubscriptionFieldExpiredAt                        = big.NewInt(1 << 10)
-	checkoutSubscriptionFieldID                               = big.NewInt(1 << 11)
-	checkoutSubscriptionFieldInterval                         = big.NewInt(1 << 12)
-	checkoutSubscriptionFieldInvoiceID                        = big.NewInt(1 << 13)
-	checkoutSubscriptionFieldInvoiceURL                       = big.NewInt(1 << 14)
-	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 15)
-	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 16)
-	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 17)
-	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 18)
-	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 19)
-	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 20)
-	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 21)
-	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 22)
-	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 23)
+	checkoutSubscriptionFieldAccessRevokedAt                  = big.NewInt(1 << 0)
+	checkoutSubscriptionFieldApplicationID                    = big.NewInt(1 << 1)
+	checkoutSubscriptionFieldCancelAt                         = big.NewInt(1 << 2)
+	checkoutSubscriptionFieldCancelAtPeriodEnd                = big.NewInt(1 << 3)
+	checkoutSubscriptionFieldCompanyID                        = big.NewInt(1 << 4)
+	checkoutSubscriptionFieldConfirmPaymentIntentClientSecret = big.NewInt(1 << 5)
+	checkoutSubscriptionFieldConfirmPaymentIntentID           = big.NewInt(1 << 6)
+	checkoutSubscriptionFieldCreatedAt                        = big.NewInt(1 << 7)
+	checkoutSubscriptionFieldCurrency                         = big.NewInt(1 << 8)
+	checkoutSubscriptionFieldCustomerExternalID               = big.NewInt(1 << 9)
+	checkoutSubscriptionFieldDefaultPaymentMethodID           = big.NewInt(1 << 10)
+	checkoutSubscriptionFieldExpiredAt                        = big.NewInt(1 << 11)
+	checkoutSubscriptionFieldID                               = big.NewInt(1 << 12)
+	checkoutSubscriptionFieldInterval                         = big.NewInt(1 << 13)
+	checkoutSubscriptionFieldInvoiceID                        = big.NewInt(1 << 14)
+	checkoutSubscriptionFieldInvoiceURL                       = big.NewInt(1 << 15)
+	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 16)
+	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 17)
+	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 18)
+	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 19)
+	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 20)
+	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 21)
+	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 22)
+	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 23)
+	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 24)
 )
 
 type CheckoutSubscription struct {
+	AccessRevokedAt                  *time.Time                          `json:"access_revoked_at,omitempty" url:"access_revoked_at,omitempty"`
 	ApplicationID                    *string                             `json:"application_id,omitempty" url:"application_id,omitempty"`
 	CancelAt                         *int64                              `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd                bool                                `json:"cancel_at_period_end" url:"cancel_at_period_end"`
@@ -816,6 +818,13 @@ type CheckoutSubscription struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CheckoutSubscription) GetAccessRevokedAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.AccessRevokedAt
 }
 
 func (c *CheckoutSubscription) GetApplicationID() *string {
@@ -1002,6 +1011,13 @@ func (c *CheckoutSubscription) require(field *big.Int) {
 	c.explicitFields = next
 }
 
+// SetAccessRevokedAt sets the AccessRevokedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetAccessRevokedAt(accessRevokedAt *time.Time) {
+	c.AccessRevokedAt = accessRevokedAt
+	c.require(checkoutSubscriptionFieldAccessRevokedAt)
+}
+
 // SetApplicationID sets the ApplicationID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CheckoutSubscription) SetApplicationID(applicationID *string) {
@@ -1174,8 +1190,9 @@ func (c *CheckoutSubscription) UnmarshalJSON(data []byte) error {
 	type embed CheckoutSubscription
 	var unmarshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
+		CreatedAt       *internal.DateTime `json:"created_at"`
+		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
 	}{
 		embed: embed(*c),
 	}
@@ -1183,6 +1200,7 @@ func (c *CheckoutSubscription) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CheckoutSubscription(unmarshaler.embed)
+	c.AccessRevokedAt = unmarshaler.AccessRevokedAt.TimePtr()
 	c.CreatedAt = unmarshaler.CreatedAt.Time()
 	c.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
@@ -1198,12 +1216,14 @@ func (c *CheckoutSubscription) MarshalJSON() ([]byte, error) {
 	type embed CheckoutSubscription
 	var marshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
+		CreatedAt       *internal.DateTime `json:"created_at"`
+		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
 	}{
-		embed:     embed(*c),
-		CreatedAt: internal.NewDateTime(c.CreatedAt),
-		ExpiredAt: internal.NewOptionalDateTime(c.ExpiredAt),
+		embed:           embed(*c),
+		AccessRevokedAt: internal.NewOptionalDateTime(c.AccessRevokedAt),
+		CreatedAt:       internal.NewDateTime(c.CreatedAt),
+		ExpiredAt:       internal.NewOptionalDateTime(c.ExpiredAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)

@@ -1962,14 +1962,16 @@ var (
 	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 8)
 	publishPlanVersionRequestBodyFieldEndDate            = big.NewInt(1 << 9)
 	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 10)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 11)
-	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 12)
-	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 13)
-	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 14)
-	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 15)
-	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 16)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 17)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 18)
+	publishPlanVersionRequestBodyFieldGatingDays         = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 12)
+	publishPlanVersionRequestBodyFieldPaymentGating      = big.NewInt(1 << 13)
+	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 14)
+	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 15)
+	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 16)
+	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 17)
+	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 18)
+	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 19)
+	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 20)
 )
 
 type PublishPlanVersionRequestBody struct {
@@ -1989,10 +1991,14 @@ type PublishPlanVersionRequestBody struct {
 	// Payment terms in days. On a custom-plan republish they apply to the amendment invoice only, leave the subscription's renewal terms unchanged, and are only used when that invoice is raised today and sent rather than charged. Defaults to the subscription's terms.
 	DaysUntilDue *int64 `json:"days_until_due,omitempty" url:"days_until_due,omitempty"`
 	// When a custom plan that doesn't renew ends: the company moves to the default plan then, and no renewal invoice is raised. Required when the version's renewal_policy is expire_to_default, and refused otherwise. Moved back to the last renewal on or before it, which must leave at least one whole billing period. Only honored on a first publish that starts a subscription.
-	EndDate            *time.Time                   `json:"end_date,omitempty" url:"end_date,omitempty"`
-	ExcludedCompanyIDs []string                     `json:"excluded_company_ids" url:"excluded_company_ids"`
-	MigrationStrategy  PlanVersionMigrationStrategy `json:"migration_strategy" url:"migration_strategy"`
-	Phone              *string                      `json:"phone,omitempty" url:"phone,omitempty"`
+	EndDate            *time.Time `json:"end_date,omitempty" url:"end_date,omitempty"`
+	ExcludedCompanyIDs []string   `json:"excluded_company_ids" url:"excluded_company_ids"`
+	// With payment_gating revoke_after, how many days past due an invoice may go before the company loses the plan. 0 revokes at once. Only applies when Schematic bills the company. Applies to the company's contract and never creates a plan version. Omitted keeps the contract's setting.
+	GatingDays        *int64                       `json:"gating_days,omitempty" url:"gating_days,omitempty"`
+	MigrationStrategy PlanVersionMigrationStrategy `json:"migration_strategy" url:"migration_strategy"`
+	// What happens to the company's access when an invoice passes its due date: keep_serving keeps the plan and marks the subscription past due; revoke_after takes the plan away after gating_days. Only applies when Schematic bills the company, to every invoice on its contract, and never creates a plan version. Omitted keeps the contract's setting, which is keep_serving unless changed.
+	PaymentGating *PaymentGating `json:"payment_gating,omitempty" url:"payment_gating,omitempty"`
+	Phone         *string        `json:"phone,omitempty" url:"phone,omitempty"`
 	// When true, the partial period between the subscription starting and its renewal date is billed pro rata straight away. When false that period is free and no invoice is raised until the renewal date. Only applies alongside billing_cycle_anchor. Defaults to true.
 	ProrateFirstPeriod *bool `json:"prorate_first_period,omitempty" url:"prorate_first_period,omitempty"`
 	// How Stripe handles the price difference when companies are migrated. With migration_strategy immediate, omitted means create_prorations. With end_of_billing_period only none is accepted and means the same as omitting it: the change lands on the renewal boundary, so there is nothing to prorate. With scheduled any value is accepted and omitted means none. Not accepted with leave.
@@ -2089,11 +2095,25 @@ func (p *PublishPlanVersionRequestBody) GetExcludedCompanyIDs() []string {
 	return p.ExcludedCompanyIDs
 }
 
+func (p *PublishPlanVersionRequestBody) GetGatingDays() *int64 {
+	if p == nil {
+		return nil
+	}
+	return p.GatingDays
+}
+
 func (p *PublishPlanVersionRequestBody) GetMigrationStrategy() PlanVersionMigrationStrategy {
 	if p == nil {
 		return ""
 	}
 	return p.MigrationStrategy
+}
+
+func (p *PublishPlanVersionRequestBody) GetPaymentGating() *PaymentGating {
+	if p == nil {
+		return nil
+	}
+	return p.PaymentGating
 }
 
 func (p *PublishPlanVersionRequestBody) GetPhone() *string {
@@ -2238,11 +2258,25 @@ func (p *PublishPlanVersionRequestBody) SetExcludedCompanyIDs(excludedCompanyIDs
 	p.require(publishPlanVersionRequestBodyFieldExcludedCompanyIDs)
 }
 
+// SetGatingDays sets the GatingDays field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetGatingDays(gatingDays *int64) {
+	p.GatingDays = gatingDays
+	p.require(publishPlanVersionRequestBodyFieldGatingDays)
+}
+
 // SetMigrationStrategy sets the MigrationStrategy field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PublishPlanVersionRequestBody) SetMigrationStrategy(migrationStrategy PlanVersionMigrationStrategy) {
 	p.MigrationStrategy = migrationStrategy
 	p.require(publishPlanVersionRequestBodyFieldMigrationStrategy)
+}
+
+// SetPaymentGating sets the PaymentGating field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetPaymentGating(paymentGating *PaymentGating) {
+	p.PaymentGating = paymentGating
+	p.require(publishPlanVersionRequestBodyFieldPaymentGating)
 }
 
 // SetPhone sets the Phone field and marks it as non-optional;

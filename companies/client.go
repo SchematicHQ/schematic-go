@@ -37,6 +37,9 @@ func NewClient(options *core.RequestOptions) *Client {
 // Example:
 //
 //	request := &schematichq.ListCompaniesRequest{
+//	    CancelAtPeriodEnd: schematichq.Bool(
+//	        true,
+//	    ),
 //	    CreditTypeIDs: []*string{
 //	        schematichq.String(
 //	            "credit_type_ids",
@@ -107,7 +110,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListCompanies(
+//	_, err := client.Companies.ListCompanies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -134,7 +137,7 @@ func (c *Client) ListCompanies(
 //	        "key": "value",
 //	    },
 //	}
-//	client.Companies.UpsertCompany(
+//	_, err := client.Companies.UpsertCompany(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -156,7 +159,7 @@ func (c *Client) UpsertCompany(
 
 // Example:
 //
-//	client.Companies.GetCompany(
+//	_, err := client.Companies.GetCompany(
 //	    context.TODO(),
 //	    "company_id",
 //	)
@@ -187,7 +190,7 @@ func (c *Client) GetCompany(
 //	        true,
 //	    ),
 //	}
-//	client.Companies.DeleteCompany(
+//	_, err := client.Companies.DeleteCompany(
 //	    context.TODO(),
 //	    "company_id",
 //	    request,
@@ -213,7 +216,48 @@ func (c *Client) DeleteCompany(
 
 // Example:
 //
+//	request := &schematichq.GetCompanyInferenceCostRequest{
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	}
+//	_, err := client.Companies.GetCompanyInferenceCost(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
+func (c *Client) GetCompanyInferenceCost(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	request *schematichq.GetCompanyInferenceCostRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyInferenceCostResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyInferenceCost(
+		ctx,
+		companyID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.CountCompaniesRequest{
+//	    CancelAtPeriodEnd: schematichq.Bool(
+//	        true,
+//	    ),
 //	    CreditTypeIDs: []*string{
 //	        schematichq.String(
 //	            "credit_type_ids",
@@ -284,7 +328,7 @@ func (c *Client) DeleteCompany(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountCompanies(
+//	_, err := client.Companies.CountCompanies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -311,7 +355,7 @@ func (c *Client) CountCompanies(
 //	        "key": "value",
 //	    },
 //	}
-//	client.Companies.CreateCompany(
+//	_, err := client.Companies.CreateCompany(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -338,7 +382,7 @@ func (c *Client) CreateCompany(
 //	        "key": "value",
 //	    },
 //	}
-//	client.Companies.DeleteCompanyByKeys(
+//	_, err := client.Companies.DeleteCompanyByKeys(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -371,7 +415,7 @@ func (c *Client) DeleteCompanyByKeys(
 //	        "keys": "keys",
 //	    },
 //	}
-//	client.Companies.LookupCompany(
+//	_, err := client.Companies.LookupCompany(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -396,7 +440,7 @@ func (c *Client) LookupCompany(
 //	request := &schematichq.GetCompanyBillingEntityRequest{
 //	    CompanyID: "company_id",
 //	}
-//	client.Companies.GetCompanyBillingEntity(
+//	_, err := client.Companies.GetCompanyBillingEntity(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -421,7 +465,7 @@ func (c *Client) GetCompanyBillingEntity(
 //	request := &schematichq.GetBillingEntityChildSubscriptionsRequest{
 //	    CompanyID: "company_id",
 //	}
-//	client.Companies.GetBillingEntityChildSubscriptions(
+//	_, err := client.Companies.GetBillingEntityChildSubscriptions(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -457,7 +501,7 @@ func (c *Client) GetBillingEntityChildSubscriptions(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListCompanyMemberships(
+//	_, err := client.Companies.ListCompanyMemberships(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -483,7 +527,7 @@ func (c *Client) ListCompanyMemberships(
 //	    CompanyID: "company_id",
 //	    UserID: "user_id",
 //	}
-//	client.Companies.GetOrCreateCompanyMembership(
+//	_, err := client.Companies.GetOrCreateCompanyMembership(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -505,7 +549,7 @@ func (c *Client) GetOrCreateCompanyMembership(
 
 // Example:
 //
-//	client.Companies.DeleteCompanyMembership(
+//	_, err := client.Companies.DeleteCompanyMembership(
 //	    context.TODO(),
 //	    "company_membership_id",
 //	)
@@ -544,7 +588,7 @@ func (c *Client) DeleteCompanyMembership(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.GetActiveCompanySubscription(
+//	_, err := client.Companies.GetActiveCompanySubscription(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -572,7 +616,7 @@ func (c *Client) GetActiveCompanySubscription(
 //	    },
 //	    Trait: "trait",
 //	}
-//	client.Companies.UpsertCompanyTrait(
+//	_, err := client.Companies.UpsertCompanyTrait(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -611,7 +655,7 @@ func (c *Client) UpsertCompanyTrait(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListEntityKeyDefinitions(
+//	_, err := client.Companies.ListEntityKeyDefinitions(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -633,7 +677,7 @@ func (c *Client) ListEntityKeyDefinitions(
 
 // Example:
 //
-//	client.Companies.DeleteEntityKeyDefinition(
+//	_, err := client.Companies.DeleteEntityKeyDefinition(
 //	    context.TODO(),
 //	    "entity_key_definition_id",
 //	)
@@ -673,7 +717,7 @@ func (c *Client) DeleteEntityKeyDefinition(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountEntityKeyDefinitions(
+//	_, err := client.Companies.CountEntityKeyDefinitions(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -707,7 +751,7 @@ func (c *Client) CountEntityKeyDefinitions(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountEntityKeys(
+//	_, err := client.Companies.CountEntityKeys(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -750,7 +794,7 @@ func (c *Client) CountEntityKeys(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListEntityTraitDefinitions(
+//	_, err := client.Companies.ListEntityTraitDefinitions(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -779,7 +823,7 @@ func (c *Client) ListEntityTraitDefinitions(
 //	    },
 //	    TraitType: schematichq.TraitTypeBoolean,
 //	}
-//	client.Companies.GetOrCreateEntityTraitDefinition(
+//	_, err := client.Companies.GetOrCreateEntityTraitDefinition(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -801,7 +845,7 @@ func (c *Client) GetOrCreateEntityTraitDefinition(
 
 // Example:
 //
-//	client.Companies.GetEntityTraitDefinition(
+//	_, err := client.Companies.GetEntityTraitDefinition(
 //	    context.TODO(),
 //	    "entity_trait_definition_id",
 //	)
@@ -827,7 +871,7 @@ func (c *Client) GetEntityTraitDefinition(
 //	request := &schematichq.UpdateEntityTraitDefinitionRequestBody{
 //	    TraitType: schematichq.TraitTypeBoolean,
 //	}
-//	client.Companies.UpdateEntityTraitDefinition(
+//	_, err := client.Companies.UpdateEntityTraitDefinition(
 //	    context.TODO(),
 //	    "entity_trait_definition_id",
 //	    request,
@@ -853,7 +897,7 @@ func (c *Client) UpdateEntityTraitDefinition(
 
 // Example:
 //
-//	client.Companies.DeleteEntityTraitDefinition(
+//	_, err := client.Companies.DeleteEntityTraitDefinition(
 //	    context.TODO(),
 //	    "entity_trait_definition_id",
 //	)
@@ -876,7 +920,7 @@ func (c *Client) DeleteEntityTraitDefinition(
 
 // Example:
 //
-//	client.Companies.GetEntityTraitDefinitionUsage(
+//	_, err := client.Companies.GetEntityTraitDefinitionUsage(
 //	    context.TODO(),
 //	    "entity_trait_definition_id",
 //	)
@@ -920,7 +964,7 @@ func (c *Client) GetEntityTraitDefinitionUsage(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountEntityTraitDefinitions(
+//	_, err := client.Companies.CountEntityTraitDefinitions(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -954,7 +998,7 @@ func (c *Client) CountEntityTraitDefinitions(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.GetEntityTraitValues(
+//	_, err := client.Companies.GetEntityTraitValues(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -988,7 +1032,7 @@ func (c *Client) GetEntityTraitValues(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountEntityTraits(
+//	_, err := client.Companies.CountEntityTraits(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1011,7 +1055,7 @@ func (c *Client) CountEntityTraits(
 // Example:
 //
 //	request := &schematichq.ListPlanChangesRequest{
-//	    Action: schematichq.PlanChangeActionAmendment.Ptr(),
+//	    Action: schematichq.PlanChangeActionAccessReinstated.Ptr(),
 //	    BasePlanAction: schematichq.PlanChangeBasePlanActionFallback.Ptr(),
 //	    CompanyID: schematichq.String(
 //	        "company_id",
@@ -1028,7 +1072,7 @@ func (c *Client) CountEntityTraits(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListPlanChanges(
+//	_, err := client.Companies.ListPlanChanges(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1050,7 +1094,7 @@ func (c *Client) ListPlanChanges(
 
 // Example:
 //
-//	client.Companies.GetPlanChange(
+//	_, err := client.Companies.GetPlanChange(
 //	    context.TODO(),
 //	    "plan_change_id",
 //	)
@@ -1097,7 +1141,7 @@ func (c *Client) GetPlanChange(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListPlanTraits(
+//	_, err := client.Companies.ListPlanTraits(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1119,7 +1163,7 @@ func (c *Client) ListPlanTraits(
 
 // Example:
 //
-//	client.Companies.GetPlanTrait(
+//	_, err := client.Companies.GetPlanTrait(
 //	    context.TODO(),
 //	    "plan_trait_id",
 //	)
@@ -1152,7 +1196,7 @@ func (c *Client) GetPlanTrait(
 //	        },
 //	    },
 //	}
-//	client.Companies.UpdatePlanTraitsBulk(
+//	_, err := client.Companies.UpdatePlanTraitsBulk(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1198,7 +1242,7 @@ func (c *Client) UpdatePlanTraitsBulk(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountPlanTraits(
+//	_, err := client.Companies.CountPlanTraits(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1226,7 +1270,7 @@ func (c *Client) CountPlanTraits(
 //	    },
 //	    Trait: "trait",
 //	}
-//	client.Companies.UpsertUserTrait(
+//	_, err := client.Companies.UpsertUserTrait(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1270,7 +1314,7 @@ func (c *Client) UpsertUserTrait(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.ListUsers(
+//	_, err := client.Companies.ListUsers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1297,7 +1341,7 @@ func (c *Client) ListUsers(
 //	        "key": "value",
 //	    },
 //	}
-//	client.Companies.UpsertUser(
+//	_, err := client.Companies.UpsertUser(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1319,7 +1363,7 @@ func (c *Client) UpsertUser(
 
 // Example:
 //
-//	client.Companies.GetUser(
+//	_, err := client.Companies.GetUser(
 //	    context.TODO(),
 //	    "user_id",
 //	)
@@ -1342,7 +1386,7 @@ func (c *Client) GetUser(
 
 // Example:
 //
-//	client.Companies.DeleteUser(
+//	_, err := client.Companies.DeleteUser(
 //	    context.TODO(),
 //	    "user_id",
 //	)
@@ -1387,7 +1431,7 @@ func (c *Client) DeleteUser(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Companies.CountUsers(
+//	_, err := client.Companies.CountUsers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1414,7 +1458,7 @@ func (c *Client) CountUsers(
 //	        "key": "value",
 //	    },
 //	}
-//	client.Companies.CreateUser(
+//	_, err := client.Companies.CreateUser(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1441,7 +1485,7 @@ func (c *Client) CreateUser(
 //	        "key": "value",
 //	    },
 //	}
-//	client.Companies.DeleteUserByKeys(
+//	_, err := client.Companies.DeleteUserByKeys(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1468,7 +1512,7 @@ func (c *Client) DeleteUserByKeys(
 //	        "keys": "keys",
 //	    },
 //	}
-//	client.Companies.LookupUser(
+//	_, err := client.Companies.LookupUser(
 //	    context.TODO(),
 //	    request,
 //	)

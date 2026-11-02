@@ -53,7 +53,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.ListAccountMembers(
+//	_, err := client.Accounts.ListAccountMembers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -75,7 +75,7 @@ func (c *Client) ListAccountMembers(
 
 // Example:
 //
-//	client.Accounts.GetAccountMember(
+//	_, err := client.Accounts.GetAccountMember(
 //	    context.TODO(),
 //	    "account_member_id",
 //	)
@@ -115,7 +115,7 @@ func (c *Client) GetAccountMember(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.CountAccountMembers(
+//	_, err := client.Accounts.CountAccountMembers(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -149,7 +149,7 @@ func (c *Client) CountAccountMembers(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.ListAPIKeys(
+//	_, err := client.Accounts.ListAPIKeys(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -171,7 +171,7 @@ func (c *Client) ListAPIKeys(
 
 // Example:
 //
-//	client.Accounts.GetAPIKey(
+//	_, err := client.Accounts.GetAPIKey(
 //	    context.TODO(),
 //	    "api_key_id",
 //	)
@@ -206,7 +206,7 @@ func (c *Client) GetAPIKey(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.CountAPIKeys(
+//	_, err := client.Accounts.CountAPIKeys(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -230,6 +230,9 @@ func (c *Client) CountAPIKeys(
 //
 //	request := &schematichq.ListAuditLogsRequest{
 //	    ActorType: schematichq.ActorTypeAPIKey.Ptr(),
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
 //	    EndTime: schematichq.Time(
 //	        schematichq.MustParseDateTime(
 //	            "2024-01-15T09:30:00Z",
@@ -253,7 +256,7 @@ func (c *Client) CountAPIKeys(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.ListAuditLogs(
+//	_, err := client.Accounts.ListAuditLogs(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -275,7 +278,7 @@ func (c *Client) ListAuditLogs(
 
 // Example:
 //
-//	client.Accounts.GetAuditLog(
+//	_, err := client.Accounts.GetAuditLog(
 //	    context.TODO(),
 //	    "audit_log_id",
 //	)
@@ -300,6 +303,9 @@ func (c *Client) GetAuditLog(
 //
 //	request := &schematichq.CountAuditLogsRequest{
 //	    ActorType: schematichq.ActorTypeAPIKey.Ptr(),
+//	    CompanyID: schematichq.String(
+//	        "company_id",
+//	    ),
 //	    EndTime: schematichq.Time(
 //	        schematichq.MustParseDateTime(
 //	            "2024-01-15T09:30:00Z",
@@ -323,7 +329,7 @@ func (c *Client) GetAuditLog(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.CountAuditLogs(
+//	_, err := client.Accounts.CountAuditLogs(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -358,7 +364,7 @@ func (c *Client) CountAuditLogs(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Accounts.ListEnvironments(
+//	_, err := client.Accounts.ListEnvironments(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -380,7 +386,7 @@ func (c *Client) ListEnvironments(
 
 // Example:
 //
-//	client.Accounts.GetEnvironment(
+//	_, err := client.Accounts.GetEnvironment(
 //	    context.TODO(),
 //	    "environment_id",
 //	)
@@ -403,7 +409,7 @@ func (c *Client) GetEnvironment(
 
 // Example:
 //
-//	client.Accounts.GetOnboardingState(
+//	_, err := client.Accounts.GetOnboardingState(
 //	    context.TODO(),
 //	)
 func (c *Client) GetOnboardingState(
@@ -423,7 +429,7 @@ func (c *Client) GetOnboardingState(
 // Example:
 //
 //	request := &schematichq.UpdateOnboardingStateRequestBody{}
-//	client.Accounts.UpdateOnboardingState(
+//	_, err := client.Accounts.UpdateOnboardingState(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -445,7 +451,7 @@ func (c *Client) UpdateOnboardingState(
 
 // Example:
 //
-//	client.Accounts.Quickstart(
+//	_, err := client.Accounts.Quickstart(
 //	    context.TODO(),
 //	)
 func (c *Client) Quickstart(
@@ -464,7 +470,7 @@ func (c *Client) Quickstart(
 
 // Example:
 //
-//	client.Accounts.GetWhoAmI(
+//	_, err := client.Accounts.GetWhoAmI(
 //	    context.TODO(),
 //	)
 func (c *Client) GetWhoAmI(

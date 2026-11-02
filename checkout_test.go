@@ -2231,6 +2231,14 @@ func TestSettersMarkExplicitCheckoutDataResponseData(t *testing.T) {
 }
 
 func TestSettersCheckoutSubscription(t *testing.T) {
+	t.Run("SetAccessRevokedAt", func(t *testing.T) {
+		obj := &CheckoutSubscription{}
+		var fernTestValueAccessRevokedAt *time.Time
+		obj.SetAccessRevokedAt(fernTestValueAccessRevokedAt)
+		assert.Equal(t, fernTestValueAccessRevokedAt, obj.AccessRevokedAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetApplicationID", func(t *testing.T) {
 		obj := &CheckoutSubscription{}
 		var fernTestValueApplicationID *string
@@ -2426,6 +2434,39 @@ func TestSettersCheckoutSubscription(t *testing.T) {
 }
 
 func TestGettersCheckoutSubscription(t *testing.T) {
+	t.Run("GetAccessRevokedAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSubscription{}
+		var expected *time.Time
+		obj.AccessRevokedAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetAccessRevokedAt(), "getter should return the property value")
+	})
+
+	t.Run("GetAccessRevokedAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSubscription{}
+		obj.AccessRevokedAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetAccessRevokedAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetAccessRevokedAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CheckoutSubscription
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetAccessRevokedAt() // Should return zero value
+	})
+
 	t.Run("GetApplicationID", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -3101,6 +3142,37 @@ func TestGettersCheckoutSubscription(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCheckoutSubscription(t *testing.T) {
+	t.Run("SetAccessRevokedAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutSubscription{}
+		var fernTestValueAccessRevokedAt *time.Time
+
+		// Act
+		obj.SetAccessRevokedAt(fernTestValueAccessRevokedAt)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetApplicationID_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange

@@ -71,7 +71,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	    },
 //	    SkipTrial: true,
 //	}
-//	client.Checkout.Internal(
+//	_, err := client.Checkout.Internal(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -96,7 +96,7 @@ func (c *Client) Internal(
 //	request := &schematichq.CheckoutDataRequestBody{
 //	    CompanyID: "company_id",
 //	}
-//	client.Checkout.GetCheckoutData(
+//	_, err := client.Checkout.GetCheckoutData(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -153,7 +153,7 @@ func (c *Client) GetCheckoutData(
 //	    },
 //	    SkipTrial: true,
 //	}
-//	client.Checkout.PreviewCheckoutInternal(
+//	_, err := client.Checkout.PreviewCheckoutInternal(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -175,7 +175,7 @@ func (c *Client) PreviewCheckoutInternal(
 
 // Example:
 //
-//	client.Checkout.GetCompanyBillingDetails(
+//	_, err := client.Checkout.GetCompanyBillingDetails(
 //	    context.TODO(),
 //	    "company_id",
 //	)
@@ -206,7 +206,7 @@ func (c *Client) GetCompanyBillingDetails(
 //	        },
 //	    },
 //	}
-//	client.Checkout.UpdateCompanyBillingDetails(
+//	_, err := client.Checkout.UpdateCompanyBillingDetails(
 //	    context.TODO(),
 //	    "company_id",
 //	    request,
@@ -258,7 +258,7 @@ func (c *Client) UpdateCompanyBillingDetails(
 //	        },
 //	    },
 //	}
-//	client.Checkout.ManagePlan(
+//	_, err := client.Checkout.ManagePlan(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -306,7 +306,7 @@ func (c *Client) ManagePlan(
 //	        },
 //	    },
 //	}
-//	client.Checkout.PreviewManagePlan(
+//	_, err := client.Checkout.PreviewManagePlan(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -331,7 +331,7 @@ func (c *Client) PreviewManagePlan(
 //	request := &schematichq.CancelSubscriptionRequest{
 //	    CompanyID: "company_id",
 //	}
-//	client.Checkout.CancelSubscription(
+//	_, err := client.Checkout.CancelSubscription(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -354,7 +354,7 @@ func (c *Client) CancelSubscription(
 // Example:
 //
 //	request := &schematichq.UpdateTrialEndRequestBody{}
-//	client.Checkout.UpdateCustomerSubscriptionTrialEnd(
+//	_, err := client.Checkout.UpdateCustomerSubscriptionTrialEnd(
 //	    context.TODO(),
 //	    "subscription_id",
 //	    request,

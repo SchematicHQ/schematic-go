@@ -43,7 +43,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        },
 //	    },
 //	}
-//	client.Events.CreateEventBatch(
+//	_, err := client.Events.CreateEventBatch(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -81,7 +81,7 @@ func (c *Client) CreateEventBatch(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Events.GetEventSummaries(
+//	_, err := client.Events.GetEventSummaries(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -129,7 +129,7 @@ func (c *Client) GetEventSummaries(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Events.ListEvents(
+//	_, err := client.Events.ListEvents(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -154,7 +154,7 @@ func (c *Client) ListEvents(
 //	request := &schematichq.CreateEventRequestBody{
 //	    EventType: schematichq.EventTypeFlagCheck,
 //	}
-//	client.Events.CreateEvent(
+//	_, err := client.Events.CreateEvent(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -176,7 +176,7 @@ func (c *Client) CreateEvent(
 
 // Example:
 //
-//	client.Events.GetEvent(
+//	_, err := client.Events.GetEvent(
 //	    context.TODO(),
 //	    "event_id",
 //	)
@@ -199,7 +199,7 @@ func (c *Client) GetEvent(
 
 // Example:
 //
-//	client.Events.GetOtlpEnvironmentSettings(
+//	_, err := client.Events.GetOtlpEnvironmentSettings(
 //	    context.TODO(),
 //	)
 func (c *Client) GetOtlpEnvironmentSettings(
@@ -221,7 +221,7 @@ func (c *Client) GetOtlpEnvironmentSettings(
 //	request := &schematichq.UpsertOtlpEnvironmentSettingsRequestBody{
 //	    ToolEventsEnabled: true,
 //	}
-//	client.Events.UpsertOtlpEnvironmentSettings(
+//	_, err := client.Events.UpsertOtlpEnvironmentSettings(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -243,7 +243,7 @@ func (c *Client) UpsertOtlpEnvironmentSettings(
 
 // Example:
 //
-//	client.Events.DeleteOtlpEnvironmentSettings(
+//	_, err := client.Events.DeleteOtlpEnvironmentSettings(
 //	    context.TODO(),
 //	)
 func (c *Client) DeleteOtlpEnvironmentSettings(
@@ -262,7 +262,7 @@ func (c *Client) DeleteOtlpEnvironmentSettings(
 
 // Example:
 //
-//	client.Events.GetSegmentIntegrationStatus(
+//	_, err := client.Events.GetSegmentIntegrationStatus(
 //	    context.TODO(),
 //	)
 func (c *Client) GetSegmentIntegrationStatus(

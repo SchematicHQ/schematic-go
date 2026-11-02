@@ -1626,54 +1626,63 @@ var (
 	eventDetailResponseDataFieldCapturedAt     = big.NewInt(1 << 4)
 	eventDetailResponseDataFieldCompany        = big.NewInt(1 << 5)
 	eventDetailResponseDataFieldCompanyID      = big.NewInt(1 << 6)
-	eventDetailResponseDataFieldEnrichedAt     = big.NewInt(1 << 7)
-	eventDetailResponseDataFieldEnvironmentID  = big.NewInt(1 << 8)
-	eventDetailResponseDataFieldErrorMessage   = big.NewInt(1 << 9)
-	eventDetailResponseDataFieldFeatureIDs     = big.NewInt(1 << 10)
-	eventDetailResponseDataFieldFeatures       = big.NewInt(1 << 11)
-	eventDetailResponseDataFieldID             = big.NewInt(1 << 12)
-	eventDetailResponseDataFieldIdempotencyKey = big.NewInt(1 << 13)
-	eventDetailResponseDataFieldLeaseID        = big.NewInt(1 << 14)
-	eventDetailResponseDataFieldLoadedAt       = big.NewInt(1 << 15)
-	eventDetailResponseDataFieldProcessedAt    = big.NewInt(1 << 16)
-	eventDetailResponseDataFieldQuantity       = big.NewInt(1 << 17)
-	eventDetailResponseDataFieldReservationID  = big.NewInt(1 << 18)
-	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 19)
-	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 20)
-	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 21)
-	eventDetailResponseDataFieldType           = big.NewInt(1 << 22)
-	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 23)
-	eventDetailResponseDataFieldUser           = big.NewInt(1 << 24)
-	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 25)
+	eventDetailResponseDataFieldCost           = big.NewInt(1 << 7)
+	eventDetailResponseDataFieldCostSource     = big.NewInt(1 << 8)
+	eventDetailResponseDataFieldCurrency       = big.NewInt(1 << 9)
+	eventDetailResponseDataFieldEnrichedAt     = big.NewInt(1 << 10)
+	eventDetailResponseDataFieldEnvironmentID  = big.NewInt(1 << 11)
+	eventDetailResponseDataFieldErrorMessage   = big.NewInt(1 << 12)
+	eventDetailResponseDataFieldFeatureIDs     = big.NewInt(1 << 13)
+	eventDetailResponseDataFieldFeatures       = big.NewInt(1 << 14)
+	eventDetailResponseDataFieldID             = big.NewInt(1 << 15)
+	eventDetailResponseDataFieldIdempotencyKey = big.NewInt(1 << 16)
+	eventDetailResponseDataFieldLeaseID        = big.NewInt(1 << 17)
+	eventDetailResponseDataFieldLoadedAt       = big.NewInt(1 << 18)
+	eventDetailResponseDataFieldProcessedAt    = big.NewInt(1 << 19)
+	eventDetailResponseDataFieldQuantity       = big.NewInt(1 << 20)
+	eventDetailResponseDataFieldReservationID  = big.NewInt(1 << 21)
+	eventDetailResponseDataFieldSentAt         = big.NewInt(1 << 22)
+	eventDetailResponseDataFieldStatus         = big.NewInt(1 << 23)
+	eventDetailResponseDataFieldSubtype        = big.NewInt(1 << 24)
+	eventDetailResponseDataFieldType           = big.NewInt(1 << 25)
+	eventDetailResponseDataFieldUpdatedAt      = big.NewInt(1 << 26)
+	eventDetailResponseDataFieldUser           = big.NewInt(1 << 27)
+	eventDetailResponseDataFieldUserID         = big.NewInt(1 << 28)
 )
 
 type EventDetailResponseData struct {
-	APIKey         *string             `json:"api_key,omitempty" url:"api_key,omitempty"`
-	APIKeyView     *APIKeyResponseData `json:"api_key_view,omitempty" url:"api_key_view,omitempty"`
-	Body           map[string]any      `json:"body" url:"body"`
-	BodyPreview    string              `json:"body_preview" url:"body_preview"`
-	CapturedAt     time.Time           `json:"captured_at" url:"captured_at"`
-	Company        *PreviewObject      `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID      *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EnrichedAt     *time.Time          `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
-	EnvironmentID  *string             `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ErrorMessage   *string             `json:"error_message,omitempty" url:"error_message,omitempty"`
-	FeatureIDs     []string            `json:"feature_ids" url:"feature_ids"`
-	Features       []*PreviewObject    `json:"features" url:"features"`
-	ID             string              `json:"id" url:"id"`
-	IdempotencyKey *string             `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
-	LeaseID        *string             `json:"lease_id,omitempty" url:"lease_id,omitempty"`
-	LoadedAt       *time.Time          `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
-	ProcessedAt    *time.Time          `json:"processed_at,omitempty" url:"processed_at,omitempty"`
-	Quantity       int64               `json:"quantity" url:"quantity"`
-	ReservationID  *string             `json:"reservation_id,omitempty" url:"reservation_id,omitempty"`
-	SentAt         *time.Time          `json:"sent_at,omitempty" url:"sent_at,omitempty"`
-	Status         EventStatus         `json:"status" url:"status"`
-	Subtype        *string             `json:"subtype,omitempty" url:"subtype,omitempty"`
-	Type           EventType           `json:"type" url:"type"`
-	UpdatedAt      *time.Time          `json:"updated_at,omitempty" url:"updated_at,omitempty"`
-	User           *PreviewObject      `json:"user,omitempty" url:"user,omitempty"`
-	UserID         *string             `json:"user_id,omitempty" url:"user_id,omitempty"`
+	APIKey      *string             `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyView  *APIKeyResponseData `json:"api_key_view,omitempty" url:"api_key_view,omitempty"`
+	Body        map[string]any      `json:"body" url:"body"`
+	BodyPreview string              `json:"body_preview" url:"body_preview"`
+	CapturedAt  time.Time           `json:"captured_at" url:"captured_at"`
+	Company     *PreviewObject      `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID   *string             `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// What the inference call cost, as a decimal amount in currency (dollars, not cents, for usd). Absent when the call has no price, for other event types, and when listing events.
+	Cost *string `json:"cost,omitempty" url:"cost,omitempty"`
+	// Where the inference call's cost came from: provided when the request reported it, list_price when Schematic priced it from the model's list price, unpriced when neither applied. Absent for other event types and when listing events.
+	CostSource *InferenceCostSource `json:"cost_source,omitempty" url:"cost_source,omitempty"`
+	// Lowercase ISO currency code for cost. Absent for other event types and when listing events.
+	Currency       *string          `json:"currency,omitempty" url:"currency,omitempty"`
+	EnrichedAt     *time.Time       `json:"enriched_at,omitempty" url:"enriched_at,omitempty"`
+	EnvironmentID  *string          `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ErrorMessage   *string          `json:"error_message,omitempty" url:"error_message,omitempty"`
+	FeatureIDs     []string         `json:"feature_ids" url:"feature_ids"`
+	Features       []*PreviewObject `json:"features" url:"features"`
+	ID             string           `json:"id" url:"id"`
+	IdempotencyKey *string          `json:"idempotency_key,omitempty" url:"idempotency_key,omitempty"`
+	LeaseID        *string          `json:"lease_id,omitempty" url:"lease_id,omitempty"`
+	LoadedAt       *time.Time       `json:"loaded_at,omitempty" url:"loaded_at,omitempty"`
+	ProcessedAt    *time.Time       `json:"processed_at,omitempty" url:"processed_at,omitempty"`
+	Quantity       int64            `json:"quantity" url:"quantity"`
+	ReservationID  *string          `json:"reservation_id,omitempty" url:"reservation_id,omitempty"`
+	SentAt         *time.Time       `json:"sent_at,omitempty" url:"sent_at,omitempty"`
+	Status         EventStatus      `json:"status" url:"status"`
+	Subtype        *string          `json:"subtype,omitempty" url:"subtype,omitempty"`
+	Type           EventType        `json:"type" url:"type"`
+	UpdatedAt      *time.Time       `json:"updated_at,omitempty" url:"updated_at,omitempty"`
+	User           *PreviewObject   `json:"user,omitempty" url:"user,omitempty"`
+	UserID         *string          `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1729,6 +1738,27 @@ func (e *EventDetailResponseData) GetCompanyID() *string {
 		return nil
 	}
 	return e.CompanyID
+}
+
+func (e *EventDetailResponseData) GetCost() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Cost
+}
+
+func (e *EventDetailResponseData) GetCostSource() *InferenceCostSource {
+	if e == nil {
+		return nil
+	}
+	return e.CostSource
+}
+
+func (e *EventDetailResponseData) GetCurrency() *string {
+	if e == nil {
+		return nil
+	}
+	return e.Currency
 }
 
 func (e *EventDetailResponseData) GetEnrichedAt() *time.Time {
@@ -1927,6 +1957,27 @@ func (e *EventDetailResponseData) SetCompany(company *PreviewObject) {
 func (e *EventDetailResponseData) SetCompanyID(companyID *string) {
 	e.CompanyID = companyID
 	e.require(eventDetailResponseDataFieldCompanyID)
+}
+
+// SetCost sets the Cost field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetCost(cost *string) {
+	e.Cost = cost
+	e.require(eventDetailResponseDataFieldCost)
+}
+
+// SetCostSource sets the CostSource field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetCostSource(costSource *InferenceCostSource) {
+	e.CostSource = costSource
+	e.require(eventDetailResponseDataFieldCostSource)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EventDetailResponseData) SetCurrency(currency *string) {
+	e.Currency = currency
+	e.require(eventDetailResponseDataFieldCurrency)
 }
 
 // SetEnrichedAt sets the EnrichedAt field and marks it as non-optional;
@@ -2189,6 +2240,31 @@ func NewEventTypeFromString(s string) (EventType, error) {
 
 func (e EventType) Ptr() *EventType {
 	return &e
+}
+
+type InferenceCostSource string
+
+const (
+	InferenceCostSourceListPrice InferenceCostSource = "list_price"
+	InferenceCostSourceProvided  InferenceCostSource = "provided"
+	InferenceCostSourceUnpriced  InferenceCostSource = "unpriced"
+)
+
+func NewInferenceCostSourceFromString(s string) (InferenceCostSource, error) {
+	switch s {
+	case "list_price":
+		return InferenceCostSourceListPrice, nil
+	case "provided":
+		return InferenceCostSourceProvided, nil
+	case "unpriced":
+		return InferenceCostSourceUnpriced, nil
+	}
+	var t InferenceCostSource
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i InferenceCostSource) Ptr() *InferenceCostSource {
+	return &i
 }
 
 var (

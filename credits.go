@@ -1996,7 +1996,7 @@ type ReserveCreditsRequestBody struct {
 	Amount       float64 `json:"amount" url:"-"`
 	CompanyID    string  `json:"company_id" url:"-"`
 	CreditTypeID string  `json:"credit_type_id" url:"-"`
-	// When the hold lapses if no track event settles it; defaults to one minute from now and may be at most one hour out. The unspent hold is refunded on expiry
+	// When the hold lapses if no track event settles it; defaults to one minute from now and may be at most 24 hours out. The unspent hold is refunded on expiry
 	ExpiresAt *time.Time `json:"expires_at,omitempty" url:"-"`
 	// A caller-chosen key for safe retries: a second request with the same key returns the original reservation instead of taking another hold
 	IdempotencyKey *string `json:"idempotency_key,omitempty" url:"-"`
@@ -4146,12 +4146,14 @@ var (
 	creditEventLedgerResponseDataFieldQuantityConsumed           = big.NewInt(1 << 29)
 	creditEventLedgerResponseDataFieldQuantityRemainingAtZeroOut = big.NewInt(1 << 30)
 	creditEventLedgerResponseDataFieldSourceID                   = big.NewInt(1 << 31)
-	creditEventLedgerResponseDataFieldToGrantID                  = big.NewInt(1 << 32)
-	creditEventLedgerResponseDataFieldTransferReason             = big.NewInt(1 << 33)
-	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 34)
-	creditEventLedgerResponseDataFieldUsageReason                = big.NewInt(1 << 35)
-	creditEventLedgerResponseDataFieldUserID                     = big.NewInt(1 << 36)
-	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 37)
+	creditEventLedgerResponseDataFieldSourceIDString             = big.NewInt(1 << 32)
+	creditEventLedgerResponseDataFieldSourceType                 = big.NewInt(1 << 33)
+	creditEventLedgerResponseDataFieldToGrantID                  = big.NewInt(1 << 34)
+	creditEventLedgerResponseDataFieldTransferReason             = big.NewInt(1 << 35)
+	creditEventLedgerResponseDataFieldUsageEventID               = big.NewInt(1 << 36)
+	creditEventLedgerResponseDataFieldUsageReason                = big.NewInt(1 << 37)
+	creditEventLedgerResponseDataFieldUserID                     = big.NewInt(1 << 38)
+	creditEventLedgerResponseDataFieldZeroedOutReason            = big.NewInt(1 << 39)
 )
 
 type CreditEventLedgerResponseData struct {
@@ -4160,40 +4162,43 @@ type CreditEventLedgerResponseData struct {
 	BillingCreditBundleID *string `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
 	BillingCreditID       *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
 	// The part of the draw this row covers: one line per priced quantity, including the request line, summing to the row amount. Set on inference-driven draws only.
-	BurnBreakdown              []*CreditBurnBreakdownLine         `json:"burn_breakdown,omitempty" url:"burn_breakdown,omitempty"`
-	Company                    *CompanyLedgerResponseData         `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID                  string                             `json:"company_id" url:"company_id"`
-	Credit                     *BillingCreditLedgerResponseData   `json:"credit,omitempty" url:"credit,omitempty"`
-	CreditName                 string                             `json:"credit_name" url:"credit_name"`
-	Currency                   *Currency                          `json:"currency,omitempty" url:"currency,omitempty"`
-	EnvironmentID              string                             `json:"environment_id" url:"environment_id"`
-	EventAt                    time.Time                          `json:"event_at" url:"event_at"`
-	EventID                    string                             `json:"event_id" url:"event_id"`
-	EventIDs                   []string                           `json:"event_ids" url:"event_ids"`
-	EventType                  CreditEventType                    `json:"event_type" url:"event_type"`
-	ExpiryType                 *BillingCreditExpiryType           `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
-	ExpiryUnit                 *BillingCreditExpiryUnit           `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
-	ExpiryUnitCount            *int64                             `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
-	Feature                    *FeatureLedgerResponseData         `json:"feature,omitempty" url:"feature,omitempty"`
-	FeatureID                  *string                            `json:"feature_id,omitempty" url:"feature_id,omitempty"`
-	FromGrantID                *string                            `json:"from_grant_id,omitempty" url:"from_grant_id,omitempty"`
-	GrantExpiresAt             *time.Time                         `json:"grant_expires_at,omitempty" url:"grant_expires_at,omitempty"`
-	GrantID                    *string                            `json:"grant_id,omitempty" url:"grant_id,omitempty"`
-	GrantQuantity              *float64                           `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
-	GrantQuantityRemaining     *float64                           `json:"grant_quantity_remaining,omitempty" url:"grant_quantity_remaining,omitempty"`
-	GrantReason                *BillingCreditGrantReason          `json:"grant_reason,omitempty" url:"grant_reason,omitempty"`
-	GrantValidFrom             *time.Time                         `json:"grant_valid_from,omitempty" url:"grant_valid_from,omitempty"`
-	Kind                       CreditLedgerEntryKind              `json:"kind" url:"kind"`
-	PlanID                     *string                            `json:"plan_id,omitempty" url:"plan_id,omitempty"`
-	QuantityConsumed           *float64                           `json:"quantity_consumed,omitempty" url:"quantity_consumed,omitempty"`
-	QuantityRemainingAtZeroOut *float64                           `json:"quantity_remaining_at_zero_out,omitempty" url:"quantity_remaining_at_zero_out,omitempty"`
-	SourceID                   int64                              `json:"source_id" url:"source_id"`
-	ToGrantID                  *string                            `json:"to_grant_id,omitempty" url:"to_grant_id,omitempty"`
-	TransferReason             *CreditTransferReason              `json:"transfer_reason,omitempty" url:"transfer_reason,omitempty"`
-	UsageEventID               *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
-	UsageReason                *CreditUsageReason                 `json:"usage_reason,omitempty" url:"usage_reason,omitempty"`
-	UserID                     *string                            `json:"user_id,omitempty" url:"user_id,omitempty"`
-	ZeroedOutReason            *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
+	BurnBreakdown              []*CreditBurnBreakdownLine       `json:"burn_breakdown,omitempty" url:"burn_breakdown,omitempty"`
+	Company                    *CompanyLedgerResponseData       `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID                  string                           `json:"company_id" url:"company_id"`
+	Credit                     *BillingCreditLedgerResponseData `json:"credit,omitempty" url:"credit,omitempty"`
+	CreditName                 string                           `json:"credit_name" url:"credit_name"`
+	Currency                   *Currency                        `json:"currency,omitempty" url:"currency,omitempty"`
+	EnvironmentID              string                           `json:"environment_id" url:"environment_id"`
+	EventAt                    time.Time                        `json:"event_at" url:"event_at"`
+	EventID                    string                           `json:"event_id" url:"event_id"`
+	EventIDs                   []string                         `json:"event_ids" url:"event_ids"`
+	EventType                  CreditEventType                  `json:"event_type" url:"event_type"`
+	ExpiryType                 *BillingCreditExpiryType         `json:"expiry_type,omitempty" url:"expiry_type,omitempty"`
+	ExpiryUnit                 *BillingCreditExpiryUnit         `json:"expiry_unit,omitempty" url:"expiry_unit,omitempty"`
+	ExpiryUnitCount            *int64                           `json:"expiry_unit_count,omitempty" url:"expiry_unit_count,omitempty"`
+	Feature                    *FeatureLedgerResponseData       `json:"feature,omitempty" url:"feature,omitempty"`
+	FeatureID                  *string                          `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	FromGrantID                *string                          `json:"from_grant_id,omitempty" url:"from_grant_id,omitempty"`
+	GrantExpiresAt             *time.Time                       `json:"grant_expires_at,omitempty" url:"grant_expires_at,omitempty"`
+	GrantID                    *string                          `json:"grant_id,omitempty" url:"grant_id,omitempty"`
+	GrantQuantity              *float64                         `json:"grant_quantity,omitempty" url:"grant_quantity,omitempty"`
+	GrantQuantityRemaining     *float64                         `json:"grant_quantity_remaining,omitempty" url:"grant_quantity_remaining,omitempty"`
+	GrantReason                *BillingCreditGrantReason        `json:"grant_reason,omitempty" url:"grant_reason,omitempty"`
+	GrantValidFrom             *time.Time                       `json:"grant_valid_from,omitempty" url:"grant_valid_from,omitempty"`
+	Kind                       CreditLedgerEntryKind            `json:"kind" url:"kind"`
+	PlanID                     *string                          `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	QuantityConsumed           *float64                         `json:"quantity_consumed,omitempty" url:"quantity_consumed,omitempty"`
+	QuantityRemainingAtZeroOut *float64                         `json:"quantity_remaining_at_zero_out,omitempty" url:"quantity_remaining_at_zero_out,omitempty"`
+	// Always 0. Use source_id_string.
+	SourceID        int64                              `json:"source_id" url:"source_id"`
+	SourceIDString  *string                            `json:"source_id_string,omitempty" url:"source_id_string,omitempty"`
+	SourceType      *CreditLedgerSourceType            `json:"source_type,omitempty" url:"source_type,omitempty"`
+	ToGrantID       *string                            `json:"to_grant_id,omitempty" url:"to_grant_id,omitempty"`
+	TransferReason  *CreditTransferReason              `json:"transfer_reason,omitempty" url:"transfer_reason,omitempty"`
+	UsageEventID    *string                            `json:"usage_event_id,omitempty" url:"usage_event_id,omitempty"`
+	UsageReason     *CreditUsageReason                 `json:"usage_reason,omitempty" url:"usage_reason,omitempty"`
+	UserID          *string                            `json:"user_id,omitempty" url:"user_id,omitempty"`
+	ZeroedOutReason *BillingCreditGrantZeroedOutReason `json:"zeroed_out_reason,omitempty" url:"zeroed_out_reason,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -4424,6 +4429,20 @@ func (c *CreditEventLedgerResponseData) GetSourceID() int64 {
 		return 0
 	}
 	return c.SourceID
+}
+
+func (c *CreditEventLedgerResponseData) GetSourceIDString() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SourceIDString
+}
+
+func (c *CreditEventLedgerResponseData) GetSourceType() *CreditLedgerSourceType {
+	if c == nil {
+		return nil
+	}
+	return c.SourceType
 }
 
 func (c *CreditEventLedgerResponseData) GetToGrantID() *string {
@@ -4706,6 +4725,20 @@ func (c *CreditEventLedgerResponseData) SetQuantityRemainingAtZeroOut(quantityRe
 func (c *CreditEventLedgerResponseData) SetSourceID(sourceID int64) {
 	c.SourceID = sourceID
 	c.require(creditEventLedgerResponseDataFieldSourceID)
+}
+
+// SetSourceIDString sets the SourceIDString field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetSourceIDString(sourceIDString *string) {
+	c.SourceIDString = sourceIDString
+	c.require(creditEventLedgerResponseDataFieldSourceIDString)
+}
+
+// SetSourceType sets the SourceType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditEventLedgerResponseData) SetSourceType(sourceType *CreditLedgerSourceType) {
+	c.SourceType = sourceType
+	c.require(creditEventLedgerResponseDataFieldSourceType)
 }
 
 // SetToGrantID sets the ToGrantID field and marks it as non-optional;
@@ -5141,6 +5174,34 @@ func NewCreditLedgerEntryKindFromString(s string) (CreditLedgerEntryKind, error)
 }
 
 func (c CreditLedgerEntryKind) Ptr() *CreditLedgerEntryKind {
+	return &c
+}
+
+type CreditLedgerSourceType string
+
+const (
+	CreditLedgerSourceTypeBillingCharge         CreditLedgerSourceType = "billing_charge"
+	CreditLedgerSourceTypeBillingCreditGrant    CreditLedgerSourceType = "billing_credit_grant"
+	CreditLedgerSourceTypeBillingCreditTransfer CreditLedgerSourceType = "billing_credit_transfer"
+	CreditLedgerSourceTypeBillingSettlement     CreditLedgerSourceType = "billing_settlement"
+)
+
+func NewCreditLedgerSourceTypeFromString(s string) (CreditLedgerSourceType, error) {
+	switch s {
+	case "billing_charge":
+		return CreditLedgerSourceTypeBillingCharge, nil
+	case "billing_credit_grant":
+		return CreditLedgerSourceTypeBillingCreditGrant, nil
+	case "billing_credit_transfer":
+		return CreditLedgerSourceTypeBillingCreditTransfer, nil
+	case "billing_settlement":
+		return CreditLedgerSourceTypeBillingSettlement, nil
+	}
+	var t CreditLedgerSourceType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditLedgerSourceType) Ptr() *CreditLedgerSourceType {
 	return &c
 }
 

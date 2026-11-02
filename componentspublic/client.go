@@ -36,7 +36,7 @@ func NewClient(options *core.RequestOptions) *Client {
 
 // Example:
 //
-//	client.Componentspublic.GetPublicPlans(
+//	_, err := client.Componentspublic.GetPublicPlans(
 //	    context.TODO(),
 //	)
 func (c *Client) GetPublicPlans(

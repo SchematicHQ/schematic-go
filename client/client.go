@@ -102,7 +102,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 
 // Example:
 //
-//	client.PostAPIKeys(
+//	_, err := client.PostAPIKeys(
 //	    context.TODO(),
 //	)
 func (c *Client) PostAPIKeys(
@@ -121,7 +121,7 @@ func (c *Client) PostAPIKeys(
 
 // Example:
 //
-//	client.PutAPIKeysAPIKeyID(
+//	_, err := client.PutAPIKeysAPIKeyID(
 //	    context.TODO(),
 //	    "api_key_id",
 //	)
@@ -143,7 +143,7 @@ func (c *Client) PutAPIKeysAPIKeyID(
 
 // Example:
 //
-//	client.DeleteAPIKeysAPIKeyID(
+//	_, err := client.DeleteAPIKeysAPIKeyID(
 //	    context.TODO(),
 //	    "api_key_id",
 //	)
@@ -165,7 +165,7 @@ func (c *Client) DeleteAPIKeysAPIKeyID(
 
 // Example:
 //
-//	client.PostEnvironments(
+//	_, err := client.PostEnvironments(
 //	    context.TODO(),
 //	)
 func (c *Client) PostEnvironments(
@@ -184,7 +184,7 @@ func (c *Client) PostEnvironments(
 
 // Example:
 //
-//	client.PutEnvironmentsEnvironmentID(
+//	_, err := client.PutEnvironmentsEnvironmentID(
 //	    context.TODO(),
 //	    "environment_id",
 //	)
@@ -206,7 +206,7 @@ func (c *Client) PutEnvironmentsEnvironmentID(
 
 // Example:
 //
-//	client.DeleteEnvironmentsEnvironmentID(
+//	_, err := client.DeleteEnvironmentsEnvironmentID(
 //	    context.TODO(),
 //	    "environment_id",
 //	)
@@ -228,7 +228,7 @@ func (c *Client) DeleteEnvironmentsEnvironmentID(
 
 // Example:
 //
-//	client.GetCreditLedger(
+//	_, err := client.GetCreditLedger(
 //	    context.TODO(),
 //	)
 func (c *Client) GetCreditLedger(

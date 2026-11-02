@@ -41,7 +41,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        true,
 //	    ),
 //	}
-//	client.Plangroups.GetPlanGroup(
+//	_, err := client.Plangroups.GetPlanGroup(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -100,7 +100,7 @@ func (c *Client) GetPlanGroup(
 //	    ShowZeroPriceAsFree: true,
 //	    SyncCustomerBillingDetails: true,
 //	}
-//	client.Plangroups.CreatePlanGroup(
+//	_, err := client.Plangroups.CreatePlanGroup(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -159,7 +159,7 @@ func (c *Client) CreatePlanGroup(
 //	    ShowZeroPriceAsFree: true,
 //	    SyncCustomerBillingDetails: true,
 //	}
-//	client.Plangroups.UpdatePlanGroup(
+//	_, err := client.Plangroups.UpdatePlanGroup(
 //	    context.TODO(),
 //	    "plan_group_id",
 //	    request,

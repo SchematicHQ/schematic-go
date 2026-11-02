@@ -51,7 +51,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        Name: "name",
 //	    },
 //	}
-//	client.Planbundle.CreateCustomPlanBundle(
+//	_, err := client.Planbundle.CreateCustomPlanBundle(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -84,7 +84,7 @@ func (c *Client) CreateCustomPlanBundle(
 //	        PlanType: schematichq.PlanTypePlan,
 //	    },
 //	}
-//	client.Planbundle.CreatePlanBundle(
+//	_, err := client.Planbundle.CreatePlanBundle(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -116,7 +116,7 @@ func (c *Client) CreatePlanBundle(
 //	        Name: "name",
 //	    },
 //	}
-//	client.Planbundle.UpdatePlanBundle(
+//	_, err := client.Planbundle.UpdatePlanBundle(
 //	    context.TODO(),
 //	    "plan_id",
 //	    request,

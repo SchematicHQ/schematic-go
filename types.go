@@ -878,43 +878,150 @@ func (a APIKeyScope) Ptr() *APIKeyScope {
 }
 
 var (
+	auditLogCompanyResponseDataFieldID   = big.NewInt(1 << 0)
+	auditLogCompanyResponseDataFieldName = big.NewInt(1 << 1)
+)
+
+type AuditLogCompanyResponseData struct {
+	ID   string `json:"id" url:"id"`
+	Name string `json:"name" url:"name"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogCompanyResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *AuditLogCompanyResponseData) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AuditLogCompanyResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AuditLogCompanyResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
+	}
+	next.Or(next, field)
+	a.explicitFields = next
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogCompanyResponseData) SetID(id string) {
+	a.ID = id
+	a.require(auditLogCompanyResponseDataFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogCompanyResponseData) SetName(name string) {
+	a.Name = name
+	a.require(auditLogCompanyResponseDataFieldName)
+}
+
+func (a *AuditLogCompanyResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler AuditLogCompanyResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AuditLogCompanyResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AuditLogCompanyResponseData) MarshalJSON() ([]byte, error) {
+	type embed AuditLogCompanyResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AuditLogCompanyResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
 	auditLogListResponseDataFieldActorType         = big.NewInt(1 << 0)
 	auditLogListResponseDataFieldAPIKey            = big.NewInt(1 << 1)
 	auditLogListResponseDataFieldAPIKeyID          = big.NewInt(1 << 2)
-	auditLogListResponseDataFieldEndedAt           = big.NewInt(1 << 3)
-	auditLogListResponseDataFieldEnvironment       = big.NewInt(1 << 4)
-	auditLogListResponseDataFieldEnvironmentID     = big.NewInt(1 << 5)
-	auditLogListResponseDataFieldID                = big.NewInt(1 << 6)
-	auditLogListResponseDataFieldMethod            = big.NewInt(1 << 7)
-	auditLogListResponseDataFieldResourceID        = big.NewInt(1 << 8)
-	auditLogListResponseDataFieldResourceIDString  = big.NewInt(1 << 9)
-	auditLogListResponseDataFieldResourceName      = big.NewInt(1 << 10)
-	auditLogListResponseDataFieldResourceType      = big.NewInt(1 << 11)
-	auditLogListResponseDataFieldRespCode          = big.NewInt(1 << 12)
-	auditLogListResponseDataFieldSecondaryResource = big.NewInt(1 << 13)
-	auditLogListResponseDataFieldStartedAt         = big.NewInt(1 << 14)
-	auditLogListResponseDataFieldURL               = big.NewInt(1 << 15)
-	auditLogListResponseDataFieldUserName          = big.NewInt(1 << 16)
+	auditLogListResponseDataFieldCompany           = big.NewInt(1 << 3)
+	auditLogListResponseDataFieldCompanyID         = big.NewInt(1 << 4)
+	auditLogListResponseDataFieldEndedAt           = big.NewInt(1 << 5)
+	auditLogListResponseDataFieldEnvironment       = big.NewInt(1 << 6)
+	auditLogListResponseDataFieldEnvironmentID     = big.NewInt(1 << 7)
+	auditLogListResponseDataFieldID                = big.NewInt(1 << 8)
+	auditLogListResponseDataFieldMethod            = big.NewInt(1 << 9)
+	auditLogListResponseDataFieldResourceID        = big.NewInt(1 << 10)
+	auditLogListResponseDataFieldResourceIDString  = big.NewInt(1 << 11)
+	auditLogListResponseDataFieldResourceName      = big.NewInt(1 << 12)
+	auditLogListResponseDataFieldResourceType      = big.NewInt(1 << 13)
+	auditLogListResponseDataFieldRespCode          = big.NewInt(1 << 14)
+	auditLogListResponseDataFieldSecondaryResource = big.NewInt(1 << 15)
+	auditLogListResponseDataFieldStartedAt         = big.NewInt(1 << 16)
+	auditLogListResponseDataFieldURL               = big.NewInt(1 << 17)
+	auditLogListResponseDataFieldUserName          = big.NewInt(1 << 18)
 )
 
 type AuditLogListResponseData struct {
-	ActorType         ActorType                `json:"actor_type" url:"actor_type"`
-	APIKey            *APIKeyResponseData      `json:"api_key,omitempty" url:"api_key,omitempty"`
-	APIKeyID          *string                  `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
-	EndedAt           *time.Time               `json:"ended_at,omitempty" url:"ended_at,omitempty"`
-	Environment       *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
-	EnvironmentID     *string                  `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID                string                   `json:"id" url:"id"`
-	Method            string                   `json:"method" url:"method"`
-	ResourceID        *int64                   `json:"resource_id,omitempty" url:"resource_id,omitempty"`
-	ResourceIDString  *string                  `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
-	ResourceName      *string                  `json:"resource_name,omitempty" url:"resource_name,omitempty"`
-	ResourceType      *string                  `json:"resource_type,omitempty" url:"resource_type,omitempty"`
-	RespCode          *int64                   `json:"resp_code,omitempty" url:"resp_code,omitempty"`
-	SecondaryResource *string                  `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
-	StartedAt         time.Time                `json:"started_at" url:"started_at"`
-	URL               string                   `json:"url" url:"url"`
-	UserName          *string                  `json:"user_name,omitempty" url:"user_name,omitempty"`
+	ActorType     ActorType                    `json:"actor_type" url:"actor_type"`
+	APIKey        *APIKeyResponseData          `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyID      *string                      `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
+	Company       *AuditLogCompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID     *string                      `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndedAt       *time.Time                   `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	Environment   *EnvironmentResponseData     `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string                       `json:"id" url:"id"`
+	Method        string                       `json:"method" url:"method"`
+	// Always null. Use resource_id_string.
+	ResourceID        *int64    `json:"resource_id,omitempty" url:"resource_id,omitempty"`
+	ResourceIDString  *string   `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
+	ResourceName      *string   `json:"resource_name,omitempty" url:"resource_name,omitempty"`
+	ResourceType      *string   `json:"resource_type,omitempty" url:"resource_type,omitempty"`
+	RespCode          *int64    `json:"resp_code,omitempty" url:"resp_code,omitempty"`
+	SecondaryResource *string   `json:"secondary_resource,omitempty" url:"secondary_resource,omitempty"`
+	StartedAt         time.Time `json:"started_at" url:"started_at"`
+	URL               string    `json:"url" url:"url"`
+	UserName          *string   `json:"user_name,omitempty" url:"user_name,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -942,6 +1049,20 @@ func (a *AuditLogListResponseData) GetAPIKeyID() *string {
 		return nil
 	}
 	return a.APIKeyID
+}
+
+func (a *AuditLogListResponseData) GetCompany() *AuditLogCompanyResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.Company
+}
+
+func (a *AuditLogListResponseData) GetCompanyID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.CompanyID
 }
 
 func (a *AuditLogListResponseData) GetEndedAt() *time.Time {
@@ -1077,6 +1198,20 @@ func (a *AuditLogListResponseData) SetAPIKey(apiKey *APIKeyResponseData) {
 func (a *AuditLogListResponseData) SetAPIKeyID(apiKeyID *string) {
 	a.APIKeyID = apiKeyID
 	a.require(auditLogListResponseDataFieldAPIKeyID)
+}
+
+// SetCompany sets the Company field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogListResponseData) SetCompany(company *AuditLogCompanyResponseData) {
+	a.Company = company
+	a.require(auditLogListResponseDataFieldCompany)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogListResponseData) SetCompanyID(companyID *string) {
+	a.CompanyID = companyID
+	a.require(auditLogListResponseDataFieldCompanyID)
 }
 
 // SetEndedAt sets the EndedAt field and marks it as non-optional;
@@ -2749,6 +2884,349 @@ func (b *BillingCreditView) MarshalJSON() ([]byte, error) {
 }
 
 func (b *BillingCreditView) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingInvoiceWebhookFieldAmountDue       = big.NewInt(1 << 0)
+	billingInvoiceWebhookFieldAmountPaid      = big.NewInt(1 << 1)
+	billingInvoiceWebhookFieldAmountRemaining = big.NewInt(1 << 2)
+	billingInvoiceWebhookFieldCompanyID       = big.NewInt(1 << 3)
+	billingInvoiceWebhookFieldContractID      = big.NewInt(1 << 4)
+	billingInvoiceWebhookFieldCurrency        = big.NewInt(1 << 5)
+	billingInvoiceWebhookFieldDueDate         = big.NewInt(1 << 6)
+	billingInvoiceWebhookFieldID              = big.NewInt(1 << 7)
+	billingInvoiceWebhookFieldNumber          = big.NewInt(1 << 8)
+	billingInvoiceWebhookFieldPeriodEnd       = big.NewInt(1 << 9)
+	billingInvoiceWebhookFieldPeriodStart     = big.NewInt(1 << 10)
+	billingInvoiceWebhookFieldStatus          = big.NewInt(1 << 11)
+	billingInvoiceWebhookFieldSubtotal        = big.NewInt(1 << 12)
+	billingInvoiceWebhookFieldTax             = big.NewInt(1 << 13)
+	billingInvoiceWebhookFieldTotal           = big.NewInt(1 << 14)
+	billingInvoiceWebhookFieldURL             = big.NewInt(1 << 15)
+)
+
+type BillingInvoiceWebhook struct {
+	AmountDue       int64          `json:"amount_due" url:"amount_due"`
+	AmountPaid      int64          `json:"amount_paid" url:"amount_paid"`
+	AmountRemaining int64          `json:"amount_remaining" url:"amount_remaining"`
+	CompanyID       string         `json:"company_id" url:"company_id"`
+	ContractID      *string        `json:"contract_id,omitempty" url:"contract_id,omitempty"`
+	Currency        Currency       `json:"currency" url:"currency"`
+	DueDate         *time.Time     `json:"due_date,omitempty" url:"due_date,omitempty"`
+	ID              string         `json:"id" url:"id"`
+	Number          *string        `json:"number,omitempty" url:"number,omitempty"`
+	PeriodEnd       *time.Time     `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart     *time.Time     `json:"period_start,omitempty" url:"period_start,omitempty"`
+	Status          *InvoiceStatus `json:"status,omitempty" url:"status,omitempty"`
+	Subtotal        int64          `json:"subtotal" url:"subtotal"`
+	Tax             int64          `json:"tax" url:"tax"`
+	Total           int64          `json:"total" url:"total"`
+	// The invoice's hosted page. Null until the invoice has one.
+	URL *string `json:"url,omitempty" url:"url,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceWebhook) GetAmountDue() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountDue
+}
+
+func (b *BillingInvoiceWebhook) GetAmountPaid() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountPaid
+}
+
+func (b *BillingInvoiceWebhook) GetAmountRemaining() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountRemaining
+}
+
+func (b *BillingInvoiceWebhook) GetCompanyID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CompanyID
+}
+
+func (b *BillingInvoiceWebhook) GetContractID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.ContractID
+}
+
+func (b *BillingInvoiceWebhook) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingInvoiceWebhook) GetDueDate() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.DueDate
+}
+
+func (b *BillingInvoiceWebhook) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingInvoiceWebhook) GetNumber() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Number
+}
+
+func (b *BillingInvoiceWebhook) GetPeriodEnd() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingInvoiceWebhook) GetPeriodStart() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingInvoiceWebhook) GetStatus() *InvoiceStatus {
+	if b == nil {
+		return nil
+	}
+	return b.Status
+}
+
+func (b *BillingInvoiceWebhook) GetSubtotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Subtotal
+}
+
+func (b *BillingInvoiceWebhook) GetTax() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Tax
+}
+
+func (b *BillingInvoiceWebhook) GetTotal() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Total
+}
+
+func (b *BillingInvoiceWebhook) GetURL() *string {
+	if b == nil {
+		return nil
+	}
+	return b.URL
+}
+
+func (b *BillingInvoiceWebhook) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingInvoiceWebhook) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmountDue sets the AmountDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetAmountDue(amountDue int64) {
+	b.AmountDue = amountDue
+	b.require(billingInvoiceWebhookFieldAmountDue)
+}
+
+// SetAmountPaid sets the AmountPaid field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetAmountPaid(amountPaid int64) {
+	b.AmountPaid = amountPaid
+	b.require(billingInvoiceWebhookFieldAmountPaid)
+}
+
+// SetAmountRemaining sets the AmountRemaining field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetAmountRemaining(amountRemaining int64) {
+	b.AmountRemaining = amountRemaining
+	b.require(billingInvoiceWebhookFieldAmountRemaining)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetCompanyID(companyID string) {
+	b.CompanyID = companyID
+	b.require(billingInvoiceWebhookFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetContractID(contractID *string) {
+	b.ContractID = contractID
+	b.require(billingInvoiceWebhookFieldContractID)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingInvoiceWebhookFieldCurrency)
+}
+
+// SetDueDate sets the DueDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetDueDate(dueDate *time.Time) {
+	b.DueDate = dueDate
+	b.require(billingInvoiceWebhookFieldDueDate)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetID(id string) {
+	b.ID = id
+	b.require(billingInvoiceWebhookFieldID)
+}
+
+// SetNumber sets the Number field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetNumber(number *string) {
+	b.Number = number
+	b.require(billingInvoiceWebhookFieldNumber)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetPeriodEnd(periodEnd *time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingInvoiceWebhookFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetPeriodStart(periodStart *time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingInvoiceWebhookFieldPeriodStart)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetStatus(status *InvoiceStatus) {
+	b.Status = status
+	b.require(billingInvoiceWebhookFieldStatus)
+}
+
+// SetSubtotal sets the Subtotal field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetSubtotal(subtotal int64) {
+	b.Subtotal = subtotal
+	b.require(billingInvoiceWebhookFieldSubtotal)
+}
+
+// SetTax sets the Tax field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetTax(tax int64) {
+	b.Tax = tax
+	b.require(billingInvoiceWebhookFieldTax)
+}
+
+// SetTotal sets the Total field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetTotal(total int64) {
+	b.Total = total
+	b.require(billingInvoiceWebhookFieldTotal)
+}
+
+// SetURL sets the URL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceWebhook) SetURL(url *string) {
+	b.URL = url
+	b.require(billingInvoiceWebhookFieldURL)
+}
+
+func (b *BillingInvoiceWebhook) UnmarshalJSON(data []byte) error {
+	type embed BillingInvoiceWebhook
+	var unmarshaler = struct {
+		embed
+		DueDate     *internal.DateTime `json:"due_date,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingInvoiceWebhook(unmarshaler.embed)
+	b.DueDate = unmarshaler.DueDate.TimePtr()
+	b.PeriodEnd = unmarshaler.PeriodEnd.TimePtr()
+	b.PeriodStart = unmarshaler.PeriodStart.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingInvoiceWebhook) MarshalJSON() ([]byte, error) {
+	type embed BillingInvoiceWebhook
+	var marshaler = struct {
+		embed
+		DueDate     *internal.DateTime `json:"due_date,omitempty"`
+		PeriodEnd   *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart *internal.DateTime `json:"period_start,omitempty"`
+	}{
+		embed:       embed(*b),
+		DueDate:     internal.NewOptionalDateTime(b.DueDate),
+		PeriodEnd:   internal.NewOptionalDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewOptionalDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingInvoiceWebhook) String() string {
 	if b == nil {
 		return "<nil>"
 	}
@@ -6909,6 +7387,396 @@ func (b *BillingSubscriptionDiscountView) String() string {
 	return fmt.Sprintf("%#v", b)
 }
 
+var (
+	billingSubscriptionPeriodLineWebhookFieldAmount      = big.NewInt(1 << 0)
+	billingSubscriptionPeriodLineWebhookFieldCurrency    = big.NewInt(1 << 1)
+	billingSubscriptionPeriodLineWebhookFieldID          = big.NewInt(1 << 2)
+	billingSubscriptionPeriodLineWebhookFieldPeriodEnd   = big.NewInt(1 << 3)
+	billingSubscriptionPeriodLineWebhookFieldPeriodStart = big.NewInt(1 << 4)
+	billingSubscriptionPeriodLineWebhookFieldQuantity    = big.NewInt(1 << 5)
+	billingSubscriptionPeriodLineWebhookFieldSourceID    = big.NewInt(1 << 6)
+	billingSubscriptionPeriodLineWebhookFieldUnitAmount  = big.NewInt(1 << 7)
+)
+
+type BillingSubscriptionPeriodLineWebhook struct {
+	Amount      int64     `json:"amount" url:"amount"`
+	Currency    Currency  `json:"currency" url:"currency"`
+	ID          string    `json:"id" url:"id"`
+	PeriodEnd   time.Time `json:"period_end" url:"period_end"`
+	PeriodStart time.Time `json:"period_start" url:"period_start"`
+	Quantity    *int64    `json:"quantity,omitempty" url:"quantity,omitempty"`
+	// The plan or add-on the line bills for.
+	SourceID   string `json:"source_id" url:"source_id"`
+	UnitAmount *int64 `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetAmount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Amount
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetCurrency() Currency {
+	if b == nil {
+		return ""
+	}
+	return b.Currency
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ID
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetPeriodEnd() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetPeriodStart() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetQuantity() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.Quantity
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetSourceID() string {
+	if b == nil {
+		return ""
+	}
+	return b.SourceID
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetUnitAmount() *int64 {
+	if b == nil {
+		return nil
+	}
+	return b.UnitAmount
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetAmount sets the Amount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetAmount(amount int64) {
+	b.Amount = amount
+	b.require(billingSubscriptionPeriodLineWebhookFieldAmount)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetCurrency(currency Currency) {
+	b.Currency = currency
+	b.require(billingSubscriptionPeriodLineWebhookFieldCurrency)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetID(id string) {
+	b.ID = id
+	b.require(billingSubscriptionPeriodLineWebhookFieldID)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetPeriodEnd(periodEnd time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingSubscriptionPeriodLineWebhookFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetPeriodStart(periodStart time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingSubscriptionPeriodLineWebhookFieldPeriodStart)
+}
+
+// SetQuantity sets the Quantity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetQuantity(quantity *int64) {
+	b.Quantity = quantity
+	b.require(billingSubscriptionPeriodLineWebhookFieldQuantity)
+}
+
+// SetSourceID sets the SourceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetSourceID(sourceID string) {
+	b.SourceID = sourceID
+	b.require(billingSubscriptionPeriodLineWebhookFieldSourceID)
+}
+
+// SetUnitAmount sets the UnitAmount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodLineWebhook) SetUnitAmount(unitAmount *int64) {
+	b.UnitAmount = unitAmount
+	b.require(billingSubscriptionPeriodLineWebhookFieldUnitAmount)
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) UnmarshalJSON(data []byte) error {
+	type embed BillingSubscriptionPeriodLineWebhook
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingSubscriptionPeriodLineWebhook(unmarshaler.embed)
+	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	b.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) MarshalJSON() ([]byte, error) {
+	type embed BillingSubscriptionPeriodLineWebhook
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*b),
+		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingSubscriptionPeriodLineWebhook) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
+var (
+	billingSubscriptionPeriodWebhookFieldCompanyID      = big.NewInt(1 << 0)
+	billingSubscriptionPeriodWebhookFieldContractID     = big.NewInt(1 << 1)
+	billingSubscriptionPeriodWebhookFieldLines          = big.NewInt(1 << 2)
+	billingSubscriptionPeriodWebhookFieldPeriodEnd      = big.NewInt(1 << 3)
+	billingSubscriptionPeriodWebhookFieldPeriodStart    = big.NewInt(1 << 4)
+	billingSubscriptionPeriodWebhookFieldSubscriptionID = big.NewInt(1 << 5)
+)
+
+type BillingSubscriptionPeriodWebhook struct {
+	CompanyID  string `json:"company_id" url:"company_id"`
+	ContractID string `json:"contract_id" url:"contract_id"`
+	// The lines charged in advance when the period started.
+	Lines          []*BillingSubscriptionPeriodLineWebhook `json:"lines" url:"lines"`
+	PeriodEnd      time.Time                               `json:"period_end" url:"period_end"`
+	PeriodStart    time.Time                               `json:"period_start" url:"period_start"`
+	SubscriptionID string                                  `json:"subscription_id" url:"subscription_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetCompanyID() string {
+	if b == nil {
+		return ""
+	}
+	return b.CompanyID
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetContractID() string {
+	if b == nil {
+		return ""
+	}
+	return b.ContractID
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetLines() []*BillingSubscriptionPeriodLineWebhook {
+	if b == nil {
+		return nil
+	}
+	return b.Lines
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetPeriodEnd() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodEnd
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetPeriodStart() time.Time {
+	if b == nil {
+		return time.Time{}
+	}
+	return b.PeriodStart
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetSubscriptionID() string {
+	if b == nil {
+		return ""
+	}
+	return b.SubscriptionID
+}
+
+func (b *BillingSubscriptionPeriodWebhook) GetExtraProperties() map[string]interface{} {
+	if b == nil {
+		return nil
+	}
+	return b.extraProperties
+}
+
+func (b *BillingSubscriptionPeriodWebhook) require(field *big.Int) {
+	next := new(big.Int)
+	if b.explicitFields != nil {
+		next.Set(b.explicitFields)
+	}
+	next.Or(next, field)
+	b.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodWebhook) SetCompanyID(companyID string) {
+	b.CompanyID = companyID
+	b.require(billingSubscriptionPeriodWebhookFieldCompanyID)
+}
+
+// SetContractID sets the ContractID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodWebhook) SetContractID(contractID string) {
+	b.ContractID = contractID
+	b.require(billingSubscriptionPeriodWebhookFieldContractID)
+}
+
+// SetLines sets the Lines field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodWebhook) SetLines(lines []*BillingSubscriptionPeriodLineWebhook) {
+	b.Lines = lines
+	b.require(billingSubscriptionPeriodWebhookFieldLines)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodWebhook) SetPeriodEnd(periodEnd time.Time) {
+	b.PeriodEnd = periodEnd
+	b.require(billingSubscriptionPeriodWebhookFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodWebhook) SetPeriodStart(periodStart time.Time) {
+	b.PeriodStart = periodStart
+	b.require(billingSubscriptionPeriodWebhookFieldPeriodStart)
+}
+
+// SetSubscriptionID sets the SubscriptionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionPeriodWebhook) SetSubscriptionID(subscriptionID string) {
+	b.SubscriptionID = subscriptionID
+	b.require(billingSubscriptionPeriodWebhookFieldSubscriptionID)
+}
+
+func (b *BillingSubscriptionPeriodWebhook) UnmarshalJSON(data []byte) error {
+	type embed BillingSubscriptionPeriodWebhook
+	var unmarshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed: embed(*b),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*b = BillingSubscriptionPeriodWebhook(unmarshaler.embed)
+	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
+	b.PeriodStart = unmarshaler.PeriodStart.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *b)
+	if err != nil {
+		return err
+	}
+	b.extraProperties = extraProperties
+	b.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (b *BillingSubscriptionPeriodWebhook) MarshalJSON() ([]byte, error) {
+	type embed BillingSubscriptionPeriodWebhook
+	var marshaler = struct {
+		embed
+		PeriodEnd   *internal.DateTime `json:"period_end"`
+		PeriodStart *internal.DateTime `json:"period_start"`
+	}{
+		embed:       embed(*b),
+		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
+		PeriodStart: internal.NewDateTime(b.PeriodStart),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (b *BillingSubscriptionPeriodWebhook) String() string {
+	if b == nil {
+		return "<nil>"
+	}
+	if len(b.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(b.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(b); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", b)
+}
+
 type BillingSubscriptionTrialEndSetting string
 
 const (
@@ -6932,33 +7800,35 @@ func (b BillingSubscriptionTrialEndSetting) Ptr() *BillingSubscriptionTrialEndSe
 }
 
 var (
-	billingSubscriptionViewFieldApplicationID          = big.NewInt(1 << 0)
-	billingSubscriptionViewFieldCancelAt               = big.NewInt(1 << 1)
-	billingSubscriptionViewFieldCancelAtPeriodEnd      = big.NewInt(1 << 2)
-	billingSubscriptionViewFieldCompanyID              = big.NewInt(1 << 3)
-	billingSubscriptionViewFieldCreatedAt              = big.NewInt(1 << 4)
-	billingSubscriptionViewFieldCurrency               = big.NewInt(1 << 5)
-	billingSubscriptionViewFieldCustomerExternalID     = big.NewInt(1 << 6)
-	billingSubscriptionViewFieldDefaultPaymentMethodID = big.NewInt(1 << 7)
-	billingSubscriptionViewFieldDiscounts              = big.NewInt(1 << 8)
-	billingSubscriptionViewFieldExpiredAt              = big.NewInt(1 << 9)
-	billingSubscriptionViewFieldID                     = big.NewInt(1 << 10)
-	billingSubscriptionViewFieldInterval               = big.NewInt(1 << 11)
-	billingSubscriptionViewFieldLatestInvoice          = big.NewInt(1 << 12)
-	billingSubscriptionViewFieldMetadata               = big.NewInt(1 << 13)
-	billingSubscriptionViewFieldPaymentMethod          = big.NewInt(1 << 14)
-	billingSubscriptionViewFieldPeriodEnd              = big.NewInt(1 << 15)
-	billingSubscriptionViewFieldPeriodStart            = big.NewInt(1 << 16)
-	billingSubscriptionViewFieldProducts               = big.NewInt(1 << 17)
-	billingSubscriptionViewFieldProviderType           = big.NewInt(1 << 18)
-	billingSubscriptionViewFieldStatus                 = big.NewInt(1 << 19)
-	billingSubscriptionViewFieldSubscriptionExternalID = big.NewInt(1 << 20)
-	billingSubscriptionViewFieldTotalPrice             = big.NewInt(1 << 21)
-	billingSubscriptionViewFieldTrialEnd               = big.NewInt(1 << 22)
-	billingSubscriptionViewFieldTrialEndSetting        = big.NewInt(1 << 23)
+	billingSubscriptionViewFieldAccessRevokedAt        = big.NewInt(1 << 0)
+	billingSubscriptionViewFieldApplicationID          = big.NewInt(1 << 1)
+	billingSubscriptionViewFieldCancelAt               = big.NewInt(1 << 2)
+	billingSubscriptionViewFieldCancelAtPeriodEnd      = big.NewInt(1 << 3)
+	billingSubscriptionViewFieldCompanyID              = big.NewInt(1 << 4)
+	billingSubscriptionViewFieldCreatedAt              = big.NewInt(1 << 5)
+	billingSubscriptionViewFieldCurrency               = big.NewInt(1 << 6)
+	billingSubscriptionViewFieldCustomerExternalID     = big.NewInt(1 << 7)
+	billingSubscriptionViewFieldDefaultPaymentMethodID = big.NewInt(1 << 8)
+	billingSubscriptionViewFieldDiscounts              = big.NewInt(1 << 9)
+	billingSubscriptionViewFieldExpiredAt              = big.NewInt(1 << 10)
+	billingSubscriptionViewFieldID                     = big.NewInt(1 << 11)
+	billingSubscriptionViewFieldInterval               = big.NewInt(1 << 12)
+	billingSubscriptionViewFieldLatestInvoice          = big.NewInt(1 << 13)
+	billingSubscriptionViewFieldMetadata               = big.NewInt(1 << 14)
+	billingSubscriptionViewFieldPaymentMethod          = big.NewInt(1 << 15)
+	billingSubscriptionViewFieldPeriodEnd              = big.NewInt(1 << 16)
+	billingSubscriptionViewFieldPeriodStart            = big.NewInt(1 << 17)
+	billingSubscriptionViewFieldProducts               = big.NewInt(1 << 18)
+	billingSubscriptionViewFieldProviderType           = big.NewInt(1 << 19)
+	billingSubscriptionViewFieldStatus                 = big.NewInt(1 << 20)
+	billingSubscriptionViewFieldSubscriptionExternalID = big.NewInt(1 << 21)
+	billingSubscriptionViewFieldTotalPrice             = big.NewInt(1 << 22)
+	billingSubscriptionViewFieldTrialEnd               = big.NewInt(1 << 23)
+	billingSubscriptionViewFieldTrialEndSetting        = big.NewInt(1 << 24)
 )
 
 type BillingSubscriptionView struct {
+	AccessRevokedAt        *time.Time                                   `json:"access_revoked_at,omitempty" url:"access_revoked_at,omitempty"`
 	ApplicationID          *string                                      `json:"application_id,omitempty" url:"application_id,omitempty"`
 	CancelAt               *int64                                       `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
@@ -6989,6 +7859,13 @@ type BillingSubscriptionView struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingSubscriptionView) GetAccessRevokedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.AccessRevokedAt
 }
 
 func (b *BillingSubscriptionView) GetApplicationID() *string {
@@ -7175,6 +8052,13 @@ func (b *BillingSubscriptionView) require(field *big.Int) {
 	b.explicitFields = next
 }
 
+// SetAccessRevokedAt sets the AccessRevokedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionView) SetAccessRevokedAt(accessRevokedAt *time.Time) {
+	b.AccessRevokedAt = accessRevokedAt
+	b.require(billingSubscriptionViewFieldAccessRevokedAt)
+}
+
 // SetApplicationID sets the ApplicationID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingSubscriptionView) SetApplicationID(applicationID *string) {
@@ -7347,8 +8231,9 @@ func (b *BillingSubscriptionView) UnmarshalJSON(data []byte) error {
 	type embed BillingSubscriptionView
 	var unmarshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
+		CreatedAt       *internal.DateTime `json:"created_at"`
+		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
 	}{
 		embed: embed(*b),
 	}
@@ -7356,6 +8241,7 @@ func (b *BillingSubscriptionView) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*b = BillingSubscriptionView(unmarshaler.embed)
+	b.AccessRevokedAt = unmarshaler.AccessRevokedAt.TimePtr()
 	b.CreatedAt = unmarshaler.CreatedAt.Time()
 	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *b)
@@ -7371,12 +8257,14 @@ func (b *BillingSubscriptionView) MarshalJSON() ([]byte, error) {
 	type embed BillingSubscriptionView
 	var marshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
+		CreatedAt       *internal.DateTime `json:"created_at"`
+		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
 	}{
-		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		ExpiredAt: internal.NewOptionalDateTime(b.ExpiredAt),
+		embed:           embed(*b),
+		AccessRevokedAt: internal.NewOptionalDateTime(b.AccessRevokedAt),
+		CreatedAt:       internal.NewDateTime(b.CreatedAt),
+		ExpiredAt:       internal.NewOptionalDateTime(b.ExpiredAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
 	return json.Marshal(explicitMarshaler)

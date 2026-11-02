@@ -49,7 +49,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Planmigrations.ListCompanyMigrations(
+//	_, err := client.Planmigrations.ListCompanyMigrations(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -71,7 +71,7 @@ func (c *Client) ListCompanyMigrations(
 
 // Example:
 //
-//	client.Planmigrations.RetryCompanyMigration(
+//	_, err := client.Planmigrations.RetryCompanyMigration(
 //	    context.TODO(),
 //	    "plan_version_company_migration_id",
 //	)
@@ -107,7 +107,7 @@ func (c *Client) RetryCompanyMigration(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Planmigrations.CountCompanyMigrations(
+//	_, err := client.Planmigrations.CountCompanyMigrations(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -147,7 +147,7 @@ func (c *Client) CountCompanyMigrations(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Planmigrations.ListMigrations(
+//	_, err := client.Planmigrations.ListMigrations(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -175,7 +175,7 @@ func (c *Client) ListMigrations(
 //	    Strategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
 //	    TargetPlanType: schematichq.PlanTypePlan,
 //	}
-//	client.Planmigrations.CreateMigration(
+//	_, err := client.Planmigrations.CreateMigration(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -197,7 +197,7 @@ func (c *Client) CreateMigration(
 
 // Example:
 //
-//	client.Planmigrations.GetMigration(
+//	_, err := client.Planmigrations.GetMigration(
 //	    context.TODO(),
 //	    "plan_version_migration_id",
 //	)
@@ -220,7 +220,7 @@ func (c *Client) GetMigration(
 
 // Example:
 //
-//	client.Planmigrations.CancelMigration(
+//	_, err := client.Planmigrations.CancelMigration(
 //	    context.TODO(),
 //	    "plan_version_migration_id",
 //	)
@@ -244,7 +244,7 @@ func (c *Client) CancelMigration(
 // Example:
 //
 //	request := &schematichq.CompleteMigrationNowRequestBody{}
-//	client.Planmigrations.CompleteMigrationNow(
+//	_, err := client.Planmigrations.CompleteMigrationNow(
 //	    context.TODO(),
 //	    "plan_version_migration_id",
 //	    request,
@@ -275,7 +275,7 @@ func (c *Client) CompleteMigrationNow(
 //	        schematichq.MigrationErrorCodeAmbiguousSubscriptionItem,
 //	    },
 //	}
-//	client.Planmigrations.RetryMigration(
+//	_, err := client.Planmigrations.RetryMigration(
 //	    context.TODO(),
 //	    "plan_version_migration_id",
 //	    request,
@@ -319,7 +319,7 @@ func (c *Client) RetryMigration(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Planmigrations.CountMigrations(
+//	_, err := client.Planmigrations.CountMigrations(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -346,7 +346,7 @@ func (c *Client) CountMigrations(
 //	    PlanVersionIDTo: "plan_version_id_to",
 //	    TargetPlanType: schematichq.PlanTypePlan,
 //	}
-//	client.Planmigrations.PreviewMigration(
+//	_, err := client.Planmigrations.PreviewMigration(
 //	    context.TODO(),
 //	    request,
 //	)

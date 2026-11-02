@@ -300,32 +300,35 @@ func (a *AuditLogExportMetadata) String() string {
 }
 
 var (
-	companyFeatureUsageExportMetadataFieldCompanyIDs                               = big.NewInt(1 << 0)
-	companyFeatureUsageExportMetadataFieldCreditTypeIDs                            = big.NewInt(1 << 1)
-	companyFeatureUsageExportMetadataFieldEntityKeyDefinitionIDs                   = big.NewInt(1 << 2)
-	companyFeatureUsageExportMetadataFieldEntityTraitDefinitionIDs                 = big.NewInt(1 << 3)
-	companyFeatureUsageExportMetadataFieldFeatureIDs                               = big.NewInt(1 << 4)
-	companyFeatureUsageExportMetadataFieldHasScheduledDowngrade                    = big.NewInt(1 << 5)
-	companyFeatureUsageExportMetadataFieldMonetizedSubscriptions                   = big.NewInt(1 << 6)
-	companyFeatureUsageExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 7)
-	companyFeatureUsageExportMetadataFieldPlanID                                   = big.NewInt(1 << 8)
-	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 9)
-	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 10)
-	companyFeatureUsageExportMetadataFieldPlanVersionUnpublished                   = big.NewInt(1 << 11)
-	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 12)
-	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 13)
-	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 14)
-	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 15)
-	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 16)
-	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 17)
-	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 18)
-	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 19)
-	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 20)
-	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 21)
-	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 22)
+	companyFeatureUsageExportMetadataFieldCancelAtPeriodEnd                        = big.NewInt(1 << 0)
+	companyFeatureUsageExportMetadataFieldCompanyIDs                               = big.NewInt(1 << 1)
+	companyFeatureUsageExportMetadataFieldCreditTypeIDs                            = big.NewInt(1 << 2)
+	companyFeatureUsageExportMetadataFieldEntityKeyDefinitionIDs                   = big.NewInt(1 << 3)
+	companyFeatureUsageExportMetadataFieldEntityTraitDefinitionIDs                 = big.NewInt(1 << 4)
+	companyFeatureUsageExportMetadataFieldFeatureIDs                               = big.NewInt(1 << 5)
+	companyFeatureUsageExportMetadataFieldHasScheduledDowngrade                    = big.NewInt(1 << 6)
+	companyFeatureUsageExportMetadataFieldMonetizedSubscriptions                   = big.NewInt(1 << 7)
+	companyFeatureUsageExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 8)
+	companyFeatureUsageExportMetadataFieldPlanID                                   = big.NewInt(1 << 9)
+	companyFeatureUsageExportMetadataFieldPlanIDs                                  = big.NewInt(1 << 10)
+	companyFeatureUsageExportMetadataFieldPlanVersionID                            = big.NewInt(1 << 11)
+	companyFeatureUsageExportMetadataFieldPlanVersionUnpublished                   = big.NewInt(1 << 12)
+	companyFeatureUsageExportMetadataFieldQ                                        = big.NewInt(1 << 13)
+	companyFeatureUsageExportMetadataFieldSortOrderColumn                          = big.NewInt(1 << 14)
+	companyFeatureUsageExportMetadataFieldSortOrderDirection                       = big.NewInt(1 << 15)
+	companyFeatureUsageExportMetadataFieldSubscriptionStatuses                     = big.NewInt(1 << 16)
+	companyFeatureUsageExportMetadataFieldSubscriptionTypes                        = big.NewInt(1 << 17)
+	companyFeatureUsageExportMetadataFieldVisibleColumns                           = big.NewInt(1 << 18)
+	companyFeatureUsageExportMetadataFieldWithEntitlementFor                       = big.NewInt(1 << 19)
+	companyFeatureUsageExportMetadataFieldWithSubscription                         = big.NewInt(1 << 20)
+	companyFeatureUsageExportMetadataFieldWithoutFeatureOverrideFor                = big.NewInt(1 << 21)
+	companyFeatureUsageExportMetadataFieldWithoutPlan                              = big.NewInt(1 << 22)
+	companyFeatureUsageExportMetadataFieldWithoutSubscription                      = big.NewInt(1 << 23)
 )
 
 type CompanyFeatureUsageExportMetadata struct {
+	// If true, restrict the export to companies with an active subscription that is set to cancel at the end of the current period; if false, restrict it to companies without one
+	CancelAtPeriodEnd *bool `json:"cancel_at_period_end,omitempty" url:"cancel_at_period_end,omitempty"`
 	// Restrict the export to these Schematic company IDs (starting with 'comp_')
 	CompanyIDs []string `json:"company_ids,omitempty" url:"company_ids,omitempty"`
 	// Restrict the export to companies with these billing credit type IDs
@@ -378,6 +381,13 @@ type CompanyFeatureUsageExportMetadata struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (c *CompanyFeatureUsageExportMetadata) GetCancelAtPeriodEnd() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.CancelAtPeriodEnd
 }
 
 func (c *CompanyFeatureUsageExportMetadata) GetCompanyIDs() []string {
@@ -555,6 +565,13 @@ func (c *CompanyFeatureUsageExportMetadata) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	c.explicitFields = next
+}
+
+// SetCancelAtPeriodEnd sets the CancelAtPeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyFeatureUsageExportMetadata) SetCancelAtPeriodEnd(cancelAtPeriodEnd *bool) {
+	c.CancelAtPeriodEnd = cancelAtPeriodEnd
+	c.require(companyFeatureUsageExportMetadataFieldCancelAtPeriodEnd)
 }
 
 // SetCompanyIDs sets the CompanyIDs field and marks it as non-optional;

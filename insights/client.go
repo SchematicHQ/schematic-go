@@ -41,7 +41,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Insights.GetActivity(
+//	_, err := client.Insights.GetActivity(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -73,7 +73,7 @@ func (c *Client) GetActivity(
 //	        "2024-01-15T09:30:00Z",
 //	    ),
 //	}
-//	client.Insights.GetEnvironmentFeatureUsageTimeSeries(
+//	_, err := client.Insights.GetEnvironmentFeatureUsageTimeSeries(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -100,7 +100,7 @@ func (c *Client) GetEnvironmentFeatureUsageTimeSeries(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Insights.GetPlanGrowth(
+//	_, err := client.Insights.GetPlanGrowth(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -122,7 +122,7 @@ func (c *Client) GetPlanGrowth(
 
 // Example:
 //
-//	client.Insights.GetSummary(
+//	_, err := client.Insights.GetSummary(
 //	    context.TODO(),
 //	)
 func (c *Client) GetSummary(
@@ -152,7 +152,7 @@ func (c *Client) GetSummary(
 //	        "2024-01-15T09:30:00Z",
 //	    ),
 //	}
-//	client.Insights.GetTopFeaturesByUsage(
+//	_, err := client.Insights.GetTopFeaturesByUsage(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -184,7 +184,7 @@ func (c *Client) GetTopFeaturesByUsage(
 //	        "2024-01-15T09:30:00Z",
 //	    ),
 //	}
-//	client.Insights.GetEnvironmentTraitUsageTimeSeries(
+//	_, err := client.Insights.GetEnvironmentTraitUsageTimeSeries(
 //	    context.TODO(),
 //	    request,
 //	)

@@ -665,6 +665,14 @@ func TestSettersMarkExplicitAuditLogExportMetadata(t *testing.T) {
 }
 
 func TestSettersCompanyFeatureUsageExportMetadata(t *testing.T) {
+	t.Run("SetCancelAtPeriodEnd", func(t *testing.T) {
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var fernTestValueCancelAtPeriodEnd *bool
+		obj.SetCancelAtPeriodEnd(fernTestValueCancelAtPeriodEnd)
+		assert.Equal(t, fernTestValueCancelAtPeriodEnd, obj.CancelAtPeriodEnd)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCompanyIDs", func(t *testing.T) {
 		obj := &CompanyFeatureUsageExportMetadata{}
 		var fernTestValueCompanyIDs []string
@@ -852,6 +860,39 @@ func TestSettersCompanyFeatureUsageExportMetadata(t *testing.T) {
 }
 
 func TestGettersCompanyFeatureUsageExportMetadata(t *testing.T) {
+	t.Run("GetCancelAtPeriodEnd", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var expected *bool
+		obj.CancelAtPeriodEnd = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetCancelAtPeriodEnd(), "getter should return the property value")
+	})
+
+	t.Run("GetCancelAtPeriodEnd_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		obj.CancelAtPeriodEnd = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetCancelAtPeriodEnd(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetCancelAtPeriodEnd_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CompanyFeatureUsageExportMetadata
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetCancelAtPeriodEnd() // Should return zero value
+	})
+
 	t.Run("GetCompanyIDs", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -1614,6 +1655,37 @@ func TestGettersCompanyFeatureUsageExportMetadata(t *testing.T) {
 }
 
 func TestSettersMarkExplicitCompanyFeatureUsageExportMetadata(t *testing.T) {
+	t.Run("SetCancelAtPeriodEnd_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CompanyFeatureUsageExportMetadata{}
+		var fernTestValueCancelAtPeriodEnd *bool
+
+		// Act
+		obj.SetCancelAtPeriodEnd(fernTestValueCancelAtPeriodEnd)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCompanyIDs_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange

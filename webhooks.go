@@ -973,6 +973,10 @@ const (
 	WebhookRequestTypeFlagDeleted                 WebhookRequestType = "flag.deleted"
 	WebhookRequestTypeFlagRulesUpdated            WebhookRequestType = "flag_rules.updated"
 	WebhookRequestTypeFlagUpdated                 WebhookRequestType = "flag.updated"
+	WebhookRequestTypeInvoiceFinalized            WebhookRequestType = "invoice.finalized"
+	WebhookRequestTypeInvoicePaid                 WebhookRequestType = "invoice.paid"
+	WebhookRequestTypeInvoicePastDue              WebhookRequestType = "invoice.past_due"
+	WebhookRequestTypeInvoiceVoided               WebhookRequestType = "invoice.voided"
 	WebhookRequestTypePlanCreated                 WebhookRequestType = "plan.created"
 	WebhookRequestTypePlanDeleted                 WebhookRequestType = "plan.deleted"
 	WebhookRequestTypePlanEntitlementCreated      WebhookRequestType = "plan.entitlement.created"
@@ -981,6 +985,7 @@ const (
 	WebhookRequestTypePlanUpdated                 WebhookRequestType = "plan.updated"
 	WebhookRequestTypePlanVersionDeleted          WebhookRequestType = "plan_version.deleted"
 	WebhookRequestTypeRuleDeleted                 WebhookRequestType = "rule.deleted"
+	WebhookRequestTypeSubscriptionPeriodStarted   WebhookRequestType = "subscription.period.started"
 	WebhookRequestTypeTestSend                    WebhookRequestType = "test.send"
 	WebhookRequestTypeUserCreated                 WebhookRequestType = "user.created"
 	WebhookRequestTypeUserDeleted                 WebhookRequestType = "user.deleted"
@@ -1046,6 +1051,14 @@ func NewWebhookRequestTypeFromString(s string) (WebhookRequestType, error) {
 		return WebhookRequestTypeFlagRulesUpdated, nil
 	case "flag.updated":
 		return WebhookRequestTypeFlagUpdated, nil
+	case "invoice.finalized":
+		return WebhookRequestTypeInvoiceFinalized, nil
+	case "invoice.paid":
+		return WebhookRequestTypeInvoicePaid, nil
+	case "invoice.past_due":
+		return WebhookRequestTypeInvoicePastDue, nil
+	case "invoice.voided":
+		return WebhookRequestTypeInvoiceVoided, nil
 	case "plan.created":
 		return WebhookRequestTypePlanCreated, nil
 	case "plan.deleted":
@@ -1062,6 +1075,8 @@ func NewWebhookRequestTypeFromString(s string) (WebhookRequestType, error) {
 		return WebhookRequestTypePlanVersionDeleted, nil
 	case "rule.deleted":
 		return WebhookRequestTypeRuleDeleted, nil
+	case "subscription.period.started":
+		return WebhookRequestTypeSubscriptionPeriodStarted, nil
 	case "test.send":
 		return WebhookRequestTypeTestSend, nil
 	case "user.created":

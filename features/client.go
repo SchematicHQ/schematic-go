@@ -68,7 +68,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Features.ListFeatures(
+//	_, err := client.Features.ListFeatures(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -95,7 +95,7 @@ func (c *Client) ListFeatures(
 //	    FeatureType: schematichq.FeatureTypeBoolean,
 //	    Name: "name",
 //	}
-//	client.Features.CreateFeature(
+//	_, err := client.Features.CreateFeature(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -117,7 +117,7 @@ func (c *Client) CreateFeature(
 
 // Example:
 //
-//	client.Features.GetFeature(
+//	_, err := client.Features.GetFeature(
 //	    context.TODO(),
 //	    "feature_id",
 //	)
@@ -141,7 +141,7 @@ func (c *Client) GetFeature(
 // Example:
 //
 //	request := &schematichq.UpdateFeatureRequestBody{}
-//	client.Features.UpdateFeature(
+//	_, err := client.Features.UpdateFeature(
 //	    context.TODO(),
 //	    "feature_id",
 //	    request,
@@ -167,7 +167,7 @@ func (c *Client) UpdateFeature(
 
 // Example:
 //
-//	client.Features.DeleteFeature(
+//	_, err := client.Features.DeleteFeature(
 //	    context.TODO(),
 //	    "feature_id",
 //	)
@@ -197,7 +197,7 @@ func (c *Client) DeleteFeature(
 //	    FeatureType: schematichq.FeatureTypeBoolean,
 //	    Name: "name",
 //	}
-//	client.Features.UpsertFeatureForBillingProduct(
+//	_, err := client.Features.UpsertFeatureForBillingProduct(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -251,7 +251,7 @@ func (c *Client) UpsertFeatureForBillingProduct(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Features.CountFeatures(
+//	_, err := client.Features.CountFeatures(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -292,7 +292,7 @@ func (c *Client) CountFeatures(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Features.ListFlags(
+//	_, err := client.Features.ListFlags(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -322,7 +322,7 @@ func (c *Client) ListFlags(
 //	    Key: "key",
 //	    Name: "name",
 //	}
-//	client.Features.CreateFlag(
+//	_, err := client.Features.CreateFlag(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -344,7 +344,7 @@ func (c *Client) CreateFlag(
 
 // Example:
 //
-//	client.Features.GetFlag(
+//	_, err := client.Features.GetFlag(
 //	    context.TODO(),
 //	    "flag_id",
 //	)
@@ -375,7 +375,7 @@ func (c *Client) GetFlag(
 //	    Key: "key",
 //	    Name: "name",
 //	}
-//	client.Features.UpdateFlag(
+//	_, err := client.Features.UpdateFlag(
 //	    context.TODO(),
 //	    "flag_id",
 //	    request,
@@ -401,7 +401,7 @@ func (c *Client) UpdateFlag(
 
 // Example:
 //
-//	client.Features.DeleteFlag(
+//	_, err := client.Features.DeleteFlag(
 //	    context.TODO(),
 //	    "flag_id",
 //	)
@@ -455,7 +455,7 @@ func (c *Client) DeleteFlag(
 //	        },
 //	    },
 //	}
-//	client.Features.UpdateFlagRules(
+//	_, err := client.Features.UpdateFlagRules(
 //	    context.TODO(),
 //	    "flag_id",
 //	    request,
@@ -482,7 +482,7 @@ func (c *Client) UpdateFlagRules(
 // Example:
 //
 //	request := &schematichq.CheckFlagRequestBody{}
-//	client.Features.CheckFlag(
+//	_, err := client.Features.CheckFlag(
 //	    context.TODO(),
 //	    "key",
 //	    request,
@@ -509,7 +509,7 @@ func (c *Client) CheckFlag(
 // Example:
 //
 //	request := &schematichq.CheckAndReserveFlagRequestBody{}
-//	client.Features.CheckAndReserveFlag(
+//	_, err := client.Features.CheckAndReserveFlag(
 //	    context.TODO(),
 //	    "key",
 //	    request,
@@ -536,7 +536,7 @@ func (c *Client) CheckAndReserveFlag(
 // Example:
 //
 //	request := &schematichq.CheckFlagRequestBody{}
-//	client.Features.CheckFlags(
+//	_, err := client.Features.CheckFlags(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -563,7 +563,7 @@ func (c *Client) CheckFlags(
 //	        &schematichq.CheckFlagRequestBody{},
 //	    },
 //	}
-//	client.Features.CheckFlagsBulk(
+//	_, err := client.Features.CheckFlagsBulk(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -604,7 +604,7 @@ func (c *Client) CheckFlagsBulk(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Features.CountFlags(
+//	_, err := client.Features.CountFlags(
 //	    context.TODO(),
 //	    request,
 //	)

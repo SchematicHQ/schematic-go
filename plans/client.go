@@ -41,7 +41,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        "add_on_ids",
 //	    },
 //	}
-//	client.Plans.UpdateCompanyPlans(
+//	_, err := client.Plans.UpdateCompanyPlans(
 //	    context.TODO(),
 //	    "company_id",
 //	    request,
@@ -92,7 +92,7 @@ func (c *Client) UpdateCompanyPlans(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Plans.ListCustomPlanBillings(
+//	_, err := client.Plans.ListCustomPlanBillings(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -117,7 +117,7 @@ func (c *Client) ListCustomPlanBillings(
 //	request := map[string]any{
 //	    "key": "value",
 //	}
-//	client.Plans.MarkCustomPlanBillingPaid(
+//	_, err := client.Plans.MarkCustomPlanBillingPaid(
 //	    context.TODO(),
 //	    "custom_plan_billing_id",
 //	    request,
@@ -146,7 +146,7 @@ func (c *Client) MarkCustomPlanBillingPaid(
 //	request := &schematichq.RetryCustomPlanBillingRequestBody{
 //	    CustomerEmail: "customer_email",
 //	}
-//	client.Plans.RetryCustomPlanBilling(
+//	_, err := client.Plans.RetryCustomPlanBilling(
 //	    context.TODO(),
 //	    "custom_plan_billing_id",
 //	    request,
@@ -176,7 +176,7 @@ func (c *Client) RetryCustomPlanBilling(
 //	    CompanyID: "company_id",
 //	    Name: "name",
 //	}
-//	client.Plans.CreateCustomPlan(
+//	_, err := client.Plans.CreateCustomPlan(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -260,7 +260,7 @@ func (c *Client) CreateCustomPlan(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Plans.ListPlans(
+//	_, err := client.Plans.ListPlans(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -286,7 +286,7 @@ func (c *Client) ListPlans(
 //	    Name: "name",
 //	    PlanType: schematichq.PlanTypePlan,
 //	}
-//	client.Plans.CreatePlan(
+//	_, err := client.Plans.CreatePlan(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -313,7 +313,7 @@ func (c *Client) CreatePlan(
 //	        "plan_version_id",
 //	    ),
 //	}
-//	client.Plans.GetPlan(
+//	_, err := client.Plans.GetPlan(
 //	    context.TODO(),
 //	    "plan_id",
 //	    request,
@@ -342,7 +342,7 @@ func (c *Client) GetPlan(
 //	request := &schematichq.UpdatePlanRequestBody{
 //	    Name: "name",
 //	}
-//	client.Plans.UpdatePlan(
+//	_, err := client.Plans.UpdatePlan(
 //	    context.TODO(),
 //	    "plan_id",
 //	    request,
@@ -368,7 +368,7 @@ func (c *Client) UpdatePlan(
 
 // Example:
 //
-//	client.Plans.DeletePlan(
+//	_, err := client.Plans.DeletePlan(
 //	    context.TODO(),
 //	    "plan_id",
 //	)
@@ -395,7 +395,7 @@ func (c *Client) DeletePlan(
 //	    ChargeType: schematichq.ChargeTypeFree,
 //	    IsTrialable: true,
 //	}
-//	client.Plans.UpsertBillingProductPlan(
+//	_, err := client.Plans.UpsertBillingProductPlan(
 //	    context.TODO(),
 //	    "plan_id",
 //	    request,
@@ -427,7 +427,7 @@ func (c *Client) UpsertBillingProductPlan(
 //	    Name: "name",
 //	    PlanType: schematichq.PlanTypePlan,
 //	}
-//	client.Plans.UpsertPlanForBillingProduct(
+//	_, err := client.Plans.UpsertPlanForBillingProduct(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -461,7 +461,7 @@ func (c *Client) UpsertPlanForBillingProduct(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Plans.ListBillingProductMatchCompanies(
+//	_, err := client.Plans.ListBillingProductMatchCompanies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -495,7 +495,7 @@ func (c *Client) ListBillingProductMatchCompanies(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Plans.CountBillingProductMatchCompanies(
+//	_, err := client.Plans.CountBillingProductMatchCompanies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -579,7 +579,7 @@ func (c *Client) CountBillingProductMatchCompanies(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Plans.CountPlans(
+//	_, err := client.Plans.CountPlans(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -607,7 +607,7 @@ func (c *Client) CountPlans(
 //	        "plan_version_id",
 //	    ),
 //	}
-//	client.Plans.ListPlanIssues(
+//	_, err := client.Plans.ListPlanIssues(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -634,7 +634,7 @@ func (c *Client) ListPlanIssues(
 //	        true,
 //	    ),
 //	}
-//	client.Plans.DeletePlanVersion(
+//	_, err := client.Plans.DeletePlanVersion(
 //	    context.TODO(),
 //	    "plan_version_id",
 //	    request,
@@ -665,7 +665,7 @@ func (c *Client) DeletePlanVersion(
 //	        "against",
 //	    ),
 //	}
-//	client.Plans.GetPlanVersionDiff(
+//	_, err := client.Plans.GetPlanVersionDiff(
 //	    context.TODO(),
 //	    "plan_version_id",
 //	    request,
@@ -697,7 +697,7 @@ func (c *Client) GetPlanVersionDiff(
 //	    },
 //	    MigrationStrategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
 //	}
-//	client.Plans.PublishPlanVersion(
+//	_, err := client.Plans.PublishPlanVersion(
 //	    context.TODO(),
 //	    "plan_version_id",
 //	    request,
@@ -729,7 +729,7 @@ func (c *Client) PublishPlanVersion(
 //	    },
 //	    MigrationStrategy: schematichq.PlanVersionMigrationStrategyEndOfBillingPeriod,
 //	}
-//	client.Plans.PreviewPublishPlanVersion(
+//	_, err := client.Plans.PreviewPublishPlanVersion(
 //	    context.TODO(),
 //	    "plan_version_id",
 //	    request,

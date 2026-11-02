@@ -1826,6 +1826,7 @@ var (
 	catalogCreditGrantResponseDataFieldLicenseID           = big.NewInt(1 << 8)
 	catalogCreditGrantResponseDataFieldResetCadence        = big.NewInt(1 << 9)
 	catalogCreditGrantResponseDataFieldScaling             = big.NewInt(1 << 10)
+	catalogCreditGrantResponseDataFieldVisible             = big.NewInt(1 << 11)
 )
 
 type CatalogCreditGrantResponseData struct {
@@ -1842,6 +1843,8 @@ type CatalogCreditGrantResponseData struct {
 	LicenseID          *string                             `json:"license_id,omitempty" url:"license_id,omitempty"`
 	ResetCadence       *BillingPlanCreditGrantResetCadence `json:"reset_cadence,omitempty" url:"reset_cadence,omitempty"`
 	Scaling            PlanCreditGrantScaling              `json:"scaling" url:"scaling"`
+	// Whether the catalog shows this credit on the plan. Display-only: a hidden grant is still granted and priced at checkout.
+	Visible bool `json:"visible" url:"visible"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1925,6 +1928,13 @@ func (c *CatalogCreditGrantResponseData) GetScaling() PlanCreditGrantScaling {
 		return ""
 	}
 	return c.Scaling
+}
+
+func (c *CatalogCreditGrantResponseData) GetVisible() bool {
+	if c == nil {
+		return false
+	}
+	return c.Visible
 }
 
 func (c *CatalogCreditGrantResponseData) GetExtraProperties() map[string]interface{} {
@@ -2018,6 +2028,13 @@ func (c *CatalogCreditGrantResponseData) SetResetCadence(resetCadence *BillingPl
 func (c *CatalogCreditGrantResponseData) SetScaling(scaling PlanCreditGrantScaling) {
 	c.Scaling = scaling
 	c.require(catalogCreditGrantResponseDataFieldScaling)
+}
+
+// SetVisible sets the Visible field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogCreditGrantResponseData) SetVisible(visible bool) {
+	c.Visible = visible
+	c.require(catalogCreditGrantResponseDataFieldVisible)
 }
 
 func (c *CatalogCreditGrantResponseData) UnmarshalJSON(data []byte) error {

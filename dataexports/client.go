@@ -47,7 +47,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Dataexports.ListDataExports(
+//	_, err := client.Dataexports.ListDataExports(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -73,7 +73,7 @@ func (c *Client) ListDataExports(
 //	    ExportType: schematichq.DataExportTypeAuditLog,
 //	    OutputFileType: schematichq.DataExportOutputFileTypeCsv,
 //	}
-//	client.Dataexports.CreateDataExport(
+//	_, err := client.Dataexports.CreateDataExport(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -95,7 +95,7 @@ func (c *Client) CreateDataExport(
 
 // Example:
 //
-//	client.Dataexports.GetDataExport(
+//	_, err := client.Dataexports.GetDataExport(
 //	    context.TODO(),
 //	    "data_export_id",
 //	)
@@ -118,7 +118,7 @@ func (c *Client) GetDataExport(
 
 // Example:
 //
-//	client.Dataexports.GetDataExportArtifact(
+//	_, err := client.Dataexports.GetDataExportArtifact(
 //	    context.TODO(),
 //	    "data_export_id",
 //	)

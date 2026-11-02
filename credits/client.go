@@ -52,7 +52,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListBillingCredits(
+//	_, err := client.Credits.ListBillingCredits(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -79,7 +79,7 @@ func (c *Client) ListBillingCredits(
 //	    Description: "description",
 //	    Name: "name",
 //	}
-//	client.Credits.CreateBillingCredit(
+//	_, err := client.Credits.CreateBillingCredit(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -101,7 +101,7 @@ func (c *Client) CreateBillingCredit(
 
 // Example:
 //
-//	client.Credits.GetSingleBillingCredit(
+//	_, err := client.Credits.GetSingleBillingCredit(
 //	    context.TODO(),
 //	    "credit_id",
 //	)
@@ -128,7 +128,7 @@ func (c *Client) GetSingleBillingCredit(
 //	    Description: "description",
 //	    Name: "name",
 //	}
-//	client.Credits.UpdateBillingCredit(
+//	_, err := client.Credits.UpdateBillingCredit(
 //	    context.TODO(),
 //	    "credit_id",
 //	    request,
@@ -154,7 +154,7 @@ func (c *Client) UpdateBillingCredit(
 
 // Example:
 //
-//	client.Credits.SoftDeleteBillingCredit(
+//	_, err := client.Credits.SoftDeleteBillingCredit(
 //	    context.TODO(),
 //	    "credit_id",
 //	)
@@ -180,7 +180,7 @@ func (c *Client) SoftDeleteBillingCredit(
 //	request := &schematichq.ListCompanyCreditBalancesRequest{
 //	    CompanyID: "company_id",
 //	}
-//	client.Credits.ListCompanyCreditBalances(
+//	_, err := client.Credits.ListCompanyCreditBalances(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -212,7 +212,7 @@ func (c *Client) ListCompanyCreditBalances(
 //	        "2024-01-15T09:30:00Z",
 //	    ),
 //	}
-//	client.Credits.GetCreditBalanceTimeSeries(
+//	_, err := client.Credits.GetCreditBalanceTimeSeries(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -254,7 +254,7 @@ func (c *Client) GetCreditBalanceTimeSeries(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListCreditBundles(
+//	_, err := client.Credits.ListCreditBundles(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -282,7 +282,7 @@ func (c *Client) ListCreditBundles(
 //	    Currency: schematichq.CurrencyAed,
 //	    PricePerUnit: int64(1000000),
 //	}
-//	client.Credits.CreateCreditBundle(
+//	_, err := client.Credits.CreateCreditBundle(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -304,7 +304,7 @@ func (c *Client) CreateCreditBundle(
 
 // Example:
 //
-//	client.Credits.GetCreditBundle(
+//	_, err := client.Credits.GetCreditBundle(
 //	    context.TODO(),
 //	    "bundle_id",
 //	)
@@ -331,7 +331,7 @@ func (c *Client) GetCreditBundle(
 //	    BundleName: "bundle_name",
 //	    PricePerUnit: int64(1000000),
 //	}
-//	client.Credits.UpdateCreditBundleDetails(
+//	_, err := client.Credits.UpdateCreditBundleDetails(
 //	    context.TODO(),
 //	    "bundle_id",
 //	    request,
@@ -357,7 +357,7 @@ func (c *Client) UpdateCreditBundleDetails(
 
 // Example:
 //
-//	client.Credits.DeleteCreditBundle(
+//	_, err := client.Credits.DeleteCreditBundle(
 //	    context.TODO(),
 //	    "bundle_id",
 //	)
@@ -400,7 +400,7 @@ func (c *Client) DeleteCreditBundle(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountCreditBundles(
+//	_, err := client.Credits.CountCreditBundles(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -438,7 +438,7 @@ func (c *Client) CountCreditBundles(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountBillingCredits(
+//	_, err := client.Credits.CountBillingCredits(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -461,7 +461,7 @@ func (c *Client) CountBillingCredits(
 // Example:
 //
 //	request := &schematichq.ZeroOutGrantRequestBody{}
-//	client.Credits.ZeroOutGrant(
+//	_, err := client.Credits.ZeroOutGrant(
 //	    context.TODO(),
 //	    "grant_id",
 //	    request,
@@ -493,7 +493,7 @@ func (c *Client) ZeroOutGrant(
 //	    Quantity: int64(1000000),
 //	    Reason: schematichq.BillingCreditGrantReasonAdjustment,
 //	}
-//	client.Credits.GrantBillingCreditsToCompany(
+//	_, err := client.Credits.GrantBillingCreditsToCompany(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -526,7 +526,7 @@ func (c *Client) GrantBillingCreditsToCompany(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountCompanyGrants(
+//	_, err := client.Credits.CountCompanyGrants(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -559,7 +559,7 @@ func (c *Client) CountCompanyGrants(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListCompanyGrants(
+//	_, err := client.Credits.ListCompanyGrants(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -597,7 +597,7 @@ func (c *Client) ListCompanyGrants(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountBillingCreditsGrants(
+//	_, err := client.Credits.CountBillingCreditsGrants(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -635,7 +635,7 @@ func (c *Client) CountBillingCreditsGrants(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListGrantsForCredit(
+//	_, err := client.Credits.ListGrantsForCredit(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -662,7 +662,7 @@ func (c *Client) ListGrantsForCredit(
 //	    CreditTypeID: "credit_type_id",
 //	    RequestedAmount: 1.1,
 //	}
-//	client.Credits.AcquireCreditLease(
+//	_, err := client.Credits.AcquireCreditLease(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -687,7 +687,7 @@ func (c *Client) AcquireCreditLease(
 //	request := &schematichq.ExtendCreditLeaseRequestBody{
 //	    AdditionalAmount: 1.1,
 //	}
-//	client.Credits.ExtendCreditLease(
+//	_, err := client.Credits.ExtendCreditLease(
 //	    context.TODO(),
 //	    "lease_id",
 //	    request,
@@ -713,7 +713,7 @@ func (c *Client) ExtendCreditLease(
 
 // Example:
 //
-//	client.Credits.ReleaseCreditLease(
+//	_, err := client.Credits.ReleaseCreditLease(
 //	    context.TODO(),
 //	    "lease_id",
 //	)
@@ -768,7 +768,7 @@ func (c *Client) ReleaseCreditLease(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListBillingPlanCreditGrants(
+//	_, err := client.Credits.ListBillingPlanCreditGrants(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -797,7 +797,7 @@ func (c *Client) ListBillingPlanCreditGrants(
 //	    ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
 //	    ResetStart: schematichq.BillingPlanCreditGrantResetStartBillingPeriod,
 //	}
-//	client.Credits.CreateBillingPlanCreditGrant(
+//	_, err := client.Credits.CreateBillingPlanCreditGrant(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -819,7 +819,7 @@ func (c *Client) CreateBillingPlanCreditGrant(
 
 // Example:
 //
-//	client.Credits.GetSingleBillingPlanCreditGrant(
+//	_, err := client.Credits.GetSingleBillingPlanCreditGrant(
 //	    context.TODO(),
 //	    "plan_grant_id",
 //	)
@@ -846,7 +846,7 @@ func (c *Client) GetSingleBillingPlanCreditGrant(
 //	    ResetCadence: schematichq.BillingPlanCreditGrantResetCadenceDaily,
 //	    ResetStart: schematichq.BillingPlanCreditGrantResetStartBillingPeriod,
 //	}
-//	client.Credits.UpdateBillingPlanCreditGrant(
+//	_, err := client.Credits.UpdateBillingPlanCreditGrant(
 //	    context.TODO(),
 //	    "plan_grant_id",
 //	    request,
@@ -877,7 +877,7 @@ func (c *Client) UpdateBillingPlanCreditGrant(
 //	        true,
 //	    ),
 //	}
-//	client.Credits.DeleteBillingPlanCreditGrant(
+//	_, err := client.Credits.DeleteBillingPlanCreditGrant(
 //	    context.TODO(),
 //	    "plan_grant_id",
 //	    request,
@@ -935,7 +935,7 @@ func (c *Client) DeleteBillingPlanCreditGrant(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountBillingPlanCreditGrants(
+//	_, err := client.Credits.CountBillingPlanCreditGrants(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -962,7 +962,7 @@ func (c *Client) CountBillingPlanCreditGrants(
 //	    CompanyID: "company_id",
 //	    CreditTypeID: "credit_type_id",
 //	}
-//	client.Credits.ReserveCredits(
+//	_, err := client.Credits.ReserveCredits(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -984,7 +984,7 @@ func (c *Client) ReserveCredits(
 
 // Example:
 //
-//	client.Credits.ReleaseCreditReservation(
+//	_, err := client.Credits.ReleaseCreditReservation(
 //	    context.TODO(),
 //	    "reservation_id",
 //	)
@@ -1030,7 +1030,7 @@ func (c *Client) ReleaseCreditReservation(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListCreditSpendPolicies(
+//	_, err := client.Credits.ListCreditSpendPolicies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1055,7 +1055,7 @@ func (c *Client) ListCreditSpendPolicies(
 //	request := &schematichq.CreateCreditSpendPolicyRequestBody{
 //	    BillingCreditID: "billing_credit_id",
 //	}
-//	client.Credits.CreateCreditSpendPolicy(
+//	_, err := client.Credits.CreateCreditSpendPolicy(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1077,7 +1077,7 @@ func (c *Client) CreateCreditSpendPolicy(
 
 // Example:
 //
-//	client.Credits.GetCreditSpendPolicy(
+//	_, err := client.Credits.GetCreditSpendPolicy(
 //	    context.TODO(),
 //	    "spend_policy_id",
 //	)
@@ -1101,7 +1101,7 @@ func (c *Client) GetCreditSpendPolicy(
 // Example:
 //
 //	request := &schematichq.UpdateCreditSpendPolicyRequestBody{}
-//	client.Credits.UpdateCreditSpendPolicy(
+//	_, err := client.Credits.UpdateCreditSpendPolicy(
 //	    context.TODO(),
 //	    "spend_policy_id",
 //	    request,
@@ -1127,7 +1127,7 @@ func (c *Client) UpdateCreditSpendPolicy(
 
 // Example:
 //
-//	client.Credits.DeleteCreditSpendPolicy(
+//	_, err := client.Credits.DeleteCreditSpendPolicy(
 //	    context.TODO(),
 //	    "spend_policy_id",
 //	)
@@ -1173,7 +1173,7 @@ func (c *Client) DeleteCreditSpendPolicy(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountCreditSpendPolicies(
+//	_, err := client.Credits.CountCreditSpendPolicies(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1206,7 +1206,7 @@ func (c *Client) CountCreditSpendPolicies(
 //	        ),
 //	    },
 //	}
-//	client.Credits.GetCreditSpendPolicyUsage(
+//	_, err := client.Credits.GetCreditSpendPolicyUsage(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1253,7 +1253,7 @@ func (c *Client) GetCreditSpendPolicyUsage(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.ListCreditEventLedger(
+//	_, err := client.Credits.ListCreditEventLedger(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -1275,7 +1275,7 @@ func (c *Client) ListCreditEventLedger(
 
 // Example:
 //
-//	client.Credits.GetCreditEventLedgerEntry(
+//	_, err := client.Credits.GetCreditEventLedgerEntry(
 //	    context.TODO(),
 //	    "ledger_entry_id",
 //	)
@@ -1323,7 +1323,7 @@ func (c *Client) GetCreditEventLedgerEntry(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Credits.CountCreditEventLedger(
+//	_, err := client.Credits.CountCreditEventLedger(
 //	    context.TODO(),
 //	    request,
 //	)

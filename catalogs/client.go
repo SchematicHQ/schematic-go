@@ -50,7 +50,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Catalogs.ListCatalogs(
+//	_, err := client.Catalogs.ListCatalogs(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -75,7 +75,7 @@ func (c *Client) ListCatalogs(
 //	request := &schematichq.CreateCatalogRequestBody{
 //	    Name: "name",
 //	}
-//	client.Catalogs.CreateCatalog(
+//	_, err := client.Catalogs.CreateCatalog(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -97,7 +97,7 @@ func (c *Client) CreateCatalog(
 
 // Example:
 //
-//	client.Catalogs.GetCatalog(
+//	_, err := client.Catalogs.GetCatalog(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)
@@ -121,7 +121,7 @@ func (c *Client) GetCatalog(
 // Example:
 //
 //	request := &schematichq.UpdateCatalogRequestBody{}
-//	client.Catalogs.UpdateCatalog(
+//	_, err := client.Catalogs.UpdateCatalog(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    request,
@@ -147,7 +147,7 @@ func (c *Client) UpdateCatalog(
 
 // Example:
 //
-//	client.Catalogs.DeleteCatalog(
+//	_, err := client.Catalogs.DeleteCatalog(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)
@@ -170,7 +170,7 @@ func (c *Client) DeleteCatalog(
 
 // Example:
 //
-//	client.Catalogs.GetConfiguration(
+//	_, err := client.Catalogs.GetConfiguration(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)
@@ -194,7 +194,7 @@ func (c *Client) GetConfiguration(
 // Example:
 //
 //	request := &schematichq.UpdateCatalogConfigurationRequestBody{}
-//	client.Catalogs.UpdateConfiguration(
+//	_, err := client.Catalogs.UpdateConfiguration(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    request,
@@ -220,7 +220,7 @@ func (c *Client) UpdateConfiguration(
 
 // Example:
 //
-//	client.Catalogs.GetCreditBundlesInCatalog(
+//	_, err := client.Catalogs.GetCreditBundlesInCatalog(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)
@@ -243,7 +243,7 @@ func (c *Client) GetCreditBundlesInCatalog(
 
 // Example:
 //
-//	client.Catalogs.AddCreditBundle(
+//	_, err := client.Catalogs.AddCreditBundle(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "credit_bundle_id",
@@ -270,7 +270,7 @@ func (c *Client) AddCreditBundle(
 
 // Example:
 //
-//	client.Catalogs.RemoveCreditBundle(
+//	_, err := client.Catalogs.RemoveCreditBundle(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "credit_bundle_id",
@@ -297,7 +297,7 @@ func (c *Client) RemoveCreditBundle(
 
 // Example:
 //
-//	client.Catalogs.GetDerivedFeatures(
+//	_, err := client.Catalogs.GetDerivedFeatures(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)
@@ -320,7 +320,7 @@ func (c *Client) GetDerivedFeatures(
 
 // Example:
 //
-//	client.Catalogs.GetPlansInCatalog(
+//	_, err := client.Catalogs.GetPlansInCatalog(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)
@@ -343,7 +343,7 @@ func (c *Client) GetPlansInCatalog(
 
 // Example:
 //
-//	client.Catalogs.AddPlan(
+//	_, err := client.Catalogs.AddPlan(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "plan_id",
@@ -370,7 +370,7 @@ func (c *Client) AddPlan(
 
 // Example:
 //
-//	client.Catalogs.RemovePlan(
+//	_, err := client.Catalogs.RemovePlan(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "plan_id",
@@ -397,7 +397,7 @@ func (c *Client) RemovePlan(
 
 // Example:
 //
-//	client.Catalogs.GetPublicCatalog(
+//	_, err := client.Catalogs.GetPublicCatalog(
 //	    context.TODO(),
 //	)
 func (c *Client) GetPublicCatalog(
@@ -416,7 +416,7 @@ func (c *Client) GetPublicCatalog(
 
 // Example:
 //
-//	client.Catalogs.GetPublicCatalogByID(
+//	_, err := client.Catalogs.GetPublicCatalogByID(
 //	    context.TODO(),
 //	    "catalog_id",
 //	)

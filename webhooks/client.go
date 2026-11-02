@@ -55,7 +55,7 @@ func NewClient(options *core.RequestOptions) *Client {
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Webhooks.ListWebhookEvents(
+//	_, err := client.Webhooks.ListWebhookEvents(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -77,7 +77,7 @@ func (c *Client) ListWebhookEvents(
 
 // Example:
 //
-//	client.Webhooks.GetWebhookEvent(
+//	_, err := client.Webhooks.GetWebhookEvent(
 //	    context.TODO(),
 //	    "webhook_event_id",
 //	)
@@ -119,7 +119,7 @@ func (c *Client) GetWebhookEvent(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Webhooks.CountWebhookEvents(
+//	_, err := client.Webhooks.CountWebhookEvents(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -152,7 +152,7 @@ func (c *Client) CountWebhookEvents(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Webhooks.ListWebhooks(
+//	_, err := client.Webhooks.ListWebhooks(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -181,7 +181,7 @@ func (c *Client) ListWebhooks(
 //	    },
 //	    URL: "url",
 //	}
-//	client.Webhooks.CreateWebhook(
+//	_, err := client.Webhooks.CreateWebhook(
 //	    context.TODO(),
 //	    request,
 //	)
@@ -203,7 +203,7 @@ func (c *Client) CreateWebhook(
 
 // Example:
 //
-//	client.Webhooks.GetWebhook(
+//	_, err := client.Webhooks.GetWebhook(
 //	    context.TODO(),
 //	    "webhook_id",
 //	)
@@ -227,7 +227,7 @@ func (c *Client) GetWebhook(
 // Example:
 //
 //	request := &schematichq.UpdateWebhookRequestBody{}
-//	client.Webhooks.UpdateWebhook(
+//	_, err := client.Webhooks.UpdateWebhook(
 //	    context.TODO(),
 //	    "webhook_id",
 //	    request,
@@ -253,7 +253,7 @@ func (c *Client) UpdateWebhook(
 
 // Example:
 //
-//	client.Webhooks.DeleteWebhook(
+//	_, err := client.Webhooks.DeleteWebhook(
 //	    context.TODO(),
 //	    "webhook_id",
 //	)
@@ -279,7 +279,7 @@ func (c *Client) DeleteWebhook(
 //	request := &schematichq.TestWebhookRequestBody{
 //	    RequestType: schematichq.WebhookRequestTypeSubscriptionTrialEnded,
 //	}
-//	client.Webhooks.SendTestWebhookAction(
+//	_, err := client.Webhooks.SendTestWebhookAction(
 //	    context.TODO(),
 //	    "webhook_id",
 //	    request,
@@ -316,7 +316,7 @@ func (c *Client) SendTestWebhookAction(
 //	        int64(1000000),
 //	    ),
 //	}
-//	client.Webhooks.CountWebhooks(
+//	_, err := client.Webhooks.CountWebhooks(
 //	    context.TODO(),
 //	    request,
 //	)

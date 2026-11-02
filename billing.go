@@ -2671,38 +2671,43 @@ func (b *BillingInvoiceBillingDetailsResponseData) String() string {
 }
 
 var (
-	billingInvoiceDetailResponseDataFieldAmountPaid             = big.NewInt(1 << 0)
-	billingInvoiceDetailResponseDataFieldAmountRemaining        = big.NewInt(1 << 1)
-	billingInvoiceDetailResponseDataFieldCollectionState        = big.NewInt(1 << 2)
-	billingInvoiceDetailResponseDataFieldCollector              = big.NewInt(1 << 3)
-	billingInvoiceDetailResponseDataFieldCompanyID              = big.NewInt(1 << 4)
-	billingInvoiceDetailResponseDataFieldContractID             = big.NewInt(1 << 5)
-	billingInvoiceDetailResponseDataFieldCreatedAt              = big.NewInt(1 << 6)
-	billingInvoiceDetailResponseDataFieldCurrency               = big.NewInt(1 << 7)
-	billingInvoiceDetailResponseDataFieldDiscount               = big.NewInt(1 << 8)
-	billingInvoiceDetailResponseDataFieldDocumentState          = big.NewInt(1 << 9)
-	billingInvoiceDetailResponseDataFieldDueAt                  = big.NewInt(1 << 10)
-	billingInvoiceDetailResponseDataFieldExternalID             = big.NewInt(1 << 11)
-	billingInvoiceDetailResponseDataFieldFinalizedAt            = big.NewInt(1 << 12)
-	billingInvoiceDetailResponseDataFieldID                     = big.NewInt(1 << 13)
-	billingInvoiceDetailResponseDataFieldLines                  = big.NewInt(1 << 14)
-	billingInvoiceDetailResponseDataFieldNumber                 = big.NewInt(1 << 15)
-	billingInvoiceDetailResponseDataFieldPdfURL                 = big.NewInt(1 << 16)
-	billingInvoiceDetailResponseDataFieldPeriodEnd              = big.NewInt(1 << 17)
-	billingInvoiceDetailResponseDataFieldPeriodStart            = big.NewInt(1 << 18)
-	billingInvoiceDetailResponseDataFieldProviderType           = big.NewInt(1 << 19)
-	billingInvoiceDetailResponseDataFieldSettlements            = big.NewInt(1 << 20)
-	billingInvoiceDetailResponseDataFieldStatus                 = big.NewInt(1 << 21)
-	billingInvoiceDetailResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 22)
-	billingInvoiceDetailResponseDataFieldSubscriptionID         = big.NewInt(1 << 23)
-	billingInvoiceDetailResponseDataFieldSubtotal               = big.NewInt(1 << 24)
-	billingInvoiceDetailResponseDataFieldTax                    = big.NewInt(1 << 25)
-	billingInvoiceDetailResponseDataFieldTerms                  = big.NewInt(1 << 26)
-	billingInvoiceDetailResponseDataFieldTotal                  = big.NewInt(1 << 27)
-	billingInvoiceDetailResponseDataFieldURL                    = big.NewInt(1 << 28)
+	billingInvoiceDetailResponseDataFieldAmountDue              = big.NewInt(1 << 0)
+	billingInvoiceDetailResponseDataFieldAmountPaid             = big.NewInt(1 << 1)
+	billingInvoiceDetailResponseDataFieldAmountRemaining        = big.NewInt(1 << 2)
+	billingInvoiceDetailResponseDataFieldCollectionState        = big.NewInt(1 << 3)
+	billingInvoiceDetailResponseDataFieldCollector              = big.NewInt(1 << 4)
+	billingInvoiceDetailResponseDataFieldCompanyID              = big.NewInt(1 << 5)
+	billingInvoiceDetailResponseDataFieldContractID             = big.NewInt(1 << 6)
+	billingInvoiceDetailResponseDataFieldCreatedAt              = big.NewInt(1 << 7)
+	billingInvoiceDetailResponseDataFieldCurrency               = big.NewInt(1 << 8)
+	billingInvoiceDetailResponseDataFieldDiscount               = big.NewInt(1 << 9)
+	billingInvoiceDetailResponseDataFieldDocumentState          = big.NewInt(1 << 10)
+	billingInvoiceDetailResponseDataFieldDueAt                  = big.NewInt(1 << 11)
+	billingInvoiceDetailResponseDataFieldEndingBalance          = big.NewInt(1 << 12)
+	billingInvoiceDetailResponseDataFieldExternalID             = big.NewInt(1 << 13)
+	billingInvoiceDetailResponseDataFieldFinalizedAt            = big.NewInt(1 << 14)
+	billingInvoiceDetailResponseDataFieldID                     = big.NewInt(1 << 15)
+	billingInvoiceDetailResponseDataFieldLines                  = big.NewInt(1 << 16)
+	billingInvoiceDetailResponseDataFieldNumber                 = big.NewInt(1 << 17)
+	billingInvoiceDetailResponseDataFieldPdfURL                 = big.NewInt(1 << 18)
+	billingInvoiceDetailResponseDataFieldPeriodEnd              = big.NewInt(1 << 19)
+	billingInvoiceDetailResponseDataFieldPeriodStart            = big.NewInt(1 << 20)
+	billingInvoiceDetailResponseDataFieldProviderType           = big.NewInt(1 << 21)
+	billingInvoiceDetailResponseDataFieldSettlements            = big.NewInt(1 << 22)
+	billingInvoiceDetailResponseDataFieldStartingBalance        = big.NewInt(1 << 23)
+	billingInvoiceDetailResponseDataFieldStatus                 = big.NewInt(1 << 24)
+	billingInvoiceDetailResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 25)
+	billingInvoiceDetailResponseDataFieldSubscriptionID         = big.NewInt(1 << 26)
+	billingInvoiceDetailResponseDataFieldSubtotal               = big.NewInt(1 << 27)
+	billingInvoiceDetailResponseDataFieldTax                    = big.NewInt(1 << 28)
+	billingInvoiceDetailResponseDataFieldTerms                  = big.NewInt(1 << 29)
+	billingInvoiceDetailResponseDataFieldTotal                  = big.NewInt(1 << 30)
+	billingInvoiceDetailResponseDataFieldURL                    = big.NewInt(1 << 31)
 )
 
 type BillingInvoiceDetailResponseData struct {
+	// What the company is asked to pay: the total less any balance applied to it, never below zero. Zero on a draft.
+	AmountDue       int64 `json:"amount_due" url:"amount_due"`
 	AmountPaid      int64 `json:"amount_paid" url:"amount_paid"`
 	AmountRemaining int64 `json:"amount_remaining" url:"amount_remaining"`
 	// The collector's report on payment. Null on a draft and on a Stripe invoice.
@@ -2718,6 +2723,8 @@ type BillingInvoiceDetailResponseData struct {
 	// Null on a Stripe invoice.
 	DocumentState *InvoiceDocumentState `json:"document_state,omitempty" url:"document_state,omitempty"`
 	DueAt         *time.Time            `json:"due_at,omitempty" url:"due_at,omitempty"`
+	// The company's balance after this invoice, in minor units. Below zero is credit the next invoice takes off what is due.
+	EndingBalance int64 `json:"ending_balance" url:"ending_balance"`
 	// The billing provider's invoice ID. Null on an invoice Schematic issued.
 	ExternalID  *string                           `json:"external_id,omitempty" url:"external_id,omitempty"`
 	FinalizedAt *time.Time                        `json:"finalized_at,omitempty" url:"finalized_at,omitempty"`
@@ -2732,7 +2739,9 @@ type BillingInvoiceDetailResponseData struct {
 	PeriodStart  *time.Time                              `json:"period_start,omitempty" url:"period_start,omitempty"`
 	ProviderType BillingProviderType                     `json:"provider_type" url:"provider_type"`
 	Settlements  []*BillingInvoiceSettlementResponseData `json:"settlements" url:"settlements"`
-	Status       InvoiceStatus                           `json:"status" url:"status"`
+	// The company's balance before this invoice, in minor units. Below zero is credit applied to this invoice.
+	StartingBalance int64         `json:"starting_balance" url:"starting_balance"`
+	Status          InvoiceStatus `json:"status" url:"status"`
 	// The billing provider's subscription ID. Null on an invoice Schematic issued.
 	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	// The Schematic subscription the invoice's lines bill for. Null on a Stripe invoice, which links its subscription through subscription_external_id.
@@ -2751,6 +2760,13 @@ type BillingInvoiceDetailResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceDetailResponseData) GetAmountDue() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountDue
 }
 
 func (b *BillingInvoiceDetailResponseData) GetAmountPaid() int64 {
@@ -2830,6 +2846,13 @@ func (b *BillingInvoiceDetailResponseData) GetDueAt() *time.Time {
 	return b.DueAt
 }
 
+func (b *BillingInvoiceDetailResponseData) GetEndingBalance() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.EndingBalance
+}
+
 func (b *BillingInvoiceDetailResponseData) GetExternalID() *string {
 	if b == nil {
 		return nil
@@ -2898,6 +2921,13 @@ func (b *BillingInvoiceDetailResponseData) GetSettlements() []*BillingInvoiceSet
 		return nil
 	}
 	return b.Settlements
+}
+
+func (b *BillingInvoiceDetailResponseData) GetStartingBalance() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.StartingBalance
 }
 
 func (b *BillingInvoiceDetailResponseData) GetStatus() InvoiceStatus {
@@ -2970,6 +3000,13 @@ func (b *BillingInvoiceDetailResponseData) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	b.explicitFields = next
+}
+
+// SetAmountDue sets the AmountDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetAmountDue(amountDue int64) {
+	b.AmountDue = amountDue
+	b.require(billingInvoiceDetailResponseDataFieldAmountDue)
 }
 
 // SetAmountPaid sets the AmountPaid field and marks it as non-optional;
@@ -3049,6 +3086,13 @@ func (b *BillingInvoiceDetailResponseData) SetDueAt(dueAt *time.Time) {
 	b.require(billingInvoiceDetailResponseDataFieldDueAt)
 }
 
+// SetEndingBalance sets the EndingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetEndingBalance(endingBalance int64) {
+	b.EndingBalance = endingBalance
+	b.require(billingInvoiceDetailResponseDataFieldEndingBalance)
+}
+
 // SetExternalID sets the ExternalID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingInvoiceDetailResponseData) SetExternalID(externalID *string) {
@@ -3117,6 +3161,13 @@ func (b *BillingInvoiceDetailResponseData) SetProviderType(providerType BillingP
 func (b *BillingInvoiceDetailResponseData) SetSettlements(settlements []*BillingInvoiceSettlementResponseData) {
 	b.Settlements = settlements
 	b.require(billingInvoiceDetailResponseDataFieldSettlements)
+}
+
+// SetStartingBalance sets the StartingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceDetailResponseData) SetStartingBalance(startingBalance int64) {
+	b.StartingBalance = startingBalance
+	b.require(billingInvoiceDetailResponseDataFieldStartingBalance)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -3250,10 +3301,11 @@ var (
 	billingInvoiceLineResponseDataFieldKind               = big.NewInt(1 << 5)
 	billingInvoiceLineResponseDataFieldPeriodEnd          = big.NewInt(1 << 6)
 	billingInvoiceLineResponseDataFieldPeriodStart        = big.NewInt(1 << 7)
-	billingInvoiceLineResponseDataFieldQuantity           = big.NewInt(1 << 8)
-	billingInvoiceLineResponseDataFieldSubscriptionLineID = big.NewInt(1 << 9)
-	billingInvoiceLineResponseDataFieldTaxable            = big.NewInt(1 << 10)
-	billingInvoiceLineResponseDataFieldUnitAmount         = big.NewInt(1 << 11)
+	billingInvoiceLineResponseDataFieldProrationFraction  = big.NewInt(1 << 8)
+	billingInvoiceLineResponseDataFieldQuantity           = big.NewInt(1 << 9)
+	billingInvoiceLineResponseDataFieldSubscriptionLineID = big.NewInt(1 << 10)
+	billingInvoiceLineResponseDataFieldTaxable            = big.NewInt(1 << 11)
+	billingInvoiceLineResponseDataFieldUnitAmount         = big.NewInt(1 << 12)
 )
 
 type BillingInvoiceLineResponseData struct {
@@ -3261,19 +3313,21 @@ type BillingInvoiceLineResponseData struct {
 	Amount int64 `json:"amount" url:"amount"`
 	// The charges this line sums.
 	ChargeIDs []string `json:"charge_ids" url:"charge_ids"`
-	// What the line bills for: the product, plan, add-on or credit. Null when the line has no subscription line behind it.
+	// What the line bills for: the product, plan, add-on or credit, and for part of a period, which part. Null when the line has no subscription line behind it.
 	Description *string `json:"description,omitempty" url:"description,omitempty"`
 	// The billing provider's line ID. Null on an invoice Schematic issued.
 	ExternalID *string `json:"external_id,omitempty" url:"external_id,omitempty"`
 	// Null on a Stripe invoice line.
-	ID                 *string         `json:"id,omitempty" url:"id,omitempty"`
-	Kind               InvoiceLineKind `json:"kind" url:"kind"`
-	PeriodEnd          *time.Time      `json:"period_end,omitempty" url:"period_end,omitempty"`
-	PeriodStart        *time.Time      `json:"period_start,omitempty" url:"period_start,omitempty"`
-	Quantity           *int64          `json:"quantity,omitempty" url:"quantity,omitempty"`
-	SubscriptionLineID *string         `json:"subscription_line_id,omitempty" url:"subscription_line_id,omitempty"`
-	Taxable            bool            `json:"taxable" url:"taxable"`
-	UnitAmount         *int64          `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
+	ID          *string         `json:"id,omitempty" url:"id,omitempty"`
+	Kind        InvoiceLineKind `json:"kind" url:"kind"`
+	PeriodEnd   *time.Time      `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart *time.Time      `json:"period_start,omitempty" url:"period_start,omitempty"`
+	// The share of a full billing period the line bills, as a decimal from 0 to 1. Null when the line bills a whole period.
+	ProrationFraction  *string `json:"proration_fraction,omitempty" url:"proration_fraction,omitempty"`
+	Quantity           *int64  `json:"quantity,omitempty" url:"quantity,omitempty"`
+	SubscriptionLineID *string `json:"subscription_line_id,omitempty" url:"subscription_line_id,omitempty"`
+	Taxable            bool    `json:"taxable" url:"taxable"`
+	UnitAmount         *int64  `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3336,6 +3390,13 @@ func (b *BillingInvoiceLineResponseData) GetPeriodStart() *time.Time {
 		return nil
 	}
 	return b.PeriodStart
+}
+
+func (b *BillingInvoiceLineResponseData) GetProrationFraction() *string {
+	if b == nil {
+		return nil
+	}
+	return b.ProrationFraction
 }
 
 func (b *BillingInvoiceLineResponseData) GetQuantity() *int64 {
@@ -3438,6 +3499,13 @@ func (b *BillingInvoiceLineResponseData) SetPeriodStart(periodStart *time.Time) 
 	b.require(billingInvoiceLineResponseDataFieldPeriodStart)
 }
 
+// SetProrationFraction sets the ProrationFraction field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceLineResponseData) SetProrationFraction(prorationFraction *string) {
+	b.ProrationFraction = prorationFraction
+	b.require(billingInvoiceLineResponseDataFieldProrationFraction)
+}
+
 // SetQuantity sets the Quantity field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingInvoiceLineResponseData) SetQuantity(quantity *int64) {
@@ -3521,31 +3589,36 @@ func (b *BillingInvoiceLineResponseData) String() string {
 }
 
 var (
-	billingInvoiceResponseDataFieldAmountPaid             = big.NewInt(1 << 0)
-	billingInvoiceResponseDataFieldAmountRemaining        = big.NewInt(1 << 1)
-	billingInvoiceResponseDataFieldCollectionState        = big.NewInt(1 << 2)
-	billingInvoiceResponseDataFieldCollector              = big.NewInt(1 << 3)
-	billingInvoiceResponseDataFieldCompanyID              = big.NewInt(1 << 4)
-	billingInvoiceResponseDataFieldContractID             = big.NewInt(1 << 5)
-	billingInvoiceResponseDataFieldCreatedAt              = big.NewInt(1 << 6)
-	billingInvoiceResponseDataFieldCurrency               = big.NewInt(1 << 7)
-	billingInvoiceResponseDataFieldDocumentState          = big.NewInt(1 << 8)
-	billingInvoiceResponseDataFieldDueAt                  = big.NewInt(1 << 9)
-	billingInvoiceResponseDataFieldExternalID             = big.NewInt(1 << 10)
-	billingInvoiceResponseDataFieldFinalizedAt            = big.NewInt(1 << 11)
-	billingInvoiceResponseDataFieldID                     = big.NewInt(1 << 12)
-	billingInvoiceResponseDataFieldNumber                 = big.NewInt(1 << 13)
-	billingInvoiceResponseDataFieldPeriodEnd              = big.NewInt(1 << 14)
-	billingInvoiceResponseDataFieldPeriodStart            = big.NewInt(1 << 15)
-	billingInvoiceResponseDataFieldProviderType           = big.NewInt(1 << 16)
-	billingInvoiceResponseDataFieldStatus                 = big.NewInt(1 << 17)
-	billingInvoiceResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 18)
-	billingInvoiceResponseDataFieldSubtotal               = big.NewInt(1 << 19)
-	billingInvoiceResponseDataFieldTotal                  = big.NewInt(1 << 20)
-	billingInvoiceResponseDataFieldURL                    = big.NewInt(1 << 21)
+	billingInvoiceResponseDataFieldAmountDue              = big.NewInt(1 << 0)
+	billingInvoiceResponseDataFieldAmountPaid             = big.NewInt(1 << 1)
+	billingInvoiceResponseDataFieldAmountRemaining        = big.NewInt(1 << 2)
+	billingInvoiceResponseDataFieldCollectionState        = big.NewInt(1 << 3)
+	billingInvoiceResponseDataFieldCollector              = big.NewInt(1 << 4)
+	billingInvoiceResponseDataFieldCompanyID              = big.NewInt(1 << 5)
+	billingInvoiceResponseDataFieldContractID             = big.NewInt(1 << 6)
+	billingInvoiceResponseDataFieldCreatedAt              = big.NewInt(1 << 7)
+	billingInvoiceResponseDataFieldCurrency               = big.NewInt(1 << 8)
+	billingInvoiceResponseDataFieldDocumentState          = big.NewInt(1 << 9)
+	billingInvoiceResponseDataFieldDueAt                  = big.NewInt(1 << 10)
+	billingInvoiceResponseDataFieldEndingBalance          = big.NewInt(1 << 11)
+	billingInvoiceResponseDataFieldExternalID             = big.NewInt(1 << 12)
+	billingInvoiceResponseDataFieldFinalizedAt            = big.NewInt(1 << 13)
+	billingInvoiceResponseDataFieldID                     = big.NewInt(1 << 14)
+	billingInvoiceResponseDataFieldNumber                 = big.NewInt(1 << 15)
+	billingInvoiceResponseDataFieldPeriodEnd              = big.NewInt(1 << 16)
+	billingInvoiceResponseDataFieldPeriodStart            = big.NewInt(1 << 17)
+	billingInvoiceResponseDataFieldProviderType           = big.NewInt(1 << 18)
+	billingInvoiceResponseDataFieldStartingBalance        = big.NewInt(1 << 19)
+	billingInvoiceResponseDataFieldStatus                 = big.NewInt(1 << 20)
+	billingInvoiceResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 21)
+	billingInvoiceResponseDataFieldSubtotal               = big.NewInt(1 << 22)
+	billingInvoiceResponseDataFieldTotal                  = big.NewInt(1 << 23)
+	billingInvoiceResponseDataFieldURL                    = big.NewInt(1 << 24)
 )
 
 type BillingInvoiceResponseData struct {
+	// What the company is asked to pay: the total less any balance applied to it, never below zero. Zero on a draft.
+	AmountDue       int64 `json:"amount_due" url:"amount_due"`
 	AmountPaid      int64 `json:"amount_paid" url:"amount_paid"`
 	AmountRemaining int64 `json:"amount_remaining" url:"amount_remaining"`
 	// The collector's report on payment. Null on a draft and on a Stripe invoice.
@@ -3559,6 +3632,8 @@ type BillingInvoiceResponseData struct {
 	// Null on a Stripe invoice.
 	DocumentState *InvoiceDocumentState `json:"document_state,omitempty" url:"document_state,omitempty"`
 	DueAt         *time.Time            `json:"due_at,omitempty" url:"due_at,omitempty"`
+	// The company's balance after this invoice, in minor units. Below zero is credit the next invoice takes off what is due.
+	EndingBalance int64 `json:"ending_balance" url:"ending_balance"`
 	// The billing provider's invoice ID. Null on an invoice Schematic issued.
 	ExternalID  *string    `json:"external_id,omitempty" url:"external_id,omitempty"`
 	FinalizedAt *time.Time `json:"finalized_at,omitempty" url:"finalized_at,omitempty"`
@@ -3569,7 +3644,9 @@ type BillingInvoiceResponseData struct {
 	// Null on a Stripe invoice.
 	PeriodStart  *time.Time          `json:"period_start,omitempty" url:"period_start,omitempty"`
 	ProviderType BillingProviderType `json:"provider_type" url:"provider_type"`
-	Status       InvoiceStatus       `json:"status" url:"status"`
+	// The company's balance before this invoice, in minor units. Below zero is credit applied to this invoice.
+	StartingBalance int64         `json:"starting_balance" url:"starting_balance"`
+	Status          InvoiceStatus `json:"status" url:"status"`
 	// The billing provider's subscription ID. Null on an invoice Schematic issued.
 	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"subscription_external_id,omitempty"`
 	Subtotal               int64   `json:"subtotal" url:"subtotal"`
@@ -3582,6 +3659,13 @@ type BillingInvoiceResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingInvoiceResponseData) GetAmountDue() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.AmountDue
 }
 
 func (b *BillingInvoiceResponseData) GetAmountPaid() int64 {
@@ -3654,6 +3738,13 @@ func (b *BillingInvoiceResponseData) GetDueAt() *time.Time {
 	return b.DueAt
 }
 
+func (b *BillingInvoiceResponseData) GetEndingBalance() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.EndingBalance
+}
+
 func (b *BillingInvoiceResponseData) GetExternalID() *string {
 	if b == nil {
 		return nil
@@ -3701,6 +3792,13 @@ func (b *BillingInvoiceResponseData) GetProviderType() BillingProviderType {
 		return ""
 	}
 	return b.ProviderType
+}
+
+func (b *BillingInvoiceResponseData) GetStartingBalance() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.StartingBalance
 }
 
 func (b *BillingInvoiceResponseData) GetStatus() InvoiceStatus {
@@ -3752,6 +3850,13 @@ func (b *BillingInvoiceResponseData) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	b.explicitFields = next
+}
+
+// SetAmountDue sets the AmountDue field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetAmountDue(amountDue int64) {
+	b.AmountDue = amountDue
+	b.require(billingInvoiceResponseDataFieldAmountDue)
 }
 
 // SetAmountPaid sets the AmountPaid field and marks it as non-optional;
@@ -3824,6 +3929,13 @@ func (b *BillingInvoiceResponseData) SetDueAt(dueAt *time.Time) {
 	b.require(billingInvoiceResponseDataFieldDueAt)
 }
 
+// SetEndingBalance sets the EndingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetEndingBalance(endingBalance int64) {
+	b.EndingBalance = endingBalance
+	b.require(billingInvoiceResponseDataFieldEndingBalance)
+}
+
 // SetExternalID sets the ExternalID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingInvoiceResponseData) SetExternalID(externalID *string) {
@@ -3871,6 +3983,13 @@ func (b *BillingInvoiceResponseData) SetPeriodStart(periodStart *time.Time) {
 func (b *BillingInvoiceResponseData) SetProviderType(providerType BillingProviderType) {
 	b.ProviderType = providerType
 	b.require(billingInvoiceResponseDataFieldProviderType)
+}
+
+// SetStartingBalance sets the StartingBalance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingInvoiceResponseData) SetStartingBalance(startingBalance int64) {
+	b.StartingBalance = startingBalance
+	b.require(billingInvoiceResponseDataFieldStartingBalance)
 }
 
 // SetStatus sets the Status field and marks it as non-optional;
@@ -4739,16 +4858,17 @@ var (
 	billingNativeSubscriptionLineResponseDataFieldCurrentPeriodStart = big.NewInt(1 << 7)
 	billingNativeSubscriptionLineResponseDataFieldEffectiveFrom      = big.NewInt(1 << 8)
 	billingNativeSubscriptionLineResponseDataFieldEffectiveTo        = big.NewInt(1 << 9)
-	billingNativeSubscriptionLineResponseDataFieldID                 = big.NewInt(1 << 10)
-	billingNativeSubscriptionLineResponseDataFieldKind               = big.NewInt(1 << 11)
-	billingNativeSubscriptionLineResponseDataFieldQuantity           = big.NewInt(1 << 12)
-	billingNativeSubscriptionLineResponseDataFieldSourceID           = big.NewInt(1 << 13)
-	billingNativeSubscriptionLineResponseDataFieldSourceName         = big.NewInt(1 << 14)
-	billingNativeSubscriptionLineResponseDataFieldSourcePlanType     = big.NewInt(1 << 15)
-	billingNativeSubscriptionLineResponseDataFieldTaxable            = big.NewInt(1 << 16)
-	billingNativeSubscriptionLineResponseDataFieldTiersMode          = big.NewInt(1 << 17)
-	billingNativeSubscriptionLineResponseDataFieldTiming             = big.NewInt(1 << 18)
-	billingNativeSubscriptionLineResponseDataFieldUnitAmount         = big.NewInt(1 << 19)
+	billingNativeSubscriptionLineResponseDataFieldFeatureName        = big.NewInt(1 << 10)
+	billingNativeSubscriptionLineResponseDataFieldID                 = big.NewInt(1 << 11)
+	billingNativeSubscriptionLineResponseDataFieldKind               = big.NewInt(1 << 12)
+	billingNativeSubscriptionLineResponseDataFieldQuantity           = big.NewInt(1 << 13)
+	billingNativeSubscriptionLineResponseDataFieldSourceID           = big.NewInt(1 << 14)
+	billingNativeSubscriptionLineResponseDataFieldSourceName         = big.NewInt(1 << 15)
+	billingNativeSubscriptionLineResponseDataFieldSourcePlanType     = big.NewInt(1 << 16)
+	billingNativeSubscriptionLineResponseDataFieldTaxable            = big.NewInt(1 << 17)
+	billingNativeSubscriptionLineResponseDataFieldTiersMode          = big.NewInt(1 << 18)
+	billingNativeSubscriptionLineResponseDataFieldTiming             = big.NewInt(1 << 19)
+	billingNativeSubscriptionLineResponseDataFieldUnitAmount         = big.NewInt(1 << 20)
 )
 
 type BillingNativeSubscriptionLineResponseData struct {
@@ -4766,9 +4886,11 @@ type BillingNativeSubscriptionLineResponseData struct {
 	CurrentPeriodStart *time.Time `json:"current_period_start,omitempty" url:"current_period_start,omitempty"`
 	EffectiveFrom      time.Time  `json:"effective_from" url:"effective_from"`
 	EffectiveTo        *time.Time `json:"effective_to,omitempty" url:"effective_to,omitempty"`
-	ID                 string     `json:"id" url:"id"`
-	Kind               LineKind   `json:"kind" url:"kind"`
-	Quantity           int64      `json:"quantity" url:"quantity"`
+	// The feature the line bills for when its price belongs to a plan entitlement, such as seats. Null on a plan's own price, an add-on's and a credit's.
+	FeatureName *string  `json:"feature_name,omitempty" url:"feature_name,omitempty"`
+	ID          string   `json:"id" url:"id"`
+	Kind        LineKind `json:"kind" url:"kind"`
+	Quantity    int64    `json:"quantity" url:"quantity"`
 	// The plan, add-on or plan credit grant the line compiles from.
 	SourceID string `json:"source_id" url:"source_id"`
 	// The name of the plan, add-on or credit the line compiles from.
@@ -4856,6 +4978,13 @@ func (b *BillingNativeSubscriptionLineResponseData) GetEffectiveTo() *time.Time 
 		return nil
 	}
 	return b.EffectiveTo
+}
+
+func (b *BillingNativeSubscriptionLineResponseData) GetFeatureName() *string {
+	if b == nil {
+		return nil
+	}
+	return b.FeatureName
 }
 
 func (b *BillingNativeSubscriptionLineResponseData) GetID() string {
@@ -5014,6 +5143,13 @@ func (b *BillingNativeSubscriptionLineResponseData) SetEffectiveTo(effectiveTo *
 	b.require(billingNativeSubscriptionLineResponseDataFieldEffectiveTo)
 }
 
+// SetFeatureName sets the FeatureName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionLineResponseData) SetFeatureName(featureName *string) {
+	b.FeatureName = featureName
+	b.require(billingNativeSubscriptionLineResponseDataFieldFeatureName)
+}
+
 // SetID sets the ID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingNativeSubscriptionLineResponseData) SetID(id string) {
@@ -5151,21 +5287,24 @@ func (b *BillingNativeSubscriptionLineResponseData) String() string {
 }
 
 var (
-	billingNativeSubscriptionResponseDataFieldCancelAt         = big.NewInt(1 << 0)
-	billingNativeSubscriptionResponseDataFieldCompanyID        = big.NewInt(1 << 1)
-	billingNativeSubscriptionResponseDataFieldCurrency         = big.NewInt(1 << 2)
-	billingNativeSubscriptionResponseDataFieldID               = big.NewInt(1 << 3)
-	billingNativeSubscriptionResponseDataFieldLines            = big.NewInt(1 << 4)
-	billingNativeSubscriptionResponseDataFieldPeriodEnd        = big.NewInt(1 << 5)
-	billingNativeSubscriptionResponseDataFieldPeriodStart      = big.NewInt(1 << 6)
-	billingNativeSubscriptionResponseDataFieldScheduledChanges = big.NewInt(1 << 7)
-	billingNativeSubscriptionResponseDataFieldStartedAt        = big.NewInt(1 << 8)
-	billingNativeSubscriptionResponseDataFieldStatement        = big.NewInt(1 << 9)
-	billingNativeSubscriptionResponseDataFieldStatus           = big.NewInt(1 << 10)
-	billingNativeSubscriptionResponseDataFieldTerms            = big.NewInt(1 << 11)
+	billingNativeSubscriptionResponseDataFieldBalance          = big.NewInt(1 << 0)
+	billingNativeSubscriptionResponseDataFieldCancelAt         = big.NewInt(1 << 1)
+	billingNativeSubscriptionResponseDataFieldCompanyID        = big.NewInt(1 << 2)
+	billingNativeSubscriptionResponseDataFieldCurrency         = big.NewInt(1 << 3)
+	billingNativeSubscriptionResponseDataFieldID               = big.NewInt(1 << 4)
+	billingNativeSubscriptionResponseDataFieldLines            = big.NewInt(1 << 5)
+	billingNativeSubscriptionResponseDataFieldPeriodEnd        = big.NewInt(1 << 6)
+	billingNativeSubscriptionResponseDataFieldPeriodStart      = big.NewInt(1 << 7)
+	billingNativeSubscriptionResponseDataFieldScheduledChanges = big.NewInt(1 << 8)
+	billingNativeSubscriptionResponseDataFieldStartedAt        = big.NewInt(1 << 9)
+	billingNativeSubscriptionResponseDataFieldStatement        = big.NewInt(1 << 10)
+	billingNativeSubscriptionResponseDataFieldStatus           = big.NewInt(1 << 11)
+	billingNativeSubscriptionResponseDataFieldTerms            = big.NewInt(1 << 12)
 )
 
 type BillingNativeSubscriptionResponseData struct {
+	// The company's balance on its contract, in minor units of the currency. Below zero is credit the next invoice takes off what is due. Zero when the company has no billing profile.
+	Balance   int64      `json:"balance" url:"balance"`
 	CancelAt  *time.Time `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CompanyID string     `json:"company_id" url:"company_id"`
 	Currency  Currency   `json:"currency" url:"currency"`
@@ -5188,6 +5327,13 @@ type BillingNativeSubscriptionResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetBalance() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.Balance
 }
 
 func (b *BillingNativeSubscriptionResponseData) GetCancelAt() *time.Time {
@@ -5288,6 +5434,13 @@ func (b *BillingNativeSubscriptionResponseData) require(field *big.Int) {
 	}
 	next.Or(next, field)
 	b.explicitFields = next
+}
+
+// SetBalance sets the Balance field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetBalance(balance int64) {
+	b.Balance = balance
+	b.require(billingNativeSubscriptionResponseDataFieldBalance)
 }
 
 // SetCancelAt sets the CancelAt field and marks it as non-optional;
@@ -5786,23 +5939,29 @@ func (b *BillingSettingsResponseData) String() string {
 
 var (
 	billingStatementLineResponseDataFieldAmount             = big.NewInt(1 << 0)
-	billingStatementLineResponseDataFieldKind               = big.NewInt(1 << 1)
-	billingStatementLineResponseDataFieldPeriodEnd          = big.NewInt(1 << 2)
-	billingStatementLineResponseDataFieldPeriodStart        = big.NewInt(1 << 3)
-	billingStatementLineResponseDataFieldQuantity           = big.NewInt(1 << 4)
-	billingStatementLineResponseDataFieldSubscriptionLineID = big.NewInt(1 << 5)
-	billingStatementLineResponseDataFieldUnitAmount         = big.NewInt(1 << 6)
+	billingStatementLineResponseDataFieldDescription        = big.NewInt(1 << 1)
+	billingStatementLineResponseDataFieldKind               = big.NewInt(1 << 2)
+	billingStatementLineResponseDataFieldPeriodEnd          = big.NewInt(1 << 3)
+	billingStatementLineResponseDataFieldPeriodStart        = big.NewInt(1 << 4)
+	billingStatementLineResponseDataFieldProrationFraction  = big.NewInt(1 << 5)
+	billingStatementLineResponseDataFieldQuantity           = big.NewInt(1 << 6)
+	billingStatementLineResponseDataFieldSubscriptionLineID = big.NewInt(1 << 7)
+	billingStatementLineResponseDataFieldUnitAmount         = big.NewInt(1 << 8)
 )
 
 type BillingStatementLineResponseData struct {
 	// In minor units of the statement's currency.
-	Amount             int64           `json:"amount" url:"amount"`
-	Kind               InvoiceLineKind `json:"kind" url:"kind"`
-	PeriodEnd          *time.Time      `json:"period_end,omitempty" url:"period_end,omitempty"`
-	PeriodStart        *time.Time      `json:"period_start,omitempty" url:"period_start,omitempty"`
-	Quantity           *int64          `json:"quantity,omitempty" url:"quantity,omitempty"`
-	SubscriptionLineID *string         `json:"subscription_line_id,omitempty" url:"subscription_line_id,omitempty"`
-	UnitAmount         *int64          `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
+	Amount int64 `json:"amount" url:"amount"`
+	// What the line bills for, and for part of a period, which part. Null when the line has no subscription line behind it.
+	Description *string         `json:"description,omitempty" url:"description,omitempty"`
+	Kind        InvoiceLineKind `json:"kind" url:"kind"`
+	PeriodEnd   *time.Time      `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart *time.Time      `json:"period_start,omitempty" url:"period_start,omitempty"`
+	// The share of a full billing period the line bills, as a decimal from 0 to 1. Null when the line bills a whole period.
+	ProrationFraction  *string `json:"proration_fraction,omitempty" url:"proration_fraction,omitempty"`
+	Quantity           *int64  `json:"quantity,omitempty" url:"quantity,omitempty"`
+	SubscriptionLineID *string `json:"subscription_line_id,omitempty" url:"subscription_line_id,omitempty"`
+	UnitAmount         *int64  `json:"unit_amount,omitempty" url:"unit_amount,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5816,6 +5975,13 @@ func (b *BillingStatementLineResponseData) GetAmount() int64 {
 		return 0
 	}
 	return b.Amount
+}
+
+func (b *BillingStatementLineResponseData) GetDescription() *string {
+	if b == nil {
+		return nil
+	}
+	return b.Description
 }
 
 func (b *BillingStatementLineResponseData) GetKind() InvoiceLineKind {
@@ -5837,6 +6003,13 @@ func (b *BillingStatementLineResponseData) GetPeriodStart() *time.Time {
 		return nil
 	}
 	return b.PeriodStart
+}
+
+func (b *BillingStatementLineResponseData) GetProrationFraction() *string {
+	if b == nil {
+		return nil
+	}
+	return b.ProrationFraction
 }
 
 func (b *BillingStatementLineResponseData) GetQuantity() *int64 {
@@ -5883,6 +6056,13 @@ func (b *BillingStatementLineResponseData) SetAmount(amount int64) {
 	b.require(billingStatementLineResponseDataFieldAmount)
 }
 
+// SetDescription sets the Description field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetDescription(description *string) {
+	b.Description = description
+	b.require(billingStatementLineResponseDataFieldDescription)
+}
+
 // SetKind sets the Kind field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingStatementLineResponseData) SetKind(kind InvoiceLineKind) {
@@ -5902,6 +6082,13 @@ func (b *BillingStatementLineResponseData) SetPeriodEnd(periodEnd *time.Time) {
 func (b *BillingStatementLineResponseData) SetPeriodStart(periodStart *time.Time) {
 	b.PeriodStart = periodStart
 	b.require(billingStatementLineResponseDataFieldPeriodStart)
+}
+
+// SetProrationFraction sets the ProrationFraction field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingStatementLineResponseData) SetProrationFraction(prorationFraction *string) {
+	b.ProrationFraction = prorationFraction
+	b.require(billingStatementLineResponseDataFieldProrationFraction)
 }
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
@@ -6354,29 +6541,31 @@ func (b *BillingSubscriptionDiscount) String() string {
 }
 
 var (
-	billingSubscriptionResponseDataFieldApplicationID          = big.NewInt(1 << 0)
-	billingSubscriptionResponseDataFieldCancelAt               = big.NewInt(1 << 1)
-	billingSubscriptionResponseDataFieldCancelAtPeriodEnd      = big.NewInt(1 << 2)
-	billingSubscriptionResponseDataFieldCompanyID              = big.NewInt(1 << 3)
-	billingSubscriptionResponseDataFieldCreatedAt              = big.NewInt(1 << 4)
-	billingSubscriptionResponseDataFieldCurrency               = big.NewInt(1 << 5)
-	billingSubscriptionResponseDataFieldCustomerExternalID     = big.NewInt(1 << 6)
-	billingSubscriptionResponseDataFieldDefaultPaymentMethodID = big.NewInt(1 << 7)
-	billingSubscriptionResponseDataFieldExpiredAt              = big.NewInt(1 << 8)
-	billingSubscriptionResponseDataFieldID                     = big.NewInt(1 << 9)
-	billingSubscriptionResponseDataFieldInterval               = big.NewInt(1 << 10)
-	billingSubscriptionResponseDataFieldMetadata               = big.NewInt(1 << 11)
-	billingSubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 12)
-	billingSubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 13)
-	billingSubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 14)
-	billingSubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 15)
-	billingSubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 16)
-	billingSubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 17)
-	billingSubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 18)
-	billingSubscriptionResponseDataFieldTrialEndSetting        = big.NewInt(1 << 19)
+	billingSubscriptionResponseDataFieldAccessRevokedAt        = big.NewInt(1 << 0)
+	billingSubscriptionResponseDataFieldApplicationID          = big.NewInt(1 << 1)
+	billingSubscriptionResponseDataFieldCancelAt               = big.NewInt(1 << 2)
+	billingSubscriptionResponseDataFieldCancelAtPeriodEnd      = big.NewInt(1 << 3)
+	billingSubscriptionResponseDataFieldCompanyID              = big.NewInt(1 << 4)
+	billingSubscriptionResponseDataFieldCreatedAt              = big.NewInt(1 << 5)
+	billingSubscriptionResponseDataFieldCurrency               = big.NewInt(1 << 6)
+	billingSubscriptionResponseDataFieldCustomerExternalID     = big.NewInt(1 << 7)
+	billingSubscriptionResponseDataFieldDefaultPaymentMethodID = big.NewInt(1 << 8)
+	billingSubscriptionResponseDataFieldExpiredAt              = big.NewInt(1 << 9)
+	billingSubscriptionResponseDataFieldID                     = big.NewInt(1 << 10)
+	billingSubscriptionResponseDataFieldInterval               = big.NewInt(1 << 11)
+	billingSubscriptionResponseDataFieldMetadata               = big.NewInt(1 << 12)
+	billingSubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 13)
+	billingSubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 14)
+	billingSubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 15)
+	billingSubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 16)
+	billingSubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 17)
+	billingSubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 18)
+	billingSubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 19)
+	billingSubscriptionResponseDataFieldTrialEndSetting        = big.NewInt(1 << 20)
 )
 
 type BillingSubscriptionResponseData struct {
+	AccessRevokedAt        *time.Time                          `json:"access_revoked_at,omitempty" url:"access_revoked_at,omitempty"`
 	ApplicationID          *string                             `json:"application_id,omitempty" url:"application_id,omitempty"`
 	CancelAt               *int64                              `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
 	CancelAtPeriodEnd      bool                                `json:"cancel_at_period_end" url:"cancel_at_period_end"`
@@ -6403,6 +6592,13 @@ type BillingSubscriptionResponseData struct {
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
+}
+
+func (b *BillingSubscriptionResponseData) GetAccessRevokedAt() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.AccessRevokedAt
 }
 
 func (b *BillingSubscriptionResponseData) GetApplicationID() *string {
@@ -6561,6 +6757,13 @@ func (b *BillingSubscriptionResponseData) require(field *big.Int) {
 	b.explicitFields = next
 }
 
+// SetAccessRevokedAt sets the AccessRevokedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingSubscriptionResponseData) SetAccessRevokedAt(accessRevokedAt *time.Time) {
+	b.AccessRevokedAt = accessRevokedAt
+	b.require(billingSubscriptionResponseDataFieldAccessRevokedAt)
+}
+
 // SetApplicationID sets the ApplicationID field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingSubscriptionResponseData) SetApplicationID(applicationID *string) {
@@ -6705,8 +6908,9 @@ func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
 	type embed BillingSubscriptionResponseData
 	var unmarshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
+		CreatedAt       *internal.DateTime `json:"created_at"`
+		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
 	}{
 		embed: embed(*b),
 	}
@@ -6714,6 +6918,7 @@ func (b *BillingSubscriptionResponseData) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*b = BillingSubscriptionResponseData(unmarshaler.embed)
+	b.AccessRevokedAt = unmarshaler.AccessRevokedAt.TimePtr()
 	b.CreatedAt = unmarshaler.CreatedAt.Time()
 	b.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *b)
@@ -6729,12 +6934,14 @@ func (b *BillingSubscriptionResponseData) MarshalJSON() ([]byte, error) {
 	type embed BillingSubscriptionResponseData
 	var marshaler = struct {
 		embed
-		CreatedAt *internal.DateTime `json:"created_at"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
+		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
+		CreatedAt       *internal.DateTime `json:"created_at"`
+		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
 	}{
-		embed:     embed(*b),
-		CreatedAt: internal.NewDateTime(b.CreatedAt),
-		ExpiredAt: internal.NewOptionalDateTime(b.ExpiredAt),
+		embed:           embed(*b),
+		AccessRevokedAt: internal.NewOptionalDateTime(b.AccessRevokedAt),
+		CreatedAt:       internal.NewDateTime(b.CreatedAt),
+		ExpiredAt:       internal.NewOptionalDateTime(b.ExpiredAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -13654,18 +13861,26 @@ func (u *UpdateBillingSettingsRequestBody) MarshalJSON() ([]byte, error) {
 
 var (
 	updateCompanyBillingProfileRequestBodyFieldCollectionMethod  = big.NewInt(1 << 0)
-	updateCompanyBillingProfileRequestBodyFieldDaysUntilDue      = big.NewInt(1 << 1)
-	updateCompanyBillingProfileRequestBodyFieldIsDefault         = big.NewInt(1 << 2)
-	updateCompanyBillingProfileRequestBodyFieldName              = big.NewInt(1 << 3)
-	updateCompanyBillingProfileRequestBodyFieldPaymentMethodID   = big.NewInt(1 << 4)
-	updateCompanyBillingProfileRequestBodyFieldProrationBehavior = big.NewInt(1 << 5)
+	updateCompanyBillingProfileRequestBodyFieldCurrency          = big.NewInt(1 << 1)
+	updateCompanyBillingProfileRequestBodyFieldDaysUntilDue      = big.NewInt(1 << 2)
+	updateCompanyBillingProfileRequestBodyFieldGatingDays        = big.NewInt(1 << 3)
+	updateCompanyBillingProfileRequestBodyFieldIsDefault         = big.NewInt(1 << 4)
+	updateCompanyBillingProfileRequestBodyFieldName              = big.NewInt(1 << 5)
+	updateCompanyBillingProfileRequestBodyFieldOverdraftLimit    = big.NewInt(1 << 6)
+	updateCompanyBillingProfileRequestBodyFieldPaymentGating     = big.NewInt(1 << 7)
+	updateCompanyBillingProfileRequestBodyFieldPaymentMethodID   = big.NewInt(1 << 8)
+	updateCompanyBillingProfileRequestBodyFieldProrationBehavior = big.NewInt(1 << 9)
 )
 
 type UpdateCompanyBillingProfileRequestBody struct {
 	CollectionMethod  BillingCollectionMethod `json:"collection_method" url:"-"`
+	Currency          *Currency               `json:"currency,omitempty" url:"-"`
 	DaysUntilDue      *int64                  `json:"days_until_due,omitempty" url:"-"`
+	GatingDays        *int64                  `json:"gating_days,omitempty" url:"-"`
 	IsDefault         *bool                   `json:"is_default,omitempty" url:"-"`
 	Name              *string                 `json:"name,omitempty" url:"-"`
+	OverdraftLimit    *int64                  `json:"overdraft_limit,omitempty" url:"-"`
+	PaymentGating     *PaymentGating          `json:"payment_gating,omitempty" url:"-"`
 	PaymentMethodID   *string                 `json:"payment_method_id,omitempty" url:"-"`
 	ProrationBehavior *ProrationBehavior      `json:"proration_behavior,omitempty" url:"-"`
 
@@ -13689,11 +13904,25 @@ func (u *UpdateCompanyBillingProfileRequestBody) SetCollectionMethod(collectionM
 	u.require(updateCompanyBillingProfileRequestBodyFieldCollectionMethod)
 }
 
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetCurrency(currency *Currency) {
+	u.Currency = currency
+	u.require(updateCompanyBillingProfileRequestBodyFieldCurrency)
+}
+
 // SetDaysUntilDue sets the DaysUntilDue field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (u *UpdateCompanyBillingProfileRequestBody) SetDaysUntilDue(daysUntilDue *int64) {
 	u.DaysUntilDue = daysUntilDue
 	u.require(updateCompanyBillingProfileRequestBodyFieldDaysUntilDue)
+}
+
+// SetGatingDays sets the GatingDays field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetGatingDays(gatingDays *int64) {
+	u.GatingDays = gatingDays
+	u.require(updateCompanyBillingProfileRequestBodyFieldGatingDays)
 }
 
 // SetIsDefault sets the IsDefault field and marks it as non-optional;
@@ -13708,6 +13937,20 @@ func (u *UpdateCompanyBillingProfileRequestBody) SetIsDefault(isDefault *bool) {
 func (u *UpdateCompanyBillingProfileRequestBody) SetName(name *string) {
 	u.Name = name
 	u.require(updateCompanyBillingProfileRequestBodyFieldName)
+}
+
+// SetOverdraftLimit sets the OverdraftLimit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetOverdraftLimit(overdraftLimit *int64) {
+	u.OverdraftLimit = overdraftLimit
+	u.require(updateCompanyBillingProfileRequestBodyFieldOverdraftLimit)
+}
+
+// SetPaymentGating sets the PaymentGating field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyBillingProfileRequestBody) SetPaymentGating(paymentGating *PaymentGating) {
+	u.PaymentGating = paymentGating
+	u.require(updateCompanyBillingProfileRequestBodyFieldPaymentGating)
 }
 
 // SetPaymentMethodID sets the PaymentMethodID field and marks it as non-optional;

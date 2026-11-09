@@ -1623,12 +1623,14 @@ func (l *ListPlanTraitsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	listUsersRequestFieldCompanyID = big.NewInt(1 << 0)
-	listUsersRequestFieldIDs       = big.NewInt(1 << 1)
-	listUsersRequestFieldPlanID    = big.NewInt(1 << 2)
-	listUsersRequestFieldQ         = big.NewInt(1 << 3)
-	listUsersRequestFieldLimit     = big.NewInt(1 << 4)
-	listUsersRequestFieldOffset    = big.NewInt(1 << 5)
+	listUsersRequestFieldCompanyID          = big.NewInt(1 << 0)
+	listUsersRequestFieldIDs                = big.NewInt(1 << 1)
+	listUsersRequestFieldPlanID             = big.NewInt(1 << 2)
+	listUsersRequestFieldQ                  = big.NewInt(1 << 3)
+	listUsersRequestFieldSortOrderColumn    = big.NewInt(1 << 4)
+	listUsersRequestFieldSortOrderDirection = big.NewInt(1 << 5)
+	listUsersRequestFieldLimit              = big.NewInt(1 << 6)
+	listUsersRequestFieldOffset             = big.NewInt(1 << 7)
 )
 
 type ListUsersRequest struct {
@@ -1640,6 +1642,10 @@ type ListUsersRequest struct {
 	PlanID *string `json:"-" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
 	Q *string `json:"-" url:"q,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"-" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *SortDirection `json:"-" url:"sort_order_direction,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"-" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -1684,6 +1690,20 @@ func (l *ListUsersRequest) SetPlanID(planID *string) {
 func (l *ListUsersRequest) SetQ(q *string) {
 	l.Q = q
 	l.require(listUsersRequestFieldQ)
+}
+
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListUsersRequest) SetSortOrderColumn(sortOrderColumn *string) {
+	l.SortOrderColumn = sortOrderColumn
+	l.require(listUsersRequestFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListUsersRequest) SetSortOrderDirection(sortOrderDirection *SortDirection) {
+	l.SortOrderDirection = sortOrderDirection
+	l.require(listUsersRequestFieldSortOrderDirection)
 }
 
 // SetLimit sets the Limit field and marks it as non-optional;
@@ -1859,6 +1879,132 @@ func (c *CompanyBillingEntityResponseData) String() string {
 }
 
 var (
+	companyBillingEntitySettingsResponseDataFieldBillingDate           = big.NewInt(1 << 0)
+	companyBillingEntitySettingsResponseDataFieldChildrenMayChangePlan = big.NewInt(1 << 1)
+	companyBillingEntitySettingsResponseDataFieldCompanyID             = big.NewInt(1 << 2)
+)
+
+type CompanyBillingEntitySettingsResponseData struct {
+	BillingDate           *time.Time `json:"billing_date,omitempty" url:"billing_date,omitempty"`
+	ChildrenMayChangePlan bool       `json:"children_may_change_plan" url:"children_may_change_plan"`
+	CompanyID             string     `json:"company_id" url:"company_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) GetBillingDate() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.BillingDate
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) GetChildrenMayChangePlan() bool {
+	if c == nil {
+		return false
+	}
+	return c.ChildrenMayChangePlan
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBillingDate sets the BillingDate field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySettingsResponseData) SetBillingDate(billingDate *time.Time) {
+	c.BillingDate = billingDate
+	c.require(companyBillingEntitySettingsResponseDataFieldBillingDate)
+}
+
+// SetChildrenMayChangePlan sets the ChildrenMayChangePlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySettingsResponseData) SetChildrenMayChangePlan(childrenMayChangePlan bool) {
+	c.ChildrenMayChangePlan = childrenMayChangePlan
+	c.require(companyBillingEntitySettingsResponseDataFieldChildrenMayChangePlan)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySettingsResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(companyBillingEntitySettingsResponseDataFieldCompanyID)
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyBillingEntitySettingsResponseData
+	var unmarshaler = struct {
+		embed
+		BillingDate *internal.DateTime `json:"billing_date,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyBillingEntitySettingsResponseData(unmarshaler.embed)
+	c.BillingDate = unmarshaler.BillingDate.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyBillingEntitySettingsResponseData
+	var marshaler = struct {
+		embed
+		BillingDate *internal.DateTime `json:"billing_date,omitempty"`
+	}{
+		embed:       embed(*c),
+		BillingDate: internal.NewOptionalDateTime(c.BillingDate),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyBillingEntitySettingsResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	companyBillingEntitySubscriptionResponseDataFieldCancelAt               = big.NewInt(1 << 0)
 	companyBillingEntitySubscriptionResponseDataFieldCancelAtPeriodEnd      = big.NewInt(1 << 1)
 	companyBillingEntitySubscriptionResponseDataFieldCompany                = big.NewInt(1 << 2)
@@ -1869,14 +2015,19 @@ var (
 	companyBillingEntitySubscriptionResponseDataFieldInterval               = big.NewInt(1 << 7)
 	companyBillingEntitySubscriptionResponseDataFieldIsInitial              = big.NewInt(1 << 8)
 	companyBillingEntitySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 9)
-	companyBillingEntitySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 10)
-	companyBillingEntitySubscriptionResponseDataFieldPlanName               = big.NewInt(1 << 11)
-	companyBillingEntitySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 12)
-	companyBillingEntitySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 13)
-	companyBillingEntitySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 14)
-	companyBillingEntitySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 15)
-	companyBillingEntitySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 16)
-	companyBillingEntitySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 17)
+	companyBillingEntitySubscriptionResponseDataFieldPauseBehavior          = big.NewInt(1 << 10)
+	companyBillingEntitySubscriptionResponseDataFieldPauseResumesAt         = big.NewInt(1 << 11)
+	companyBillingEntitySubscriptionResponseDataFieldPausedAt               = big.NewInt(1 << 12)
+	companyBillingEntitySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 13)
+	companyBillingEntitySubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 14)
+	companyBillingEntitySubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 15)
+	companyBillingEntitySubscriptionResponseDataFieldPlanName               = big.NewInt(1 << 16)
+	companyBillingEntitySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 17)
+	companyBillingEntitySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 18)
+	companyBillingEntitySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 19)
+	companyBillingEntitySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 20)
+	companyBillingEntitySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 21)
+	companyBillingEntitySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 22)
 )
 
 type CompanyBillingEntitySubscriptionResponseData struct {
@@ -1890,7 +2041,12 @@ type CompanyBillingEntitySubscriptionResponseData struct {
 	Interval               string                                       `json:"interval" url:"interval"`
 	IsInitial              bool                                         `json:"is_initial" url:"is_initial"`
 	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
+	PauseBehavior          *BillingSubscriptionPauseBehavior            `json:"pause_behavior,omitempty" url:"pause_behavior,omitempty"`
+	PauseResumesAt         *time.Time                                   `json:"pause_resumes_at,omitempty" url:"pause_resumes_at,omitempty"`
+	PausedAt               *time.Time                                   `json:"paused_at,omitempty" url:"paused_at,omitempty"`
 	PaymentMethod          *PaymentMethodResponseData                   `json:"payment_method,omitempty" url:"payment_method,omitempty"`
+	PeriodEnd              *time.Time                                   `json:"period_end,omitempty" url:"period_end,omitempty"`
+	PeriodStart            *time.Time                                   `json:"period_start,omitempty" url:"period_start,omitempty"`
 	PlanName               string                                       `json:"plan_name" url:"plan_name"`
 	Products               []*BillingProductForSubscriptionResponseData `json:"products" url:"products"`
 	ProviderType           BillingProviderType                          `json:"provider_type" url:"provider_type"`
@@ -1976,11 +2132,46 @@ func (c *CompanyBillingEntitySubscriptionResponseData) GetLatestInvoice() *Invoi
 	return c.LatestInvoice
 }
 
+func (c *CompanyBillingEntitySubscriptionResponseData) GetPauseBehavior() *BillingSubscriptionPauseBehavior {
+	if c == nil {
+		return nil
+	}
+	return c.PauseBehavior
+}
+
+func (c *CompanyBillingEntitySubscriptionResponseData) GetPauseResumesAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.PauseResumesAt
+}
+
+func (c *CompanyBillingEntitySubscriptionResponseData) GetPausedAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.PausedAt
+}
+
 func (c *CompanyBillingEntitySubscriptionResponseData) GetPaymentMethod() *PaymentMethodResponseData {
 	if c == nil {
 		return nil
 	}
 	return c.PaymentMethod
+}
+
+func (c *CompanyBillingEntitySubscriptionResponseData) GetPeriodEnd() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.PeriodEnd
+}
+
+func (c *CompanyBillingEntitySubscriptionResponseData) GetPeriodStart() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.PeriodStart
 }
 
 func (c *CompanyBillingEntitySubscriptionResponseData) GetPlanName() string {
@@ -2118,11 +2309,46 @@ func (c *CompanyBillingEntitySubscriptionResponseData) SetLatestInvoice(latestIn
 	c.require(companyBillingEntitySubscriptionResponseDataFieldLatestInvoice)
 }
 
+// SetPauseBehavior sets the PauseBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySubscriptionResponseData) SetPauseBehavior(pauseBehavior *BillingSubscriptionPauseBehavior) {
+	c.PauseBehavior = pauseBehavior
+	c.require(companyBillingEntitySubscriptionResponseDataFieldPauseBehavior)
+}
+
+// SetPauseResumesAt sets the PauseResumesAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySubscriptionResponseData) SetPauseResumesAt(pauseResumesAt *time.Time) {
+	c.PauseResumesAt = pauseResumesAt
+	c.require(companyBillingEntitySubscriptionResponseDataFieldPauseResumesAt)
+}
+
+// SetPausedAt sets the PausedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySubscriptionResponseData) SetPausedAt(pausedAt *time.Time) {
+	c.PausedAt = pausedAt
+	c.require(companyBillingEntitySubscriptionResponseDataFieldPausedAt)
+}
+
 // SetPaymentMethod sets the PaymentMethod field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CompanyBillingEntitySubscriptionResponseData) SetPaymentMethod(paymentMethod *PaymentMethodResponseData) {
 	c.PaymentMethod = paymentMethod
 	c.require(companyBillingEntitySubscriptionResponseDataFieldPaymentMethod)
+}
+
+// SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySubscriptionResponseData) SetPeriodEnd(periodEnd *time.Time) {
+	c.PeriodEnd = periodEnd
+	c.require(companyBillingEntitySubscriptionResponseDataFieldPeriodEnd)
+}
+
+// SetPeriodStart sets the PeriodStart field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySubscriptionResponseData) SetPeriodStart(periodStart *time.Time) {
+	c.PeriodStart = periodStart
+	c.require(companyBillingEntitySubscriptionResponseDataFieldPeriodStart)
 }
 
 // SetPlanName sets the PlanName field and marks it as non-optional;
@@ -2178,9 +2404,13 @@ func (c *CompanyBillingEntitySubscriptionResponseData) UnmarshalJSON(data []byte
 	type embed CompanyBillingEntitySubscriptionResponseData
 	var unmarshaler = struct {
 		embed
-		CancelAt  *internal.DateTime `json:"cancel_at,omitempty"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
-		TrialEnd  *internal.DateTime `json:"trial_end,omitempty"`
+		CancelAt       *internal.DateTime `json:"cancel_at,omitempty"`
+		ExpiredAt      *internal.DateTime `json:"expired_at,omitempty"`
+		PauseResumesAt *internal.DateTime `json:"pause_resumes_at,omitempty"`
+		PausedAt       *internal.DateTime `json:"paused_at,omitempty"`
+		PeriodEnd      *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart    *internal.DateTime `json:"period_start,omitempty"`
+		TrialEnd       *internal.DateTime `json:"trial_end,omitempty"`
 	}{
 		embed: embed(*c),
 	}
@@ -2190,6 +2420,10 @@ func (c *CompanyBillingEntitySubscriptionResponseData) UnmarshalJSON(data []byte
 	*c = CompanyBillingEntitySubscriptionResponseData(unmarshaler.embed)
 	c.CancelAt = unmarshaler.CancelAt.TimePtr()
 	c.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+	c.PauseResumesAt = unmarshaler.PauseResumesAt.TimePtr()
+	c.PausedAt = unmarshaler.PausedAt.TimePtr()
+	c.PeriodEnd = unmarshaler.PeriodEnd.TimePtr()
+	c.PeriodStart = unmarshaler.PeriodStart.TimePtr()
 	c.TrialEnd = unmarshaler.TrialEnd.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
@@ -2204,14 +2438,22 @@ func (c *CompanyBillingEntitySubscriptionResponseData) MarshalJSON() ([]byte, er
 	type embed CompanyBillingEntitySubscriptionResponseData
 	var marshaler = struct {
 		embed
-		CancelAt  *internal.DateTime `json:"cancel_at,omitempty"`
-		ExpiredAt *internal.DateTime `json:"expired_at,omitempty"`
-		TrialEnd  *internal.DateTime `json:"trial_end,omitempty"`
+		CancelAt       *internal.DateTime `json:"cancel_at,omitempty"`
+		ExpiredAt      *internal.DateTime `json:"expired_at,omitempty"`
+		PauseResumesAt *internal.DateTime `json:"pause_resumes_at,omitempty"`
+		PausedAt       *internal.DateTime `json:"paused_at,omitempty"`
+		PeriodEnd      *internal.DateTime `json:"period_end,omitempty"`
+		PeriodStart    *internal.DateTime `json:"period_start,omitempty"`
+		TrialEnd       *internal.DateTime `json:"trial_end,omitempty"`
 	}{
-		embed:     embed(*c),
-		CancelAt:  internal.NewOptionalDateTime(c.CancelAt),
-		ExpiredAt: internal.NewOptionalDateTime(c.ExpiredAt),
-		TrialEnd:  internal.NewOptionalDateTime(c.TrialEnd),
+		embed:          embed(*c),
+		CancelAt:       internal.NewOptionalDateTime(c.CancelAt),
+		ExpiredAt:      internal.NewOptionalDateTime(c.ExpiredAt),
+		PauseResumesAt: internal.NewOptionalDateTime(c.PauseResumesAt),
+		PausedAt:       internal.NewOptionalDateTime(c.PausedAt),
+		PeriodEnd:      internal.NewOptionalDateTime(c.PeriodEnd),
+		PeriodStart:    internal.NewOptionalDateTime(c.PeriodStart),
+		TrialEnd:       internal.NewOptionalDateTime(c.TrialEnd),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -2597,204 +2839,6 @@ func (c *CompanyMembershipDetailResponseData) MarshalJSON() ([]byte, error) {
 }
 
 func (c *CompanyMembershipDetailResponseData) String() string {
-	if c == nil {
-		return "<nil>"
-	}
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
-}
-
-var (
-	companyResponseDataFieldCreatedAt     = big.NewInt(1 << 0)
-	companyResponseDataFieldEnvironmentID = big.NewInt(1 << 1)
-	companyResponseDataFieldID            = big.NewInt(1 << 2)
-	companyResponseDataFieldLastSeenAt    = big.NewInt(1 << 3)
-	companyResponseDataFieldLogoURL       = big.NewInt(1 << 4)
-	companyResponseDataFieldName          = big.NewInt(1 << 5)
-	companyResponseDataFieldUpdatedAt     = big.NewInt(1 << 6)
-)
-
-type CompanyResponseData struct {
-	CreatedAt     time.Time  `json:"created_at" url:"created_at"`
-	EnvironmentID string     `json:"environment_id" url:"environment_id"`
-	ID            string     `json:"id" url:"id"`
-	LastSeenAt    *time.Time `json:"last_seen_at,omitempty" url:"last_seen_at,omitempty"`
-	LogoURL       *string    `json:"logo_url,omitempty" url:"logo_url,omitempty"`
-	Name          string     `json:"name" url:"name"`
-	UpdatedAt     time.Time  `json:"updated_at" url:"updated_at"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CompanyResponseData) GetCreatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.CreatedAt
-}
-
-func (c *CompanyResponseData) GetEnvironmentID() string {
-	if c == nil {
-		return ""
-	}
-	return c.EnvironmentID
-}
-
-func (c *CompanyResponseData) GetID() string {
-	if c == nil {
-		return ""
-	}
-	return c.ID
-}
-
-func (c *CompanyResponseData) GetLastSeenAt() *time.Time {
-	if c == nil {
-		return nil
-	}
-	return c.LastSeenAt
-}
-
-func (c *CompanyResponseData) GetLogoURL() *string {
-	if c == nil {
-		return nil
-	}
-	return c.LogoURL
-}
-
-func (c *CompanyResponseData) GetName() string {
-	if c == nil {
-		return ""
-	}
-	return c.Name
-}
-
-func (c *CompanyResponseData) GetUpdatedAt() time.Time {
-	if c == nil {
-		return time.Time{}
-	}
-	return c.UpdatedAt
-}
-
-func (c *CompanyResponseData) GetExtraProperties() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.extraProperties
-}
-
-func (c *CompanyResponseData) require(field *big.Int) {
-	next := new(big.Int)
-	if c.explicitFields != nil {
-		next.Set(c.explicitFields)
-	}
-	next.Or(next, field)
-	c.explicitFields = next
-}
-
-// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetCreatedAt(createdAt time.Time) {
-	c.CreatedAt = createdAt
-	c.require(companyResponseDataFieldCreatedAt)
-}
-
-// SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetEnvironmentID(environmentID string) {
-	c.EnvironmentID = environmentID
-	c.require(companyResponseDataFieldEnvironmentID)
-}
-
-// SetID sets the ID field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetID(id string) {
-	c.ID = id
-	c.require(companyResponseDataFieldID)
-}
-
-// SetLastSeenAt sets the LastSeenAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetLastSeenAt(lastSeenAt *time.Time) {
-	c.LastSeenAt = lastSeenAt
-	c.require(companyResponseDataFieldLastSeenAt)
-}
-
-// SetLogoURL sets the LogoURL field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetLogoURL(logoURL *string) {
-	c.LogoURL = logoURL
-	c.require(companyResponseDataFieldLogoURL)
-}
-
-// SetName sets the Name field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetName(name string) {
-	c.Name = name
-	c.require(companyResponseDataFieldName)
-}
-
-// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (c *CompanyResponseData) SetUpdatedAt(updatedAt time.Time) {
-	c.UpdatedAt = updatedAt
-	c.require(companyResponseDataFieldUpdatedAt)
-}
-
-func (c *CompanyResponseData) UnmarshalJSON(data []byte) error {
-	type embed CompanyResponseData
-	var unmarshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed: embed(*c),
-	}
-	if err := json.Unmarshal(data, &unmarshaler); err != nil {
-		return err
-	}
-	*c = CompanyResponseData(unmarshaler.embed)
-	c.CreatedAt = unmarshaler.CreatedAt.Time()
-	c.LastSeenAt = unmarshaler.LastSeenAt.TimePtr()
-	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CompanyResponseData) MarshalJSON() ([]byte, error) {
-	type embed CompanyResponseData
-	var marshaler = struct {
-		embed
-		CreatedAt  *internal.DateTime `json:"created_at"`
-		LastSeenAt *internal.DateTime `json:"last_seen_at,omitempty"`
-		UpdatedAt  *internal.DateTime `json:"updated_at"`
-	}{
-		embed:      embed(*c),
-		CreatedAt:  internal.NewDateTime(c.CreatedAt),
-		LastSeenAt: internal.NewOptionalDateTime(c.LastSeenAt),
-		UpdatedAt:  internal.NewDateTime(c.UpdatedAt),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (c *CompanyResponseData) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -3451,6 +3495,7 @@ const (
 	PlanChangeActionInvoicePastDue            PlanChangeAction = "invoice_past_due"
 	PlanChangeActionManagePlan                PlanChangeAction = "manage_plan"
 	PlanChangeActionMigration                 PlanChangeAction = "migration"
+	PlanChangeActionPastDueDefaultPlan        PlanChangeAction = "past_due_default_plan"
 	PlanChangeActionPlanBillingProductChanged PlanChangeAction = "plan_billing_product_changed"
 	PlanChangeActionPlanDeleted               PlanChangeAction = "plan_deleted"
 	PlanChangeActionPlanTraitChange           PlanChangeAction = "plan_trait_change"
@@ -3479,6 +3524,8 @@ func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 		return PlanChangeActionManagePlan, nil
 	case "migration":
 		return PlanChangeActionMigration, nil
+	case "past_due_default_plan":
+		return PlanChangeActionPastDueDefaultPlan, nil
 	case "plan_billing_product_changed":
 		return PlanChangeActionPlanBillingProductChanged, nil
 	case "plan_deleted":
@@ -9457,6 +9504,109 @@ func (g *GetBillingEntityChildSubscriptionsResponse) String() string {
 }
 
 var (
+	getBillingEntitySettingsResponseFieldData   = big.NewInt(1 << 0)
+	getBillingEntitySettingsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetBillingEntitySettingsResponse struct {
+	Data *CompanyBillingEntitySettingsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetBillingEntitySettingsResponse) GetData() *CompanyBillingEntitySettingsResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetBillingEntitySettingsResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetBillingEntitySettingsResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetBillingEntitySettingsResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetBillingEntitySettingsResponse) SetData(data *CompanyBillingEntitySettingsResponseData) {
+	g.Data = data
+	g.require(getBillingEntitySettingsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetBillingEntitySettingsResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getBillingEntitySettingsResponseFieldParams)
+}
+
+func (g *GetBillingEntitySettingsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetBillingEntitySettingsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetBillingEntitySettingsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetBillingEntitySettingsResponse) MarshalJSON() ([]byte, error) {
+	type embed GetBillingEntitySettingsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetBillingEntitySettingsResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	getCompanyBillingEntityParamsFieldCompanyID = big.NewInt(1 << 0)
 )
 
@@ -12807,12 +12957,14 @@ func (l *ListPlanTraitsResponse) String() string {
 }
 
 var (
-	listUsersParamsFieldCompanyID = big.NewInt(1 << 0)
-	listUsersParamsFieldIDs       = big.NewInt(1 << 1)
-	listUsersParamsFieldLimit     = big.NewInt(1 << 2)
-	listUsersParamsFieldOffset    = big.NewInt(1 << 3)
-	listUsersParamsFieldPlanID    = big.NewInt(1 << 4)
-	listUsersParamsFieldQ         = big.NewInt(1 << 5)
+	listUsersParamsFieldCompanyID          = big.NewInt(1 << 0)
+	listUsersParamsFieldIDs                = big.NewInt(1 << 1)
+	listUsersParamsFieldLimit              = big.NewInt(1 << 2)
+	listUsersParamsFieldOffset             = big.NewInt(1 << 3)
+	listUsersParamsFieldPlanID             = big.NewInt(1 << 4)
+	listUsersParamsFieldQ                  = big.NewInt(1 << 5)
+	listUsersParamsFieldSortOrderColumn    = big.NewInt(1 << 6)
+	listUsersParamsFieldSortOrderDirection = big.NewInt(1 << 7)
 )
 
 // Input parameters
@@ -12829,6 +12981,10 @@ type ListUsersParams struct {
 	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
 	// Search for users by name, keys or string traits
 	Q *string `json:"q,omitempty" url:"q,omitempty"`
+	// Column to sort by (e.g. name, created_at, last_seen_at)
+	SortOrderColumn *string `json:"sort_order_column,omitempty" url:"sort_order_column,omitempty"`
+	// Direction to sort by (asc or desc)
+	SortOrderDirection *SortDirection `json:"sort_order_direction,omitempty" url:"sort_order_direction,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -12877,6 +13033,20 @@ func (l *ListUsersParams) GetQ() *string {
 		return nil
 	}
 	return l.Q
+}
+
+func (l *ListUsersParams) GetSortOrderColumn() *string {
+	if l == nil {
+		return nil
+	}
+	return l.SortOrderColumn
+}
+
+func (l *ListUsersParams) GetSortOrderDirection() *SortDirection {
+	if l == nil {
+		return nil
+	}
+	return l.SortOrderDirection
 }
 
 func (l *ListUsersParams) GetExtraProperties() map[string]interface{} {
@@ -12935,6 +13105,20 @@ func (l *ListUsersParams) SetPlanID(planID *string) {
 func (l *ListUsersParams) SetQ(q *string) {
 	l.Q = q
 	l.require(listUsersParamsFieldQ)
+}
+
+// SetSortOrderColumn sets the SortOrderColumn field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListUsersParams) SetSortOrderColumn(sortOrderColumn *string) {
+	l.SortOrderColumn = sortOrderColumn
+	l.require(listUsersParamsFieldSortOrderColumn)
+}
+
+// SetSortOrderDirection sets the SortOrderDirection field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListUsersParams) SetSortOrderDirection(sortOrderDirection *SortDirection) {
+	l.SortOrderDirection = sortOrderDirection
+	l.require(listUsersParamsFieldSortOrderDirection)
 }
 
 func (l *ListUsersParams) UnmarshalJSON(data []byte) error {
@@ -13460,6 +13644,109 @@ func (l *LookupUserResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	updateBillingEntitySettingsResponseFieldData   = big.NewInt(1 << 0)
+	updateBillingEntitySettingsResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpdateBillingEntitySettingsResponse struct {
+	Data *CompanyBillingEntitySettingsResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateBillingEntitySettingsResponse) GetData() *CompanyBillingEntitySettingsResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateBillingEntitySettingsResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdateBillingEntitySettingsResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateBillingEntitySettingsResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
+	}
+	next.Or(next, field)
+	u.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingEntitySettingsResponse) SetData(data *CompanyBillingEntitySettingsResponseData) {
+	u.Data = data
+	u.require(updateBillingEntitySettingsResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingEntitySettingsResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(updateBillingEntitySettingsResponseFieldParams)
+}
+
+func (u *UpdateBillingEntitySettingsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateBillingEntitySettingsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateBillingEntitySettingsResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateBillingEntitySettingsResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateBillingEntitySettingsResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateBillingEntitySettingsResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 var (
@@ -14078,6 +14365,55 @@ func (u *UpsertUserTraitResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateBillingEntitySettingsRequestBodyFieldChildrenMayChangePlan = big.NewInt(1 << 0)
+)
+
+type UpdateBillingEntitySettingsRequestBody struct {
+	// Whether the companies this company pays for may change their own plan and add-ons in components. The change is billed to this company. When false, they may only cancel.
+	ChildrenMayChangePlan *bool `json:"children_may_change_plan,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpdateBillingEntitySettingsRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
+	}
+	next.Or(next, field)
+	u.explicitFields = next
+}
+
+// SetChildrenMayChangePlan sets the ChildrenMayChangePlan field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateBillingEntitySettingsRequestBody) SetChildrenMayChangePlan(childrenMayChangePlan *bool) {
+	u.ChildrenMayChangePlan = childrenMayChangePlan
+	u.require(updateBillingEntitySettingsRequestBodyFieldChildrenMayChangePlan)
+}
+
+func (u *UpdateBillingEntitySettingsRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateBillingEntitySettingsRequestBody
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateBillingEntitySettingsRequestBody(body)
+	return nil
+}
+
+func (u *UpdateBillingEntitySettingsRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateBillingEntitySettingsRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
 }
 
 var (

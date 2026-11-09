@@ -1,230 +1,4 @@
 # Reference
-<details><summary><code>client.PostAPIKeys() -> error</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-_, err := client.PostAPIKeys(
-    context.TODO(),
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.PutAPIKeysAPIKeyID(APIKeyID) -> error</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-_, err := client.PutAPIKeysAPIKeyID(
-    context.TODO(),
-    "api_key_id",
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**apiKeyID:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.DeleteAPIKeysAPIKeyID(APIKeyID) -> error</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-_, err := client.DeleteAPIKeysAPIKeyID(
-    context.TODO(),
-    "api_key_id",
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**apiKeyID:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.PostEnvironments() -> error</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-_, err := client.PostEnvironments(
-    context.TODO(),
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.PutEnvironmentsEnvironmentID(EnvironmentID) -> error</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-_, err := client.PutEnvironmentsEnvironmentID(
-    context.TODO(),
-    "environment_id",
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**environmentID:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.DeleteEnvironmentsEnvironmentID(EnvironmentID) -> error</code></summary>
-<dl>
-<dd>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```go
-_, err := client.DeleteEnvironmentsEnvironmentID(
-    context.TODO(),
-    "environment_id",
-)
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**environmentID:** `string` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
 <details><summary><code>client.GetCreditLedger() -> error</code></summary>
 <dl>
 <dd>
@@ -3871,7 +3645,23 @@ _, err := client.Billing.UpdateCompanyBillingProfile(
 <dl>
 <dd>
 
+**billingDetails:** `*schematichq.ContractBillingDetailsRequestBody` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **collectionMethod:** `schematichq.BillingCollectionMethod` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**collector:** `*schematichq.Collector` 
     
 </dd>
 </dl>
@@ -3947,6 +3737,192 @@ _, err := client.Billing.UpdateCompanyBillingProfile(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**purchaseOrder:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.GetCompanyContract(BillingProfileID) -> *schematichq.GetCompanyContractResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.GetCompanyContract(
+    context.TODO(),
+    "billing_profile_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProfileID:** `string` — billing_profile_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.DownloadContractDocument(BillingProfileID) -> string</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.DownloadContractDocument(
+    context.TODO(),
+    "billing_profile_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProfileID:** `string` — billing_profile_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.UploadContractDocument(BillingProfileID, request) -> *schematichq.UploadContractDocumentResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UploadContractDocumentRequest{
+    File: strings.NewReader(
+        "",
+    ),
+}
+_, err := client.Billing.UploadContractDocument(
+    context.TODO(),
+    "billing_profile_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProfileID:** `string` — billing_profile_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.DeleteContractDocument(BillingProfileID) -> *schematichq.DeleteContractDocumentResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.DeleteContractDocument(
+    context.TODO(),
+    "billing_profile_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**billingProfileID:** `string` — billing_profile_id
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -4014,7 +3990,23 @@ _, err := client.Billing.UpdateBillingSettings(
 <dl>
 <dd>
 
+**defaultCollector:** `*schematichq.Collector` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **defaultProviderType:** `*schematichq.BillingProviderType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**invoiceReplyToEmail:** `*string` — Where a payer's reply to an invoice email goes. Schematic sends no invoice email until it is set. Send null to clear it.
     
 </dd>
 </dl>
@@ -4184,6 +4176,22 @@ _, err := client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
+**pauseBehavior:** `*schematichq.BillingSubscriptionPauseBehavior` — How the provider treats invoices while payment collection is paused. Omit it to keep the current pause, send null to clear it, or send a behavior to set one.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**pauseResumesAt:** `*int64` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **periodEnd:** `*int64` 
     
 </dd>
@@ -4282,6 +4290,92 @@ _, err := client.Billing.UpsertBillingSubscription(
 
 ```go
 _, err := client.Billing.GetCompanyNativeSubscription(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.MoveToDefaultPlan(CompanyID) -> *schematichq.MoveToDefaultPlanResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.MoveToDefaultPlan(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.GetCompanyUpcomingInvoices(CompanyID) -> *schematichq.GetCompanyUpcomingInvoicesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.GetCompanyUpcomingInvoices(
     context.TODO(),
     "company_id",
 )
@@ -4484,6 +4578,49 @@ _, err := client.Billing.GetBillingInvoice(
 </dl>
 </details>
 
+<details><summary><code>client.Billing.ChargeNativeInvoice(InvoiceID) -> *schematichq.ChargeNativeInvoiceResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.ChargeNativeInvoice(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>client.Billing.ExportNativeInvoice(InvoiceID) -> string</code></summary>
 <dl>
 <dd>
@@ -4541,6 +4678,92 @@ _, err := client.Billing.ExportNativeInvoice(
 
 ```go
 _, err := client.Billing.FinalizeNativeInvoice(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.ReissueNativeInvoiceLink(InvoiceID) -> *schematichq.ReissueNativeInvoiceLinkResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.ReissueNativeInvoiceLink(
+    context.TODO(),
+    "invoice_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**invoiceID:** `string` — invoice_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.RevokeNativeInvoiceLink(InvoiceID) -> *schematichq.RevokeNativeInvoiceLinkResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.RevokeNativeInvoiceLink(
     context.TODO(),
     "invoice_id",
 )
@@ -8676,6 +8899,14 @@ _, err := client.Catalogs.UpdateConfiguration(
 <dl>
 <dd>
 
+**customPlanID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **customPlanPriceText:** `*string` 
     
 </dd>
@@ -9686,6 +9917,123 @@ _, err := client.Checkout.CancelSubscription(
 <dd>
 
 **prorate:** `*bool` — If true and cancel_immediately is true, issue prorated credit. Defaults to true.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Checkout.PauseSubscription(request) -> *schematichq.PauseSubscriptionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.PauseSubscriptionRequest{
+    CompanyID: "company_id",
+    Months: int64(1000000),
+}
+_, err := client.Checkout.PauseSubscription(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**months:** `int64` — How many months to pause for, counted from the end of the current billing period. Between 1 and 6.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**subscriptionExternalID:** `*string` — The payment provider's ID for the subscription to pause. Required when the company has more than one subscription; otherwise defaults to its only one.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Checkout.ResumeSubscription(request) -> *schematichq.ResumeSubscriptionResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ResumeSubscriptionRequest{
+    CompanyID: "company_id",
+}
+_, err := client.Checkout.ResumeSubscription(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**subscriptionExternalID:** `*string` — The payment provider's ID for the subscription to resume. Required when the company has more than one subscription; otherwise defaults to its only one.
     
 </dd>
 </dl>
@@ -10749,6 +11097,102 @@ _, err := client.Companies.GetCompanyBillingEntity(
 <dd>
 
 **companyID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Companies.GetBillingEntitySettings(CompanyID) -> *schematichq.GetBillingEntitySettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Companies.GetBillingEntitySettings(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Companies.UpdateBillingEntitySettings(CompanyID, request) -> *schematichq.UpdateBillingEntitySettingsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateBillingEntitySettingsRequestBody{}
+_, err := client.Companies.UpdateBillingEntitySettings(
+    context.TODO(),
+    "company_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**childrenMayChangePlan:** `*bool` — Whether the companies this company pays for may change their own plan and add-ons in components. The change is billed to this company. When false, they may only cancel.
     
 </dd>
 </dl>
@@ -12618,6 +13062,10 @@ request := &schematichq.ListUsersRequest{
     Q: schematichq.String(
         "q",
     ),
+    SortOrderColumn: schematichq.String(
+        "sort_order_column",
+    ),
+    SortOrderDirection: schematichq.SortDirectionAsc.Ptr(),
     Limit: schematichq.Int64(
         int64(1000000),
     ),
@@ -12668,6 +13116,22 @@ _, err := client.Companies.ListUsers(
 <dd>
 
 **q:** `*string` — Search for users by name, keys or string traits
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sortOrderColumn:** `*string` — Column to sort by (e.g. name, created_at, last_seen_at)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**sortOrderDirection:** `*schematichq.SortDirection` — Direction to sort by (asc or desc)
     
 </dd>
 </dl>
@@ -13305,6 +13769,14 @@ _, err := client.Entitlements.CreateCompanyOverride(
 <dl>
 <dd>
 
+**modelRates:** `[]*schematichq.CreditModelRate` — Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **note:** `*string` 
     
 </dd>
@@ -13476,6 +13948,14 @@ _, err := client.Entitlements.UpdateCompanyOverride(
 <dd>
 
 **metricPeriodMonthReset:** `*schematichq.MetricPeriodMonthReset` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modelRates:** `[]*schematichq.CreditModelRate` — Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
     
 </dd>
 </dl>
@@ -14778,6 +15258,14 @@ _, err := client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
+**modelRates:** `[]*schematichq.CreditModelRate` — Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **monthlyMeteredPriceID:** `*string` 
     
 </dd>
@@ -15149,6 +15637,14 @@ _, err := client.Entitlements.UpdatePlanEntitlement(
 <dd>
 
 **metricPeriodMonthReset:** `*schematichq.MetricPeriodMonthReset` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modelRates:** `[]*schematichq.CreditModelRate` — Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
     
 </dd>
 </dl>
@@ -15530,6 +16026,14 @@ _, err := client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dd>
 
 **metricPeriodMonthReset:** `*schematichq.MetricPeriodMonthReset` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**modelRates:** `[]*schematichq.CreditModelRate` — Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
     
 </dd>
 </dl>
@@ -19029,6 +19533,300 @@ _, err := client.Planbundle.UpdatePlanBundle(
 </dl>
 </details>
 
+## customplangrouprollouts
+<details><summary><code>client.Customplangrouprollouts.ListGroupRollouts() -> *schematichq.ListGroupRolloutsResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListGroupRolloutsRequest{
+    PlanID: "plan_id",
+}
+_, err := client.Customplangrouprollouts.ListGroupRollouts(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Customplangrouprollouts.GetGroupRollout(CustomPlanGroupRolloutID) -> *schematichq.GetGroupRolloutResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Customplangrouprollouts.GetGroupRollout(
+    context.TODO(),
+    "custom_plan_group_rollout_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**customPlanGroupRolloutID:** `string` — custom_plan_group_rollout_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Customplangrouprollouts.CopyCustomPlan(PlanID, request) -> *schematichq.CopyCustomPlanResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CopyCustomPlanRequestBody{
+    CompanyID: "company_id",
+}
+_, err := client.Customplangrouprollouts.CopyCustomPlan(
+    context.TODO(),
+    "plan_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — plan_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**companyID:** `string` — The company the copy is for, such as a location the plan's company pays for.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**name:** `*string` — The copy's name. Defaults to the source plan's.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Customplangrouprollouts.PreviewGroupRollout(PlanID) -> *schematichq.PreviewGroupRolloutResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.PreviewGroupRolloutRequest{
+    FromPlanVersionID: schematichq.String(
+        "from_plan_version_id",
+    ),
+    ToPlanVersionID: schematichq.String(
+        "to_plan_version_id",
+    ),
+}
+_, err := client.Customplangrouprollouts.PreviewGroupRollout(
+    context.TODO(),
+    "plan_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — plan_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**fromPlanVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**toPlanVersionID:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Customplangrouprollouts.StartGroupRollout(PlanID, request) -> *schematichq.StartGroupRolloutResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.StartGroupRolloutRequestBody{
+    ExcludedCompanyIDs: []string{
+        "excluded_company_ids",
+    },
+}
+_, err := client.Customplangrouprollouts.StartGroupRollout(
+    context.TODO(),
+    "plan_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**planID:** `string` — plan_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**excludedCompanyIDs:** `[]string` — Companies the payer pays for whose custom plans keep their current version.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**fromPlanVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**toPlanVersionID:** `*string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## dataexports
 <details><summary><code>client.Dataexports.ListDataExports() -> *schematichq.ListDataExportsResponse</code></summary>
 <dl>
@@ -19593,6 +20391,272 @@ _, err := client.Events.GetEvent(
 <dd>
 
 **eventID:** `string` — event_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.ListAccountInferenceCostRates() -> *schematichq.ListAccountInferenceCostRatesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListAccountInferenceCostRatesRequest{
+    Provider: schematichq.String(
+        "provider",
+    ),
+    ResponseModel: schematichq.String(
+        "response_model",
+    ),
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+_, err := client.Events.ListAccountInferenceCostRates(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**provider:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**responseModel:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.CreateAccountInferenceCostRate(request) -> *schematichq.CreateAccountInferenceCostRateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.CreateAccountInferenceCostRateRequestBody{
+    Provider: "provider",
+    Rates: map[string]float64{
+        "key": 1.1,
+    },
+    ResponseModel: "response_model",
+    StartingAt: schematichq.MustParseDateTime(
+        "2024-01-15T09:30:00Z",
+    ),
+}
+_, err := client.Events.CreateAccountInferenceCostRate(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**currency:** `*string` — Three-letter currency code the rates are in, matched against the event's currency. Defaults to usd.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**provider:** `string` — Provider the event reports, such as anthropic or openai. Matched case-insensitively.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rates:** `map[string]float64` — Cost of a single token in the row's currency, keyed by input_tokens, cached_input_tokens, cache_creation_input_tokens and output_tokens. input_tokens prices only the input left after the cached and cache-creation subsets, and output_tokens includes reasoning.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**responseModel:** `string` — Model the response reports. A dated snapshot such as claude-sonnet-4-5-20250929 falls back to the undated name when the sheet has no row for the dated one.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startingAt:** `time.Time` — When the rate takes effect. It applies to events captured from then until the next row for the same provider, model and currency.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.UpdateAccountInferenceCostRate(InferenceRateSheetID, request) -> *schematichq.UpdateAccountInferenceCostRateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateAccountInferenceCostRateRequestBody{
+    Rates: map[string]float64{
+        "key": 1.1,
+    },
+}
+_, err := client.Events.UpdateAccountInferenceCostRate(
+    context.TODO(),
+    "inference_rate_sheet_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**inferenceRateSheetID:** `string` — inference_rate_sheet_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**rates:** `map[string]float64` — Cost of a single token in the row's currency, keyed by input_tokens, cached_input_tokens, cache_creation_input_tokens and output_tokens. input_tokens prices only the input left after the cached and cache-creation subsets, and output_tokens includes reasoning.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.DeleteAccountInferenceCostRate(InferenceRateSheetID) -> *schematichq.DeleteAccountInferenceCostRateResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Events.DeleteAccountInferenceCostRate(
+    context.TODO(),
+    "inference_rate_sheet_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**inferenceRateSheetID:** `string` — inference_rate_sheet_id
     
 </dd>
 </dl>

@@ -3864,13 +3864,17 @@ func (c *CreditBundleCurrencyPriceRequestBody) String() string {
 var (
 	creditBurnBreakdownLineFieldCredits  = big.NewInt(1 << 0)
 	creditBurnBreakdownLineFieldKey      = big.NewInt(1 << 1)
-	creditBurnBreakdownLineFieldQuantity = big.NewInt(1 << 2)
-	creditBurnBreakdownLineFieldRate     = big.NewInt(1 << 3)
+	creditBurnBreakdownLineFieldModel    = big.NewInt(1 << 2)
+	creditBurnBreakdownLineFieldProvider = big.NewInt(1 << 3)
+	creditBurnBreakdownLineFieldQuantity = big.NewInt(1 << 4)
+	creditBurnBreakdownLineFieldRate     = big.NewInt(1 << 5)
 )
 
 type CreditBurnBreakdownLine struct {
 	Credits  float64 `json:"credits" url:"credits"`
 	Key      string  `json:"key" url:"key"`
+	Model    *string `json:"model,omitempty" url:"model,omitempty"`
+	Provider *string `json:"provider,omitempty" url:"provider,omitempty"`
 	Quantity float64 `json:"quantity" url:"quantity"`
 	Rate     float64 `json:"rate" url:"rate"`
 
@@ -3893,6 +3897,20 @@ func (c *CreditBurnBreakdownLine) GetKey() string {
 		return ""
 	}
 	return c.Key
+}
+
+func (c *CreditBurnBreakdownLine) GetModel() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Model
+}
+
+func (c *CreditBurnBreakdownLine) GetProvider() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Provider
 }
 
 func (c *CreditBurnBreakdownLine) GetQuantity() float64 {
@@ -3937,6 +3955,20 @@ func (c *CreditBurnBreakdownLine) SetCredits(credits float64) {
 func (c *CreditBurnBreakdownLine) SetKey(key string) {
 	c.Key = key
 	c.require(creditBurnBreakdownLineFieldKey)
+}
+
+// SetModel sets the Model field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBurnBreakdownLine) SetModel(model *string) {
+	c.Model = model
+	c.require(creditBurnBreakdownLineFieldModel)
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBurnBreakdownLine) SetProvider(provider *string) {
+	c.Provider = provider
+	c.require(creditBurnBreakdownLineFieldProvider)
 }
 
 // SetQuantity sets the Quantity field and marks it as non-optional;
@@ -4161,7 +4193,7 @@ type CreditEventLedgerResponseData struct {
 	AutoTopupLogID        *string `json:"auto_topup_log_id,omitempty" url:"auto_topup_log_id,omitempty"`
 	BillingCreditBundleID *string `json:"billing_credit_bundle_id,omitempty" url:"billing_credit_bundle_id,omitempty"`
 	BillingCreditID       *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
-	// The part of the draw this row covers: one line per priced quantity, including the request line, summing to the row amount. Set on inference-driven draws only.
+	// The part of the draw this row covers: one line per priced quantity, including the request line, summing to the row amount. When one of the entitlement's per-model rates priced the draw, every line carries that rate's provider and model; both are absent when the default rates priced it. Set on inference-driven draws only.
 	BurnBreakdown              []*CreditBurnBreakdownLine       `json:"burn_breakdown,omitempty" url:"burn_breakdown,omitempty"`
 	Company                    *CompanyLedgerResponseData       `json:"company,omitempty" url:"company,omitempty"`
 	CompanyID                  string                           `json:"company_id" url:"company_id"`

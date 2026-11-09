@@ -556,13 +556,14 @@ var (
 	createCompanyOverrideRequestBodyFieldFeatureID              = big.NewInt(1 << 3)
 	createCompanyOverrideRequestBodyFieldMetricPeriod           = big.NewInt(1 << 4)
 	createCompanyOverrideRequestBodyFieldMetricPeriodMonthReset = big.NewInt(1 << 5)
-	createCompanyOverrideRequestBodyFieldNote                   = big.NewInt(1 << 6)
-	createCompanyOverrideRequestBodyFieldQuantityRates          = big.NewInt(1 << 7)
-	createCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 8)
-	createCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 9)
-	createCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 10)
-	createCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 11)
-	createCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 12)
+	createCompanyOverrideRequestBodyFieldModelRates             = big.NewInt(1 << 6)
+	createCompanyOverrideRequestBodyFieldNote                   = big.NewInt(1 << 7)
+	createCompanyOverrideRequestBodyFieldQuantityRates          = big.NewInt(1 << 8)
+	createCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 9)
+	createCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 10)
+	createCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 11)
+	createCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 12)
+	createCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 13)
 )
 
 type CreateCompanyOverrideRequestBody struct {
@@ -572,7 +573,9 @@ type CreateCompanyOverrideRequestBody struct {
 	FeatureID              string                  `json:"feature_id" url:"-"`
 	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	Note                   *string                 `json:"note,omitempty" url:"-"`
+	// Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+	ModelRates []*CreditModelRate `json:"model_rates,omitempty" url:"-"`
+	Note       *string            `json:"note,omitempty" url:"-"`
 	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
 	QuantityRates map[string]float64   `json:"quantity_rates,omitempty" url:"-"`
 	ValueBool     *bool                `json:"value_bool,omitempty" url:"-"`
@@ -634,6 +637,13 @@ func (c *CreateCompanyOverrideRequestBody) SetMetricPeriod(metricPeriod *MetricP
 func (c *CreateCompanyOverrideRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createCompanyOverrideRequestBodyFieldMetricPeriodMonthReset)
+}
+
+// SetModelRates sets the ModelRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCompanyOverrideRequestBody) SetModelRates(modelRates []*CreditModelRate) {
+	c.ModelRates = modelRates
+	c.require(createCompanyOverrideRequestBodyFieldModelRates)
 }
 
 // SetNote sets the Note field and marks it as non-optional;
@@ -723,46 +733,49 @@ var (
 	createPlanEntitlementRequestBodyFieldFeatureID                 = big.NewInt(1 << 5)
 	createPlanEntitlementRequestBodyFieldMetricPeriod              = big.NewInt(1 << 6)
 	createPlanEntitlementRequestBodyFieldMetricPeriodMonthReset    = big.NewInt(1 << 7)
-	createPlanEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 8)
-	createPlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 9)
-	createPlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 10)
-	createPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 11)
-	createPlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 12)
-	createPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 13)
-	createPlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 14)
-	createPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 15)
-	createPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
-	createPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
-	createPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
-	createPlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 19)
-	createPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 20)
-	createPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 21)
-	createPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 22)
-	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 23)
-	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 24)
-	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 25)
-	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 26)
-	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 27)
-	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 28)
-	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 29)
-	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 30)
-	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 31)
-	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 32)
-	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 33)
-	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 34)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 35)
-	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 36)
+	createPlanEntitlementRequestBodyFieldModelRates                = big.NewInt(1 << 8)
+	createPlanEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 9)
+	createPlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 10)
+	createPlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 11)
+	createPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 12)
+	createPlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 13)
+	createPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 14)
+	createPlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 15)
+	createPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 16)
+	createPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 17)
+	createPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 18)
+	createPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 19)
+	createPlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 20)
+	createPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 21)
+	createPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 22)
+	createPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 23)
+	createPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 24)
+	createPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 25)
+	createPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 26)
+	createPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 27)
+	createPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 28)
+	createPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 29)
+	createPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 30)
+	createPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 31)
+	createPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 32)
+	createPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 33)
+	createPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 34)
+	createPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 35)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 36)
+	createPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 37)
 )
 
 type CreatePlanEntitlementRequestBody struct {
-	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
-	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
-	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *Currency                     `json:"currency,omitempty" url:"-"`
-	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
-	FeatureID               string                        `json:"feature_id" url:"-"`
-	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
+	BillingProductID       *string                     `json:"billing_product_id,omitempty" url:"-"`
+	BillingThreshold       *int64                      `json:"billing_threshold,omitempty" url:"-"`
+	CreditConsumptionRate  *float64                    `json:"credit_consumption_rate,omitempty" url:"-"`
+	Currency               *Currency                   `json:"currency,omitempty" url:"-"`
+	CurrencyPrices         []*CurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	FeatureID              string                      `json:"feature_id" url:"-"`
+	MetricPeriod           *MetricPeriod               `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset     `json:"metric_period_month_reset,omitempty" url:"-"`
+	// Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+	ModelRates              []*CreditModelRate            `json:"model_rates,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"-"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
@@ -865,6 +878,13 @@ func (c *CreatePlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *MetricP
 func (c *CreatePlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createPlanEntitlementRequestBodyFieldMetricPeriodMonthReset)
+}
+
+// SetModelRates sets the ModelRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreatePlanEntitlementRequestBody) SetModelRates(modelRates []*CreditModelRate) {
+	c.ModelRates = modelRates
+	c.require(createPlanEntitlementRequestBodyFieldModelRates)
 }
 
 // SetMonthlyMeteredPriceID sets the MonthlyMeteredPriceID field and marks it as non-optional;
@@ -11815,13 +11835,14 @@ var (
 	updateCompanyOverrideRequestBodyFieldExpirationDate         = big.NewInt(1 << 1)
 	updateCompanyOverrideRequestBodyFieldMetricPeriod           = big.NewInt(1 << 2)
 	updateCompanyOverrideRequestBodyFieldMetricPeriodMonthReset = big.NewInt(1 << 3)
-	updateCompanyOverrideRequestBodyFieldNote                   = big.NewInt(1 << 4)
-	updateCompanyOverrideRequestBodyFieldQuantityRates          = big.NewInt(1 << 5)
-	updateCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 6)
-	updateCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 7)
-	updateCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 8)
-	updateCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 9)
-	updateCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 10)
+	updateCompanyOverrideRequestBodyFieldModelRates             = big.NewInt(1 << 4)
+	updateCompanyOverrideRequestBodyFieldNote                   = big.NewInt(1 << 5)
+	updateCompanyOverrideRequestBodyFieldQuantityRates          = big.NewInt(1 << 6)
+	updateCompanyOverrideRequestBodyFieldValueBool              = big.NewInt(1 << 7)
+	updateCompanyOverrideRequestBodyFieldValueCreditID          = big.NewInt(1 << 8)
+	updateCompanyOverrideRequestBodyFieldValueNumeric           = big.NewInt(1 << 9)
+	updateCompanyOverrideRequestBodyFieldValueTraitID           = big.NewInt(1 << 10)
+	updateCompanyOverrideRequestBodyFieldValueType              = big.NewInt(1 << 11)
 )
 
 type UpdateCompanyOverrideRequestBody struct {
@@ -11829,7 +11850,9 @@ type UpdateCompanyOverrideRequestBody struct {
 	ExpirationDate         *time.Time              `json:"expiration_date,omitempty" url:"-"`
 	MetricPeriod           *MetricPeriod           `json:"metric_period,omitempty" url:"-"`
 	MetricPeriodMonthReset *MetricPeriodMonthReset `json:"metric_period_month_reset,omitempty" url:"-"`
-	Note                   *string                 `json:"note,omitempty" url:"-"`
+	// Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+	ModelRates []*CreditModelRate `json:"model_rates,omitempty" url:"-"`
+	Note       *string            `json:"note,omitempty" url:"-"`
 	// Credits per unit of the quantity (per token for inference features), keyed by quantity key. Inference features may price input_tokens, output_tokens, cached_input_tokens, cache_creation_input_tokens and reasoning_tokens; reasoning_tokens is priced on top of output_tokens, so leave its rate at zero for providers that count reasoning inside output. Omit to leave the schedule as it is; send null to clear it.
 	QuantityRates map[string]float64   `json:"quantity_rates,omitempty" url:"-"`
 	ValueBool     *bool                `json:"value_bool,omitempty" url:"-"`
@@ -11877,6 +11900,13 @@ func (u *UpdateCompanyOverrideRequestBody) SetMetricPeriod(metricPeriod *MetricP
 func (u *UpdateCompanyOverrideRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	u.MetricPeriodMonthReset = metricPeriodMonthReset
 	u.require(updateCompanyOverrideRequestBodyFieldMetricPeriodMonthReset)
+}
+
+// SetModelRates sets the ModelRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyOverrideRequestBody) SetModelRates(modelRates []*CreditModelRate) {
+	u.ModelRates = modelRates
+	u.require(updateCompanyOverrideRequestBodyFieldModelRates)
 }
 
 // SetNote sets the Note field and marks it as non-optional;
@@ -11965,43 +11995,46 @@ var (
 	updatePlanEntitlementRequestBodyFieldCurrencyPrices            = big.NewInt(1 << 4)
 	updatePlanEntitlementRequestBodyFieldMetricPeriod              = big.NewInt(1 << 5)
 	updatePlanEntitlementRequestBodyFieldMetricPeriodMonthReset    = big.NewInt(1 << 6)
-	updatePlanEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 7)
-	updatePlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 8)
-	updatePlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 9)
-	updatePlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 10)
-	updatePlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 11)
-	updatePlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 12)
-	updatePlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 13)
-	updatePlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 14)
-	updatePlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 15)
-	updatePlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 16)
-	updatePlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 17)
-	updatePlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 18)
-	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 19)
-	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 20)
-	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 21)
-	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 22)
-	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 23)
-	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 24)
-	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 25)
-	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 26)
-	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 27)
-	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 28)
-	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 29)
-	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 30)
-	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 31)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 32)
-	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 33)
+	updatePlanEntitlementRequestBodyFieldModelRates                = big.NewInt(1 << 7)
+	updatePlanEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 8)
+	updatePlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 9)
+	updatePlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 10)
+	updatePlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 11)
+	updatePlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 12)
+	updatePlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 13)
+	updatePlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 14)
+	updatePlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 15)
+	updatePlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 16)
+	updatePlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 17)
+	updatePlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 18)
+	updatePlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 19)
+	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 20)
+	updatePlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 21)
+	updatePlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 22)
+	updatePlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 23)
+	updatePlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 24)
+	updatePlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 25)
+	updatePlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 26)
+	updatePlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 27)
+	updatePlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 28)
+	updatePlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 29)
+	updatePlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 30)
+	updatePlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 31)
+	updatePlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 32)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 33)
+	updatePlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 34)
 )
 
 type UpdatePlanEntitlementRequestBody struct {
-	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
-	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
-	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *Currency                     `json:"currency,omitempty" url:"-"`
-	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
-	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
+	BillingProductID       *string                     `json:"billing_product_id,omitempty" url:"-"`
+	BillingThreshold       *int64                      `json:"billing_threshold,omitempty" url:"-"`
+	CreditConsumptionRate  *float64                    `json:"credit_consumption_rate,omitempty" url:"-"`
+	Currency               *Currency                   `json:"currency,omitempty" url:"-"`
+	CurrencyPrices         []*CurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	MetricPeriod           *MetricPeriod               `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset     `json:"metric_period_month_reset,omitempty" url:"-"`
+	// Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+	ModelRates              []*CreditModelRate            `json:"model_rates,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"-"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
@@ -12095,6 +12128,13 @@ func (u *UpdatePlanEntitlementRequestBody) SetMetricPeriod(metricPeriod *MetricP
 func (u *UpdatePlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	u.MetricPeriodMonthReset = metricPeriodMonthReset
 	u.require(updatePlanEntitlementRequestBodyFieldMetricPeriodMonthReset)
+}
+
+// SetModelRates sets the ModelRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanEntitlementRequestBody) SetModelRates(modelRates []*CreditModelRate) {
+	u.ModelRates = modelRates
+	u.require(updatePlanEntitlementRequestBodyFieldModelRates)
 }
 
 // SetMonthlyMeteredPriceID sets the MonthlyMeteredPriceID field and marks it as non-optional;
@@ -12318,48 +12358,51 @@ var (
 	createBillingLinkedPlanEntitlementRequestBodyFieldFeatureID                 = big.NewInt(1 << 7)
 	createBillingLinkedPlanEntitlementRequestBodyFieldMetricPeriod              = big.NewInt(1 << 8)
 	createBillingLinkedPlanEntitlementRequestBodyFieldMetricPeriodMonthReset    = big.NewInt(1 << 9)
-	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 10)
-	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 11)
-	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 12)
-	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 13)
-	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 14)
-	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 15)
-	createBillingLinkedPlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 16)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 17)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 18)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 19)
-	createBillingLinkedPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 20)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 21)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 22)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 23)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 24)
-	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 25)
-	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 26)
-	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 27)
-	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 28)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 29)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 30)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 31)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 32)
-	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 33)
-	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 34)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 35)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 36)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 37)
-	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 38)
+	createBillingLinkedPlanEntitlementRequestBodyFieldModelRates                = big.NewInt(1 << 10)
+	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 11)
+	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 12)
+	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 13)
+	createBillingLinkedPlanEntitlementRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 14)
+	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 15)
+	createBillingLinkedPlanEntitlementRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 16)
+	createBillingLinkedPlanEntitlementRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 17)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPlanID                    = big.NewInt(1 << 18)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPlanVersionID             = big.NewInt(1 << 19)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPriceBehavior             = big.NewInt(1 << 20)
+	createBillingLinkedPlanEntitlementRequestBodyFieldPriceTiers                = big.NewInt(1 << 21)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuantityRates             = big.NewInt(1 << 22)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 23)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 24)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 25)
+	createBillingLinkedPlanEntitlementRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 26)
+	createBillingLinkedPlanEntitlementRequestBodyFieldSoftLimit                 = big.NewInt(1 << 27)
+	createBillingLinkedPlanEntitlementRequestBodyFieldTierMode                  = big.NewInt(1 << 28)
+	createBillingLinkedPlanEntitlementRequestBodyFieldUsageQuantity             = big.NewInt(1 << 29)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueBool                 = big.NewInt(1 << 30)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueCreditID             = big.NewInt(1 << 31)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueNumeric              = big.NewInt(1 << 32)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueTraitID              = big.NewInt(1 << 33)
+	createBillingLinkedPlanEntitlementRequestBodyFieldValueType                 = big.NewInt(1 << 34)
+	createBillingLinkedPlanEntitlementRequestBodyFieldWarningTiers              = big.NewInt(1 << 35)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 36)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 37)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 38)
+	createBillingLinkedPlanEntitlementRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 39)
 )
 
 type CreateBillingLinkedPlanEntitlementRequestBody struct {
-	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"-"`
-	BillingProvider         BillingProviderType           `json:"billing_provider" url:"-"`
-	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"-"`
-	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"-"`
-	Currency                *Currency                     `json:"currency,omitempty" url:"-"`
-	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"-"`
-	ExternalResourceID      string                        `json:"external_resource_id" url:"-"`
-	FeatureID               string                        `json:"feature_id" url:"-"`
-	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"-"`
-	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"-"`
+	BillingProductID       *string                     `json:"billing_product_id,omitempty" url:"-"`
+	BillingProvider        BillingProviderType         `json:"billing_provider" url:"-"`
+	BillingThreshold       *int64                      `json:"billing_threshold,omitempty" url:"-"`
+	CreditConsumptionRate  *float64                    `json:"credit_consumption_rate,omitempty" url:"-"`
+	Currency               *Currency                   `json:"currency,omitempty" url:"-"`
+	CurrencyPrices         []*CurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"-"`
+	ExternalResourceID     string                      `json:"external_resource_id" url:"-"`
+	FeatureID              string                      `json:"feature_id" url:"-"`
+	MetricPeriod           *MetricPeriod               `json:"metric_period,omitempty" url:"-"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset     `json:"metric_period_month_reset,omitempty" url:"-"`
+	// Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+	ModelRates              []*CreditModelRate            `json:"model_rates,omitempty" url:"-"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"-"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"-"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"-"`
@@ -12476,6 +12519,13 @@ func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMetricPeriod(metricPe
 func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldMetricPeriodMonthReset)
+}
+
+// SetModelRates sets the ModelRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingLinkedPlanEntitlementRequestBody) SetModelRates(modelRates []*CreditModelRate) {
+	c.ModelRates = modelRates
+	c.require(createBillingLinkedPlanEntitlementRequestBodyFieldModelRates)
 }
 
 // SetMonthlyMeteredPriceID sets the MonthlyMeteredPriceID field and marks it as non-optional;

@@ -199,6 +199,128 @@ func (c *Client) GetEvent(
 
 // Example:
 //
+//	request := &schematichq.ListAccountInferenceCostRatesRequest{
+//	    Provider: schematichq.String(
+//	        "provider",
+//	    ),
+//	    ResponseModel: schematichq.String(
+//	        "response_model",
+//	    ),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	_, err := client.Events.ListAccountInferenceCostRates(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListAccountInferenceCostRates(
+	ctx context.Context,
+	request *schematichq.ListAccountInferenceCostRatesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListAccountInferenceCostRatesResponse, error) {
+	response, err := c.WithRawResponse.ListAccountInferenceCostRates(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.CreateAccountInferenceCostRateRequestBody{
+//	    Provider: "provider",
+//	    Rates: map[string]float64{
+//	        "key": 1.1,
+//	    },
+//	    ResponseModel: "response_model",
+//	    StartingAt: schematichq.MustParseDateTime(
+//	        "2024-01-15T09:30:00Z",
+//	    ),
+//	}
+//	_, err := client.Events.CreateAccountInferenceCostRate(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) CreateAccountInferenceCostRate(
+	ctx context.Context,
+	request *schematichq.CreateAccountInferenceCostRateRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.CreateAccountInferenceCostRateResponse, error) {
+	response, err := c.WithRawResponse.CreateAccountInferenceCostRate(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpdateAccountInferenceCostRateRequestBody{
+//	    Rates: map[string]float64{
+//	        "key": 1.1,
+//	    },
+//	}
+//	_, err := client.Events.UpdateAccountInferenceCostRate(
+//	    context.TODO(),
+//	    "inference_rate_sheet_id",
+//	    request,
+//	)
+func (c *Client) UpdateAccountInferenceCostRate(
+	ctx context.Context,
+	// inference_rate_sheet_id
+	inferenceRateSheetID string,
+	request *schematichq.UpdateAccountInferenceCostRateRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateAccountInferenceCostRateResponse, error) {
+	response, err := c.WithRawResponse.UpdateAccountInferenceCostRate(
+		ctx,
+		inferenceRateSheetID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Events.DeleteAccountInferenceCostRate(
+//	    context.TODO(),
+//	    "inference_rate_sheet_id",
+//	)
+func (c *Client) DeleteAccountInferenceCostRate(
+	ctx context.Context,
+	// inference_rate_sheet_id
+	inferenceRateSheetID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteAccountInferenceCostRateResponse, error) {
+	response, err := c.WithRawResponse.DeleteAccountInferenceCostRate(
+		ctx,
+		inferenceRateSheetID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	_, err := client.Events.GetOtlpEnvironmentSettings(
 //	    context.TODO(),
 //	)

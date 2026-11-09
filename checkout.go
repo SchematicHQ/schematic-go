@@ -145,6 +145,132 @@ func (c *CheckoutDataRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
+	pauseSubscriptionRequestFieldCompanyID              = big.NewInt(1 << 0)
+	pauseSubscriptionRequestFieldMonths                 = big.NewInt(1 << 1)
+	pauseSubscriptionRequestFieldSubscriptionExternalID = big.NewInt(1 << 2)
+)
+
+type PauseSubscriptionRequest struct {
+	CompanyID string `json:"company_id" url:"-"`
+	// How many months to pause for, counted from the end of the current billing period. Between 1 and 6.
+	Months int64 `json:"months" url:"-"`
+	// The payment provider's ID for the subscription to pause. Required when the company has more than one subscription; otherwise defaults to its only one.
+	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (p *PauseSubscriptionRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PauseSubscriptionRequest) SetCompanyID(companyID string) {
+	p.CompanyID = companyID
+	p.require(pauseSubscriptionRequestFieldCompanyID)
+}
+
+// SetMonths sets the Months field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PauseSubscriptionRequest) SetMonths(months int64) {
+	p.Months = months
+	p.require(pauseSubscriptionRequestFieldMonths)
+}
+
+// SetSubscriptionExternalID sets the SubscriptionExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PauseSubscriptionRequest) SetSubscriptionExternalID(subscriptionExternalID *string) {
+	p.SubscriptionExternalID = subscriptionExternalID
+	p.require(pauseSubscriptionRequestFieldSubscriptionExternalID)
+}
+
+func (p *PauseSubscriptionRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler PauseSubscriptionRequest
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*p = PauseSubscriptionRequest(body)
+	return nil
+}
+
+func (p *PauseSubscriptionRequest) MarshalJSON() ([]byte, error) {
+	type embed PauseSubscriptionRequest
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
+	resumeSubscriptionRequestFieldCompanyID              = big.NewInt(1 << 0)
+	resumeSubscriptionRequestFieldSubscriptionExternalID = big.NewInt(1 << 1)
+)
+
+type ResumeSubscriptionRequest struct {
+	CompanyID string `json:"company_id" url:"-"`
+	// The payment provider's ID for the subscription to resume. Required when the company has more than one subscription; otherwise defaults to its only one.
+	SubscriptionExternalID *string `json:"subscription_external_id,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (r *ResumeSubscriptionRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResumeSubscriptionRequest) SetCompanyID(companyID string) {
+	r.CompanyID = companyID
+	r.require(resumeSubscriptionRequestFieldCompanyID)
+}
+
+// SetSubscriptionExternalID sets the SubscriptionExternalID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResumeSubscriptionRequest) SetSubscriptionExternalID(subscriptionExternalID *string) {
+	r.SubscriptionExternalID = subscriptionExternalID
+	r.require(resumeSubscriptionRequestFieldSubscriptionExternalID)
+}
+
+func (r *ResumeSubscriptionRequest) UnmarshalJSON(data []byte) error {
+	type unmarshaler ResumeSubscriptionRequest
+	var body unmarshaler
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*r = ResumeSubscriptionRequest(body)
+	return nil
+}
+
+func (r *ResumeSubscriptionRequest) MarshalJSON() ([]byte, error) {
+	type embed ResumeSubscriptionRequest
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	changeSubscriptionInternalRequestBodyFieldAddOnIDs           = big.NewInt(1 << 0)
 	changeSubscriptionInternalRequestBodyFieldAutoTopupOverrides = big.NewInt(1 << 1)
 	changeSubscriptionInternalRequestBodyFieldBillingEntityID    = big.NewInt(1 << 2)
@@ -776,14 +902,17 @@ var (
 	checkoutSubscriptionFieldInvoiceID                        = big.NewInt(1 << 14)
 	checkoutSubscriptionFieldInvoiceURL                       = big.NewInt(1 << 15)
 	checkoutSubscriptionFieldMetadata                         = big.NewInt(1 << 16)
-	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 17)
-	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 18)
-	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 19)
-	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 20)
-	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 21)
-	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 22)
-	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 23)
-	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 24)
+	checkoutSubscriptionFieldPauseBehavior                    = big.NewInt(1 << 17)
+	checkoutSubscriptionFieldPauseResumesAt                   = big.NewInt(1 << 18)
+	checkoutSubscriptionFieldPausedAt                         = big.NewInt(1 << 19)
+	checkoutSubscriptionFieldPeriodEnd                        = big.NewInt(1 << 20)
+	checkoutSubscriptionFieldPeriodStart                      = big.NewInt(1 << 21)
+	checkoutSubscriptionFieldProviderType                     = big.NewInt(1 << 22)
+	checkoutSubscriptionFieldStatus                           = big.NewInt(1 << 23)
+	checkoutSubscriptionFieldSubscriptionExternalID           = big.NewInt(1 << 24)
+	checkoutSubscriptionFieldTotalPrice                       = big.NewInt(1 << 25)
+	checkoutSubscriptionFieldTrialEnd                         = big.NewInt(1 << 26)
+	checkoutSubscriptionFieldTrialEndSetting                  = big.NewInt(1 << 27)
 )
 
 type CheckoutSubscription struct {
@@ -804,6 +933,9 @@ type CheckoutSubscription struct {
 	InvoiceID                        *string                             `json:"invoice_id,omitempty" url:"invoice_id,omitempty"`
 	InvoiceURL                       *string                             `json:"invoice_url,omitempty" url:"invoice_url,omitempty"`
 	Metadata                         map[string]any                      `json:"metadata,omitempty" url:"metadata,omitempty"`
+	PauseBehavior                    *BillingSubscriptionPauseBehavior   `json:"pause_behavior,omitempty" url:"pause_behavior,omitempty"`
+	PauseResumesAt                   *int64                              `json:"pause_resumes_at,omitempty" url:"pause_resumes_at,omitempty"`
+	PausedAt                         *time.Time                          `json:"paused_at,omitempty" url:"paused_at,omitempty"`
 	PeriodEnd                        int64                               `json:"period_end" url:"period_end"`
 	PeriodStart                      int64                               `json:"period_start" url:"period_start"`
 	ProviderType                     BillingProviderType                 `json:"provider_type" url:"provider_type"`
@@ -937,6 +1069,27 @@ func (c *CheckoutSubscription) GetMetadata() map[string]any {
 		return nil
 	}
 	return c.Metadata
+}
+
+func (c *CheckoutSubscription) GetPauseBehavior() *BillingSubscriptionPauseBehavior {
+	if c == nil {
+		return nil
+	}
+	return c.PauseBehavior
+}
+
+func (c *CheckoutSubscription) GetPauseResumesAt() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.PauseResumesAt
+}
+
+func (c *CheckoutSubscription) GetPausedAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.PausedAt
 }
 
 func (c *CheckoutSubscription) GetPeriodEnd() int64 {
@@ -1130,6 +1283,27 @@ func (c *CheckoutSubscription) SetMetadata(metadata map[string]any) {
 	c.require(checkoutSubscriptionFieldMetadata)
 }
 
+// SetPauseBehavior sets the PauseBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetPauseBehavior(pauseBehavior *BillingSubscriptionPauseBehavior) {
+	c.PauseBehavior = pauseBehavior
+	c.require(checkoutSubscriptionFieldPauseBehavior)
+}
+
+// SetPauseResumesAt sets the PauseResumesAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetPauseResumesAt(pauseResumesAt *int64) {
+	c.PauseResumesAt = pauseResumesAt
+	c.require(checkoutSubscriptionFieldPauseResumesAt)
+}
+
+// SetPausedAt sets the PausedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutSubscription) SetPausedAt(pausedAt *time.Time) {
+	c.PausedAt = pausedAt
+	c.require(checkoutSubscriptionFieldPausedAt)
+}
+
 // SetPeriodEnd sets the PeriodEnd field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (c *CheckoutSubscription) SetPeriodEnd(periodEnd int64) {
@@ -1193,6 +1367,7 @@ func (c *CheckoutSubscription) UnmarshalJSON(data []byte) error {
 		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
 		CreatedAt       *internal.DateTime `json:"created_at"`
 		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
+		PausedAt        *internal.DateTime `json:"paused_at,omitempty"`
 	}{
 		embed: embed(*c),
 	}
@@ -1203,6 +1378,7 @@ func (c *CheckoutSubscription) UnmarshalJSON(data []byte) error {
 	c.AccessRevokedAt = unmarshaler.AccessRevokedAt.TimePtr()
 	c.CreatedAt = unmarshaler.CreatedAt.Time()
 	c.ExpiredAt = unmarshaler.ExpiredAt.TimePtr()
+	c.PausedAt = unmarshaler.PausedAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *c)
 	if err != nil {
 		return err
@@ -1219,11 +1395,13 @@ func (c *CheckoutSubscription) MarshalJSON() ([]byte, error) {
 		AccessRevokedAt *internal.DateTime `json:"access_revoked_at,omitempty"`
 		CreatedAt       *internal.DateTime `json:"created_at"`
 		ExpiredAt       *internal.DateTime `json:"expired_at,omitempty"`
+		PausedAt        *internal.DateTime `json:"paused_at,omitempty"`
 	}{
 		embed:           embed(*c),
 		AccessRevokedAt: internal.NewOptionalDateTime(c.AccessRevokedAt),
 		CreatedAt:       internal.NewDateTime(c.CreatedAt),
 		ExpiredAt:       internal.NewOptionalDateTime(c.ExpiredAt),
+		PausedAt:        internal.NewOptionalDateTime(c.PausedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -2083,37 +2261,40 @@ func (m *ManagePlanPreviewResponseResponseData) String() string {
 var (
 	managePlanRequestFieldActivateOnPayment        = big.NewInt(1 << 0)
 	managePlanRequestFieldAddOnSelections          = big.NewInt(1 << 1)
-	managePlanRequestFieldBasePlanID               = big.NewInt(1 << 2)
-	managePlanRequestFieldBasePlanPriceID          = big.NewInt(1 << 3)
-	managePlanRequestFieldBasePlanVersionID        = big.NewInt(1 << 4)
-	managePlanRequestFieldBillingCycleAnchor       = big.NewInt(1 << 5)
-	managePlanRequestFieldBillingEmail             = big.NewInt(1 << 6)
-	managePlanRequestFieldBillingEntityID          = big.NewInt(1 << 7)
-	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 8)
-	managePlanRequestFieldCollectionMethod         = big.NewInt(1 << 9)
-	managePlanRequestFieldCompanyID                = big.NewInt(1 << 10)
-	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 11)
-	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 12)
-	managePlanRequestFieldCurrency                 = big.NewInt(1 << 13)
-	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 14)
-	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 15)
-	managePlanRequestFieldPaidOutsideStripe        = big.NewInt(1 << 16)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 17)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 18)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 19)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 20)
-	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 21)
-	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 22)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 23)
+	managePlanRequestFieldAlignWithBillingEntity   = big.NewInt(1 << 2)
+	managePlanRequestFieldBasePlanID               = big.NewInt(1 << 3)
+	managePlanRequestFieldBasePlanPriceID          = big.NewInt(1 << 4)
+	managePlanRequestFieldBasePlanVersionID        = big.NewInt(1 << 5)
+	managePlanRequestFieldBillingCycleAnchor       = big.NewInt(1 << 6)
+	managePlanRequestFieldBillingEmail             = big.NewInt(1 << 7)
+	managePlanRequestFieldBillingEntityID          = big.NewInt(1 << 8)
+	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 9)
+	managePlanRequestFieldCollectionMethod         = big.NewInt(1 << 10)
+	managePlanRequestFieldCompanyID                = big.NewInt(1 << 11)
+	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 12)
+	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 13)
+	managePlanRequestFieldCurrency                 = big.NewInt(1 << 14)
+	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 15)
+	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 16)
+	managePlanRequestFieldPaidOutsideStripe        = big.NewInt(1 << 17)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 18)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 19)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 20)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 21)
+	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 22)
+	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 23)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 24)
 )
 
 type ManagePlanRequest struct {
 	// If true, the company gets the plan only once the first invoice is paid. Only applies to an invoiced subscription. Defaults to false.
 	ActivateOnPayment *bool            `json:"activate_on_payment,omitempty" url:"activate_on_payment,omitempty"`
 	AddOnSelections   []*PlanSelection `json:"add_on_selections" url:"add_on_selections"`
-	BasePlanID        *string          `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
-	BasePlanPriceID   *string          `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
-	BasePlanVersionID *string          `json:"base_plan_version_id,omitempty" url:"base_plan_version_id,omitempty"`
+	// When true, the new subscription renews on the same date as the subscriptions billing_entity_id pays for, and the partial first period is billed pro rata. Requires billing_entity_id, and can't be combined with billing_cycle_anchor. Only honored when starting a new subscription.
+	AlignWithBillingEntity *bool   `json:"align_with_billing_entity,omitempty" url:"align_with_billing_entity,omitempty"`
+	BasePlanID             *string `json:"base_plan_id,omitempty" url:"base_plan_id,omitempty"`
+	BasePlanPriceID        *string `json:"base_plan_price_id,omitempty" url:"base_plan_price_id,omitempty"`
+	BasePlanVersionID      *string `json:"base_plan_version_id,omitempty" url:"base_plan_version_id,omitempty"`
 	// The date the subscription's billing period renews on. Only honored when starting a new subscription; changing the anchor on an existing subscription is not supported.
 	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
 	// Address the invoice is sent to. Required when collection_method is send_invoice.
@@ -2164,6 +2345,13 @@ func (m *ManagePlanRequest) GetAddOnSelections() []*PlanSelection {
 		return nil
 	}
 	return m.AddOnSelections
+}
+
+func (m *ManagePlanRequest) GetAlignWithBillingEntity() *bool {
+	if m == nil {
+		return nil
+	}
+	return m.AlignWithBillingEntity
 }
 
 func (m *ManagePlanRequest) GetBasePlanID() *string {
@@ -2348,6 +2536,13 @@ func (m *ManagePlanRequest) SetActivateOnPayment(activateOnPayment *bool) {
 func (m *ManagePlanRequest) SetAddOnSelections(addOnSelections []*PlanSelection) {
 	m.AddOnSelections = addOnSelections
 	m.require(managePlanRequestFieldAddOnSelections)
+}
+
+// SetAlignWithBillingEntity sets the AlignWithBillingEntity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetAlignWithBillingEntity(alignWithBillingEntity *bool) {
+	m.AlignWithBillingEntity = alignWithBillingEntity
+	m.require(managePlanRequestFieldAlignWithBillingEntity)
 }
 
 // SetBasePlanID sets the BasePlanID field and marks it as non-optional;
@@ -5376,6 +5571,109 @@ func (m *ManagePlanResponse) String() string {
 }
 
 var (
+	pauseSubscriptionResponseFieldData   = big.NewInt(1 << 0)
+	pauseSubscriptionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type PauseSubscriptionResponse struct {
+	Data *ManagePlanResponseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PauseSubscriptionResponse) GetData() *ManagePlanResponseResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.Data
+}
+
+func (p *PauseSubscriptionResponse) GetParams() map[string]any {
+	if p == nil {
+		return nil
+	}
+	return p.Params
+}
+
+func (p *PauseSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.extraProperties
+}
+
+func (p *PauseSubscriptionResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if p.explicitFields != nil {
+		next.Set(p.explicitFields)
+	}
+	next.Or(next, field)
+	p.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PauseSubscriptionResponse) SetData(data *ManagePlanResponseResponseData) {
+	p.Data = data
+	p.require(pauseSubscriptionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PauseSubscriptionResponse) SetParams(params map[string]any) {
+	p.Params = params
+	p.require(pauseSubscriptionResponseFieldParams)
+}
+
+func (p *PauseSubscriptionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PauseSubscriptionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PauseSubscriptionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PauseSubscriptionResponse) MarshalJSON() ([]byte, error) {
+	type embed PauseSubscriptionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*p),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, p.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (p *PauseSubscriptionResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+var (
 	previewCheckoutInternalResponseFieldData   = big.NewInt(1 << 0)
 	previewCheckoutInternalResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -5579,6 +5877,109 @@ func (p *PreviewManagePlanResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", p)
+}
+
+var (
+	resumeSubscriptionResponseFieldData   = big.NewInt(1 << 0)
+	resumeSubscriptionResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ResumeSubscriptionResponse struct {
+	Data *ManagePlanResponseResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ResumeSubscriptionResponse) GetData() *ManagePlanResponseResponseData {
+	if r == nil {
+		return nil
+	}
+	return r.Data
+}
+
+func (r *ResumeSubscriptionResponse) GetParams() map[string]any {
+	if r == nil {
+		return nil
+	}
+	return r.Params
+}
+
+func (r *ResumeSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *ResumeSubscriptionResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResumeSubscriptionResponse) SetData(data *ManagePlanResponseResponseData) {
+	r.Data = data
+	r.require(resumeSubscriptionResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *ResumeSubscriptionResponse) SetParams(params map[string]any) {
+	r.Params = params
+	r.require(resumeSubscriptionResponseFieldParams)
+}
+
+func (r *ResumeSubscriptionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ResumeSubscriptionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ResumeSubscriptionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ResumeSubscriptionResponse) MarshalJSON() ([]byte, error) {
+	type embed ResumeSubscriptionResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *ResumeSubscriptionResponse) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }
 
 var (

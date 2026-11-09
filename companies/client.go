@@ -462,6 +462,56 @@ func (c *Client) GetCompanyBillingEntity(
 
 // Example:
 //
+//	_, err := client.Companies.GetBillingEntitySettings(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) GetBillingEntitySettings(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetBillingEntitySettingsResponse, error) {
+	response, err := c.WithRawResponse.GetBillingEntitySettings(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpdateBillingEntitySettingsRequestBody{}
+//	_, err := client.Companies.UpdateBillingEntitySettings(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
+func (c *Client) UpdateBillingEntitySettings(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	request *schematichq.UpdateBillingEntitySettingsRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateBillingEntitySettingsResponse, error) {
+	response, err := c.WithRawResponse.UpdateBillingEntitySettings(
+		ctx,
+		companyID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.GetBillingEntityChildSubscriptionsRequest{
 //	    CompanyID: "company_id",
 //	}
@@ -1307,6 +1357,10 @@ func (c *Client) UpsertUserTrait(
 //	    Q: schematichq.String(
 //	        "q",
 //	    ),
+//	    SortOrderColumn: schematichq.String(
+//	        "sort_order_column",
+//	    ),
+//	    SortOrderDirection: schematichq.SortDirectionAsc.Ptr(),
 //	    Limit: schematichq.Int64(
 //	        int64(1000000),
 //	    ),

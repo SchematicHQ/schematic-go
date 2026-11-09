@@ -320,46 +320,49 @@ var (
 	createEntitlementInBundleRequestBodyFieldFeatureID                 = big.NewInt(1 << 5)
 	createEntitlementInBundleRequestBodyFieldMetricPeriod              = big.NewInt(1 << 6)
 	createEntitlementInBundleRequestBodyFieldMetricPeriodMonthReset    = big.NewInt(1 << 7)
-	createEntitlementInBundleRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 8)
-	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 9)
-	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 10)
-	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 11)
-	createEntitlementInBundleRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 12)
-	createEntitlementInBundleRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 13)
-	createEntitlementInBundleRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 14)
-	createEntitlementInBundleRequestBodyFieldPlanID                    = big.NewInt(1 << 15)
-	createEntitlementInBundleRequestBodyFieldPlanVersionID             = big.NewInt(1 << 16)
-	createEntitlementInBundleRequestBodyFieldPriceBehavior             = big.NewInt(1 << 17)
-	createEntitlementInBundleRequestBodyFieldPriceTiers                = big.NewInt(1 << 18)
-	createEntitlementInBundleRequestBodyFieldQuantityRates             = big.NewInt(1 << 19)
-	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 20)
-	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 21)
-	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 22)
-	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 23)
-	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 24)
-	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 25)
-	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 26)
-	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 27)
-	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 28)
-	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 29)
-	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 30)
-	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 31)
-	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 32)
-	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 33)
-	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 34)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 35)
-	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 36)
+	createEntitlementInBundleRequestBodyFieldModelRates                = big.NewInt(1 << 8)
+	createEntitlementInBundleRequestBodyFieldMonthlyMeteredPriceID     = big.NewInt(1 << 9)
+	createEntitlementInBundleRequestBodyFieldMonthlyPriceTiers         = big.NewInt(1 << 10)
+	createEntitlementInBundleRequestBodyFieldMonthlyUnitPrice          = big.NewInt(1 << 11)
+	createEntitlementInBundleRequestBodyFieldMonthlyUnitPriceDecimal   = big.NewInt(1 << 12)
+	createEntitlementInBundleRequestBodyFieldOverageBillingCadence     = big.NewInt(1 << 13)
+	createEntitlementInBundleRequestBodyFieldOverageBillingProductID   = big.NewInt(1 << 14)
+	createEntitlementInBundleRequestBodyFieldOverageInvoiceAnchor      = big.NewInt(1 << 15)
+	createEntitlementInBundleRequestBodyFieldPlanID                    = big.NewInt(1 << 16)
+	createEntitlementInBundleRequestBodyFieldPlanVersionID             = big.NewInt(1 << 17)
+	createEntitlementInBundleRequestBodyFieldPriceBehavior             = big.NewInt(1 << 18)
+	createEntitlementInBundleRequestBodyFieldPriceTiers                = big.NewInt(1 << 19)
+	createEntitlementInBundleRequestBodyFieldQuantityRates             = big.NewInt(1 << 20)
+	createEntitlementInBundleRequestBodyFieldQuarterlyMeteredPriceID   = big.NewInt(1 << 21)
+	createEntitlementInBundleRequestBodyFieldQuarterlyPriceTiers       = big.NewInt(1 << 22)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPrice        = big.NewInt(1 << 23)
+	createEntitlementInBundleRequestBodyFieldQuarterlyUnitPriceDecimal = big.NewInt(1 << 24)
+	createEntitlementInBundleRequestBodyFieldSoftLimit                 = big.NewInt(1 << 25)
+	createEntitlementInBundleRequestBodyFieldTierMode                  = big.NewInt(1 << 26)
+	createEntitlementInBundleRequestBodyFieldUsageQuantity             = big.NewInt(1 << 27)
+	createEntitlementInBundleRequestBodyFieldValueBool                 = big.NewInt(1 << 28)
+	createEntitlementInBundleRequestBodyFieldValueCreditID             = big.NewInt(1 << 29)
+	createEntitlementInBundleRequestBodyFieldValueNumeric              = big.NewInt(1 << 30)
+	createEntitlementInBundleRequestBodyFieldValueTraitID              = big.NewInt(1 << 31)
+	createEntitlementInBundleRequestBodyFieldValueType                 = big.NewInt(1 << 32)
+	createEntitlementInBundleRequestBodyFieldWarningTiers              = big.NewInt(1 << 33)
+	createEntitlementInBundleRequestBodyFieldYearlyMeteredPriceID      = big.NewInt(1 << 34)
+	createEntitlementInBundleRequestBodyFieldYearlyPriceTiers          = big.NewInt(1 << 35)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPrice           = big.NewInt(1 << 36)
+	createEntitlementInBundleRequestBodyFieldYearlyUnitPriceDecimal    = big.NewInt(1 << 37)
 )
 
 type CreateEntitlementInBundleRequestBody struct {
-	BillingProductID        *string                       `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
-	BillingThreshold        *int64                        `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
-	CreditConsumptionRate   *float64                      `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
-	Currency                *Currency                     `json:"currency,omitempty" url:"currency,omitempty"`
-	CurrencyPrices          []*CurrencyPriceRequestBody   `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
-	FeatureID               string                        `json:"feature_id" url:"feature_id"`
-	MetricPeriod            *MetricPeriod                 `json:"metric_period,omitempty" url:"metric_period,omitempty"`
-	MetricPeriodMonthReset  *MetricPeriodMonthReset       `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	BillingProductID       *string                     `json:"billing_product_id,omitempty" url:"billing_product_id,omitempty"`
+	BillingThreshold       *int64                      `json:"billing_threshold,omitempty" url:"billing_threshold,omitempty"`
+	CreditConsumptionRate  *float64                    `json:"credit_consumption_rate,omitempty" url:"credit_consumption_rate,omitempty"`
+	Currency               *Currency                   `json:"currency,omitempty" url:"currency,omitempty"`
+	CurrencyPrices         []*CurrencyPriceRequestBody `json:"currency_prices,omitempty" url:"currency_prices,omitempty"`
+	FeatureID              string                      `json:"feature_id" url:"feature_id"`
+	MetricPeriod           *MetricPeriod               `json:"metric_period,omitempty" url:"metric_period,omitempty"`
+	MetricPeriodMonthReset *MetricPeriodMonthReset     `json:"metric_period_month_reset,omitempty" url:"metric_period_month_reset,omitempty"`
+	// Per-model rate overrides for inference features, keyed by provider and model. Each entry is a complete rate card: its consumption_rate and quantity_rates replace the entitlement's credit_consumption_rate and quantity_rates for events from that provider and model. An event matches an entry by exact model name first, then by its model name without a trailing snapshot date (claude-sonnet-4-5-20250929 matches claude-sonnet-4-5). Models with no entry burn at the entitlement's own rates. Omit to leave the overrides as they are; send null to clear them.
+	ModelRates              []*CreditModelRate            `json:"model_rates,omitempty" url:"model_rates,omitempty"`
 	MonthlyMeteredPriceID   *string                       `json:"monthly_metered_price_id,omitempty" url:"monthly_metered_price_id,omitempty"`
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
@@ -456,6 +459,13 @@ func (c *CreateEntitlementInBundleRequestBody) GetMetricPeriodMonthReset() *Metr
 		return nil
 	}
 	return c.MetricPeriodMonthReset
+}
+
+func (c *CreateEntitlementInBundleRequestBody) GetModelRates() []*CreditModelRate {
+	if c == nil {
+		return nil
+	}
+	return c.ModelRates
 }
 
 func (c *CreateEntitlementInBundleRequestBody) GetMonthlyMeteredPriceID() *string {
@@ -731,6 +741,13 @@ func (c *CreateEntitlementInBundleRequestBody) SetMetricPeriod(metricPeriod *Met
 func (c *CreateEntitlementInBundleRequestBody) SetMetricPeriodMonthReset(metricPeriodMonthReset *MetricPeriodMonthReset) {
 	c.MetricPeriodMonthReset = metricPeriodMonthReset
 	c.require(createEntitlementInBundleRequestBodyFieldMetricPeriodMonthReset)
+}
+
+// SetModelRates sets the ModelRates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateEntitlementInBundleRequestBody) SetModelRates(modelRates []*CreditModelRate) {
+	c.ModelRates = modelRates
+	c.require(createEntitlementInBundleRequestBodyFieldModelRates)
 }
 
 // SetMonthlyMeteredPriceID sets the MonthlyMeteredPriceID field and marks it as non-optional;

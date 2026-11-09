@@ -1951,35 +1951,41 @@ func (p *PlanVersionPriceChangeResponseData) String() string {
 }
 
 var (
-	publishPlanVersionRequestBodyFieldActivationStrategy = big.NewInt(1 << 0)
-	publishPlanVersionRequestBodyFieldAddress            = big.NewInt(1 << 1)
-	publishPlanVersionRequestBodyFieldBillingCycleAnchor = big.NewInt(1 << 2)
-	publishPlanVersionRequestBodyFieldBillingStartDate   = big.NewInt(1 << 3)
-	publishPlanVersionRequestBodyFieldCollectionMethod   = big.NewInt(1 << 4)
-	publishPlanVersionRequestBodyFieldCouponExternalID   = big.NewInt(1 << 5)
-	publishPlanVersionRequestBodyFieldCustomFieldValues  = big.NewInt(1 << 6)
-	publishPlanVersionRequestBodyFieldCustomerEmail      = big.NewInt(1 << 7)
-	publishPlanVersionRequestBodyFieldDaysUntilDue       = big.NewInt(1 << 8)
-	publishPlanVersionRequestBodyFieldEndDate            = big.NewInt(1 << 9)
-	publishPlanVersionRequestBodyFieldExcludedCompanyIDs = big.NewInt(1 << 10)
-	publishPlanVersionRequestBodyFieldGatingDays         = big.NewInt(1 << 11)
-	publishPlanVersionRequestBodyFieldMigrationStrategy  = big.NewInt(1 << 12)
-	publishPlanVersionRequestBodyFieldPaymentGating      = big.NewInt(1 << 13)
-	publishPlanVersionRequestBodyFieldPhone              = big.NewInt(1 << 14)
-	publishPlanVersionRequestBodyFieldProrateFirstPeriod = big.NewInt(1 << 15)
-	publishPlanVersionRequestBodyFieldProrationBehavior  = big.NewInt(1 << 16)
-	publishPlanVersionRequestBodyFieldRequireNoMigration = big.NewInt(1 << 17)
-	publishPlanVersionRequestBodyFieldScheduledAt        = big.NewInt(1 << 18)
-	publishPlanVersionRequestBodyFieldSendInvoice        = big.NewInt(1 << 19)
-	publishPlanVersionRequestBodyFieldTaxID              = big.NewInt(1 << 20)
+	publishPlanVersionRequestBodyFieldActivationStrategy     = big.NewInt(1 << 0)
+	publishPlanVersionRequestBodyFieldAddress                = big.NewInt(1 << 1)
+	publishPlanVersionRequestBodyFieldAlignWithBillingEntity = big.NewInt(1 << 2)
+	publishPlanVersionRequestBodyFieldBillingCycleAnchor     = big.NewInt(1 << 3)
+	publishPlanVersionRequestBodyFieldBillingEntityID        = big.NewInt(1 << 4)
+	publishPlanVersionRequestBodyFieldBillingStartDate       = big.NewInt(1 << 5)
+	publishPlanVersionRequestBodyFieldCollectionMethod       = big.NewInt(1 << 6)
+	publishPlanVersionRequestBodyFieldCouponExternalID       = big.NewInt(1 << 7)
+	publishPlanVersionRequestBodyFieldCustomFieldValues      = big.NewInt(1 << 8)
+	publishPlanVersionRequestBodyFieldCustomerEmail          = big.NewInt(1 << 9)
+	publishPlanVersionRequestBodyFieldDaysUntilDue           = big.NewInt(1 << 10)
+	publishPlanVersionRequestBodyFieldEndDate                = big.NewInt(1 << 11)
+	publishPlanVersionRequestBodyFieldExcludedCompanyIDs     = big.NewInt(1 << 12)
+	publishPlanVersionRequestBodyFieldGatingDays             = big.NewInt(1 << 13)
+	publishPlanVersionRequestBodyFieldMigrationStrategy      = big.NewInt(1 << 14)
+	publishPlanVersionRequestBodyFieldPaymentGating          = big.NewInt(1 << 15)
+	publishPlanVersionRequestBodyFieldPhone                  = big.NewInt(1 << 16)
+	publishPlanVersionRequestBodyFieldProrateFirstPeriod     = big.NewInt(1 << 17)
+	publishPlanVersionRequestBodyFieldProrationBehavior      = big.NewInt(1 << 18)
+	publishPlanVersionRequestBodyFieldRequireNoMigration     = big.NewInt(1 << 19)
+	publishPlanVersionRequestBodyFieldScheduledAt            = big.NewInt(1 << 20)
+	publishPlanVersionRequestBodyFieldSendInvoice            = big.NewInt(1 << 21)
+	publishPlanVersionRequestBodyFieldTaxID                  = big.NewInt(1 << 22)
 )
 
 type PublishPlanVersionRequestBody struct {
 	// When the company gets the plan. On a custom-plan first publish, charging the default payment method always activates on payment. On a custom-plan republish, on_payment is only accepted when the amendment is invoiced today (migration_strategy immediate, proration_behavior always_invoice, collection_method send_invoice): the company stays on its current version until that invoice is paid.
 	ActivationStrategy *CustomPlanActivationStrategy `json:"activation_strategy,omitempty" url:"activation_strategy,omitempty"`
 	Address            *CustomerBillingAddress       `json:"address,omitempty" url:"address,omitempty"`
+	// When true, the subscription renews on the same date as the subscriptions billing_entity_id pays for, and the partial first period is billed pro rata unless prorate_first_period is false. Requires billing_entity_id, and can't be combined with billing_cycle_anchor. Only honored on a first publish that starts a subscription.
+	AlignWithBillingEntity *bool `json:"align_with_billing_entity,omitempty" url:"align_with_billing_entity,omitempty"`
 	// The date the subscription's billing period renews on. Only honored on a first publish that starts a subscription.
 	BillingCycleAnchor *time.Time `json:"billing_cycle_anchor,omitempty" url:"billing_cycle_anchor,omitempty"`
+	// The company that pays for the subscription a custom plan's first publish starts. Must already have a Stripe customer. Only honored on a first publish that starts a subscription, and not when Schematic bills the company.
+	BillingEntityID *string `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
 	// The date the contract term starts. A past date backdates the subscription so the first invoice covers the term from this date to the renewal date. Requires billing_cycle_anchor. Only honored on a first publish that starts a subscription.
 	BillingStartDate *time.Time `json:"billing_start_date,omitempty" url:"billing_start_date,omitempty"`
 	// How a custom plan's invoice is collected. send_invoice issues it for the company to pay; charge_automatically charges the default payment method straight away. On a first publish, omitted charges the default payment method when the company has one and the first period is billed, and sends the invoice otherwise. On a republish, omitted means send_invoice, and it is only accepted with migration_strategy immediate and proration_behavior always_invoice.
@@ -2032,11 +2038,25 @@ func (p *PublishPlanVersionRequestBody) GetAddress() *CustomerBillingAddress {
 	return p.Address
 }
 
+func (p *PublishPlanVersionRequestBody) GetAlignWithBillingEntity() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.AlignWithBillingEntity
+}
+
 func (p *PublishPlanVersionRequestBody) GetBillingCycleAnchor() *time.Time {
 	if p == nil {
 		return nil
 	}
 	return p.BillingCycleAnchor
+}
+
+func (p *PublishPlanVersionRequestBody) GetBillingEntityID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BillingEntityID
 }
 
 func (p *PublishPlanVersionRequestBody) GetBillingStartDate() *time.Time {
@@ -2195,11 +2215,25 @@ func (p *PublishPlanVersionRequestBody) SetAddress(address *CustomerBillingAddre
 	p.require(publishPlanVersionRequestBodyFieldAddress)
 }
 
+// SetAlignWithBillingEntity sets the AlignWithBillingEntity field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetAlignWithBillingEntity(alignWithBillingEntity *bool) {
+	p.AlignWithBillingEntity = alignWithBillingEntity
+	p.require(publishPlanVersionRequestBodyFieldAlignWithBillingEntity)
+}
+
 // SetBillingCycleAnchor sets the BillingCycleAnchor field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PublishPlanVersionRequestBody) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
 	p.BillingCycleAnchor = billingCycleAnchor
 	p.require(publishPlanVersionRequestBodyFieldBillingCycleAnchor)
+}
+
+// SetBillingEntityID sets the BillingEntityID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPlanVersionRequestBody) SetBillingEntityID(billingEntityID *string) {
+	p.BillingEntityID = billingEntityID
+	p.require(publishPlanVersionRequestBodyFieldBillingEntityID)
 }
 
 // SetBillingStartDate sets the BillingStartDate field and marks it as non-optional;
@@ -2840,33 +2874,39 @@ func (p *PublishPreviewProrationLineResponseData) String() string {
 
 var (
 	publishPreviewResponseDataFieldBillingEmail            = big.NewInt(1 << 0)
-	publishPreviewResponseDataFieldCurrency                = big.NewInt(1 << 1)
-	publishPreviewResponseDataFieldCurrentPeriodEnd        = big.NewInt(1 << 2)
-	publishPreviewResponseDataFieldCurrentPeriodStart      = big.NewInt(1 << 3)
-	publishPreviewResponseDataFieldDefaultCollectionMethod = big.NewInt(1 << 4)
-	publishPreviewResponseDataFieldDefaultDaysUntilDue     = big.NewInt(1 << 5)
-	publishPreviewResponseDataFieldDefaultSendInvoice      = big.NewInt(1 << 6)
-	publishPreviewResponseDataFieldEffectiveAt             = big.NewInt(1 << 7)
-	publishPreviewResponseDataFieldEndsAt                  = big.NewInt(1 << 8)
-	publishPreviewResponseDataFieldHasBillingChanges       = big.NewInt(1 << 9)
-	publishPreviewResponseDataFieldImmediateInvoiceAmount  = big.NewInt(1 << 10)
-	publishPreviewResponseDataFieldLandsOn                 = big.NewInt(1 << 11)
-	publishPreviewResponseDataFieldNewRecurringAmount      = big.NewInt(1 << 12)
-	publishPreviewResponseDataFieldNextInvoiceAmount       = big.NewInt(1 << 13)
-	publishPreviewResponseDataFieldNextInvoiceAt           = big.NewInt(1 << 14)
-	publishPreviewResponseDataFieldNote                    = big.NewInt(1 << 15)
-	publishPreviewResponseDataFieldPayInAdvance            = big.NewInt(1 << 16)
-	publishPreviewResponseDataFieldPaymentMethod           = big.NewInt(1 << 17)
-	publishPreviewResponseDataFieldProrationCharge         = big.NewInt(1 << 18)
-	publishPreviewResponseDataFieldProrationCredit         = big.NewInt(1 << 19)
-	publishPreviewResponseDataFieldProrationLines          = big.NewInt(1 << 20)
-	publishPreviewResponseDataFieldProrationTotal          = big.NewInt(1 << 21)
-	publishPreviewResponseDataFieldWillUpdateSubscription  = big.NewInt(1 << 22)
-	publishPreviewResponseDataFieldWouldFail               = big.NewInt(1 << 23)
+	publishPreviewResponseDataFieldBillingEntityID         = big.NewInt(1 << 1)
+	publishPreviewResponseDataFieldBillingEntityName       = big.NewInt(1 << 2)
+	publishPreviewResponseDataFieldCurrency                = big.NewInt(1 << 3)
+	publishPreviewResponseDataFieldCurrentPeriodEnd        = big.NewInt(1 << 4)
+	publishPreviewResponseDataFieldCurrentPeriodStart      = big.NewInt(1 << 5)
+	publishPreviewResponseDataFieldDefaultCollectionMethod = big.NewInt(1 << 6)
+	publishPreviewResponseDataFieldDefaultDaysUntilDue     = big.NewInt(1 << 7)
+	publishPreviewResponseDataFieldDefaultSendInvoice      = big.NewInt(1 << 8)
+	publishPreviewResponseDataFieldEffectiveAt             = big.NewInt(1 << 9)
+	publishPreviewResponseDataFieldEndsAt                  = big.NewInt(1 << 10)
+	publishPreviewResponseDataFieldHasBillingChanges       = big.NewInt(1 << 11)
+	publishPreviewResponseDataFieldImmediateInvoiceAmount  = big.NewInt(1 << 12)
+	publishPreviewResponseDataFieldLandsOn                 = big.NewInt(1 << 13)
+	publishPreviewResponseDataFieldNewRecurringAmount      = big.NewInt(1 << 14)
+	publishPreviewResponseDataFieldNextInvoiceAmount       = big.NewInt(1 << 15)
+	publishPreviewResponseDataFieldNextInvoiceAt           = big.NewInt(1 << 16)
+	publishPreviewResponseDataFieldNote                    = big.NewInt(1 << 17)
+	publishPreviewResponseDataFieldPayInAdvance            = big.NewInt(1 << 18)
+	publishPreviewResponseDataFieldPaymentMethod           = big.NewInt(1 << 19)
+	publishPreviewResponseDataFieldProrationCharge         = big.NewInt(1 << 20)
+	publishPreviewResponseDataFieldProrationCredit         = big.NewInt(1 << 21)
+	publishPreviewResponseDataFieldProrationLines          = big.NewInt(1 << 22)
+	publishPreviewResponseDataFieldProrationTotal          = big.NewInt(1 << 23)
+	publishPreviewResponseDataFieldWillUpdateSubscription  = big.NewInt(1 << 24)
+	publishPreviewResponseDataFieldWouldFail               = big.NewInt(1 << 25)
 )
 
 type PublishPreviewResponseData struct {
-	BillingEmail       *string    `json:"billing_email,omitempty" url:"billing_email,omitempty"`
+	BillingEmail *string `json:"billing_email,omitempty" url:"billing_email,omitempty"`
+	// The company that pays for the subscription, when it isn't the plan's company. The amendment invoice is raised on its customer, so payment_method and billing_email are its.
+	BillingEntityID *string `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
+	// The name of the company in billing_entity_id.
+	BillingEntityName  *string    `json:"billing_entity_name,omitempty" url:"billing_entity_name,omitempty"`
 	Currency           *Currency  `json:"currency,omitempty" url:"currency,omitempty"`
 	CurrentPeriodEnd   *time.Time `json:"current_period_end,omitempty" url:"current_period_end,omitempty"`
 	CurrentPeriodStart *time.Time `json:"current_period_start,omitempty" url:"current_period_start,omitempty"`
@@ -2914,6 +2954,20 @@ func (p *PublishPreviewResponseData) GetBillingEmail() *string {
 		return nil
 	}
 	return p.BillingEmail
+}
+
+func (p *PublishPreviewResponseData) GetBillingEntityID() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BillingEntityID
+}
+
+func (p *PublishPreviewResponseData) GetBillingEntityName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BillingEntityName
 }
 
 func (p *PublishPreviewResponseData) GetCurrency() *Currency {
@@ -3098,6 +3152,20 @@ func (p *PublishPreviewResponseData) require(field *big.Int) {
 func (p *PublishPreviewResponseData) SetBillingEmail(billingEmail *string) {
 	p.BillingEmail = billingEmail
 	p.require(publishPreviewResponseDataFieldBillingEmail)
+}
+
+// SetBillingEntityID sets the BillingEntityID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetBillingEntityID(billingEntityID *string) {
+	p.BillingEntityID = billingEntityID
+	p.require(publishPreviewResponseDataFieldBillingEntityID)
+}
+
+// SetBillingEntityName sets the BillingEntityName field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PublishPreviewResponseData) SetBillingEntityName(billingEntityName *string) {
+	p.BillingEntityName = billingEntityName
+	p.require(publishPreviewResponseDataFieldBillingEntityName)
 }
 
 // SetCurrency sets the Currency field and marks it as non-optional;

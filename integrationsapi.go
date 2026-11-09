@@ -2108,7 +2108,8 @@ var (
 	stripeIntegrationConfigFieldIsSandbox                 = big.NewInt(1 << 6)
 	stripeIntegrationConfigFieldLiveMode                  = big.NewInt(1 << 7)
 	stripeIntegrationConfigFieldOnboardURL                = big.NewInt(1 << 8)
-	stripeIntegrationConfigFieldReturnTo                  = big.NewInt(1 << 9)
+	stripeIntegrationConfigFieldPaymentsOnly              = big.NewInt(1 << 9)
+	stripeIntegrationConfigFieldReturnTo                  = big.NewInt(1 << 10)
 )
 
 type StripeIntegrationConfig struct {
@@ -2130,6 +2131,8 @@ type StripeIntegrationConfig struct {
 	LiveMode bool `json:"live_mode" url:"live_mode"`
 	// Onboarding URL returned during the v2 (Connect) install flow before activation
 	OnboardURL *string `json:"onboard_url,omitempty" url:"onboard_url,omitempty"`
+	// Whether Stripe is connected only to collect payments on the invoices Schematic issues. Customers and their cards sync; subscriptions, invoices, products, prices and coupons do not, and plans are not created in Stripe.
+	PaymentsOnly *bool `json:"payments_only,omitempty" url:"payments_only,omitempty"`
 	// App location that started the connect flow; the OAuth callback redirects back there on success
 	ReturnTo *string `json:"return_to,omitempty" url:"return_to,omitempty"`
 
@@ -2201,6 +2204,13 @@ func (s *StripeIntegrationConfig) GetOnboardURL() *string {
 		return nil
 	}
 	return s.OnboardURL
+}
+
+func (s *StripeIntegrationConfig) GetPaymentsOnly() *bool {
+	if s == nil {
+		return nil
+	}
+	return s.PaymentsOnly
 }
 
 func (s *StripeIntegrationConfig) GetReturnTo() *string {
@@ -2287,6 +2297,13 @@ func (s *StripeIntegrationConfig) SetLiveMode(liveMode bool) {
 func (s *StripeIntegrationConfig) SetOnboardURL(onboardURL *string) {
 	s.OnboardURL = onboardURL
 	s.require(stripeIntegrationConfigFieldOnboardURL)
+}
+
+// SetPaymentsOnly sets the PaymentsOnly field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StripeIntegrationConfig) SetPaymentsOnly(paymentsOnly *bool) {
+	s.PaymentsOnly = paymentsOnly
+	s.require(stripeIntegrationConfigFieldPaymentsOnly)
 }
 
 // SetReturnTo sets the ReturnTo field and marks it as non-optional;

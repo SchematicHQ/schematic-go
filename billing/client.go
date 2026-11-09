@@ -945,6 +945,106 @@ func (c *Client) UpdateCompanyBillingProfile(
 
 // Example:
 //
+//	_, err := client.Billing.GetCompanyContract(
+//	    context.TODO(),
+//	    "billing_profile_id",
+//	)
+func (c *Client) GetCompanyContract(
+	ctx context.Context,
+	// billing_profile_id
+	billingProfileID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyContractResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyContract(
+		ctx,
+		billingProfileID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.DownloadContractDocument(
+//	    context.TODO(),
+//	    "billing_profile_id",
+//	)
+func (c *Client) DownloadContractDocument(
+	ctx context.Context,
+	// billing_profile_id
+	billingProfileID string,
+	opts ...option.RequestOption,
+) (io.Reader, error) {
+	response, err := c.WithRawResponse.DownloadContractDocument(
+		ctx,
+		billingProfileID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UploadContractDocumentRequest{
+//	    File: strings.NewReader(
+//	        "",
+//	    ),
+//	}
+//	_, err := client.Billing.UploadContractDocument(
+//	    context.TODO(),
+//	    "billing_profile_id",
+//	    request,
+//	)
+func (c *Client) UploadContractDocument(
+	ctx context.Context,
+	// billing_profile_id
+	billingProfileID string,
+	request *schematichq.UploadContractDocumentRequest,
+	opts ...option.RequestOption,
+) (*schematichq.UploadContractDocumentResponse, error) {
+	response, err := c.WithRawResponse.UploadContractDocument(
+		ctx,
+		billingProfileID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.DeleteContractDocument(
+//	    context.TODO(),
+//	    "billing_profile_id",
+//	)
+func (c *Client) DeleteContractDocument(
+	ctx context.Context,
+	// billing_profile_id
+	billingProfileID string,
+	opts ...option.RequestOption,
+) (*schematichq.DeleteContractDocumentResponse, error) {
+	response, err := c.WithRawResponse.DeleteContractDocument(
+		ctx,
+		billingProfileID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	_, err := client.Billing.GetBillingSettings(
 //	    context.TODO(),
 //	)
@@ -1063,6 +1163,52 @@ func (c *Client) GetCompanyNativeSubscription(
 
 // Example:
 //
+//	_, err := client.Billing.MoveToDefaultPlan(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) MoveToDefaultPlan(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.MoveToDefaultPlanResponse, error) {
+	response, err := c.WithRawResponse.MoveToDefaultPlan(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.GetCompanyUpcomingInvoices(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) GetCompanyUpcomingInvoices(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyUpcomingInvoicesResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyUpcomingInvoices(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListBillingInvoicesRequest{
 //	    CompanyID: schematichq.String(
 //	        "company_id",
@@ -1131,6 +1277,29 @@ func (c *Client) GetBillingInvoice(
 
 // Example:
 //
+//	_, err := client.Billing.ChargeNativeInvoice(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) ChargeNativeInvoice(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (*schematichq.ChargeNativeInvoiceResponse, error) {
+	response, err := c.WithRawResponse.ChargeNativeInvoice(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	_, err := client.Billing.ExportNativeInvoice(
 //	    context.TODO(),
 //	    "invoice_id",
@@ -1165,6 +1334,52 @@ func (c *Client) FinalizeNativeInvoice(
 	opts ...option.RequestOption,
 ) (*schematichq.FinalizeNativeInvoiceResponse, error) {
 	response, err := c.WithRawResponse.FinalizeNativeInvoice(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.ReissueNativeInvoiceLink(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) ReissueNativeInvoiceLink(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (*schematichq.ReissueNativeInvoiceLinkResponse, error) {
+	response, err := c.WithRawResponse.ReissueNativeInvoiceLink(
+		ctx,
+		invoiceID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.RevokeNativeInvoiceLink(
+//	    context.TODO(),
+//	    "invoice_id",
+//	)
+func (c *Client) RevokeNativeInvoiceLink(
+	ctx context.Context,
+	// invoice_id
+	invoiceID string,
+	opts ...option.RequestOption,
+) (*schematichq.RevokeNativeInvoiceLinkResponse, error) {
+	response, err := c.WithRawResponse.RevokeNativeInvoiceLink(
 		ctx,
 		invoiceID,
 		opts...,

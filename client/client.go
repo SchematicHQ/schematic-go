@@ -15,6 +15,7 @@ import (
 	componentspublic "github.com/schematichq/schematic-go/componentspublic"
 	core "github.com/schematichq/schematic-go/core"
 	credits "github.com/schematichq/schematic-go/credits"
+	customplangrouprollouts "github.com/schematichq/schematic-go/customplangrouprollouts"
 	dataexports "github.com/schematichq/schematic-go/dataexports"
 	entitlements "github.com/schematichq/schematic-go/entitlements"
 	events "github.com/schematichq/schematic-go/events"
@@ -33,29 +34,30 @@ import (
 )
 
 type Client struct {
-	WithRawResponse   *RawClient
-	Accounts          *accounts.Client
-	Billing           *billing.Client
-	Credits           *credits.Client
-	Catalogs          *catalogs.Client
-	Checkout          *checkout.Client
-	Companies         *companies.Client
-	Entitlements      *entitlements.Client
-	Plans             *plans.Client
-	Components        *components.Client
-	Planbundle        *planbundle.Client
-	Dataexports       *dataexports.Client
-	Events            *events.Client
-	Features          *features.Client
-	Insights          *insights.Client
-	Integrationsapi   *integrationsapi.Client
-	Licenses          *licenses.Client
-	Plangroups        *plangroups.Client
-	Planmigrations    *planmigrations.Client
-	Componentspublic  *componentspublic.Client
-	Scheduledcheckout *scheduledcheckout.Client
-	Accesstokens      *accesstokens.Client
-	Webhooks          *webhooks.Client
+	WithRawResponse         *RawClient
+	Accounts                *accounts.Client
+	Billing                 *billing.Client
+	Credits                 *credits.Client
+	Catalogs                *catalogs.Client
+	Checkout                *checkout.Client
+	Companies               *companies.Client
+	Entitlements            *entitlements.Client
+	Plans                   *plans.Client
+	Components              *components.Client
+	Planbundle              *planbundle.Client
+	Customplangrouprollouts *customplangrouprollouts.Client
+	Dataexports             *dataexports.Client
+	Events                  *events.Client
+	Features                *features.Client
+	Insights                *insights.Client
+	Integrationsapi         *integrationsapi.Client
+	Licenses                *licenses.Client
+	Plangroups              *plangroups.Client
+	Planmigrations          *planmigrations.Client
+	Componentspublic        *componentspublic.Client
+	Scheduledcheckout       *scheduledcheckout.Client
+	Accesstokens            *accesstokens.Client
+	Webhooks                *webhooks.Client
 
 	options *core.RequestOptions
 	baseURL string
@@ -65,31 +67,32 @@ type Client struct {
 func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
-		Accounts:          accounts.NewClient(options),
-		Billing:           billing.NewClient(options),
-		Credits:           credits.NewClient(options),
-		Catalogs:          catalogs.NewClient(options),
-		Checkout:          checkout.NewClient(options),
-		Companies:         companies.NewClient(options),
-		Entitlements:      entitlements.NewClient(options),
-		Plans:             plans.NewClient(options),
-		Components:        components.NewClient(options),
-		Planbundle:        planbundle.NewClient(options),
-		Dataexports:       dataexports.NewClient(options),
-		Events:            events.NewClient(options),
-		Features:          features.NewClient(options),
-		Insights:          insights.NewClient(options),
-		Integrationsapi:   integrationsapi.NewClient(options),
-		Licenses:          licenses.NewClient(options),
-		Plangroups:        plangroups.NewClient(options),
-		Planmigrations:    planmigrations.NewClient(options),
-		Componentspublic:  componentspublic.NewClient(options),
-		Scheduledcheckout: scheduledcheckout.NewClient(options),
-		Accesstokens:      accesstokens.NewClient(options),
-		Webhooks:          webhooks.NewClient(options),
-		WithRawResponse:   NewRawClient(options),
-		options:           options,
-		baseURL:           options.BaseURL,
+		Accounts:                accounts.NewClient(options),
+		Billing:                 billing.NewClient(options),
+		Credits:                 credits.NewClient(options),
+		Catalogs:                catalogs.NewClient(options),
+		Checkout:                checkout.NewClient(options),
+		Companies:               companies.NewClient(options),
+		Entitlements:            entitlements.NewClient(options),
+		Plans:                   plans.NewClient(options),
+		Components:              components.NewClient(options),
+		Planbundle:              planbundle.NewClient(options),
+		Customplangrouprollouts: customplangrouprollouts.NewClient(options),
+		Dataexports:             dataexports.NewClient(options),
+		Events:                  events.NewClient(options),
+		Features:                features.NewClient(options),
+		Insights:                insights.NewClient(options),
+		Integrationsapi:         integrationsapi.NewClient(options),
+		Licenses:                licenses.NewClient(options),
+		Plangroups:              plangroups.NewClient(options),
+		Planmigrations:          planmigrations.NewClient(options),
+		Componentspublic:        componentspublic.NewClient(options),
+		Scheduledcheckout:       scheduledcheckout.NewClient(options),
+		Accesstokens:            accesstokens.NewClient(options),
+		Webhooks:                webhooks.NewClient(options),
+		WithRawResponse:         NewRawClient(options),
+		options:                 options,
+		baseURL:                 options.BaseURL,
 		caller: internal.NewCaller(
 			&internal.CallerParams{
 				Client:         options.HTTPClient,
@@ -98,132 +101,6 @@ func NewClient(opts ...option.RequestOption) *Client {
 			},
 		),
 	}
-}
-
-// Example:
-//
-//	_, err := client.PostAPIKeys(
-//	    context.TODO(),
-//	)
-func (c *Client) PostAPIKeys(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.PostAPIKeys(
-		ctx,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Example:
-//
-//	_, err := client.PutAPIKeysAPIKeyID(
-//	    context.TODO(),
-//	    "api_key_id",
-//	)
-func (c *Client) PutAPIKeysAPIKeyID(
-	ctx context.Context,
-	apiKeyID string,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.PutAPIKeysAPIKeyID(
-		ctx,
-		apiKeyID,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Example:
-//
-//	_, err := client.DeleteAPIKeysAPIKeyID(
-//	    context.TODO(),
-//	    "api_key_id",
-//	)
-func (c *Client) DeleteAPIKeysAPIKeyID(
-	ctx context.Context,
-	apiKeyID string,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.DeleteAPIKeysAPIKeyID(
-		ctx,
-		apiKeyID,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Example:
-//
-//	_, err := client.PostEnvironments(
-//	    context.TODO(),
-//	)
-func (c *Client) PostEnvironments(
-	ctx context.Context,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.PostEnvironments(
-		ctx,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Example:
-//
-//	_, err := client.PutEnvironmentsEnvironmentID(
-//	    context.TODO(),
-//	    "environment_id",
-//	)
-func (c *Client) PutEnvironmentsEnvironmentID(
-	ctx context.Context,
-	environmentID string,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.PutEnvironmentsEnvironmentID(
-		ctx,
-		environmentID,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// Example:
-//
-//	_, err := client.DeleteEnvironmentsEnvironmentID(
-//	    context.TODO(),
-//	    "environment_id",
-//	)
-func (c *Client) DeleteEnvironmentsEnvironmentID(
-	ctx context.Context,
-	environmentID string,
-	opts ...option.RequestOption,
-) error {
-	_, err := c.WithRawResponse.DeleteEnvironmentsEnvironmentID(
-		ctx,
-		environmentID,
-		opts...,
-	)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // Example:

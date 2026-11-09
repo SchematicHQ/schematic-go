@@ -353,6 +353,57 @@ func (c *Client) CancelSubscription(
 
 // Example:
 //
+//	request := &schematichq.PauseSubscriptionRequest{
+//	    CompanyID: "company_id",
+//	    Months: int64(1000000),
+//	}
+//	_, err := client.Checkout.PauseSubscription(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) PauseSubscription(
+	ctx context.Context,
+	request *schematichq.PauseSubscriptionRequest,
+	opts ...option.RequestOption,
+) (*schematichq.PauseSubscriptionResponse, error) {
+	response, err := c.WithRawResponse.PauseSubscription(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.ResumeSubscriptionRequest{
+//	    CompanyID: "company_id",
+//	}
+//	_, err := client.Checkout.ResumeSubscription(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ResumeSubscription(
+	ctx context.Context,
+	request *schematichq.ResumeSubscriptionRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ResumeSubscriptionResponse, error) {
+	response, err := c.WithRawResponse.ResumeSubscription(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.UpdateTrialEndRequestBody{}
 //	_, err := client.Checkout.UpdateCustomerSubscriptionTrialEnd(
 //	    context.TODO(),

@@ -1165,20 +1165,22 @@ var (
 	catalogConfigurationResponseDataFieldAddOns              = big.NewInt(1 << 0)
 	catalogConfigurationResponseDataFieldCustomPlanCtaText   = big.NewInt(1 << 1)
 	catalogConfigurationResponseDataFieldCustomPlanCtaURL    = big.NewInt(1 << 2)
-	catalogConfigurationResponseDataFieldCustomPlanPriceText = big.NewInt(1 << 3)
-	catalogConfigurationResponseDataFieldCustomPlansVisible  = big.NewInt(1 << 4)
-	catalogConfigurationResponseDataFieldOrderedAddOns       = big.NewInt(1 << 5)
-	catalogConfigurationResponseDataFieldOrderedBundles      = big.NewInt(1 << 6)
-	catalogConfigurationResponseDataFieldOrderedPlans        = big.NewInt(1 << 7)
-	catalogConfigurationResponseDataFieldPlans               = big.NewInt(1 << 8)
-	catalogConfigurationResponseDataFieldPricingModel        = big.NewInt(1 << 9)
-	catalogConfigurationResponseDataFieldPricingURL          = big.NewInt(1 << 10)
+	catalogConfigurationResponseDataFieldCustomPlanID        = big.NewInt(1 << 3)
+	catalogConfigurationResponseDataFieldCustomPlanPriceText = big.NewInt(1 << 4)
+	catalogConfigurationResponseDataFieldCustomPlansVisible  = big.NewInt(1 << 5)
+	catalogConfigurationResponseDataFieldOrderedAddOns       = big.NewInt(1 << 6)
+	catalogConfigurationResponseDataFieldOrderedBundles      = big.NewInt(1 << 7)
+	catalogConfigurationResponseDataFieldOrderedPlans        = big.NewInt(1 << 8)
+	catalogConfigurationResponseDataFieldPlans               = big.NewInt(1 << 9)
+	catalogConfigurationResponseDataFieldPricingModel        = big.NewInt(1 << 10)
+	catalogConfigurationResponseDataFieldPricingURL          = big.NewInt(1 << 11)
 )
 
 type CatalogConfigurationResponseData struct {
 	AddOns              []*PlanGroupPlanDetailResponseData        `json:"add_ons" url:"add_ons"`
 	CustomPlanCtaText   *string                                   `json:"custom_plan_cta_text,omitempty" url:"custom_plan_cta_text,omitempty"`
 	CustomPlanCtaURL    *string                                   `json:"custom_plan_cta_url,omitempty" url:"custom_plan_cta_url,omitempty"`
+	CustomPlanID        *string                                   `json:"custom_plan_id,omitempty" url:"custom_plan_id,omitempty"`
 	CustomPlanPriceText *string                                   `json:"custom_plan_price_text,omitempty" url:"custom_plan_price_text,omitempty"`
 	CustomPlansVisible  bool                                      `json:"custom_plans_visible" url:"custom_plans_visible"`
 	OrderedAddOns       []*CatalogConfigOrderedPlanResponseData   `json:"ordered_add_ons" url:"ordered_add_ons"`
@@ -1214,6 +1216,13 @@ func (c *CatalogConfigurationResponseData) GetCustomPlanCtaURL() *string {
 		return nil
 	}
 	return c.CustomPlanCtaURL
+}
+
+func (c *CatalogConfigurationResponseData) GetCustomPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CustomPlanID
 }
 
 func (c *CatalogConfigurationResponseData) GetCustomPlanPriceText() *string {
@@ -1307,6 +1316,13 @@ func (c *CatalogConfigurationResponseData) SetCustomPlanCtaText(customPlanCtaTex
 func (c *CatalogConfigurationResponseData) SetCustomPlanCtaURL(customPlanCtaURL *string) {
 	c.CustomPlanCtaURL = customPlanCtaURL
 	c.require(catalogConfigurationResponseDataFieldCustomPlanCtaURL)
+}
+
+// SetCustomPlanID sets the CustomPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogConfigurationResponseData) SetCustomPlanID(customPlanID *string) {
+	c.CustomPlanID = customPlanID
+	c.require(catalogConfigurationResponseDataFieldCustomPlanID)
 }
 
 // SetCustomPlanPriceText sets the CustomPlanPriceText field and marks it as non-optional;
@@ -3164,18 +3180,20 @@ var (
 	catalogPlanResponseDataFieldChargeType           = big.NewInt(1 << 2)
 	catalogPlanResponseDataFieldCompatiblePlanIDs    = big.NewInt(1 << 3)
 	catalogPlanResponseDataFieldCurrencyPrices       = big.NewInt(1 << 4)
-	catalogPlanResponseDataFieldDescription          = big.NewInt(1 << 5)
-	catalogPlanResponseDataFieldEntitlements         = big.NewInt(1 << 6)
-	catalogPlanResponseDataFieldIcon                 = big.NewInt(1 << 7)
-	catalogPlanResponseDataFieldID                   = big.NewInt(1 << 8)
-	catalogPlanResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 9)
-	catalogPlanResponseDataFieldIsTrialable          = big.NewInt(1 << 10)
-	catalogPlanResponseDataFieldMonthlyPrice         = big.NewInt(1 << 11)
-	catalogPlanResponseDataFieldName                 = big.NewInt(1 << 12)
-	catalogPlanResponseDataFieldOneTimePrice         = big.NewInt(1 << 13)
-	catalogPlanResponseDataFieldQuarterlyPrice       = big.NewInt(1 << 14)
-	catalogPlanResponseDataFieldTrialDays            = big.NewInt(1 << 15)
-	catalogPlanResponseDataFieldYearlyPrice          = big.NewInt(1 << 16)
+	catalogPlanResponseDataFieldCustom               = big.NewInt(1 << 5)
+	catalogPlanResponseDataFieldCustomPlanCta        = big.NewInt(1 << 6)
+	catalogPlanResponseDataFieldDescription          = big.NewInt(1 << 7)
+	catalogPlanResponseDataFieldEntitlements         = big.NewInt(1 << 8)
+	catalogPlanResponseDataFieldIcon                 = big.NewInt(1 << 9)
+	catalogPlanResponseDataFieldID                   = big.NewInt(1 << 10)
+	catalogPlanResponseDataFieldIncludedCreditGrants = big.NewInt(1 << 11)
+	catalogPlanResponseDataFieldIsTrialable          = big.NewInt(1 << 12)
+	catalogPlanResponseDataFieldMonthlyPrice         = big.NewInt(1 << 13)
+	catalogPlanResponseDataFieldName                 = big.NewInt(1 << 14)
+	catalogPlanResponseDataFieldOneTimePrice         = big.NewInt(1 << 15)
+	catalogPlanResponseDataFieldQuarterlyPrice       = big.NewInt(1 << 16)
+	catalogPlanResponseDataFieldTrialDays            = big.NewInt(1 << 17)
+	catalogPlanResponseDataFieldYearlyPrice          = big.NewInt(1 << 18)
 )
 
 type CatalogPlanResponseData struct {
@@ -3183,8 +3201,12 @@ type CatalogPlanResponseData struct {
 	BillingStrategy  BillingStrategy    `json:"billing_strategy" url:"billing_strategy"`
 	ChargeType       ChargeType         `json:"charge_type" url:"charge_type"`
 	// For add-ons, the plans this add-on may be purchased with. Null means compatible with every plan.
-	CompatiblePlanIDs    []string                              `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
-	CurrencyPrices       []*CatalogCurrencyPricesResponseData  `json:"currency_prices" url:"currency_prices"`
+	CompatiblePlanIDs []string                             `json:"compatible_plan_ids,omitempty" url:"compatible_plan_ids,omitempty"`
+	CurrencyPrices    []*CatalogCurrencyPricesResponseData `json:"currency_prices" url:"currency_prices"`
+	// True for the catalog's custom plan, the one sold by quote: show custom_plan_cta in place of its price and action.
+	Custom bool `json:"custom" url:"custom"`
+	// The custom plan's price text and call to action; set only where custom is true.
+	CustomPlanCta        *CatalogCustomPlanCtaResponseData     `json:"custom_plan_cta,omitempty" url:"custom_plan_cta,omitempty"`
 	Description          string                                `json:"description" url:"description"`
 	Entitlements         []*CatalogPlanEntitlementResponseData `json:"entitlements" url:"entitlements"`
 	Icon                 string                                `json:"icon" url:"icon"`
@@ -3238,6 +3260,20 @@ func (c *CatalogPlanResponseData) GetCurrencyPrices() []*CatalogCurrencyPricesRe
 		return nil
 	}
 	return c.CurrencyPrices
+}
+
+func (c *CatalogPlanResponseData) GetCustom() bool {
+	if c == nil {
+		return false
+	}
+	return c.Custom
+}
+
+func (c *CatalogPlanResponseData) GetCustomPlanCta() *CatalogCustomPlanCtaResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.CustomPlanCta
 }
 
 func (c *CatalogPlanResponseData) GetDescription() string {
@@ -3373,6 +3409,20 @@ func (c *CatalogPlanResponseData) SetCompatiblePlanIDs(compatiblePlanIDs []strin
 func (c *CatalogPlanResponseData) SetCurrencyPrices(currencyPrices []*CatalogCurrencyPricesResponseData) {
 	c.CurrencyPrices = currencyPrices
 	c.require(catalogPlanResponseDataFieldCurrencyPrices)
+}
+
+// SetCustom sets the Custom field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetCustom(custom bool) {
+	c.Custom = custom
+	c.require(catalogPlanResponseDataFieldCustom)
+}
+
+// SetCustomPlanCta sets the CustomPlanCta field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogPlanResponseData) SetCustomPlanCta(customPlanCta *CatalogCustomPlanCtaResponseData) {
+	c.CustomPlanCta = customPlanCta
+	c.require(catalogPlanResponseDataFieldCustomPlanCta)
 }
 
 // SetDescription sets the Description field and marks it as non-optional;
@@ -3906,15 +3956,16 @@ var (
 	catalogResponseDataFieldCreatedAt           = big.NewInt(1 << 1)
 	catalogResponseDataFieldCustomPlanCtaText   = big.NewInt(1 << 2)
 	catalogResponseDataFieldCustomPlanCtaURL    = big.NewInt(1 << 3)
-	catalogResponseDataFieldCustomPlanPriceText = big.NewInt(1 << 4)
-	catalogResponseDataFieldCustomPlansVisible  = big.NewInt(1 << 5)
-	catalogResponseDataFieldDescription         = big.NewInt(1 << 6)
-	catalogResponseDataFieldID                  = big.NewInt(1 << 7)
-	catalogResponseDataFieldIsDefault           = big.NewInt(1 << 8)
-	catalogResponseDataFieldName                = big.NewInt(1 << 9)
-	catalogResponseDataFieldPricingModel        = big.NewInt(1 << 10)
-	catalogResponseDataFieldPricingURL          = big.NewInt(1 << 11)
-	catalogResponseDataFieldUpdatedAt           = big.NewInt(1 << 12)
+	catalogResponseDataFieldCustomPlanID        = big.NewInt(1 << 4)
+	catalogResponseDataFieldCustomPlanPriceText = big.NewInt(1 << 5)
+	catalogResponseDataFieldCustomPlansVisible  = big.NewInt(1 << 6)
+	catalogResponseDataFieldDescription         = big.NewInt(1 << 7)
+	catalogResponseDataFieldID                  = big.NewInt(1 << 8)
+	catalogResponseDataFieldIsDefault           = big.NewInt(1 << 9)
+	catalogResponseDataFieldName                = big.NewInt(1 << 10)
+	catalogResponseDataFieldPricingModel        = big.NewInt(1 << 11)
+	catalogResponseDataFieldPricingURL          = big.NewInt(1 << 12)
+	catalogResponseDataFieldUpdatedAt           = big.NewInt(1 << 13)
 )
 
 type CatalogResponseData struct {
@@ -3922,6 +3973,7 @@ type CatalogResponseData struct {
 	CreatedAt           time.Time `json:"created_at" url:"created_at"`
 	CustomPlanCtaText   *string   `json:"custom_plan_cta_text,omitempty" url:"custom_plan_cta_text,omitempty"`
 	CustomPlanCtaURL    *string   `json:"custom_plan_cta_url,omitempty" url:"custom_plan_cta_url,omitempty"`
+	CustomPlanID        *string   `json:"custom_plan_id,omitempty" url:"custom_plan_id,omitempty"`
 	CustomPlanPriceText *string   `json:"custom_plan_price_text,omitempty" url:"custom_plan_price_text,omitempty"`
 	CustomPlansVisible  bool      `json:"custom_plans_visible" url:"custom_plans_visible"`
 	Description         *string   `json:"description,omitempty" url:"description,omitempty"`
@@ -3965,6 +4017,13 @@ func (c *CatalogResponseData) GetCustomPlanCtaURL() *string {
 		return nil
 	}
 	return c.CustomPlanCtaURL
+}
+
+func (c *CatalogResponseData) GetCustomPlanID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CustomPlanID
 }
 
 func (c *CatalogResponseData) GetCustomPlanPriceText() *string {
@@ -4072,6 +4131,13 @@ func (c *CatalogResponseData) SetCustomPlanCtaText(customPlanCtaText *string) {
 func (c *CatalogResponseData) SetCustomPlanCtaURL(customPlanCtaURL *string) {
 	c.CustomPlanCtaURL = customPlanCtaURL
 	c.require(catalogResponseDataFieldCustomPlanCtaURL)
+}
+
+// SetCustomPlanID sets the CustomPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CatalogResponseData) SetCustomPlanID(customPlanID *string) {
+	c.CustomPlanID = customPlanID
+	c.require(catalogResponseDataFieldCustomPlanID)
 }
 
 // SetCustomPlanPriceText sets the CustomPlanPriceText field and marks it as non-optional;
@@ -5882,18 +5948,20 @@ func (u *UpdateCatalogRequestBody) MarshalJSON() ([]byte, error) {
 var (
 	updateCatalogConfigurationRequestBodyFieldCustomPlanCtaText   = big.NewInt(1 << 0)
 	updateCatalogConfigurationRequestBodyFieldCustomPlanCtaURL    = big.NewInt(1 << 1)
-	updateCatalogConfigurationRequestBodyFieldCustomPlanPriceText = big.NewInt(1 << 2)
-	updateCatalogConfigurationRequestBodyFieldCustomPlansVisible  = big.NewInt(1 << 3)
-	updateCatalogConfigurationRequestBodyFieldOrderedAddOns       = big.NewInt(1 << 4)
-	updateCatalogConfigurationRequestBodyFieldOrderedBundles      = big.NewInt(1 << 5)
-	updateCatalogConfigurationRequestBodyFieldOrderedPlans        = big.NewInt(1 << 6)
-	updateCatalogConfigurationRequestBodyFieldPricingModel        = big.NewInt(1 << 7)
-	updateCatalogConfigurationRequestBodyFieldPricingURL          = big.NewInt(1 << 8)
+	updateCatalogConfigurationRequestBodyFieldCustomPlanID        = big.NewInt(1 << 2)
+	updateCatalogConfigurationRequestBodyFieldCustomPlanPriceText = big.NewInt(1 << 3)
+	updateCatalogConfigurationRequestBodyFieldCustomPlansVisible  = big.NewInt(1 << 4)
+	updateCatalogConfigurationRequestBodyFieldOrderedAddOns       = big.NewInt(1 << 5)
+	updateCatalogConfigurationRequestBodyFieldOrderedBundles      = big.NewInt(1 << 6)
+	updateCatalogConfigurationRequestBodyFieldOrderedPlans        = big.NewInt(1 << 7)
+	updateCatalogConfigurationRequestBodyFieldPricingModel        = big.NewInt(1 << 8)
+	updateCatalogConfigurationRequestBodyFieldPricingURL          = big.NewInt(1 << 9)
 )
 
 type UpdateCatalogConfigurationRequestBody struct {
 	CustomPlanCtaText   *string                       `json:"custom_plan_cta_text,omitempty" url:"-"`
 	CustomPlanCtaURL    *string                       `json:"custom_plan_cta_url,omitempty" url:"-"`
+	CustomPlanID        *string                       `json:"custom_plan_id,omitempty" url:"-"`
 	CustomPlanPriceText *string                       `json:"custom_plan_price_text,omitempty" url:"-"`
 	CustomPlansVisible  *bool                         `json:"custom_plans_visible,omitempty" url:"-"`
 	OrderedAddOns       []*CatalogConfigOrderedPlan   `json:"ordered_add_ons,omitempty" url:"-"`
@@ -5927,6 +5995,13 @@ func (u *UpdateCatalogConfigurationRequestBody) SetCustomPlanCtaText(customPlanC
 func (u *UpdateCatalogConfigurationRequestBody) SetCustomPlanCtaURL(customPlanCtaURL *string) {
 	u.CustomPlanCtaURL = customPlanCtaURL
 	u.require(updateCatalogConfigurationRequestBodyFieldCustomPlanCtaURL)
+}
+
+// SetCustomPlanID sets the CustomPlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCatalogConfigurationRequestBody) SetCustomPlanID(customPlanID *string) {
+	u.CustomPlanID = customPlanID
+	u.require(updateCatalogConfigurationRequestBodyFieldCustomPlanID)
 }
 
 // SetCustomPlanPriceText sets the CustomPlanPriceText field and marks it as non-optional;

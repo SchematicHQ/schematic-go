@@ -930,10 +930,12 @@ func (c *SchematicClient) emitTrack(
 		}
 	}
 
-	// Not gated on IsConnected: flag checks keep evaluating from the cache while
-	// the stream or replicator is down, so usage has to keep counting against it
-	// too, or metered limits freeze until it comes back. Whatever the stream
-	// pushes next replaces the metric outright, so the bump is never counted twice.
+	// Not gated on IsConnected or IsCacheReady: flag checks keep evaluating from
+	// the cache while the stream is down or the replicator has lost Schematic,
+	// and resume reading it once an unreachable replicator answers again, so
+	// usage has to keep counting against it, or metered limits freeze or jump
+	// back. Whatever the stream pushes next replaces the metric outright, so the
+	// bump is never counted twice.
 	if updateMetrics && body.Company != nil && c.useDataStream() {
 		err := c.datastreamClient.UpdateCompanyMetrics(ctx, body)
 		if err != nil {

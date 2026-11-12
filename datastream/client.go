@@ -206,11 +206,12 @@ func (c *DataStreamClient) IsConnected() bool {
 
 // IsCacheReady reports whether flag checks may be evaluated from the cache.
 //
-// In replicator mode this is the replicator's readiness from its last health
-// poll: true once the replicator reports its cache complete for the current
-// cache version, and false before that or after a poll that failed. While it
-// is false, SchematicClient does not read the cache and answers flag checks
-// from the API.
+// In replicator mode this is the readiness from the replicator's last answer
+// to a health poll: true once it reports its cache complete for the current
+// cache version, false when it reports ready false, and false before it has
+// answered at all. A poll that gets no answer changes nothing. While it is
+// false, SchematicClient does not read the cache and answers flag checks from
+// the API.
 //
 // Outside replicator mode the SDK fills its own cache over the WebSocket and
 // fetches what it lacks on demand, so there is nothing to wait for and this
@@ -1237,7 +1238,16 @@ func (c *DataStreamClient) startReplicatorHealthCheck() {
 	}
 }
 
-// checkReplicatorHealth performs a single health check against the external replicator
+// checkReplicatorHealth performs a single health check against the external
+// replicator.
+//
+// Readiness changes only on an explicit answer: a body that parses and carries
+// a ready field, whatever the HTTP status (the replicator answers 503 with
+// ready false while its cache loads). A poll that gets no such answer (a
+// network error, a timeout, an unparseable body) keeps the readiness and cache
+// version from the last answer. A missed poll says nothing about whether the
+// cache is complete, and treating it as not ready would send every check in the
+// process to the API over a replicator restart.
 func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
 	client := &http.Client{
 		Timeout: 5 * time.Second,
@@ -1245,41 +1255,39 @@ func (c *DataStreamClient) checkReplicatorHealth(ctx context.Context) {
 
 	resp, err := client.Get(c.replicatorHealthURL)
 	if err != nil {
-		c.setReplicatorReady(false, "")
-		c.logger.Debug(ctx, fmt.Sprintf("Replicator health check failed: %v", err))
+		c.logger.Debug(ctx, fmt.Sprintf("Replicator health check failed, keeping the last known readiness: %v", err))
 		return
 	}
 	defer func() { _ = resp.Body.Close() }()
 
-	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		c.setReplicatorReady(false, "")
-		c.logger.Warn(ctx, fmt.Sprintf("Failed to read replicator health response: %v", err))
+		c.logger.Warn(ctx, fmt.Sprintf("Failed to read replicator health response, keeping the last known readiness: %v", err))
 		return
 	}
 
-	// Parse the JSON response
 	var healthResp struct {
-		Ready        bool   `json:"ready"`
+		Ready        *bool  `json:"ready"`
 		CacheVersion string `json:"cache_version"`
 	}
-
-	if err := json.Unmarshal(body, &healthResp); err != nil {
-		c.setReplicatorReady(false, "")
-		c.logger.Warn(ctx, fmt.Sprintf("Failed to parse replicator health response: %v", err))
+	if err := json.Unmarshal(body, &healthResp); err != nil || healthResp.Ready == nil {
+		if err == nil {
+			err = errors.New("no ready field")
+		}
+		c.logger.Warn(ctx, fmt.Sprintf("Failed to parse replicator health response (status %d), keeping the last known readiness: %v", resp.StatusCode, err))
 		return
 	}
+	ready := *healthResp.Ready
 
 	// Update replicator ready state and cache version
 	wasReady := c.IsReplicatorReady()
 	oldCacheVersion := c.GetCacheVersion()
-	c.setReplicatorReady(healthResp.Ready, healthResp.CacheVersion)
+	c.setReplicatorReady(ready, healthResp.CacheVersion)
 
 	// Log state changes
-	if healthResp.Ready && !wasReady {
+	if ready && !wasReady {
 		c.logger.Info(ctx, fmt.Sprintf("External replicator is now ready (cache_version: %s)", healthResp.CacheVersion))
-	} else if !healthResp.Ready && wasReady {
+	} else if !ready && wasReady {
 		c.logger.Info(ctx, "External replicator is no longer ready")
 	}
 
@@ -1301,8 +1309,8 @@ func (c *DataStreamClient) setReplicatorReady(ready bool, cacheVersion string) {
 	c.replicatorMu.Lock()
 	defer c.replicatorMu.Unlock()
 	c.replicatorReady = ready
-	// Only update cache version if a non-empty value is provided
-	// This preserves the existing version when the replicator is temporarily unavailable
+	// Only update cache version if a non-empty value is provided, so an answer
+	// without one keeps the version the cache keys are built from.
 	if cacheVersion != "" {
 		c.replicatorCacheVersion = cacheVersion
 	}

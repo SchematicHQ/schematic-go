@@ -36,6 +36,7 @@ client/conversion_test.go
 client/event_options.go
 client/schematic_client.go
 client/schematic_client_test.go
+client/replicator_cache_ready_test.go
 client/logger_config_test.go
 client/tracing.go
 client/tracing_test.go
@@ -47,6 +48,7 @@ datastream/cache_tls_test.go
 datastream/client.go
 datastream/resource_cache.go
 datastream/client_test.go
+datastream/replicator_health_test.go
 datastream/consts.go
 datastream/preflight_test.go
 datastream/types.go

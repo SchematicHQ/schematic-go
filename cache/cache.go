@@ -18,6 +18,13 @@ type CacheProvider[T any] interface {
 	DeleteMissing(ctx context.Context, keysToKeep []string, scanPattern string)
 }
 
+// KeepTTLSetter is implemented by providers that can overwrite a value while
+// keeping the entry's current expiry. Use it when another process owns the
+// key's lifetime and a write from this SDK must not change it.
+type KeepTTLSetter[T any] interface {
+	SetKeepTTL(ctx context.Context, key string, val T) error
+}
+
 const defaultCacheSize = 1000 // 1000 records
 const defaultCacheTTL = 5 * time.Second
 

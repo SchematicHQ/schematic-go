@@ -143,6 +143,28 @@ func (c *localCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 	return nil
 }
 
+// SetKeepTTL overwrites the value of an existing entry without changing its
+// expiry. A missing entry gets the cache's default TTL, as Set would give it.
+func (c *localCache[T]) SetKeepTTL(ctx context.Context, key string, val T) error {
+	if c == nil || c.maxSize == 0 {
+		return nil
+	}
+
+	c.mu.Lock()
+	if element, exists := c.cache[key]; exists {
+		item := element.Value.(*cachedItem[T])
+		if item.expiration.IsZero() || time.Now().Before(item.expiration) {
+			c.lruList.MoveToFront(element)
+			item.value = val
+			c.mu.Unlock()
+			return nil
+		}
+	}
+	c.mu.Unlock()
+
+	return c.Set(ctx, key, val, nil)
+}
+
 // Delete removes an item from the cache by its key.
 func (c *localCache[T]) Delete(ctx context.Context, key string) error {
 	if c == nil || c.maxSize == 0 {
@@ -293,5 +315,7 @@ func (c *localCache[T]) Stop() {
 	}
 }
 
-// Ensure localCache implements CacheProvider
-var _ CacheProvider[any] = (*localCache[any])(nil)
+var (
+	_ CacheProvider[any] = (*localCache[any])(nil)
+	_ KeepTTLSetter[any] = (*localCache[any])(nil)
+)

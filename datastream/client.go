@@ -434,7 +434,7 @@ func (c *DataStreamClient) handleCompanyMessage(ctx context.Context, resp *schem
 	}
 
 	c.companyMu.Lock()
-	cacheResults, err := c.cacheCompanyForKeys(ctx, company)
+	cacheResults, err := c.cacheCompanyForKeys(ctx, company, false)
 	c.companyMu.Unlock()
 
 	if err != nil {
@@ -475,7 +475,7 @@ func (c *DataStreamClient) handlePartialCompanyMessage(ctx context.Context, resp
 		return fmt.Errorf("failed to merge partial company: %v", err)
 	}
 
-	cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, merged)
+	cacheResults, cacheErr := c.cacheCompanyForKeys(ctx, merged, false)
 	c.companyMu.Unlock()
 
 	if cacheErr != nil {
@@ -1157,17 +1157,17 @@ func (c *DataStreamClient) cacheUserForKeys(ctx context.Context, user *rulesengi
 	if user == nil || len(user.Keys) == 0 {
 		return nil
 	}
-	return c.userCache.cacheForKeys(ctx, user, c.cacheTTL)
+	return c.userCache.cacheForKeys(ctx, user, c.cacheTTL, false)
 }
 
-func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company) (map[string]error, error) {
+func (c *DataStreamClient) cacheCompanyForKeys(ctx context.Context, company *rulesengine.Company, keepTTL bool) (map[string]error, error) {
 	if company == nil {
 		return nil, errors.New("company cannot be nil")
 	}
 	if len(company.Keys) == 0 {
 		return nil, errors.New("no keys provided for company lookup")
 	}
-	return c.companyCache.cacheForKeys(ctx, company, c.cacheTTL), nil
+	return c.companyCache.cacheForKeys(ctx, company, c.cacheTTL, keepTTL), nil
 }
 
 func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *schematicgo.EventBodyTrack) error {
@@ -1198,8 +1198,11 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 		}
 	}
 
+	// In replicator mode the replicator owns these keys and their lifetime
+	// (no expiry by default), so the bump keeps each key's current TTL rather
+	// than applying the SDK's.
 	c.companyMu.Lock()
-	cacheResults, err := c.cacheCompanyForKeys(ctx, companyCopy)
+	cacheResults, err := c.cacheCompanyForKeys(ctx, companyCopy, c.replicatorMode)
 	c.companyMu.Unlock()
 
 	if err != nil {

@@ -809,3 +809,24 @@ func TestLocalCache_EdgeCases(t *testing.T) {
 		}
 	})
 }
+
+func TestLocalCacheSetKeepTTL(t *testing.T) {
+	ctx := context.Background()
+	c := NewLocalCache[string](10, 0)
+
+	ttl := time.Hour
+	require.NoError(t, c.Set(ctx, "with-ttl", "a", &ttl))
+	require.NoError(t, c.Set(ctx, "no-ttl", "a", nil))
+	before := c.cache["with-ttl"].Value.(*cachedItem[string]).expiration
+
+	require.NoError(t, c.SetKeepTTL(ctx, "with-ttl", "b"))
+	require.NoError(t, c.SetKeepTTL(ctx, "no-ttl", "b"))
+
+	withTTL := c.cache["with-ttl"].Value.(*cachedItem[string])
+	require.Equal(t, "b", withTTL.value)
+	require.Equal(t, before, withTTL.expiration)
+
+	noTTL := c.cache["no-ttl"].Value.(*cachedItem[string])
+	require.Equal(t, "b", noTTL.value)
+	require.True(t, noTTL.expiration.IsZero())
+}

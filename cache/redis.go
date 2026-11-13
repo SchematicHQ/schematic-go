@@ -65,6 +65,17 @@ func (r *redisCache[T]) Set(ctx context.Context, key string, val T, ttlOverride 
 	return r.client.Set(ctx, key, data, ttl).Err()
 }
 
+// SetKeepTTL overwrites the value with SET ... KEEPTTL (Redis 6.0+), so the
+// key keeps whatever expiry it had. A key that did not exist, or had no
+// expiry, is left without one.
+func (r *redisCache[T]) SetKeepTTL(ctx context.Context, key string, val T) error {
+	data, err := json.Marshal(val)
+	if err != nil {
+		return err
+	}
+	return r.client.Set(ctx, key, data, redis.KeepTTL).Err()
+}
+
 func (r *redisCache[T]) Delete(ctx context.Context, key string) error {
 	// Delete the key from Redis
 	return r.client.Del(ctx, key).Err()
@@ -119,3 +130,8 @@ func (r *redisCache[T]) DeleteMissing(ctx context.Context, keysToKeep []string, 
 		}
 	}
 }
+
+var (
+	_ CacheProvider[any] = (*redisCache[any])(nil)
+	_ KeepTTLSetter[any] = (*redisCache[any])(nil)
+)

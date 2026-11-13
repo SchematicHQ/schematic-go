@@ -32,8 +32,10 @@ func (rc *resourceCache[T]) lookupCacheKey(key, value string) string {
 
 // cacheForKeys writes the entity to the ID-based primary key and writes lookup
 // entries for each of its keys. It also cleans up stale lookup keys by diffing
-// against the previously cached version of the entity.
-func (rc *resourceCache[T]) cacheForKeys(ctx context.Context, entity T, ttl time.Duration) map[string]error {
+// against the previously cached version of the entity. With keepTTL, each key
+// keeps its current expiry instead of getting ttl, on providers that support
+// it; others fall back to ttl.
+func (rc *resourceCache[T]) cacheForKeys(ctx context.Context, entity T, ttl time.Duration, keepTTL bool) map[string]error {
 	id := rc.getID(entity)
 	keys := rc.getKeys(entity)
 	if len(keys) == 0 {
@@ -55,15 +57,24 @@ func (rc *resourceCache[T]) cacheForKeys(ctx context.Context, entity T, ttl time
 	}
 
 	// Write full entity to ID-based primary key
-	cacheResults[idKey] = rc.primaryCache.Set(ctx, idKey, entity, &ttl)
+	cacheResults[idKey] = setCacheValue(ctx, rc.primaryCache, idKey, entity, ttl, keepTTL)
 
 	// Write entity ID string to each versioned lookup key
 	for key, value := range keys {
 		lookupKey := rc.lookupCacheKey(key, value)
-		cacheResults[lookupKey] = rc.lookupCache.Set(ctx, lookupKey, id, &ttl)
+		cacheResults[lookupKey] = setCacheValue(ctx, rc.lookupCache, lookupKey, id, ttl, keepTTL)
 	}
 
 	return cacheResults
+}
+
+func setCacheValue[V any](ctx context.Context, provider cache.CacheProvider[V], key string, val V, ttl time.Duration, keepTTL bool) error {
+	if keepTTL {
+		if setter, ok := provider.(cache.KeepTTLSetter[V]); ok {
+			return setter.SetKeepTTL(ctx, key, val)
+		}
+	}
+	return provider.Set(ctx, key, val, &ttl)
 }
 
 // deleteEntity fetches the cached entity by ID, deletes all lookup keys (both

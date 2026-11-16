@@ -424,6 +424,7 @@ func (r *RawClient) CreateFlag(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreateFlagResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -518,6 +519,7 @@ func (r *RawClient) UpdateFlag(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpdateFlagResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -661,6 +663,7 @@ func (r *RawClient) CheckFlag(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CheckFlagResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -753,6 +756,7 @@ func (r *RawClient) CheckFlags(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CheckFlagsResponse
 	raw, err := r.caller.Call(
 		ctx,

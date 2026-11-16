@@ -12,7 +12,7 @@
 <dd>
 
 ```go
-_, err := client.GetCreditLedger(
+err := client.GetCreditLedger(
     context.TODO(),
 )
 ```
@@ -4088,6 +4088,14 @@ _, err := client.Billing.UpsertBillingSubscription(
 <dl>
 <dd>
 
+**billingCycleAnchor:** `*time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **cancelAt:** `*int64` 
     
 </dd>
@@ -4333,6 +4341,284 @@ _, err := client.Billing.GetCompanyNativeSubscription(
 
 ```go
 _, err := client.Billing.MoveToDefaultPlan(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.GetCompanyTrial(CompanyID) -> *schematichq.GetCompanyTrialResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.GetCompanyTrial(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.StartCompanyTrial(CompanyID, request) -> *schematichq.StartCompanyTrialResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.StartCompanyTrialRequestBody{
+    Cadence: schematichq.BillingProductPriceIntervalDay,
+    PlanID: "plan_id",
+}
+_, err := client.Billing.StartCompanyTrial(
+    context.TODO(),
+    "company_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cadence:** `schematichq.BillingProductPriceInterval` — The unit of how often the plan bills once the trial converts: month or year.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**cadenceIntervalCount:** `*int64` — How many cadence units one billing period spans. Defaults to 1; use 3 with month for quarterly.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endBehavior:** `*schematichq.BillingSubscriptionTrialEndSetting` — What happens when the trial reaches its end date: subscribe starts billing, cancel moves the company off the plan. Defaults to the plan group's trial setting.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**planID:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**trialEnd:** `*time.Time` — When the trial ends. Defaults to the plan's trial length, then the plan group's, then 14 days. Setting it grants the trial even when the company has used its trial before.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.UpdateCompanyTrial(CompanyID, request) -> *schematichq.UpdateCompanyTrialResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.UpdateCompanyTrialRequestBody{}
+_, err := client.Billing.UpdateCompanyTrial(
+    context.TODO(),
+    "company_id",
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endBehavior:** `*schematichq.BillingSubscriptionTrialEndSetting` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**trialEnd:** `*time.Time` — Moves the end of the trial, and the first billing date with it.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.ConvertCompanyTrial(CompanyID) -> *schematichq.ConvertCompanyTrialResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.ConvertCompanyTrial(
+    context.TODO(),
+    "company_id",
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**companyID:** `string` — company_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Billing.EndCompanyTrial(CompanyID) -> *schematichq.EndCompanyTrialResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Billing.EndCompanyTrial(
     context.TODO(),
     "company_id",
 )
@@ -9023,7 +9309,7 @@ _, err := client.Catalogs.GetCreditBundlesInCatalog(
 <dd>
 
 ```go
-_, err := client.Catalogs.AddCreditBundle(
+err := client.Catalogs.AddCreditBundle(
     context.TODO(),
     "catalog_id",
     "credit_bundle_id",
@@ -9075,7 +9361,7 @@ _, err := client.Catalogs.AddCreditBundle(
 <dd>
 
 ```go
-_, err := client.Catalogs.RemoveCreditBundle(
+err := client.Catalogs.RemoveCreditBundle(
     context.TODO(),
     "catalog_id",
     "credit_bundle_id",
@@ -9213,7 +9499,7 @@ _, err := client.Catalogs.GetPlansInCatalog(
 <dd>
 
 ```go
-_, err := client.Catalogs.AddPlan(
+err := client.Catalogs.AddPlan(
     context.TODO(),
     "catalog_id",
     "plan_id",
@@ -9265,7 +9551,7 @@ _, err := client.Catalogs.AddPlan(
 <dd>
 
 ```go
-_, err := client.Catalogs.RemovePlan(
+err := client.Catalogs.RemovePlan(
     context.TODO(),
     "catalog_id",
     "plan_id",
@@ -9504,6 +9790,14 @@ _, err := client.Checkout.GetCheckoutData(
 <dd>
 
 **selectedPlanID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**selectedPlanVersionID:** `*string` 
     
 </dd>
 </dl>

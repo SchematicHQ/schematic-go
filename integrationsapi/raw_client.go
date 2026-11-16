@@ -189,6 +189,7 @@ func (r *RawClient) InstallIntegration(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.InstallIntegrationResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -443,6 +444,7 @@ func (r *RawClient) AssumeStripeInstalled(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.AssumeStripeInstalledResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -486,6 +488,7 @@ func (r *RawClient) InstallStripe(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.InstallStripeResponse
 	raw, err := r.caller.Call(
 		ctx,

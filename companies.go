@@ -3502,6 +3502,7 @@ const (
 	PlanChangeActionPlanVersionMigration      PlanChangeAction = "plan_version_migration"
 	PlanChangeActionQuickstart                PlanChangeAction = "quickstart"
 	PlanChangeActionSubscriptionChange        PlanChangeAction = "subscription_change"
+	PlanChangeActionTrial                     PlanChangeAction = "trial"
 )
 
 func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
@@ -3538,6 +3539,8 @@ func NewPlanChangeActionFromString(s string) (PlanChangeAction, error) {
 		return PlanChangeActionQuickstart, nil
 	case "subscription_change":
 		return PlanChangeActionSubscriptionChange, nil
+	case "trial":
+		return PlanChangeActionTrial, nil
 	}
 	var t PlanChangeAction
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -3617,25 +3620,27 @@ var (
 	planChangeResponseDataFieldBasePlan                 = big.NewInt(1 << 7)
 	planChangeResponseDataFieldBasePlanAction           = big.NewInt(1 << 8)
 	planChangeResponseDataFieldBasePlanVersion          = big.NewInt(1 << 9)
-	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 10)
-	planChangeResponseDataFieldCompanyID                = big.NewInt(1 << 11)
-	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 12)
-	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 13)
-	planChangeResponseDataFieldID                       = big.NewInt(1 << 14)
-	planChangeResponseDataFieldIntegration              = big.NewInt(1 << 15)
-	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 16)
-	planChangeResponseDataFieldMigrationID              = big.NewInt(1 << 17)
-	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 18)
-	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 19)
-	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 20)
-	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 21)
-	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 22)
-	planChangeResponseDataFieldTrialConvertedAt         = big.NewInt(1 << 23)
-	planChangeResponseDataFieldTrialExpiresAt           = big.NewInt(1 << 24)
-	planChangeResponseDataFieldTrialStatus              = big.NewInt(1 << 25)
-	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 26)
-	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 27)
-	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 28)
+	planChangeResponseDataFieldBillingInterval          = big.NewInt(1 << 10)
+	planChangeResponseDataFieldCompany                  = big.NewInt(1 << 11)
+	planChangeResponseDataFieldCompanyID                = big.NewInt(1 << 12)
+	planChangeResponseDataFieldCreatedAt                = big.NewInt(1 << 13)
+	planChangeResponseDataFieldEnvironmentID            = big.NewInt(1 << 14)
+	planChangeResponseDataFieldID                       = big.NewInt(1 << 15)
+	planChangeResponseDataFieldIntegration              = big.NewInt(1 << 16)
+	planChangeResponseDataFieldIsVersionUpgrade         = big.NewInt(1 << 17)
+	planChangeResponseDataFieldMigrationID              = big.NewInt(1 << 18)
+	planChangeResponseDataFieldPreviousBasePlan         = big.NewInt(1 << 19)
+	planChangeResponseDataFieldPreviousBasePlanVersion  = big.NewInt(1 << 20)
+	planChangeResponseDataFieldPreviousBillingInterval  = big.NewInt(1 << 21)
+	planChangeResponseDataFieldRequestID                = big.NewInt(1 << 22)
+	planChangeResponseDataFieldSubscriptionChangeAction = big.NewInt(1 << 23)
+	planChangeResponseDataFieldTraitsUpdated            = big.NewInt(1 << 24)
+	planChangeResponseDataFieldTrialConvertedAt         = big.NewInt(1 << 25)
+	planChangeResponseDataFieldTrialExpiresAt           = big.NewInt(1 << 26)
+	planChangeResponseDataFieldTrialStatus              = big.NewInt(1 << 27)
+	planChangeResponseDataFieldUpdatedAt                = big.NewInt(1 << 28)
+	planChangeResponseDataFieldUserID                   = big.NewInt(1 << 29)
+	planChangeResponseDataFieldUserName                 = big.NewInt(1 << 30)
 )
 
 type PlanChangeResponseData struct {
@@ -3652,11 +3657,13 @@ type PlanChangeResponseData struct {
 	BasePlanAction *PlanChangeBasePlanAction `json:"base_plan_action,omitempty" url:"base_plan_action,omitempty"`
 	// The plan version that was assigned during this change.
 	BasePlanVersion *PlanVersionSnapshotView `json:"base_plan_version,omitempty" url:"base_plan_version,omitempty"`
-	Company         *CompanyResponseData     `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID       string                   `json:"company_id" url:"company_id"`
-	CreatedAt       time.Time                `json:"created_at" url:"created_at"`
-	EnvironmentID   string                   `json:"environment_id" url:"environment_id"`
-	ID              string                   `json:"id" url:"id"`
+	// The billing interval this change moved the subscription to: monthly, quarterly or yearly. Set only when the interval changed, as when a custom plan amendment's new version is priced on another interval.
+	BillingInterval *string              `json:"billing_interval,omitempty" url:"billing_interval,omitempty"`
+	Company         *CompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID       string               `json:"company_id" url:"company_id"`
+	CreatedAt       time.Time            `json:"created_at" url:"created_at"`
+	EnvironmentID   string               `json:"environment_id" url:"environment_id"`
+	ID              string               `json:"id" url:"id"`
 	// The integration that performed this change, when the actor is an integration-owned API key (e.g. a billing-provider sync).
 	Integration *IntegrationResponseData `json:"integration,omitempty" url:"integration,omitempty"`
 	// True when this change moved the company to a different version of the same plan (e.g. a plan version migration) rather than to a different plan.
@@ -3666,7 +3673,9 @@ type PlanChangeResponseData struct {
 	PreviousBasePlan *PlanSnapshotView `json:"previous_base_plan,omitempty" url:"previous_base_plan,omitempty"`
 	// The plan version of the previous base plan before this change.
 	PreviousBasePlanVersion *PlanVersionSnapshotView `json:"previous_base_plan_version,omitempty" url:"previous_base_plan_version,omitempty"`
-	RequestID               *string                  `json:"request_id,omitempty" url:"request_id,omitempty"`
+	// The billing interval the subscription was on before this change: monthly, quarterly or yearly. Set only alongside billing_interval.
+	PreviousBillingInterval *string `json:"previous_billing_interval,omitempty" url:"previous_billing_interval,omitempty"`
+	RequestID               *string `json:"request_id,omitempty" url:"request_id,omitempty"`
 	// If a subscription was changed as a part of this plan change, indicates the type of change that was made.
 	SubscriptionChangeAction *PlanChangeSubscriptionAction `json:"subscription_change_action,omitempty" url:"subscription_change_action,omitempty"`
 	// Any traits were updated as part of this plan change (via pay-in-advance entitlements).
@@ -3758,6 +3767,13 @@ func (p *PlanChangeResponseData) GetBasePlanVersion() *PlanVersionSnapshotView {
 	return p.BasePlanVersion
 }
 
+func (p *PlanChangeResponseData) GetBillingInterval() *string {
+	if p == nil {
+		return nil
+	}
+	return p.BillingInterval
+}
+
 func (p *PlanChangeResponseData) GetCompany() *CompanyResponseData {
 	if p == nil {
 		return nil
@@ -3826,6 +3842,13 @@ func (p *PlanChangeResponseData) GetPreviousBasePlanVersion() *PlanVersionSnapsh
 		return nil
 	}
 	return p.PreviousBasePlanVersion
+}
+
+func (p *PlanChangeResponseData) GetPreviousBillingInterval() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PreviousBillingInterval
 }
 
 func (p *PlanChangeResponseData) GetRequestID() *string {
@@ -3977,6 +4000,13 @@ func (p *PlanChangeResponseData) SetBasePlanVersion(basePlanVersion *PlanVersion
 	p.require(planChangeResponseDataFieldBasePlanVersion)
 }
 
+// SetBillingInterval sets the BillingInterval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetBillingInterval(billingInterval *string) {
+	p.BillingInterval = billingInterval
+	p.require(planChangeResponseDataFieldBillingInterval)
+}
+
 // SetCompany sets the Company field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (p *PlanChangeResponseData) SetCompany(company *CompanyResponseData) {
@@ -4045,6 +4075,13 @@ func (p *PlanChangeResponseData) SetPreviousBasePlan(previousBasePlan *PlanSnaps
 func (p *PlanChangeResponseData) SetPreviousBasePlanVersion(previousBasePlanVersion *PlanVersionSnapshotView) {
 	p.PreviousBasePlanVersion = previousBasePlanVersion
 	p.require(planChangeResponseDataFieldPreviousBasePlanVersion)
+}
+
+// SetPreviousBillingInterval sets the PreviousBillingInterval field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanChangeResponseData) SetPreviousBillingInterval(previousBillingInterval *string) {
+	p.PreviousBillingInterval = previousBillingInterval
+	p.require(planChangeResponseDataFieldPreviousBillingInterval)
 }
 
 // SetRequestID sets the RequestID field and marks it as non-optional;

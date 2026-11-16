@@ -48,6 +48,7 @@ func (r *RawClient) Internal(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CheckoutInternalResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -135,6 +136,7 @@ func (r *RawClient) PreviewCheckoutInternal(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.PreviewCheckoutInternalResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -273,6 +275,7 @@ func (r *RawClient) ManagePlan(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.ManagePlanResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -316,6 +319,7 @@ func (r *RawClient) PreviewManagePlan(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.PreviewManagePlanResponse
 	raw, err := r.caller.Call(
 		ctx,

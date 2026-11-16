@@ -105,7 +105,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 
 // Example:
 //
-//	_, err := client.GetCreditLedger(
+//	err := client.GetCreditLedger(
 //	    context.TODO(),
 //	)
 func (c *Client) GetCreditLedger(

@@ -79,15 +79,17 @@ func (c *CancelSubscriptionRequest) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	checkoutDataRequestBodyFieldCompanyID      = big.NewInt(1 << 0)
-	checkoutDataRequestBodyFieldCurrency       = big.NewInt(1 << 1)
-	checkoutDataRequestBodyFieldSelectedPlanID = big.NewInt(1 << 2)
+	checkoutDataRequestBodyFieldCompanyID             = big.NewInt(1 << 0)
+	checkoutDataRequestBodyFieldCurrency              = big.NewInt(1 << 1)
+	checkoutDataRequestBodyFieldSelectedPlanID        = big.NewInt(1 << 2)
+	checkoutDataRequestBodyFieldSelectedPlanVersionID = big.NewInt(1 << 3)
 )
 
 type CheckoutDataRequestBody struct {
-	CompanyID      string    `json:"company_id" url:"-"`
-	Currency       *Currency `json:"currency,omitempty" url:"-"`
-	SelectedPlanID *string   `json:"selected_plan_id,omitempty" url:"-"`
+	CompanyID             string    `json:"company_id" url:"-"`
+	Currency              *Currency `json:"currency,omitempty" url:"-"`
+	SelectedPlanID        *string   `json:"selected_plan_id,omitempty" url:"-"`
+	SelectedPlanVersionID *string   `json:"selected_plan_version_id,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -121,6 +123,13 @@ func (c *CheckoutDataRequestBody) SetCurrency(currency *Currency) {
 func (c *CheckoutDataRequestBody) SetSelectedPlanID(selectedPlanID *string) {
 	c.SelectedPlanID = selectedPlanID
 	c.require(checkoutDataRequestBodyFieldSelectedPlanID)
+}
+
+// SetSelectedPlanVersionID sets the SelectedPlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CheckoutDataRequestBody) SetSelectedPlanVersionID(selectedPlanVersionID *string) {
+	c.SelectedPlanVersionID = selectedPlanVersionID
+	c.require(checkoutDataRequestBodyFieldSelectedPlanVersionID)
 }
 
 func (c *CheckoutDataRequestBody) UnmarshalJSON(data []byte) error {
@@ -2268,22 +2277,23 @@ var (
 	managePlanRequestFieldBillingCycleAnchor       = big.NewInt(1 << 6)
 	managePlanRequestFieldBillingEmail             = big.NewInt(1 << 7)
 	managePlanRequestFieldBillingEntityID          = big.NewInt(1 << 8)
-	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 9)
-	managePlanRequestFieldCollectionMethod         = big.NewInt(1 << 10)
-	managePlanRequestFieldCompanyID                = big.NewInt(1 << 11)
-	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 12)
-	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 13)
-	managePlanRequestFieldCurrency                 = big.NewInt(1 << 14)
-	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 15)
-	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 16)
-	managePlanRequestFieldPaidOutsideStripe        = big.NewInt(1 << 17)
-	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 18)
-	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 19)
-	managePlanRequestFieldPromoCode                = big.NewInt(1 << 20)
-	managePlanRequestFieldProrate                  = big.NewInt(1 << 21)
-	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 22)
-	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 23)
-	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 24)
+	managePlanRequestFieldBillingPeriod            = big.NewInt(1 << 9)
+	managePlanRequestFieldCancelImmediately        = big.NewInt(1 << 10)
+	managePlanRequestFieldCollectionMethod         = big.NewInt(1 << 11)
+	managePlanRequestFieldCompanyID                = big.NewInt(1 << 12)
+	managePlanRequestFieldCouponExternalID         = big.NewInt(1 << 13)
+	managePlanRequestFieldCreditBundles            = big.NewInt(1 << 14)
+	managePlanRequestFieldCurrency                 = big.NewInt(1 << 15)
+	managePlanRequestFieldCustomFieldValues        = big.NewInt(1 << 16)
+	managePlanRequestFieldDaysUntilDue             = big.NewInt(1 << 17)
+	managePlanRequestFieldPaidOutsideStripe        = big.NewInt(1 << 18)
+	managePlanRequestFieldPayInAdvanceEntitlements = big.NewInt(1 << 19)
+	managePlanRequestFieldPaymentMethodExternalID  = big.NewInt(1 << 20)
+	managePlanRequestFieldPromoCode                = big.NewInt(1 << 21)
+	managePlanRequestFieldProrate                  = big.NewInt(1 << 22)
+	managePlanRequestFieldProrateFirstPeriod       = big.NewInt(1 << 23)
+	managePlanRequestFieldSendInvoice              = big.NewInt(1 << 24)
+	managePlanRequestFieldTrialEnd                 = big.NewInt(1 << 25)
 )
 
 type ManagePlanRequest struct {
@@ -2301,6 +2311,8 @@ type ManagePlanRequest struct {
 	BillingEmail *string `json:"billing_email,omitempty" url:"billing_email,omitempty"`
 	// The company that pays for this subscription. Must already have a Stripe customer. Only honored when starting a new subscription.
 	BillingEntityID *string `json:"billing_entity_id,omitempty" url:"billing_entity_id,omitempty"`
+	// How often the plan renews. Only used when Schematic bills the company: the plan's published price for this billing period and the currency is charged, and base_plan_price_id must be left empty. A new billing period starts where the current one ends. Defaults to the subscription's current billing period.
+	BillingPeriod *PlanPriceCadence `json:"billing_period,omitempty" url:"billing_period,omitempty"`
 	// If false, subscription cancels at period end. Only applies when removing all plans. Defaults to true.
 	CancelImmediately *bool `json:"cancel_immediately,omitempty" url:"cancel_immediately,omitempty"`
 	// How the subscription is paid: charged to a payment method on file, or invoiced with payment terms. Invoicing is only available when starting a new subscription. Defaults to charge_automatically.
@@ -2308,7 +2320,7 @@ type ManagePlanRequest struct {
 	CompanyID        string                           `json:"company_id" url:"company_id"`
 	CouponExternalID *string                          `json:"coupon_external_id,omitempty" url:"coupon_external_id,omitempty"`
 	CreditBundles    []*UpdateCreditBundleRequestBody `json:"credit_bundles" url:"credit_bundles"`
-	// ISO 4217 currency this change is being built in. Prices are still selected by id; this records the intent.
+	// ISO 4217 currency this change is being built in. Prices are still selected by id; this records the intent. When Schematic bills the company, the plan is charged in this currency from the next billing period, and the company's contract moves to it; defaults to the subscription's current currency.
 	Currency          *Currency             `json:"currency,omitempty" url:"currency,omitempty"`
 	CustomFieldValues []*CheckoutFieldValue `json:"custom_field_values" url:"custom_field_values"`
 	// Payment terms in days for an invoiced subscription. Defaults to 30.
@@ -2394,6 +2406,13 @@ func (m *ManagePlanRequest) GetBillingEntityID() *string {
 		return nil
 	}
 	return m.BillingEntityID
+}
+
+func (m *ManagePlanRequest) GetBillingPeriod() *PlanPriceCadence {
+	if m == nil {
+		return nil
+	}
+	return m.BillingPeriod
 }
 
 func (m *ManagePlanRequest) GetCancelImmediately() *bool {
@@ -2587,6 +2606,13 @@ func (m *ManagePlanRequest) SetBillingEntityID(billingEntityID *string) {
 	m.require(managePlanRequestFieldBillingEntityID)
 }
 
+// SetBillingPeriod sets the BillingPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanRequest) SetBillingPeriod(billingPeriod *PlanPriceCadence) {
+	m.BillingPeriod = billingPeriod
+	m.require(managePlanRequestFieldBillingPeriod)
+}
+
 // SetCancelImmediately sets the CancelImmediately field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (m *ManagePlanRequest) SetCancelImmediately(cancelImmediately *bool) {
@@ -2754,17 +2780,20 @@ func (m *ManagePlanRequest) String() string {
 }
 
 var (
-	managePlanResponseResponseDataFieldCheckoutID = big.NewInt(1 << 0)
-	managePlanResponseResponseDataFieldCompany    = big.NewInt(1 << 1)
-	managePlanResponseResponseDataFieldProblems   = big.NewInt(1 << 2)
-	managePlanResponseResponseDataFieldSuccess    = big.NewInt(1 << 3)
+	managePlanResponseResponseDataFieldCheckoutID        = big.NewInt(1 << 0)
+	managePlanResponseResponseDataFieldCompany           = big.NewInt(1 << 1)
+	managePlanResponseResponseDataFieldProblems          = big.NewInt(1 << 2)
+	managePlanResponseResponseDataFieldScheduledChangeAt = big.NewInt(1 << 3)
+	managePlanResponseResponseDataFieldSuccess           = big.NewInt(1 << 4)
 )
 
 type ManagePlanResponseResponseData struct {
 	CheckoutID *string                        `json:"checkout_id,omitempty" url:"checkout_id,omitempty"`
 	Company    *CompanyDetailResponseData     `json:"company,omitempty" url:"company,omitempty"`
 	Problems   []*CheckoutProblemResponseData `json:"problems" url:"problems"`
-	Success    bool                           `json:"success" url:"success"`
+	// When a scheduled plan change takes effect. The company stays on its current plan until then. Empty when the change took effect straight away.
+	ScheduledChangeAt *time.Time `json:"scheduled_change_at,omitempty" url:"scheduled_change_at,omitempty"`
+	Success           bool       `json:"success" url:"success"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2792,6 +2821,13 @@ func (m *ManagePlanResponseResponseData) GetProblems() []*CheckoutProblemRespons
 		return nil
 	}
 	return m.Problems
+}
+
+func (m *ManagePlanResponseResponseData) GetScheduledChangeAt() *time.Time {
+	if m == nil {
+		return nil
+	}
+	return m.ScheduledChangeAt
 }
 
 func (m *ManagePlanResponseResponseData) GetSuccess() bool {
@@ -2838,6 +2874,13 @@ func (m *ManagePlanResponseResponseData) SetProblems(problems []*CheckoutProblem
 	m.require(managePlanResponseResponseDataFieldProblems)
 }
 
+// SetScheduledChangeAt sets the ScheduledChangeAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (m *ManagePlanResponseResponseData) SetScheduledChangeAt(scheduledChangeAt *time.Time) {
+	m.ScheduledChangeAt = scheduledChangeAt
+	m.require(managePlanResponseResponseDataFieldScheduledChangeAt)
+}
+
 // SetSuccess sets the Success field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (m *ManagePlanResponseResponseData) SetSuccess(success bool) {
@@ -2846,12 +2889,18 @@ func (m *ManagePlanResponseResponseData) SetSuccess(success bool) {
 }
 
 func (m *ManagePlanResponseResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler ManagePlanResponseResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
+	type embed ManagePlanResponseResponseData
+	var unmarshaler = struct {
+		embed
+		ScheduledChangeAt *internal.DateTime `json:"scheduled_change_at,omitempty"`
+	}{
+		embed: embed(*m),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
 		return err
 	}
-	*m = ManagePlanResponseResponseData(value)
+	*m = ManagePlanResponseResponseData(unmarshaler.embed)
+	m.ScheduledChangeAt = unmarshaler.ScheduledChangeAt.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *m)
 	if err != nil {
 		return err
@@ -2865,8 +2914,10 @@ func (m *ManagePlanResponseResponseData) MarshalJSON() ([]byte, error) {
 	type embed ManagePlanResponseResponseData
 	var marshaler = struct {
 		embed
+		ScheduledChangeAt *internal.DateTime `json:"scheduled_change_at,omitempty"`
 	}{
-		embed: embed(*m),
+		embed:             embed(*m),
+		ScheduledChangeAt: internal.NewOptionalDateTime(m.ScheduledChangeAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, m.explicitFields)
 	return json.Marshal(explicitMarshaler)

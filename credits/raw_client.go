@@ -1189,6 +1189,7 @@ func (r *RawClient) CreateBillingPlanCreditGrant(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreateBillingPlanCreditGrantResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -1283,6 +1284,7 @@ func (r *RawClient) UpdateBillingPlanCreditGrant(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpdateBillingPlanCreditGrantResponse
 	raw, err := r.caller.Call(
 		ctx,

@@ -243,7 +243,7 @@ func (c *Client) GetCreditBundlesInCatalog(
 
 // Example:
 //
-//	_, err := client.Catalogs.AddCreditBundle(
+//	err := client.Catalogs.AddCreditBundle(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "credit_bundle_id",
@@ -270,7 +270,7 @@ func (c *Client) AddCreditBundle(
 
 // Example:
 //
-//	_, err := client.Catalogs.RemoveCreditBundle(
+//	err := client.Catalogs.RemoveCreditBundle(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "credit_bundle_id",
@@ -343,7 +343,7 @@ func (c *Client) GetPlansInCatalog(
 
 // Example:
 //
-//	_, err := client.Catalogs.AddPlan(
+//	err := client.Catalogs.AddPlan(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "plan_id",
@@ -370,7 +370,7 @@ func (c *Client) AddPlan(
 
 // Example:
 //
-//	_, err := client.Catalogs.RemovePlan(
+//	err := client.Catalogs.RemovePlan(
 //	    context.TODO(),
 //	    "catalog_id",
 //	    "plan_id",

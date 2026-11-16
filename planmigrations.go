@@ -602,6 +602,7 @@ type MigrationErrorCode string
 
 const (
 	MigrationErrorCodeAmbiguousSubscriptionItem   MigrationErrorCode = "ambiguous_subscription_item"
+	MigrationErrorCodeMixedBillingIntervals       MigrationErrorCode = "mixed_billing_intervals"
 	MigrationErrorCodeMultipleSubscriptions       MigrationErrorCode = "multiple_subscriptions"
 	MigrationErrorCodeNoPriceForInterval          MigrationErrorCode = "no_price_for_interval"
 	MigrationErrorCodeNotOnOriginVersion          MigrationErrorCode = "not_on_origin_version"
@@ -619,6 +620,8 @@ func NewMigrationErrorCodeFromString(s string) (MigrationErrorCode, error) {
 	switch s {
 	case "ambiguous_subscription_item":
 		return MigrationErrorCodeAmbiguousSubscriptionItem, nil
+	case "mixed_billing_intervals":
+		return MigrationErrorCodeMixedBillingIntervals, nil
 	case "multiple_subscriptions":
 		return MigrationErrorCodeMultipleSubscriptions, nil
 	case "no_price_for_interval":

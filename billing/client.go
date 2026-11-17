@@ -1186,6 +1186,132 @@ func (c *Client) MoveToDefaultPlan(
 
 // Example:
 //
+//	_, err := client.Billing.GetCompanyTrial(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) GetCompanyTrial(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.GetCompanyTrialResponse, error) {
+	response, err := c.WithRawResponse.GetCompanyTrial(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.StartCompanyTrialRequestBody{
+//	    Cadence: schematichq.BillingProductPriceIntervalDay,
+//	    PlanID: "plan_id",
+//	}
+//	_, err := client.Billing.StartCompanyTrial(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
+func (c *Client) StartCompanyTrial(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	request *schematichq.StartCompanyTrialRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.StartCompanyTrialResponse, error) {
+	response, err := c.WithRawResponse.StartCompanyTrial(
+		ctx,
+		companyID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.UpdateCompanyTrialRequestBody{}
+//	_, err := client.Billing.UpdateCompanyTrial(
+//	    context.TODO(),
+//	    "company_id",
+//	    request,
+//	)
+func (c *Client) UpdateCompanyTrial(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	request *schematichq.UpdateCompanyTrialRequestBody,
+	opts ...option.RequestOption,
+) (*schematichq.UpdateCompanyTrialResponse, error) {
+	response, err := c.WithRawResponse.UpdateCompanyTrial(
+		ctx,
+		companyID,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.ConvertCompanyTrial(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) ConvertCompanyTrial(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.ConvertCompanyTrialResponse, error) {
+	response, err := c.WithRawResponse.ConvertCompanyTrial(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	_, err := client.Billing.EndCompanyTrial(
+//	    context.TODO(),
+//	    "company_id",
+//	)
+func (c *Client) EndCompanyTrial(
+	ctx context.Context,
+	// company_id
+	companyID string,
+	opts ...option.RequestOption,
+) (*schematichq.EndCompanyTrialResponse, error) {
+	response, err := c.WithRawResponse.EndCompanyTrial(
+		ctx,
+		companyID,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	_, err := client.Billing.GetCompanyUpcomingInvoices(
 //	    context.TODO(),
 //	    "company_id",

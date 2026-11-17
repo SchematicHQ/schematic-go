@@ -97,6 +97,7 @@ func (r *RawClient) UpsertCompany(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpsertCompanyResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -343,6 +344,7 @@ func (r *RawClient) CreateCompany(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreateCompanyResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -386,6 +388,7 @@ func (r *RawClient) DeleteCompanyByKeys(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.DeleteCompanyByKeysResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -859,6 +862,7 @@ func (r *RawClient) UpsertCompanyTrait(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpsertCompanyTraitResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -1805,6 +1809,7 @@ func (r *RawClient) UpsertUserTrait(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpsertUserTraitResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -1897,6 +1902,7 @@ func (r *RawClient) UpsertUser(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.UpsertUserResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -2081,6 +2087,7 @@ func (r *RawClient) CreateUser(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreateUserResponse
 	raw, err := r.caller.Call(
 		ctx,
@@ -2124,6 +2131,7 @@ func (r *RawClient) DeleteUserByKeys(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.DeleteUserByKeysResponse
 	raw, err := r.caller.Call(
 		ctx,

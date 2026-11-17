@@ -158,6 +158,14 @@ func TestSettersCheckoutDataRequestBody(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetSelectedPlanVersionID", func(t *testing.T) {
+		obj := &CheckoutDataRequestBody{}
+		var fernTestValueSelectedPlanVersionID *string
+		obj.SetSelectedPlanVersionID(fernTestValueSelectedPlanVersionID)
+		assert.Equal(t, fernTestValueSelectedPlanVersionID, obj.SelectedPlanVersionID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 }
 
 func TestSettersMarkExplicitCheckoutDataRequestBody(t *testing.T) {
@@ -231,6 +239,37 @@ func TestSettersMarkExplicitCheckoutDataRequestBody(t *testing.T) {
 
 		// Act
 		obj.SetSelectedPlanID(fernTestValueSelectedPlanID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetSelectedPlanVersionID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CheckoutDataRequestBody{}
+		var fernTestValueSelectedPlanVersionID *string
+
+		// Act
+		obj.SetSelectedPlanVersionID(fernTestValueSelectedPlanVersionID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -6181,6 +6220,14 @@ func TestSettersManagePlanRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetBillingPeriod", func(t *testing.T) {
+		obj := &ManagePlanRequest{}
+		var fernTestValueBillingPeriod *PlanPriceCadence
+		obj.SetBillingPeriod(fernTestValueBillingPeriod)
+		assert.Equal(t, fernTestValueBillingPeriod, obj.BillingPeriod)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetCancelImmediately", func(t *testing.T) {
 		obj := &ManagePlanRequest{}
 		var fernTestValueCancelImmediately *bool
@@ -6607,6 +6654,39 @@ func TestGettersManagePlanRequest(t *testing.T) {
 			}
 		}()
 		_ = obj.GetBillingEntityID() // Should return zero value
+	})
+
+	t.Run("GetBillingPeriod", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanRequest{}
+		var expected *PlanPriceCadence
+		obj.BillingPeriod = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetBillingPeriod(), "getter should return the property value")
+	})
+
+	t.Run("GetBillingPeriod_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanRequest{}
+		obj.BillingPeriod = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetBillingPeriod(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetBillingPeriod_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ManagePlanRequest
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetBillingPeriod() // Should return zero value
 	})
 
 	t.Run("GetCancelImmediately", func(t *testing.T) {
@@ -7409,6 +7489,37 @@ func TestSettersMarkExplicitManagePlanRequest(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetBillingPeriod_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanRequest{}
+		var fernTestValueBillingPeriod *PlanPriceCadence
+
+		// Act
+		obj.SetBillingPeriod(fernTestValueBillingPeriod)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetCancelImmediately_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -7932,6 +8043,14 @@ func TestSettersManagePlanResponseResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetScheduledChangeAt", func(t *testing.T) {
+		obj := &ManagePlanResponseResponseData{}
+		var fernTestValueScheduledChangeAt *time.Time
+		obj.SetScheduledChangeAt(fernTestValueScheduledChangeAt)
+		assert.Equal(t, fernTestValueScheduledChangeAt, obj.ScheduledChangeAt)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetSuccess", func(t *testing.T) {
 		obj := &ManagePlanResponseResponseData{}
 		var fernTestValueSuccess bool
@@ -8042,6 +8161,39 @@ func TestGettersManagePlanResponseResponseData(t *testing.T) {
 		_ = obj.GetProblems() // Should return zero value
 	})
 
+	t.Run("GetScheduledChangeAt", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanResponseResponseData{}
+		var expected *time.Time
+		obj.ScheduledChangeAt = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetScheduledChangeAt(), "getter should return the property value")
+	})
+
+	t.Run("GetScheduledChangeAt_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanResponseResponseData{}
+		obj.ScheduledChangeAt = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetScheduledChangeAt(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetScheduledChangeAt_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ManagePlanResponseResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetScheduledChangeAt() // Should return zero value
+	})
+
 	t.Run("GetSuccess", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -8138,6 +8290,37 @@ func TestSettersMarkExplicitManagePlanResponseResponseData(t *testing.T) {
 
 		// Act
 		obj.SetProblems(fernTestValueProblems)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetScheduledChangeAt_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ManagePlanResponseResponseData{}
+		var fernTestValueScheduledChangeAt *time.Time
+
+		// Act
+		obj.SetScheduledChangeAt(fernTestValueScheduledChangeAt)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

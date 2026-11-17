@@ -5497,15 +5497,15 @@ type CreditSpendPolicyResponseData struct {
 	BillingCreditID string `json:"billing_credit_id" url:"billing_credit_id"`
 	// The company the policy applies in
 	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
-	// Credits spent in the current window. Set only by the usage route, and only for a window cap.
+	// Credits spent in the current window. Set only by the routes that read usage, and only for a window cap.
 	Consumed  *float64  `json:"consumed,omitempty" url:"consumed,omitempty"`
 	CreatedAt time.Time `json:"created_at" url:"created_at"`
-	// Credits left in the current window. Set only by the usage route, and only for a window cap.
+	// Credits left in the current window. Set only by the routes that read usage, and only for a window cap.
 	Headroom   *float64 `json:"headroom,omitempty" url:"headroom,omitempty"`
 	ID         string   `json:"id" url:"id"`
 	Label      *string  `json:"label,omitempty" url:"label,omitempty"`
 	MaxPerDraw *float64 `json:"max_per_draw,omitempty" url:"max_per_draw,omitempty"`
-	// When the current window ends. Set only by the usage route, and only for a window cap.
+	// When the current window ends. Set only by the routes that read usage, and only for a window cap.
 	ResetsAt  *time.Time             `json:"resets_at,omitempty" url:"resets_at,omitempty"`
 	ScopeType CreditSpendPolicyScope `json:"scope_type" url:"scope_type"`
 	UpdatedAt time.Time              `json:"updated_at" url:"updated_at"`

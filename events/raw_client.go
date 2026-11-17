@@ -190,6 +190,7 @@ func (r *RawClient) CreateEvent(
 		r.options.ToHeader(),
 		options.ToHeader(),
 	)
+	headers.Add("Content-Type", "application/json")
 	var response *schematichq.CreateEventResponse
 	raw, err := r.caller.Call(
 		ctx,

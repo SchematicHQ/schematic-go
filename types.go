@@ -5659,8 +5659,9 @@ var (
 	billingProductForSubscriptionResponseDataFieldQuantity                   = big.NewInt(1 << 18)
 	billingProductForSubscriptionResponseDataFieldSubscriptionID             = big.NewInt(1 << 19)
 	billingProductForSubscriptionResponseDataFieldSubscriptionItemExternalID = big.NewInt(1 << 20)
-	billingProductForSubscriptionResponseDataFieldUpdatedAt                  = big.NewInt(1 << 21)
-	billingProductForSubscriptionResponseDataFieldUsageType                  = big.NewInt(1 << 22)
+	billingProductForSubscriptionResponseDataFieldTiersMode                  = big.NewInt(1 << 21)
+	billingProductForSubscriptionResponseDataFieldUpdatedAt                  = big.NewInt(1 << 22)
+	billingProductForSubscriptionResponseDataFieldUsageType                  = big.NewInt(1 << 23)
 )
 
 type BillingProductForSubscriptionResponseData struct {
@@ -5685,6 +5686,7 @@ type BillingProductForSubscriptionResponseData struct {
 	Quantity                   float64                                `json:"quantity" url:"quantity"`
 	SubscriptionID             string                                 `json:"subscription_id" url:"subscription_id"`
 	SubscriptionItemExternalID *string                                `json:"subscription_item_external_id,omitempty" url:"subscription_item_external_id,omitempty"`
+	TiersMode                  *BillingTiersMode                      `json:"tiers_mode,omitempty" url:"tiers_mode,omitempty"`
 	UpdatedAt                  time.Time                              `json:"updated_at" url:"updated_at"`
 	UsageType                  BillingPriceUsageType                  `json:"usage_type" url:"usage_type"`
 
@@ -5840,6 +5842,13 @@ func (b *BillingProductForSubscriptionResponseData) GetSubscriptionItemExternalI
 		return nil
 	}
 	return b.SubscriptionItemExternalID
+}
+
+func (b *BillingProductForSubscriptionResponseData) GetTiersMode() *BillingTiersMode {
+	if b == nil {
+		return nil
+	}
+	return b.TiersMode
 }
 
 func (b *BillingProductForSubscriptionResponseData) GetUpdatedAt() time.Time {
@@ -6019,6 +6028,13 @@ func (b *BillingProductForSubscriptionResponseData) SetSubscriptionItemExternalI
 	b.require(billingProductForSubscriptionResponseDataFieldSubscriptionItemExternalID)
 }
 
+// SetTiersMode sets the TiersMode field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductForSubscriptionResponseData) SetTiersMode(tiersMode *BillingTiersMode) {
+	b.TiersMode = tiersMode
+	b.require(billingProductForSubscriptionResponseDataFieldTiersMode)
+}
+
 // SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (b *BillingProductForSubscriptionResponseData) SetUpdatedAt(updatedAt time.Time) {
@@ -6098,8 +6114,9 @@ var (
 	billingProductPlanResponseDataFieldMonthlyPriceID   = big.NewInt(1 << 7)
 	billingProductPlanResponseDataFieldOneTimePriceID   = big.NewInt(1 << 8)
 	billingProductPlanResponseDataFieldPlanID           = big.NewInt(1 << 9)
-	billingProductPlanResponseDataFieldTrialDays        = big.NewInt(1 << 10)
-	billingProductPlanResponseDataFieldYearlyPriceID    = big.NewInt(1 << 11)
+	billingProductPlanResponseDataFieldQuarterlyPriceID = big.NewInt(1 << 10)
+	billingProductPlanResponseDataFieldTrialDays        = big.NewInt(1 << 11)
+	billingProductPlanResponseDataFieldYearlyPriceID    = big.NewInt(1 << 12)
 )
 
 type BillingProductPlanResponseData struct {
@@ -6113,6 +6130,7 @@ type BillingProductPlanResponseData struct {
 	MonthlyPriceID   *string             `json:"monthly_price_id,omitempty" url:"monthly_price_id,omitempty"`
 	OneTimePriceID   *string             `json:"one_time_price_id,omitempty" url:"one_time_price_id,omitempty"`
 	PlanID           string              `json:"plan_id" url:"plan_id"`
+	QuarterlyPriceID *string             `json:"quarterly_price_id,omitempty" url:"quarterly_price_id,omitempty"`
 	TrialDays        *int64              `json:"trial_days,omitempty" url:"trial_days,omitempty"`
 	YearlyPriceID    *string             `json:"yearly_price_id,omitempty" url:"yearly_price_id,omitempty"`
 
@@ -6191,6 +6209,13 @@ func (b *BillingProductPlanResponseData) GetPlanID() string {
 		return ""
 	}
 	return b.PlanID
+}
+
+func (b *BillingProductPlanResponseData) GetQuarterlyPriceID() *string {
+	if b == nil {
+		return nil
+	}
+	return b.QuarterlyPriceID
 }
 
 func (b *BillingProductPlanResponseData) GetTrialDays() *int64 {
@@ -6291,6 +6316,13 @@ func (b *BillingProductPlanResponseData) SetOneTimePriceID(oneTimePriceID *strin
 func (b *BillingProductPlanResponseData) SetPlanID(planID string) {
 	b.PlanID = planID
 	b.require(billingProductPlanResponseDataFieldPlanID)
+}
+
+// SetQuarterlyPriceID sets the QuarterlyPriceID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingProductPlanResponseData) SetQuarterlyPriceID(quarterlyPriceID *string) {
+	b.QuarterlyPriceID = quarterlyPriceID
+	b.require(billingProductPlanResponseDataFieldQuarterlyPriceID)
 }
 
 // SetTrialDays sets the TrialDays field and marks it as non-optional;
@@ -41539,17 +41571,19 @@ func (r *RulesengineWarningTier) String() string {
 }
 
 var (
-	scheduledDowngradeResponseDataFieldCurrency              = big.NewInt(1 << 0)
-	scheduledDowngradeResponseDataFieldEffectiveAfter        = big.NewInt(1 << 1)
-	scheduledDowngradeResponseDataFieldFromPlanID            = big.NewInt(1 << 2)
-	scheduledDowngradeResponseDataFieldFromPlanName          = big.NewInt(1 << 3)
-	scheduledDowngradeResponseDataFieldFromSubscriptionPrice = big.NewInt(1 << 4)
-	scheduledDowngradeResponseDataFieldID                    = big.NewInt(1 << 5)
-	scheduledDowngradeResponseDataFieldInterval              = big.NewInt(1 << 6)
-	scheduledDowngradeResponseDataFieldScheduledInterval     = big.NewInt(1 << 7)
-	scheduledDowngradeResponseDataFieldScheduledPrice        = big.NewInt(1 << 8)
-	scheduledDowngradeResponseDataFieldToPlanID              = big.NewInt(1 << 9)
-	scheduledDowngradeResponseDataFieldToPlanName            = big.NewInt(1 << 10)
+	scheduledDowngradeResponseDataFieldCurrency               = big.NewInt(1 << 0)
+	scheduledDowngradeResponseDataFieldEffectiveAfter         = big.NewInt(1 << 1)
+	scheduledDowngradeResponseDataFieldFromPlanID             = big.NewInt(1 << 2)
+	scheduledDowngradeResponseDataFieldFromPlanName           = big.NewInt(1 << 3)
+	scheduledDowngradeResponseDataFieldFromSubscriptionPrice  = big.NewInt(1 << 4)
+	scheduledDowngradeResponseDataFieldID                     = big.NewInt(1 << 5)
+	scheduledDowngradeResponseDataFieldInterval               = big.NewInt(1 << 6)
+	scheduledDowngradeResponseDataFieldIntervalCount          = big.NewInt(1 << 7)
+	scheduledDowngradeResponseDataFieldScheduledInterval      = big.NewInt(1 << 8)
+	scheduledDowngradeResponseDataFieldScheduledIntervalCount = big.NewInt(1 << 9)
+	scheduledDowngradeResponseDataFieldScheduledPrice         = big.NewInt(1 << 10)
+	scheduledDowngradeResponseDataFieldToPlanID               = big.NewInt(1 << 11)
+	scheduledDowngradeResponseDataFieldToPlanName             = big.NewInt(1 << 12)
 )
 
 type ScheduledDowngradeResponseData struct {
@@ -41560,10 +41594,14 @@ type ScheduledDowngradeResponseData struct {
 	FromSubscriptionPrice int64     `json:"from_subscription_price" url:"from_subscription_price"`
 	ID                    string    `json:"id" url:"id"`
 	Interval              string    `json:"interval" url:"interval"`
-	ScheduledInterval     *string   `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
-	ScheduledPrice        *int64    `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
-	ToPlanID              string    `json:"to_plan_id" url:"to_plan_id"`
-	ToPlanName            string    `json:"to_plan_name" url:"to_plan_name"`
+	// With interval, the current subscription's billing period: 3 with month is quarterly.
+	IntervalCount     int64   `json:"interval_count" url:"interval_count"`
+	ScheduledInterval *string `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
+	// With scheduled_interval, the scheduled price's billing period: 3 with month is quarterly. Null for a downgrade scheduled before the price was recorded.
+	ScheduledIntervalCount *int64 `json:"scheduled_interval_count,omitempty" url:"scheduled_interval_count,omitempty"`
+	ScheduledPrice         *int64 `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
+	ToPlanID               string `json:"to_plan_id" url:"to_plan_id"`
+	ToPlanName             string `json:"to_plan_name" url:"to_plan_name"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -41621,11 +41659,25 @@ func (s *ScheduledDowngradeResponseData) GetInterval() string {
 	return s.Interval
 }
 
+func (s *ScheduledDowngradeResponseData) GetIntervalCount() int64 {
+	if s == nil {
+		return 0
+	}
+	return s.IntervalCount
+}
+
 func (s *ScheduledDowngradeResponseData) GetScheduledInterval() *string {
 	if s == nil {
 		return nil
 	}
 	return s.ScheduledInterval
+}
+
+func (s *ScheduledDowngradeResponseData) GetScheduledIntervalCount() *int64 {
+	if s == nil {
+		return nil
+	}
+	return s.ScheduledIntervalCount
 }
 
 func (s *ScheduledDowngradeResponseData) GetScheduledPrice() *int64 {
@@ -41714,11 +41766,25 @@ func (s *ScheduledDowngradeResponseData) SetInterval(interval string) {
 	s.require(scheduledDowngradeResponseDataFieldInterval)
 }
 
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *ScheduledDowngradeResponseData) SetIntervalCount(intervalCount int64) {
+	s.IntervalCount = intervalCount
+	s.require(scheduledDowngradeResponseDataFieldIntervalCount)
+}
+
 // SetScheduledInterval sets the ScheduledInterval field and marks it as non-optional;
 // this prevents an empty or null value for this field from being omitted during serialization.
 func (s *ScheduledDowngradeResponseData) SetScheduledInterval(scheduledInterval *string) {
 	s.ScheduledInterval = scheduledInterval
 	s.require(scheduledDowngradeResponseDataFieldScheduledInterval)
+}
+
+// SetScheduledIntervalCount sets the ScheduledIntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *ScheduledDowngradeResponseData) SetScheduledIntervalCount(scheduledIntervalCount *int64) {
+	s.ScheduledIntervalCount = scheduledIntervalCount
+	s.require(scheduledDowngradeResponseDataFieldScheduledIntervalCount)
 }
 
 // SetScheduledPrice sets the ScheduledPrice field and marks it as non-optional;
@@ -45657,13 +45723,14 @@ func (w *WebFeatureUsageWebhookOutput) String() string {
 }
 
 var (
-	webScheduledDowngradeWebhookOutputFieldCompany           = big.NewInt(1 << 0)
-	webScheduledDowngradeWebhookOutputFieldExecuteAfter      = big.NewInt(1 << 1)
-	webScheduledDowngradeWebhookOutputFieldFromPlan          = big.NewInt(1 << 2)
-	webScheduledDowngradeWebhookOutputFieldID                = big.NewInt(1 << 3)
-	webScheduledDowngradeWebhookOutputFieldScheduledInterval = big.NewInt(1 << 4)
-	webScheduledDowngradeWebhookOutputFieldScheduledPrice    = big.NewInt(1 << 5)
-	webScheduledDowngradeWebhookOutputFieldToPlan            = big.NewInt(1 << 6)
+	webScheduledDowngradeWebhookOutputFieldCompany                = big.NewInt(1 << 0)
+	webScheduledDowngradeWebhookOutputFieldExecuteAfter           = big.NewInt(1 << 1)
+	webScheduledDowngradeWebhookOutputFieldFromPlan               = big.NewInt(1 << 2)
+	webScheduledDowngradeWebhookOutputFieldID                     = big.NewInt(1 << 3)
+	webScheduledDowngradeWebhookOutputFieldScheduledInterval      = big.NewInt(1 << 4)
+	webScheduledDowngradeWebhookOutputFieldScheduledIntervalCount = big.NewInt(1 << 5)
+	webScheduledDowngradeWebhookOutputFieldScheduledPrice         = big.NewInt(1 << 6)
+	webScheduledDowngradeWebhookOutputFieldToPlan                 = big.NewInt(1 << 7)
 )
 
 type WebScheduledDowngradeWebhookOutput struct {
@@ -45672,8 +45739,10 @@ type WebScheduledDowngradeWebhookOutput struct {
 	FromPlan          *PlanSnapshotView    `json:"from_plan,omitempty" url:"from_plan,omitempty"`
 	ID                string               `json:"id" url:"id"`
 	ScheduledInterval *string              `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
-	ScheduledPrice    *int64               `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
-	ToPlan            *PlanSnapshotView    `json:"to_plan,omitempty" url:"to_plan,omitempty"`
+	// With scheduled_interval, the scheduled price's billing period: 3 with month is quarterly. Null for a downgrade scheduled before the price was recorded.
+	ScheduledIntervalCount *int64            `json:"scheduled_interval_count,omitempty" url:"scheduled_interval_count,omitempty"`
+	ScheduledPrice         *int64            `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
+	ToPlan                 *PlanSnapshotView `json:"to_plan,omitempty" url:"to_plan,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -45715,6 +45784,13 @@ func (w *WebScheduledDowngradeWebhookOutput) GetScheduledInterval() *string {
 		return nil
 	}
 	return w.ScheduledInterval
+}
+
+func (w *WebScheduledDowngradeWebhookOutput) GetScheduledIntervalCount() *int64 {
+	if w == nil {
+		return nil
+	}
+	return w.ScheduledIntervalCount
 }
 
 func (w *WebScheduledDowngradeWebhookOutput) GetScheduledPrice() *int64 {
@@ -45780,6 +45856,13 @@ func (w *WebScheduledDowngradeWebhookOutput) SetID(id string) {
 func (w *WebScheduledDowngradeWebhookOutput) SetScheduledInterval(scheduledInterval *string) {
 	w.ScheduledInterval = scheduledInterval
 	w.require(webScheduledDowngradeWebhookOutputFieldScheduledInterval)
+}
+
+// SetScheduledIntervalCount sets the ScheduledIntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (w *WebScheduledDowngradeWebhookOutput) SetScheduledIntervalCount(scheduledIntervalCount *int64) {
+	w.ScheduledIntervalCount = scheduledIntervalCount
+	w.require(webScheduledDowngradeWebhookOutputFieldScheduledIntervalCount)
 }
 
 // SetScheduledPrice sets the ScheduledPrice field and marks it as non-optional;

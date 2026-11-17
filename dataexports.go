@@ -831,10 +831,267 @@ func (c CompanyFeatureUsageExportMetadataVisibleColumnsItem) Ptr() *CompanyFeatu
 	return &c
 }
 
+var (
+	creditLedgerExportMetadataFieldBillingCreditID                          = big.NewInt(1 << 0)
+	creditLedgerExportMetadataFieldCompanyID                                = big.NewInt(1 << 1)
+	creditLedgerExportMetadataFieldEndTime                                  = big.NewInt(1 << 2)
+	creditLedgerExportMetadataFieldEventType                                = big.NewInt(1 << 3)
+	creditLedgerExportMetadataFieldFeatureID                                = big.NewInt(1 << 4)
+	creditLedgerExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 5)
+	creditLedgerExportMetadataFieldSourceEventID                            = big.NewInt(1 << 6)
+	creditLedgerExportMetadataFieldStartTime                                = big.NewInt(1 << 7)
+)
+
+type CreditLedgerExportMetadata struct {
+	// Restrict the export to ledger entries for this billing credit ID
+	BillingCreditID *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	// Restrict the export to ledger entries for this company ID (starting with 'comp_'); omit to export every company in the environment
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Restrict the export to ledger entries that occurred before this time
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Restrict the export to ledger entries of this event type
+	EventType *CreditLedgerExportMetadataEventType `json:"event_type,omitempty" url:"event_type,omitempty"`
+	// Restrict the export to ledger entries for this feature ID (starting with 'feat_')
+	FeatureID *string `json:"feature_id,omitempty" url:"feature_id,omitempty"`
+	// Account member emails to notify when the export completes; empty means the artifact is only retrievable via the API
+	NotificationEmailRecipientEmailAddresses []string `json:"notification_email_recipient_email_addresses,omitempty" url:"notification_email_recipient_email_addresses,omitempty"`
+	// Restrict the export to ledger entries drawn by this track or inference event, using the event ID that POST /events returned for it
+	SourceEventID *string `json:"source_event_id,omitempty" url:"source_event_id,omitempty"`
+	// Restrict the export to ledger entries that occurred at or after this time
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditLedgerExportMetadata) GetBillingCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditID
+}
+
+func (c *CreditLedgerExportMetadata) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CreditLedgerExportMetadata) GetEndTime() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.EndTime
+}
+
+func (c *CreditLedgerExportMetadata) GetEventType() *CreditLedgerExportMetadataEventType {
+	if c == nil {
+		return nil
+	}
+	return c.EventType
+}
+
+func (c *CreditLedgerExportMetadata) GetFeatureID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.FeatureID
+}
+
+func (c *CreditLedgerExportMetadata) GetNotificationEmailRecipientEmailAddresses() []string {
+	if c == nil {
+		return nil
+	}
+	return c.NotificationEmailRecipientEmailAddresses
+}
+
+func (c *CreditLedgerExportMetadata) GetSourceEventID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SourceEventID
+}
+
+func (c *CreditLedgerExportMetadata) GetStartTime() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.StartTime
+}
+
+func (c *CreditLedgerExportMetadata) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditLedgerExportMetadata) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetBillingCreditID(billingCreditID *string) {
+	c.BillingCreditID = billingCreditID
+	c.require(creditLedgerExportMetadataFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(creditLedgerExportMetadataFieldCompanyID)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetEndTime(endTime *time.Time) {
+	c.EndTime = endTime
+	c.require(creditLedgerExportMetadataFieldEndTime)
+}
+
+// SetEventType sets the EventType field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetEventType(eventType *CreditLedgerExportMetadataEventType) {
+	c.EventType = eventType
+	c.require(creditLedgerExportMetadataFieldEventType)
+}
+
+// SetFeatureID sets the FeatureID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetFeatureID(featureID *string) {
+	c.FeatureID = featureID
+	c.require(creditLedgerExportMetadataFieldFeatureID)
+}
+
+// SetNotificationEmailRecipientEmailAddresses sets the NotificationEmailRecipientEmailAddresses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetNotificationEmailRecipientEmailAddresses(notificationEmailRecipientEmailAddresses []string) {
+	c.NotificationEmailRecipientEmailAddresses = notificationEmailRecipientEmailAddresses
+	c.require(creditLedgerExportMetadataFieldNotificationEmailRecipientEmailAddresses)
+}
+
+// SetSourceEventID sets the SourceEventID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetSourceEventID(sourceEventID *string) {
+	c.SourceEventID = sourceEventID
+	c.require(creditLedgerExportMetadataFieldSourceEventID)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditLedgerExportMetadata) SetStartTime(startTime *time.Time) {
+	c.StartTime = startTime
+	c.require(creditLedgerExportMetadataFieldStartTime)
+}
+
+func (c *CreditLedgerExportMetadata) UnmarshalJSON(data []byte) error {
+	type embed CreditLedgerExportMetadata
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CreditLedgerExportMetadata(unmarshaler.embed)
+	c.EndTime = unmarshaler.EndTime.TimePtr()
+	c.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditLedgerExportMetadata) MarshalJSON() ([]byte, error) {
+	type embed CreditLedgerExportMetadata
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*c),
+		EndTime:   internal.NewOptionalDateTime(c.EndTime),
+		StartTime: internal.NewOptionalDateTime(c.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditLedgerExportMetadata) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// Restrict the export to ledger entries of this event type
+type CreditLedgerExportMetadataEventType string
+
+const (
+	CreditLedgerExportMetadataEventTypeAdjustment CreditLedgerExportMetadataEventType = "adjustment"
+	CreditLedgerExportMetadataEventTypeCharge     CreditLedgerExportMetadataEventType = "charge"
+	CreditLedgerExportMetadataEventTypeGrant      CreditLedgerExportMetadataEventType = "grant"
+	CreditLedgerExportMetadataEventTypeSettlement CreditLedgerExportMetadataEventType = "settlement"
+	CreditLedgerExportMetadataEventTypeTransfer   CreditLedgerExportMetadataEventType = "transfer"
+	CreditLedgerExportMetadataEventTypeUsage      CreditLedgerExportMetadataEventType = "usage"
+	CreditLedgerExportMetadataEventTypeZeroOut    CreditLedgerExportMetadataEventType = "zero_out"
+)
+
+func NewCreditLedgerExportMetadataEventTypeFromString(s string) (CreditLedgerExportMetadataEventType, error) {
+	switch s {
+	case "adjustment":
+		return CreditLedgerExportMetadataEventTypeAdjustment, nil
+	case "charge":
+		return CreditLedgerExportMetadataEventTypeCharge, nil
+	case "grant":
+		return CreditLedgerExportMetadataEventTypeGrant, nil
+	case "settlement":
+		return CreditLedgerExportMetadataEventTypeSettlement, nil
+	case "transfer":
+		return CreditLedgerExportMetadataEventTypeTransfer, nil
+	case "usage":
+		return CreditLedgerExportMetadataEventTypeUsage, nil
+	case "zero_out":
+		return CreditLedgerExportMetadataEventTypeZeroOut, nil
+	}
+	var t CreditLedgerExportMetadataEventType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CreditLedgerExportMetadataEventType) Ptr() *CreditLedgerExportMetadataEventType {
+	return &c
+}
+
 type DataExportMetadata struct {
 	ExportType          string
 	AuditLog            *AuditLogExportMetadata
 	CompanyFeatureUsage *CompanyFeatureUsageExportMetadata
+	CreditLedger        *CreditLedgerExportMetadata
 	Event               *EventExportMetadata
 
 	rawJSON json.RawMessage
@@ -859,6 +1116,13 @@ func (d *DataExportMetadata) GetCompanyFeatureUsage() *CompanyFeatureUsageExport
 		return nil
 	}
 	return d.CompanyFeatureUsage
+}
+
+func (d *DataExportMetadata) GetCreditLedger() *CreditLedgerExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.CreditLedger
 }
 
 func (d *DataExportMetadata) GetEvent() *EventExportMetadata {
@@ -892,6 +1156,12 @@ func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		d.CompanyFeatureUsage = value
+	case "credit-ledger":
+		value := new(CreditLedgerExportMetadata)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		d.CreditLedger = value
 	case "event":
 		value := new(EventExportMetadata)
 		if err := json.Unmarshal(data, &value); err != nil {
@@ -913,6 +1183,9 @@ func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
 	if d.CompanyFeatureUsage != nil {
 		return internal.MarshalJSONWithExtraProperty(d.CompanyFeatureUsage, "export_type", "company-feature-usage")
 	}
+	if d.CreditLedger != nil {
+		return internal.MarshalJSONWithExtraProperty(d.CreditLedger, "export_type", "credit-ledger")
+	}
 	if d.Event != nil {
 		return internal.MarshalJSONWithExtraProperty(d.Event, "export_type", "event")
 	}
@@ -925,6 +1198,7 @@ func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
 type DataExportMetadataVisitor interface {
 	VisitAuditLog(*AuditLogExportMetadata) error
 	VisitCompanyFeatureUsage(*CompanyFeatureUsageExportMetadata) error
+	VisitCreditLedger(*CreditLedgerExportMetadata) error
 	VisitEvent(*EventExportMetadata) error
 }
 
@@ -934,6 +1208,9 @@ func (d *DataExportMetadata) Accept(visitor DataExportMetadataVisitor) error {
 	}
 	if d.CompanyFeatureUsage != nil {
 		return visitor.VisitCompanyFeatureUsage(d.CompanyFeatureUsage)
+	}
+	if d.CreditLedger != nil {
+		return visitor.VisitCreditLedger(d.CreditLedger)
 	}
 	if d.Event != nil {
 		return visitor.VisitEvent(d.Event)
@@ -951,6 +1228,9 @@ func (d *DataExportMetadata) validate() error {
 	}
 	if d.CompanyFeatureUsage != nil {
 		fields = append(fields, "company-feature-usage")
+	}
+	if d.CreditLedger != nil {
+		fields = append(fields, "credit-ledger")
 	}
 	if d.Event != nil {
 		fields = append(fields, "event")
@@ -1259,6 +1539,7 @@ type DataExportType string
 const (
 	DataExportTypeAuditLog            DataExportType = "audit-log"
 	DataExportTypeCompanyFeatureUsage DataExportType = "company-feature-usage"
+	DataExportTypeCreditLedger        DataExportType = "credit-ledger"
 	DataExportTypeEvent               DataExportType = "event"
 )
 
@@ -1268,6 +1549,8 @@ func NewDataExportTypeFromString(s string) (DataExportType, error) {
 		return DataExportTypeAuditLog, nil
 	case "company-feature-usage":
 		return DataExportTypeCompanyFeatureUsage, nil
+	case "credit-ledger":
+		return DataExportTypeCreditLedger, nil
 	case "event":
 		return DataExportTypeEvent, nil
 	}

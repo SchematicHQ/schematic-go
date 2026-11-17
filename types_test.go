@@ -15538,6 +15538,14 @@ func TestSettersBillingProductForSubscriptionResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetTiersMode", func(t *testing.T) {
+		obj := &BillingProductForSubscriptionResponseData{}
+		var fernTestValueTiersMode *BillingTiersMode
+		obj.SetTiersMode(fernTestValueTiersMode)
+		assert.Equal(t, fernTestValueTiersMode, obj.TiersMode)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetUpdatedAt", func(t *testing.T) {
 		obj := &BillingProductForSubscriptionResponseData{}
 		var fernTestValueUpdatedAt time.Time
@@ -16098,6 +16106,39 @@ func TestGettersBillingProductForSubscriptionResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetSubscriptionItemExternalID() // Should return zero value
+	})
+
+	t.Run("GetTiersMode", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductForSubscriptionResponseData{}
+		var expected *BillingTiersMode
+		obj.TiersMode = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetTiersMode(), "getter should return the property value")
+	})
+
+	t.Run("GetTiersMode_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductForSubscriptionResponseData{}
+		obj.TiersMode = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetTiersMode(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetTiersMode_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *BillingProductForSubscriptionResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetTiersMode() // Should return zero value
 	})
 
 	t.Run("GetUpdatedAt", func(t *testing.T) {
@@ -16800,6 +16841,37 @@ func TestSettersMarkExplicitBillingProductForSubscriptionResponseData(t *testing
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetTiersMode_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductForSubscriptionResponseData{}
+		var fernTestValueTiersMode *BillingTiersMode
+
+		// Act
+		obj.SetTiersMode(fernTestValueTiersMode)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetUpdatedAt_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -16942,6 +17014,14 @@ func TestSettersBillingProductPlanResponseData(t *testing.T) {
 		var fernTestValuePlanID string
 		obj.SetPlanID(fernTestValuePlanID)
 		assert.Equal(t, fernTestValuePlanID, obj.PlanID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetQuarterlyPriceID", func(t *testing.T) {
+		obj := &BillingProductPlanResponseData{}
+		var fernTestValueQuarterlyPriceID *string
+		obj.SetQuarterlyPriceID(fernTestValueQuarterlyPriceID)
+		assert.Equal(t, fernTestValueQuarterlyPriceID, obj.QuarterlyPriceID)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -17212,6 +17292,39 @@ func TestGettersBillingProductPlanResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetPlanID() // Should return zero value
+	})
+
+	t.Run("GetQuarterlyPriceID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductPlanResponseData{}
+		var expected *string
+		obj.QuarterlyPriceID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetQuarterlyPriceID(), "getter should return the property value")
+	})
+
+	t.Run("GetQuarterlyPriceID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductPlanResponseData{}
+		obj.QuarterlyPriceID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetQuarterlyPriceID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetQuarterlyPriceID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *BillingProductPlanResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetQuarterlyPriceID() // Should return zero value
 	})
 
 	t.Run("GetTrialDays", func(t *testing.T) {
@@ -17570,6 +17683,37 @@ func TestSettersMarkExplicitBillingProductPlanResponseData(t *testing.T) {
 
 		// Act
 		obj.SetPlanID(fernTestValuePlanID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetQuarterlyPriceID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &BillingProductPlanResponseData{}
+		var fernTestValueQuarterlyPriceID *string
+
+		// Act
+		obj.SetQuarterlyPriceID(fernTestValueQuarterlyPriceID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -114750,11 +114894,27 @@ func TestSettersScheduledDowngradeResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetIntervalCount", func(t *testing.T) {
+		obj := &ScheduledDowngradeResponseData{}
+		var fernTestValueIntervalCount int64
+		obj.SetIntervalCount(fernTestValueIntervalCount)
+		assert.Equal(t, fernTestValueIntervalCount, obj.IntervalCount)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetScheduledInterval", func(t *testing.T) {
 		obj := &ScheduledDowngradeResponseData{}
 		var fernTestValueScheduledInterval *string
 		obj.SetScheduledInterval(fernTestValueScheduledInterval)
 		assert.Equal(t, fernTestValueScheduledInterval, obj.ScheduledInterval)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetScheduledIntervalCount", func(t *testing.T) {
+		obj := &ScheduledDowngradeResponseData{}
+		var fernTestValueScheduledIntervalCount *int64
+		obj.SetScheduledIntervalCount(fernTestValueScheduledIntervalCount)
+		assert.Equal(t, fernTestValueScheduledIntervalCount, obj.ScheduledIntervalCount)
 		assert.NotNil(t, obj.explicitFields)
 	})
 
@@ -114946,6 +115106,29 @@ func TestGettersScheduledDowngradeResponseData(t *testing.T) {
 		_ = obj.GetInterval() // Should return zero value
 	})
 
+	t.Run("GetIntervalCount", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ScheduledDowngradeResponseData{}
+		var expected int64
+		obj.IntervalCount = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetIntervalCount(), "getter should return the property value")
+	})
+
+	t.Run("GetIntervalCount_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ScheduledDowngradeResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetIntervalCount() // Should return zero value
+	})
+
 	t.Run("GetScheduledInterval", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -114977,6 +115160,39 @@ func TestGettersScheduledDowngradeResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetScheduledInterval() // Should return zero value
+	})
+
+	t.Run("GetScheduledIntervalCount", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ScheduledDowngradeResponseData{}
+		var expected *int64
+		obj.ScheduledIntervalCount = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetScheduledIntervalCount(), "getter should return the property value")
+	})
+
+	t.Run("GetScheduledIntervalCount_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ScheduledDowngradeResponseData{}
+		obj.ScheduledIntervalCount = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetScheduledIntervalCount(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetScheduledIntervalCount_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ScheduledDowngradeResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetScheduledIntervalCount() // Should return zero value
 	})
 
 	t.Run("GetScheduledPrice", func(t *testing.T) {
@@ -115278,6 +115494,37 @@ func TestSettersMarkExplicitScheduledDowngradeResponseData(t *testing.T) {
 		// It verifies that setting a field via setter allows successful JSON round-trip
 	})
 
+	t.Run("SetIntervalCount_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ScheduledDowngradeResponseData{}
+		var fernTestValueIntervalCount int64
+
+		// Act
+		obj.SetIntervalCount(fernTestValueIntervalCount)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
 	t.Run("SetScheduledInterval_MarksExplicit", func(t *testing.T) {
 		t.Parallel()
 		// Arrange
@@ -115286,6 +115533,37 @@ func TestSettersMarkExplicitScheduledDowngradeResponseData(t *testing.T) {
 
 		// Act
 		obj.SetScheduledInterval(fernTestValueScheduledInterval)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetScheduledIntervalCount_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ScheduledDowngradeResponseData{}
+		var fernTestValueScheduledIntervalCount *int64
+
+		// Act
+		obj.SetScheduledIntervalCount(fernTestValueScheduledIntervalCount)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -125751,6 +126029,14 @@ func TestSettersWebScheduledDowngradeWebhookOutput(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetScheduledIntervalCount", func(t *testing.T) {
+		obj := &WebScheduledDowngradeWebhookOutput{}
+		var fernTestValueScheduledIntervalCount *int64
+		obj.SetScheduledIntervalCount(fernTestValueScheduledIntervalCount)
+		assert.Equal(t, fernTestValueScheduledIntervalCount, obj.ScheduledIntervalCount)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetScheduledPrice", func(t *testing.T) {
 		obj := &WebScheduledDowngradeWebhookOutput{}
 		var fernTestValueScheduledPrice *int64
@@ -125913,6 +126199,39 @@ func TestGettersWebScheduledDowngradeWebhookOutput(t *testing.T) {
 			}
 		}()
 		_ = obj.GetScheduledInterval() // Should return zero value
+	})
+
+	t.Run("GetScheduledIntervalCount", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WebScheduledDowngradeWebhookOutput{}
+		var expected *int64
+		obj.ScheduledIntervalCount = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetScheduledIntervalCount(), "getter should return the property value")
+	})
+
+	t.Run("GetScheduledIntervalCount_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WebScheduledDowngradeWebhookOutput{}
+		obj.ScheduledIntervalCount = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetScheduledIntervalCount(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetScheduledIntervalCount_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *WebScheduledDowngradeWebhookOutput
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetScheduledIntervalCount() // Should return zero value
 	})
 
 	t.Run("GetScheduledPrice", func(t *testing.T) {
@@ -126116,6 +126435,37 @@ func TestSettersMarkExplicitWebScheduledDowngradeWebhookOutput(t *testing.T) {
 
 		// Act
 		obj.SetScheduledInterval(fernTestValueScheduledInterval)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetScheduledIntervalCount_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &WebScheduledDowngradeWebhookOutput{}
+		var fernTestValueScheduledIntervalCount *int64
+
+		// Act
+		obj.SetScheduledIntervalCount(fernTestValueScheduledIntervalCount)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

@@ -9000,6 +9000,13 @@ func TestEnumMigrationErrorCode(t *testing.T) {
 		assert.Equal(t, MigrationErrorCode("ambiguous_subscription_item"), val, "enum value should match expected wire value")
 	})
 
+	t.Run("NewFromString_mixed_billing_intervals", func(t *testing.T) {
+		t.Parallel()
+		val, err := NewMigrationErrorCodeFromString("mixed_billing_intervals")
+		assert.NoError(t, err, "valid enum value should not return error")
+		assert.Equal(t, MigrationErrorCode("mixed_billing_intervals"), val, "enum value should match expected wire value")
+	})
+
 	t.Run("NewFromString_multiple_subscriptions", func(t *testing.T) {
 		t.Parallel()
 		val, err := NewMigrationErrorCodeFromString("multiple_subscriptions")

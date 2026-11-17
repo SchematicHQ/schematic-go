@@ -1408,6 +1408,102 @@ func (m *MarkInvoicePaidRequestBody) MarshalJSON() ([]byte, error) {
 }
 
 var (
+	startCompanyTrialRequestBodyFieldCadence              = big.NewInt(1 << 0)
+	startCompanyTrialRequestBodyFieldCadenceIntervalCount = big.NewInt(1 << 1)
+	startCompanyTrialRequestBodyFieldEndBehavior          = big.NewInt(1 << 2)
+	startCompanyTrialRequestBodyFieldPlanID               = big.NewInt(1 << 3)
+	startCompanyTrialRequestBodyFieldTrialEnd             = big.NewInt(1 << 4)
+)
+
+type StartCompanyTrialRequestBody struct {
+	// The unit of how often the plan bills once the trial converts: month or year.
+	Cadence BillingProductPriceInterval `json:"cadence" url:"-"`
+	// How many cadence units one billing period spans. Defaults to 1; use 3 with month for quarterly.
+	CadenceIntervalCount *int64 `json:"cadence_interval_count,omitempty" url:"-"`
+	// What happens when the trial reaches its end date: subscribe starts billing, cancel moves the company off the plan. Defaults to the plan group's trial setting.
+	EndBehavior *BillingSubscriptionTrialEndSetting `json:"end_behavior,omitempty" url:"-"`
+	PlanID      string                              `json:"plan_id" url:"-"`
+	// When the trial ends. Defaults to the plan's trial length, then the plan group's, then 14 days. Setting it grants the trial even when the company has used its trial before.
+	TrialEnd *time.Time `json:"trial_end,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (s *StartCompanyTrialRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
+	}
+	next.Or(next, field)
+	s.explicitFields = next
+}
+
+// SetCadence sets the Cadence field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialRequestBody) SetCadence(cadence BillingProductPriceInterval) {
+	s.Cadence = cadence
+	s.require(startCompanyTrialRequestBodyFieldCadence)
+}
+
+// SetCadenceIntervalCount sets the CadenceIntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialRequestBody) SetCadenceIntervalCount(cadenceIntervalCount *int64) {
+	s.CadenceIntervalCount = cadenceIntervalCount
+	s.require(startCompanyTrialRequestBodyFieldCadenceIntervalCount)
+}
+
+// SetEndBehavior sets the EndBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialRequestBody) SetEndBehavior(endBehavior *BillingSubscriptionTrialEndSetting) {
+	s.EndBehavior = endBehavior
+	s.require(startCompanyTrialRequestBodyFieldEndBehavior)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialRequestBody) SetPlanID(planID string) {
+	s.PlanID = planID
+	s.require(startCompanyTrialRequestBodyFieldPlanID)
+}
+
+// SetTrialEnd sets the TrialEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialRequestBody) SetTrialEnd(trialEnd *time.Time) {
+	s.TrialEnd = trialEnd
+	s.require(startCompanyTrialRequestBodyFieldTrialEnd)
+}
+
+func (s *StartCompanyTrialRequestBody) UnmarshalJSON(data []byte) error {
+	type embed StartCompanyTrialRequestBody
+	var body = struct {
+		embed
+		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed: embed(*s),
+	}
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*s = StartCompanyTrialRequestBody(body.embed)
+	s.TrialEnd = body.TrialEnd.TimePtr()
+	return nil
+}
+
+func (s *StartCompanyTrialRequestBody) MarshalJSON() ([]byte, error) {
+	type embed StartCompanyTrialRequestBody
+	var marshaler = struct {
+		embed
+		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed:    embed(*s),
+		TrialEnd: internal.NewOptionalDateTime(s.TrialEnd),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+var (
 	billingCouponResponseDataFieldAccountID        = big.NewInt(1 << 0)
 	billingCouponResponseDataFieldAmountOff        = big.NewInt(1 << 1)
 	billingCouponResponseDataFieldCurrency         = big.NewInt(1 << 2)
@@ -1972,21 +2068,23 @@ func (b *BillingCustomerResponseData) String() string {
 }
 
 var (
-	billingCustomerSubscriptionFieldCurrency     = big.NewInt(1 << 0)
-	billingCustomerSubscriptionFieldExpiredAt    = big.NewInt(1 << 1)
-	billingCustomerSubscriptionFieldInterval     = big.NewInt(1 << 2)
-	billingCustomerSubscriptionFieldMeteredUsage = big.NewInt(1 << 3)
-	billingCustomerSubscriptionFieldPerUnitPrice = big.NewInt(1 << 4)
-	billingCustomerSubscriptionFieldTotalPrice   = big.NewInt(1 << 5)
+	billingCustomerSubscriptionFieldCurrency      = big.NewInt(1 << 0)
+	billingCustomerSubscriptionFieldExpiredAt     = big.NewInt(1 << 1)
+	billingCustomerSubscriptionFieldInterval      = big.NewInt(1 << 2)
+	billingCustomerSubscriptionFieldIntervalCount = big.NewInt(1 << 3)
+	billingCustomerSubscriptionFieldMeteredUsage  = big.NewInt(1 << 4)
+	billingCustomerSubscriptionFieldPerUnitPrice  = big.NewInt(1 << 5)
+	billingCustomerSubscriptionFieldTotalPrice    = big.NewInt(1 << 6)
 )
 
 type BillingCustomerSubscription struct {
-	Currency     Currency   `json:"currency" url:"currency"`
-	ExpiredAt    *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	Interval     string     `json:"interval" url:"interval"`
-	MeteredUsage bool       `json:"metered_usage" url:"metered_usage"`
-	PerUnitPrice int64      `json:"per_unit_price" url:"per_unit_price"`
-	TotalPrice   int64      `json:"total_price" url:"total_price"`
+	Currency      Currency   `json:"currency" url:"currency"`
+	ExpiredAt     *time.Time `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	Interval      string     `json:"interval" url:"interval"`
+	IntervalCount int64      `json:"interval_count" url:"interval_count"`
+	MeteredUsage  bool       `json:"metered_usage" url:"metered_usage"`
+	PerUnitPrice  int64      `json:"per_unit_price" url:"per_unit_price"`
+	TotalPrice    int64      `json:"total_price" url:"total_price"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -2014,6 +2112,13 @@ func (b *BillingCustomerSubscription) GetInterval() string {
 		return ""
 	}
 	return b.Interval
+}
+
+func (b *BillingCustomerSubscription) GetIntervalCount() int64 {
+	if b == nil {
+		return 0
+	}
+	return b.IntervalCount
 }
 
 func (b *BillingCustomerSubscription) GetMeteredUsage() bool {
@@ -2072,6 +2177,13 @@ func (b *BillingCustomerSubscription) SetExpiredAt(expiredAt *time.Time) {
 func (b *BillingCustomerSubscription) SetInterval(interval string) {
 	b.Interval = interval
 	b.require(billingCustomerSubscriptionFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingCustomerSubscription) SetIntervalCount(intervalCount int64) {
+	b.IntervalCount = intervalCount
+	b.require(billingCustomerSubscriptionFieldIntervalCount)
 }
 
 // SetMeteredUsage sets the MeteredUsage field and marks it as non-optional;
@@ -5455,6 +5567,8 @@ var (
 	billingNativeSubscriptionResponseDataFieldStatement        = big.NewInt(1 << 10)
 	billingNativeSubscriptionResponseDataFieldStatus           = big.NewInt(1 << 11)
 	billingNativeSubscriptionResponseDataFieldTerms            = big.NewInt(1 << 12)
+	billingNativeSubscriptionResponseDataFieldTrialEnd         = big.NewInt(1 << 13)
+	billingNativeSubscriptionResponseDataFieldTrialEndSetting  = big.NewInt(1 << 14)
 )
 
 type BillingNativeSubscriptionResponseData struct {
@@ -5476,6 +5590,10 @@ type BillingNativeSubscriptionResponseData struct {
 	Status    SubscriptionStatus            `json:"status" url:"status"`
 	// The contract terms in force. Null when the company has no billing profile.
 	Terms *BillingInvoiceTermsResponseData `json:"terms,omitempty" url:"terms,omitempty"`
+	// When the subscription's trial ends, or ended. Null when it never had a trial.
+	TrialEnd *time.Time `json:"trial_end,omitempty" url:"trial_end,omitempty"`
+	// What happens when the trial ends: subscribe starts billing, cancel ends the subscription.
+	TrialEndSetting *BillingSubscriptionTrialEndSetting `json:"trial_end_setting,omitempty" url:"trial_end_setting,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -5573,6 +5691,20 @@ func (b *BillingNativeSubscriptionResponseData) GetTerms() *BillingInvoiceTermsR
 		return nil
 	}
 	return b.Terms
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetTrialEnd() *time.Time {
+	if b == nil {
+		return nil
+	}
+	return b.TrialEnd
+}
+
+func (b *BillingNativeSubscriptionResponseData) GetTrialEndSetting() *BillingSubscriptionTrialEndSetting {
+	if b == nil {
+		return nil
+	}
+	return b.TrialEndSetting
 }
 
 func (b *BillingNativeSubscriptionResponseData) GetExtraProperties() map[string]interface{} {
@@ -5682,6 +5814,20 @@ func (b *BillingNativeSubscriptionResponseData) SetTerms(terms *BillingInvoiceTe
 	b.require(billingNativeSubscriptionResponseDataFieldTerms)
 }
 
+// SetTrialEnd sets the TrialEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetTrialEnd(trialEnd *time.Time) {
+	b.TrialEnd = trialEnd
+	b.require(billingNativeSubscriptionResponseDataFieldTrialEnd)
+}
+
+// SetTrialEndSetting sets the TrialEndSetting field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (b *BillingNativeSubscriptionResponseData) SetTrialEndSetting(trialEndSetting *BillingSubscriptionTrialEndSetting) {
+	b.TrialEndSetting = trialEndSetting
+	b.require(billingNativeSubscriptionResponseDataFieldTrialEndSetting)
+}
+
 func (b *BillingNativeSubscriptionResponseData) UnmarshalJSON(data []byte) error {
 	type embed BillingNativeSubscriptionResponseData
 	var unmarshaler = struct {
@@ -5690,6 +5836,7 @@ func (b *BillingNativeSubscriptionResponseData) UnmarshalJSON(data []byte) error
 		PeriodEnd   *internal.DateTime `json:"period_end"`
 		PeriodStart *internal.DateTime `json:"period_start"`
 		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
+		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
 	}{
 		embed: embed(*b),
 	}
@@ -5701,6 +5848,7 @@ func (b *BillingNativeSubscriptionResponseData) UnmarshalJSON(data []byte) error
 	b.PeriodEnd = unmarshaler.PeriodEnd.Time()
 	b.PeriodStart = unmarshaler.PeriodStart.Time()
 	b.StartedAt = unmarshaler.StartedAt.TimePtr()
+	b.TrialEnd = unmarshaler.TrialEnd.TimePtr()
 	extraProperties, err := internal.ExtractExtraProperties(data, *b)
 	if err != nil {
 		return err
@@ -5718,12 +5866,14 @@ func (b *BillingNativeSubscriptionResponseData) MarshalJSON() ([]byte, error) {
 		PeriodEnd   *internal.DateTime `json:"period_end"`
 		PeriodStart *internal.DateTime `json:"period_start"`
 		StartedAt   *internal.DateTime `json:"started_at,omitempty"`
+		TrialEnd    *internal.DateTime `json:"trial_end,omitempty"`
 	}{
 		embed:       embed(*b),
 		CancelAt:    internal.NewOptionalDateTime(b.CancelAt),
 		PeriodEnd:   internal.NewDateTime(b.PeriodEnd),
 		PeriodStart: internal.NewDateTime(b.PeriodStart),
 		StartedAt:   internal.NewOptionalDateTime(b.StartedAt),
+		TrialEnd:    internal.NewOptionalDateTime(b.TrialEnd),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, b.explicitFields)
 	return json.Marshal(explicitMarshaler)
@@ -8280,6 +8430,341 @@ func (c *CompanyBillingProfileDocumentResponseData) String() string {
 }
 
 var (
+	companyTrialResponseDataFieldCompanyID      = big.NewInt(1 << 0)
+	companyTrialResponseDataFieldCreatedAt      = big.NewInt(1 << 1)
+	companyTrialResponseDataFieldEndBehavior    = big.NewInt(1 << 2)
+	companyTrialResponseDataFieldEndedAt        = big.NewInt(1 << 3)
+	companyTrialResponseDataFieldEndsAt         = big.NewInt(1 << 4)
+	companyTrialResponseDataFieldID             = big.NewInt(1 << 5)
+	companyTrialResponseDataFieldPlanID         = big.NewInt(1 << 6)
+	companyTrialResponseDataFieldPlanVersionID  = big.NewInt(1 << 7)
+	companyTrialResponseDataFieldSource         = big.NewInt(1 << 8)
+	companyTrialResponseDataFieldStartedAt      = big.NewInt(1 << 9)
+	companyTrialResponseDataFieldStatus         = big.NewInt(1 << 10)
+	companyTrialResponseDataFieldSubscriptionID = big.NewInt(1 << 11)
+	companyTrialResponseDataFieldUpdatedAt      = big.NewInt(1 << 12)
+)
+
+type CompanyTrialResponseData struct {
+	CompanyID string    `json:"company_id" url:"company_id"`
+	CreatedAt time.Time `json:"created_at" url:"created_at"`
+	// What happens when the trial reaches its end date: subscribe starts billing, cancel moves the company off the plan.
+	EndBehavior BillingSubscriptionTrialEndSetting `json:"end_behavior" url:"end_behavior"`
+	// When the trial actually ended. Null while it runs.
+	EndedAt *time.Time `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	// When the trial is set to end.
+	EndsAt        time.Time `json:"ends_at" url:"ends_at"`
+	ID            string    `json:"id" url:"id"`
+	PlanID        string    `json:"plan_id" url:"plan_id"`
+	PlanVersionID *string   `json:"plan_version_id,omitempty" url:"plan_version_id,omitempty"`
+	// Where the trial was started.
+	Source    TrialSource `json:"source" url:"source"`
+	StartedAt time.Time   `json:"started_at" url:"started_at"`
+	// active while the trial runs, then converted, expired or canceled.
+	Status         CompanyTrialStatus `json:"status" url:"status"`
+	SubscriptionID *string            `json:"subscription_id,omitempty" url:"subscription_id,omitempty"`
+	UpdatedAt      time.Time          `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CompanyTrialResponseData) GetCompanyID() string {
+	if c == nil {
+		return ""
+	}
+	return c.CompanyID
+}
+
+func (c *CompanyTrialResponseData) GetCreatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.CreatedAt
+}
+
+func (c *CompanyTrialResponseData) GetEndBehavior() BillingSubscriptionTrialEndSetting {
+	if c == nil {
+		return ""
+	}
+	return c.EndBehavior
+}
+
+func (c *CompanyTrialResponseData) GetEndedAt() *time.Time {
+	if c == nil {
+		return nil
+	}
+	return c.EndedAt
+}
+
+func (c *CompanyTrialResponseData) GetEndsAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.EndsAt
+}
+
+func (c *CompanyTrialResponseData) GetID() string {
+	if c == nil {
+		return ""
+	}
+	return c.ID
+}
+
+func (c *CompanyTrialResponseData) GetPlanID() string {
+	if c == nil {
+		return ""
+	}
+	return c.PlanID
+}
+
+func (c *CompanyTrialResponseData) GetPlanVersionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.PlanVersionID
+}
+
+func (c *CompanyTrialResponseData) GetSource() TrialSource {
+	if c == nil {
+		return ""
+	}
+	return c.Source
+}
+
+func (c *CompanyTrialResponseData) GetStartedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.StartedAt
+}
+
+func (c *CompanyTrialResponseData) GetStatus() CompanyTrialStatus {
+	if c == nil {
+		return ""
+	}
+	return c.Status
+}
+
+func (c *CompanyTrialResponseData) GetSubscriptionID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.SubscriptionID
+}
+
+func (c *CompanyTrialResponseData) GetUpdatedAt() time.Time {
+	if c == nil {
+		return time.Time{}
+	}
+	return c.UpdatedAt
+}
+
+func (c *CompanyTrialResponseData) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CompanyTrialResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetCompanyID(companyID string) {
+	c.CompanyID = companyID
+	c.require(companyTrialResponseDataFieldCompanyID)
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetCreatedAt(createdAt time.Time) {
+	c.CreatedAt = createdAt
+	c.require(companyTrialResponseDataFieldCreatedAt)
+}
+
+// SetEndBehavior sets the EndBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetEndBehavior(endBehavior BillingSubscriptionTrialEndSetting) {
+	c.EndBehavior = endBehavior
+	c.require(companyTrialResponseDataFieldEndBehavior)
+}
+
+// SetEndedAt sets the EndedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetEndedAt(endedAt *time.Time) {
+	c.EndedAt = endedAt
+	c.require(companyTrialResponseDataFieldEndedAt)
+}
+
+// SetEndsAt sets the EndsAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetEndsAt(endsAt time.Time) {
+	c.EndsAt = endsAt
+	c.require(companyTrialResponseDataFieldEndsAt)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetID(id string) {
+	c.ID = id
+	c.require(companyTrialResponseDataFieldID)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetPlanID(planID string) {
+	c.PlanID = planID
+	c.require(companyTrialResponseDataFieldPlanID)
+}
+
+// SetPlanVersionID sets the PlanVersionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetPlanVersionID(planVersionID *string) {
+	c.PlanVersionID = planVersionID
+	c.require(companyTrialResponseDataFieldPlanVersionID)
+}
+
+// SetSource sets the Source field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetSource(source TrialSource) {
+	c.Source = source
+	c.require(companyTrialResponseDataFieldSource)
+}
+
+// SetStartedAt sets the StartedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetStartedAt(startedAt time.Time) {
+	c.StartedAt = startedAt
+	c.require(companyTrialResponseDataFieldStartedAt)
+}
+
+// SetStatus sets the Status field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetStatus(status CompanyTrialStatus) {
+	c.Status = status
+	c.require(companyTrialResponseDataFieldStatus)
+}
+
+// SetSubscriptionID sets the SubscriptionID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetSubscriptionID(subscriptionID *string) {
+	c.SubscriptionID = subscriptionID
+	c.require(companyTrialResponseDataFieldSubscriptionID)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyTrialResponseData) SetUpdatedAt(updatedAt time.Time) {
+	c.UpdatedAt = updatedAt
+	c.require(companyTrialResponseDataFieldUpdatedAt)
+}
+
+func (c *CompanyTrialResponseData) UnmarshalJSON(data []byte) error {
+	type embed CompanyTrialResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		EndsAt    *internal.DateTime `json:"ends_at"`
+		StartedAt *internal.DateTime `json:"started_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*c),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*c = CompanyTrialResponseData(unmarshaler.embed)
+	c.CreatedAt = unmarshaler.CreatedAt.Time()
+	c.EndedAt = unmarshaler.EndedAt.TimePtr()
+	c.EndsAt = unmarshaler.EndsAt.Time()
+	c.StartedAt = unmarshaler.StartedAt.Time()
+	c.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CompanyTrialResponseData) MarshalJSON() ([]byte, error) {
+	type embed CompanyTrialResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt *internal.DateTime `json:"created_at"`
+		EndedAt   *internal.DateTime `json:"ended_at,omitempty"`
+		EndsAt    *internal.DateTime `json:"ends_at"`
+		StartedAt *internal.DateTime `json:"started_at"`
+		UpdatedAt *internal.DateTime `json:"updated_at"`
+	}{
+		embed:     embed(*c),
+		CreatedAt: internal.NewDateTime(c.CreatedAt),
+		EndedAt:   internal.NewOptionalDateTime(c.EndedAt),
+		EndsAt:    internal.NewDateTime(c.EndsAt),
+		StartedAt: internal.NewDateTime(c.StartedAt),
+		UpdatedAt: internal.NewDateTime(c.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CompanyTrialResponseData) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CompanyTrialStatus string
+
+const (
+	CompanyTrialStatusActive    CompanyTrialStatus = "active"
+	CompanyTrialStatusCanceled  CompanyTrialStatus = "canceled"
+	CompanyTrialStatusConverted CompanyTrialStatus = "converted"
+	CompanyTrialStatusExpired   CompanyTrialStatus = "expired"
+)
+
+func NewCompanyTrialStatusFromString(s string) (CompanyTrialStatus, error) {
+	switch s {
+	case "active":
+		return CompanyTrialStatusActive, nil
+	case "canceled":
+		return CompanyTrialStatusCanceled, nil
+	case "converted":
+		return CompanyTrialStatusConverted, nil
+	case "expired":
+		return CompanyTrialStatusExpired, nil
+	}
+	var t CompanyTrialStatus
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CompanyTrialStatus) Ptr() *CompanyTrialStatus {
+	return &c
+}
+
+var (
 	contractBillingDetailsRequestBodyFieldAddress   = big.NewInt(1 << 0)
 	contractBillingDetailsRequestBodyFieldEmail     = big.NewInt(1 << 1)
 	contractBillingDetailsRequestBodyFieldLegalName = big.NewInt(1 << 2)
@@ -9169,6 +9654,31 @@ func (s SubscriptionChangeAction) Ptr() *SubscriptionChangeAction {
 	return &s
 }
 
+type TrialSource string
+
+const (
+	TrialSourceAPI          TrialSource = "api"
+	TrialSourceCustomPlan   TrialSource = "custom_plan"
+	TrialSourceSubscription TrialSource = "subscription"
+)
+
+func NewTrialSourceFromString(s string) (TrialSource, error) {
+	switch s {
+	case "api":
+		return TrialSourceAPI, nil
+	case "custom_plan":
+		return TrialSourceCustomPlan, nil
+	case "subscription":
+		return TrialSourceSubscription, nil
+	}
+	var t TrialSource
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TrialSource) Ptr() *TrialSource {
+	return &t
+}
+
 var (
 	chargeNativeInvoiceResponseFieldData   = big.NewInt(1 << 0)
 	chargeNativeInvoiceResponseFieldParams = big.NewInt(1 << 1)
@@ -9258,6 +9768,109 @@ func (c *ChargeNativeInvoiceResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (c *ChargeNativeInvoiceResponse) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
+	convertCompanyTrialResponseFieldData   = big.NewInt(1 << 0)
+	convertCompanyTrialResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ConvertCompanyTrialResponse struct {
+	Data *CompanyTrialResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *ConvertCompanyTrialResponse) GetData() *CompanyTrialResponseData {
+	if c == nil {
+		return nil
+	}
+	return c.Data
+}
+
+func (c *ConvertCompanyTrialResponse) GetParams() map[string]any {
+	if c == nil {
+		return nil
+	}
+	return c.Params
+}
+
+func (c *ConvertCompanyTrialResponse) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *ConvertCompanyTrialResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConvertCompanyTrialResponse) SetData(data *CompanyTrialResponseData) {
+	c.Data = data
+	c.require(convertCompanyTrialResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *ConvertCompanyTrialResponse) SetParams(params map[string]any) {
+	c.Params = params
+	c.require(convertCompanyTrialResponseFieldParams)
+}
+
+func (c *ConvertCompanyTrialResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ConvertCompanyTrialResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = ConvertCompanyTrialResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *ConvertCompanyTrialResponse) MarshalJSON() ([]byte, error) {
+	type embed ConvertCompanyTrialResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *ConvertCompanyTrialResponse) String() string {
 	if c == nil {
 		return "<nil>"
 	}
@@ -10979,6 +11592,109 @@ func (d *DeleteProductPriceResponse) String() string {
 }
 
 var (
+	endCompanyTrialResponseFieldData   = big.NewInt(1 << 0)
+	endCompanyTrialResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type EndCompanyTrialResponse struct {
+	Data *CompanyTrialResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (e *EndCompanyTrialResponse) GetData() *CompanyTrialResponseData {
+	if e == nil {
+		return nil
+	}
+	return e.Data
+}
+
+func (e *EndCompanyTrialResponse) GetParams() map[string]any {
+	if e == nil {
+		return nil
+	}
+	return e.Params
+}
+
+func (e *EndCompanyTrialResponse) GetExtraProperties() map[string]interface{} {
+	if e == nil {
+		return nil
+	}
+	return e.extraProperties
+}
+
+func (e *EndCompanyTrialResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if e.explicitFields != nil {
+		next.Set(e.explicitFields)
+	}
+	next.Or(next, field)
+	e.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EndCompanyTrialResponse) SetData(data *CompanyTrialResponseData) {
+	e.Data = data
+	e.require(endCompanyTrialResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (e *EndCompanyTrialResponse) SetParams(params map[string]any) {
+	e.Params = params
+	e.require(endCompanyTrialResponseFieldParams)
+}
+
+func (e *EndCompanyTrialResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler EndCompanyTrialResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*e = EndCompanyTrialResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *e)
+	if err != nil {
+		return err
+	}
+	e.extraProperties = extraProperties
+	e.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (e *EndCompanyTrialResponse) MarshalJSON() ([]byte, error) {
+	type embed EndCompanyTrialResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*e),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, e.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (e *EndCompanyTrialResponse) String() string {
+	if e == nil {
+		return "<nil>"
+	}
+	if len(e.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(e.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(e); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", e)
+}
+
+var (
 	finalizeNativeInvoiceResponseFieldData   = big.NewInt(1 << 0)
 	finalizeNativeInvoiceResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -11479,6 +12195,109 @@ func (g *GetCompanyNativeSubscriptionResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetCompanyNativeSubscriptionResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getCompanyTrialResponseFieldData   = big.NewInt(1 << 0)
+	getCompanyTrialResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetCompanyTrialResponse struct {
+	Data *CompanyTrialResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetCompanyTrialResponse) GetData() *CompanyTrialResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetCompanyTrialResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetCompanyTrialResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetCompanyTrialResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyTrialResponse) SetData(data *CompanyTrialResponseData) {
+	g.Data = data
+	g.require(getCompanyTrialResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetCompanyTrialResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getCompanyTrialResponseFieldParams)
+}
+
+func (g *GetCompanyTrialResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetCompanyTrialResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetCompanyTrialResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetCompanyTrialResponse) MarshalJSON() ([]byte, error) {
+	type embed GetCompanyTrialResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetCompanyTrialResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}
@@ -15152,6 +15971,109 @@ func (r *RevokeNativeInvoiceLinkResponse) String() string {
 }
 
 var (
+	startCompanyTrialResponseFieldData   = big.NewInt(1 << 0)
+	startCompanyTrialResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type StartCompanyTrialResponse struct {
+	Data *CompanyTrialResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StartCompanyTrialResponse) GetData() *CompanyTrialResponseData {
+	if s == nil {
+		return nil
+	}
+	return s.Data
+}
+
+func (s *StartCompanyTrialResponse) GetParams() map[string]any {
+	if s == nil {
+		return nil
+	}
+	return s.Params
+}
+
+func (s *StartCompanyTrialResponse) GetExtraProperties() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.extraProperties
+}
+
+func (s *StartCompanyTrialResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if s.explicitFields != nil {
+		next.Set(s.explicitFields)
+	}
+	next.Or(next, field)
+	s.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialResponse) SetData(data *CompanyTrialResponseData) {
+	s.Data = data
+	s.require(startCompanyTrialResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *StartCompanyTrialResponse) SetParams(params map[string]any) {
+	s.Params = params
+	s.require(startCompanyTrialResponseFieldParams)
+}
+
+func (s *StartCompanyTrialResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler StartCompanyTrialResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StartCompanyTrialResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StartCompanyTrialResponse) MarshalJSON() ([]byte, error) {
+	type embed StartCompanyTrialResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*s),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, s.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (s *StartCompanyTrialResponse) String() string {
+	if s == nil {
+		return "<nil>"
+	}
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+var (
 	updateBillingSettingsResponseFieldData   = big.NewInt(1 << 0)
 	updateBillingSettingsResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -15343,6 +16265,109 @@ func (u *UpdateCompanyBillingProfileResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (u *UpdateCompanyBillingProfileResponse) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
+}
+
+var (
+	updateCompanyTrialResponseFieldData   = big.NewInt(1 << 0)
+	updateCompanyTrialResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type UpdateCompanyTrialResponse struct {
+	Data *CompanyTrialResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UpdateCompanyTrialResponse) GetData() *CompanyTrialResponseData {
+	if u == nil {
+		return nil
+	}
+	return u.Data
+}
+
+func (u *UpdateCompanyTrialResponse) GetParams() map[string]any {
+	if u == nil {
+		return nil
+	}
+	return u.Params
+}
+
+func (u *UpdateCompanyTrialResponse) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UpdateCompanyTrialResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
+	}
+	next.Or(next, field)
+	u.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyTrialResponse) SetData(data *CompanyTrialResponseData) {
+	u.Data = data
+	u.require(updateCompanyTrialResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyTrialResponse) SetParams(params map[string]any) {
+	u.Params = params
+	u.require(updateCompanyTrialResponseFieldParams)
+}
+
+func (u *UpdateCompanyTrialResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler UpdateCompanyTrialResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UpdateCompanyTrialResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UpdateCompanyTrialResponse) MarshalJSON() ([]byte, error) {
+	type embed UpdateCompanyTrialResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UpdateCompanyTrialResponse) String() string {
 	if u == nil {
 		return "<nil>"
 	}
@@ -16610,6 +17635,72 @@ func (u *UpdateCompanyBillingProfileRequestBody) MarshalJSON() ([]byte, error) {
 	return json.Marshal(explicitMarshaler)
 }
 
+var (
+	updateCompanyTrialRequestBodyFieldEndBehavior = big.NewInt(1 << 0)
+	updateCompanyTrialRequestBodyFieldTrialEnd    = big.NewInt(1 << 1)
+)
+
+type UpdateCompanyTrialRequestBody struct {
+	EndBehavior *BillingSubscriptionTrialEndSetting `json:"end_behavior,omitempty" url:"-"`
+	// Moves the end of the trial, and the first billing date with it.
+	TrialEnd *time.Time `json:"trial_end,omitempty" url:"-"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (u *UpdateCompanyTrialRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
+	}
+	next.Or(next, field)
+	u.explicitFields = next
+}
+
+// SetEndBehavior sets the EndBehavior field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyTrialRequestBody) SetEndBehavior(endBehavior *BillingSubscriptionTrialEndSetting) {
+	u.EndBehavior = endBehavior
+	u.require(updateCompanyTrialRequestBodyFieldEndBehavior)
+}
+
+// SetTrialEnd sets the TrialEnd field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdateCompanyTrialRequestBody) SetTrialEnd(trialEnd *time.Time) {
+	u.TrialEnd = trialEnd
+	u.require(updateCompanyTrialRequestBodyFieldTrialEnd)
+}
+
+func (u *UpdateCompanyTrialRequestBody) UnmarshalJSON(data []byte) error {
+	type embed UpdateCompanyTrialRequestBody
+	var body = struct {
+		embed
+		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed: embed(*u),
+	}
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	*u = UpdateCompanyTrialRequestBody(body.embed)
+	u.TrialEnd = body.TrialEnd.TimePtr()
+	return nil
+}
+
+func (u *UpdateCompanyTrialRequestBody) MarshalJSON() ([]byte, error) {
+	type embed UpdateCompanyTrialRequestBody
+	var marshaler = struct {
+		embed
+		TrialEnd *internal.DateTime `json:"trial_end,omitempty"`
+	}{
+		embed:    embed(*u),
+		TrialEnd: internal.NewOptionalDateTime(u.TrialEnd),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
 type UploadContractDocumentRequest struct {
 	File io.Reader `json:"-" url:"-"`
 
@@ -17210,33 +18301,35 @@ func (c *CreateBillingProductRequestBody) MarshalJSON() ([]byte, error) {
 
 var (
 	createBillingSubscriptionRequestBodyFieldApplicationID                  = big.NewInt(1 << 0)
-	createBillingSubscriptionRequestBodyFieldCancelAt                       = big.NewInt(1 << 1)
-	createBillingSubscriptionRequestBodyFieldCancelAtPeriodEnd              = big.NewInt(1 << 2)
-	createBillingSubscriptionRequestBodyFieldCompanyID                      = big.NewInt(1 << 3)
-	createBillingSubscriptionRequestBodyFieldCurrency                       = big.NewInt(1 << 4)
-	createBillingSubscriptionRequestBodyFieldCustomerExternalID             = big.NewInt(1 << 5)
-	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodExternalID = big.NewInt(1 << 6)
-	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodID         = big.NewInt(1 << 7)
-	createBillingSubscriptionRequestBodyFieldDiscounts                      = big.NewInt(1 << 8)
-	createBillingSubscriptionRequestBodyFieldExpiredAt                      = big.NewInt(1 << 9)
-	createBillingSubscriptionRequestBodyFieldInterval                       = big.NewInt(1 << 10)
-	createBillingSubscriptionRequestBodyFieldMetadata                       = big.NewInt(1 << 11)
-	createBillingSubscriptionRequestBodyFieldPauseBehavior                  = big.NewInt(1 << 12)
-	createBillingSubscriptionRequestBodyFieldPauseResumesAt                 = big.NewInt(1 << 13)
-	createBillingSubscriptionRequestBodyFieldPeriodEnd                      = big.NewInt(1 << 14)
-	createBillingSubscriptionRequestBodyFieldPeriodStart                    = big.NewInt(1 << 15)
-	createBillingSubscriptionRequestBodyFieldProductExternalIDs             = big.NewInt(1 << 16)
-	createBillingSubscriptionRequestBodyFieldProviderType                   = big.NewInt(1 << 17)
-	createBillingSubscriptionRequestBodyFieldStartedAt                      = big.NewInt(1 << 18)
-	createBillingSubscriptionRequestBodyFieldStatus                         = big.NewInt(1 << 19)
-	createBillingSubscriptionRequestBodyFieldSubscriptionExternalID         = big.NewInt(1 << 20)
-	createBillingSubscriptionRequestBodyFieldTotalPrice                     = big.NewInt(1 << 21)
-	createBillingSubscriptionRequestBodyFieldTrialEnd                       = big.NewInt(1 << 22)
-	createBillingSubscriptionRequestBodyFieldTrialEndSetting                = big.NewInt(1 << 23)
+	createBillingSubscriptionRequestBodyFieldBillingCycleAnchor             = big.NewInt(1 << 1)
+	createBillingSubscriptionRequestBodyFieldCancelAt                       = big.NewInt(1 << 2)
+	createBillingSubscriptionRequestBodyFieldCancelAtPeriodEnd              = big.NewInt(1 << 3)
+	createBillingSubscriptionRequestBodyFieldCompanyID                      = big.NewInt(1 << 4)
+	createBillingSubscriptionRequestBodyFieldCurrency                       = big.NewInt(1 << 5)
+	createBillingSubscriptionRequestBodyFieldCustomerExternalID             = big.NewInt(1 << 6)
+	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodExternalID = big.NewInt(1 << 7)
+	createBillingSubscriptionRequestBodyFieldDefaultPaymentMethodID         = big.NewInt(1 << 8)
+	createBillingSubscriptionRequestBodyFieldDiscounts                      = big.NewInt(1 << 9)
+	createBillingSubscriptionRequestBodyFieldExpiredAt                      = big.NewInt(1 << 10)
+	createBillingSubscriptionRequestBodyFieldInterval                       = big.NewInt(1 << 11)
+	createBillingSubscriptionRequestBodyFieldMetadata                       = big.NewInt(1 << 12)
+	createBillingSubscriptionRequestBodyFieldPauseBehavior                  = big.NewInt(1 << 13)
+	createBillingSubscriptionRequestBodyFieldPauseResumesAt                 = big.NewInt(1 << 14)
+	createBillingSubscriptionRequestBodyFieldPeriodEnd                      = big.NewInt(1 << 15)
+	createBillingSubscriptionRequestBodyFieldPeriodStart                    = big.NewInt(1 << 16)
+	createBillingSubscriptionRequestBodyFieldProductExternalIDs             = big.NewInt(1 << 17)
+	createBillingSubscriptionRequestBodyFieldProviderType                   = big.NewInt(1 << 18)
+	createBillingSubscriptionRequestBodyFieldStartedAt                      = big.NewInt(1 << 19)
+	createBillingSubscriptionRequestBodyFieldStatus                         = big.NewInt(1 << 20)
+	createBillingSubscriptionRequestBodyFieldSubscriptionExternalID         = big.NewInt(1 << 21)
+	createBillingSubscriptionRequestBodyFieldTotalPrice                     = big.NewInt(1 << 22)
+	createBillingSubscriptionRequestBodyFieldTrialEnd                       = big.NewInt(1 << 23)
+	createBillingSubscriptionRequestBodyFieldTrialEndSetting                = big.NewInt(1 << 24)
 )
 
 type CreateBillingSubscriptionRequestBody struct {
 	ApplicationID                  *string                        `json:"application_id,omitempty" url:"-"`
+	BillingCycleAnchor             *time.Time                     `json:"billing_cycle_anchor,omitempty" url:"-"`
 	CancelAt                       *int64                         `json:"cancel_at,omitempty" url:"-"`
 	CancelAtPeriodEnd              bool                           `json:"cancel_at_period_end" url:"-"`
 	CompanyID                      *string                        `json:"company_id,omitempty" url:"-"`
@@ -17280,6 +18373,13 @@ func (c *CreateBillingSubscriptionRequestBody) require(field *big.Int) {
 func (c *CreateBillingSubscriptionRequestBody) SetApplicationID(applicationID *string) {
 	c.ApplicationID = applicationID
 	c.require(createBillingSubscriptionRequestBodyFieldApplicationID)
+}
+
+// SetBillingCycleAnchor sets the BillingCycleAnchor field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateBillingSubscriptionRequestBody) SetBillingCycleAnchor(billingCycleAnchor *time.Time) {
+	c.BillingCycleAnchor = billingCycleAnchor
+	c.require(createBillingSubscriptionRequestBodyFieldBillingCycleAnchor)
 }
 
 // SetCancelAt sets the CancelAt field and marks it as non-optional;
@@ -17447,8 +18547,9 @@ func (c *CreateBillingSubscriptionRequestBody) UnmarshalJSON(data []byte) error 
 	type embed CreateBillingSubscriptionRequestBody
 	var body = struct {
 		embed
-		ExpiredAt *internal.DateTime `json:"expired_at"`
-		StartedAt *internal.DateTime `json:"started_at,omitempty"`
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		ExpiredAt          *internal.DateTime `json:"expired_at"`
+		StartedAt          *internal.DateTime `json:"started_at,omitempty"`
 	}{
 		embed: embed(*c),
 	}
@@ -17456,6 +18557,7 @@ func (c *CreateBillingSubscriptionRequestBody) UnmarshalJSON(data []byte) error 
 		return err
 	}
 	*c = CreateBillingSubscriptionRequestBody(body.embed)
+	c.BillingCycleAnchor = body.BillingCycleAnchor.TimePtr()
 	c.ExpiredAt = body.ExpiredAt.Time()
 	c.StartedAt = body.StartedAt.TimePtr()
 	return nil
@@ -17465,12 +18567,14 @@ func (c *CreateBillingSubscriptionRequestBody) MarshalJSON() ([]byte, error) {
 	type embed CreateBillingSubscriptionRequestBody
 	var marshaler = struct {
 		embed
-		ExpiredAt *internal.DateTime `json:"expired_at"`
-		StartedAt *internal.DateTime `json:"started_at,omitempty"`
+		BillingCycleAnchor *internal.DateTime `json:"billing_cycle_anchor,omitempty"`
+		ExpiredAt          *internal.DateTime `json:"expired_at"`
+		StartedAt          *internal.DateTime `json:"started_at,omitempty"`
 	}{
-		embed:     embed(*c),
-		ExpiredAt: internal.NewDateTime(c.ExpiredAt),
-		StartedAt: internal.NewOptionalDateTime(c.StartedAt),
+		embed:              embed(*c),
+		BillingCycleAnchor: internal.NewOptionalDateTime(c.BillingCycleAnchor),
+		ExpiredAt:          internal.NewDateTime(c.ExpiredAt),
+		StartedAt:          internal.NewOptionalDateTime(c.StartedAt),
 	}
 	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
 	return json.Marshal(explicitMarshaler)

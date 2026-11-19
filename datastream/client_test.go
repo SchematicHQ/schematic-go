@@ -736,6 +736,73 @@ func TestUpdateCompanyMetricsSkipsCacheWriteWhenNoMetricMatches(t *testing.T) {
 	assert.Equal(t, initialValue+quantity, cached.Metrics[0].Value)
 }
 
+func TestUpdateCompanyMetricsSkipsCacheWriteWhenQuantityIsZero(t *testing.T) {
+	server, _, outgoingMessages := setupMockWebSocketServer()
+	defer server.Close()
+	defer close(outgoingMessages)
+
+	companyCache := &countingCompanyCache{
+		CacheProvider: cache.NewLocalCache[*rulesengine.Company](100, time.Minute),
+	}
+
+	clientOptions := createTestClientOptions(server.URL, NewMockLogger(), "test-api-key")
+	clientOptions.CompanyCache = companyCache
+
+	client := datastream.NewDataStreamClient(clientOptions, &core.DatastreamOptions{CacheTTL: 5 * time.Minute})
+	client.Start()
+	defer client.Close()
+
+	time.Sleep(300 * time.Millisecond)
+
+	companyID := "test-company-123"
+	eventType := "test-event"
+	initialValue := int64(10)
+
+	company := &rulesengine.Company{
+		ID:            "company-id",
+		AccountID:     "account-id",
+		EnvironmentID: "env-id",
+		Keys:          map[string]string{"company_id": companyID},
+		Metrics: []*rulesengine.CompanyMetric{
+			{
+				CompanyID:    companyID,
+				EventSubtype: eventType,
+				Value:        initialValue,
+				Period:       rulesengine.MetricPeriodAllTime,
+			},
+		},
+	}
+	companyData, _ := json.Marshal(company)
+	respData, _ := json.Marshal(schematicdatastreamws.DataStreamResp{
+		EntityType:  string(schematicdatastreamws.EntityTypeCompany),
+		Data:        companyData,
+		MessageType: schematicdatastreamws.MessageTypeFull,
+	})
+	outgoingMessages <- string(respData)
+
+	ctx := context.Background()
+	idKey := fmt.Sprintf("schematic:company:%s:company-id", client.GetCacheVersion())
+	require.Eventually(t, func() bool {
+		_, ok := companyCache.Get(ctx, idKey)
+		return ok
+	}, 2*time.Second, 10*time.Millisecond)
+
+	setsBefore := companyCache.sets.Load()
+
+	quantity := int64(0)
+	err := client.UpdateCompanyMetrics(ctx, &schematicgo.EventBodyTrack{
+		Event:    eventType,
+		Company:  map[string]string{"company_id": companyID},
+		Quantity: &quantity,
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, setsBefore, companyCache.sets.Load())
+	cached, ok := companyCache.Get(ctx, idKey)
+	require.True(t, ok)
+	assert.Equal(t, initialValue, cached.Metrics[0].Value)
+}
+
 func TestUpdateCompanyMetricsTreatsNilQuantityAsOne(t *testing.T) {
 	server, _, outgoingMessages := setupMockWebSocketServer()
 	defer server.Close()

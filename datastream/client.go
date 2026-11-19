@@ -1180,6 +1180,14 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 		return errors.New("no keys provided for company lookup")
 	}
 
+	quantity := int64(1)
+	if event.Quantity != nil {
+		quantity = *event.Quantity
+	}
+	if quantity == 0 {
+		return nil
+	}
+
 	company := c.getCompanyFromCache(keys)
 	if company == nil {
 		return nil
@@ -1187,11 +1195,6 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 
 	// Create a deep copy of the company to avoid modifying the cached object directly
 	companyCopy := DeepCopyCompany(company)
-
-	quantity := int64(1)
-	if event.Quantity != nil {
-		quantity = *event.Quantity
-	}
 
 	// Update the metric value if it matches the event
 	metricUpdated := false

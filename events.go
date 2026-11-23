@@ -212,6 +212,44 @@ func (g *GetEventSummariesRequest) SetOffset(offset *int64) {
 }
 
 var (
+	getInferenceCostRequestFieldEndTime   = big.NewInt(1 << 0)
+	getInferenceCostRequestFieldStartTime = big.NewInt(1 << 1)
+)
+
+type GetInferenceCostRequest struct {
+	// End of the window (exclusive). Pass together with start_time; when both are omitted, the current calendar month in UTC is used
+	EndTime *time.Time `json:"-" url:"end_time,omitempty"`
+	// Start of the window (inclusive). Pass together with end_time; when both are omitted, the current calendar month in UTC is used
+	StartTime *time.Time `json:"-" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (g *GetInferenceCostRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetInferenceCostRequest) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getInferenceCostRequestFieldEndTime)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetInferenceCostRequest) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getInferenceCostRequestFieldStartTime)
+}
+
+var (
 	listAccountInferenceCostRatesRequestFieldProvider      = big.NewInt(1 << 0)
 	listAccountInferenceCostRatesRequestFieldResponseModel = big.NewInt(1 << 1)
 	listAccountInferenceCostRatesRequestFieldLimit         = big.NewInt(1 << 2)
@@ -357,6 +395,72 @@ func (l *ListEventsRequest) SetLimit(limit *int64) {
 func (l *ListEventsRequest) SetOffset(offset *int64) {
 	l.Offset = offset
 	l.require(listEventsRequestFieldOffset)
+}
+
+var (
+	listInferenceCostRatesRequestFieldProvider      = big.NewInt(1 << 0)
+	listInferenceCostRatesRequestFieldResponseModel = big.NewInt(1 << 1)
+	listInferenceCostRatesRequestFieldScope         = big.NewInt(1 << 2)
+	listInferenceCostRatesRequestFieldLimit         = big.NewInt(1 << 3)
+	listInferenceCostRatesRequestFieldOffset        = big.NewInt(1 << 4)
+)
+
+type ListInferenceCostRatesRequest struct {
+	Provider      *string `json:"-" url:"provider,omitempty"`
+	ResponseModel *string `json:"-" url:"response_model,omitempty"`
+	// Only list rates from this sheet: list_price for Schematic's list prices, account for the environment's own rate sheet.
+	Scope *InferenceCostRateScope `json:"-" url:"scope,omitempty"`
+	// Page limit (default 100)
+	Limit *int64 `json:"-" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset *int64 `json:"-" url:"offset,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+}
+
+func (l *ListInferenceCostRatesRequest) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesRequest) SetProvider(provider *string) {
+	l.Provider = provider
+	l.require(listInferenceCostRatesRequestFieldProvider)
+}
+
+// SetResponseModel sets the ResponseModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesRequest) SetResponseModel(responseModel *string) {
+	l.ResponseModel = responseModel
+	l.require(listInferenceCostRatesRequestFieldResponseModel)
+}
+
+// SetScope sets the Scope field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesRequest) SetScope(scope *InferenceCostRateScope) {
+	l.Scope = scope
+	l.require(listInferenceCostRatesRequestFieldScope)
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesRequest) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listInferenceCostRatesRequestFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesRequest) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listInferenceCostRatesRequestFieldOffset)
 }
 
 var (
@@ -2647,6 +2751,487 @@ func (e EventType) Ptr() *EventType {
 	return &e
 }
 
+var (
+	inferenceCostRateResponseDataFieldCreatedAt     = big.NewInt(1 << 0)
+	inferenceCostRateResponseDataFieldCurrency      = big.NewInt(1 << 1)
+	inferenceCostRateResponseDataFieldID            = big.NewInt(1 << 2)
+	inferenceCostRateResponseDataFieldPinned        = big.NewInt(1 << 3)
+	inferenceCostRateResponseDataFieldProvider      = big.NewInt(1 << 4)
+	inferenceCostRateResponseDataFieldRates         = big.NewInt(1 << 5)
+	inferenceCostRateResponseDataFieldRepricedAt    = big.NewInt(1 << 6)
+	inferenceCostRateResponseDataFieldResponseModel = big.NewInt(1 << 7)
+	inferenceCostRateResponseDataFieldScope         = big.NewInt(1 << 8)
+	inferenceCostRateResponseDataFieldStartingAt    = big.NewInt(1 << 9)
+	inferenceCostRateResponseDataFieldUpdatedAt     = big.NewInt(1 << 10)
+)
+
+type InferenceCostRateResponseData struct {
+	CreatedAt time.Time `json:"created_at" url:"created_at"`
+	// Lowercase ISO currency code the rates are priced in.
+	Currency string `json:"currency" url:"currency"`
+	// The rate's ID. An account rate's ID is the one its update and delete routes take.
+	ID string `json:"id" url:"id"`
+	// Whether Schematic's daily list-price update leaves this price alone. Always false for an account rate.
+	Pinned bool `json:"pinned" url:"pinned"`
+	// The inference provider, such as anthropic or openai.
+	Provider string `json:"provider" url:"provider"`
+	// Cost of a single token in the row's currency, keyed by quantity key.
+	Rates map[string]float64 `json:"rates" url:"rates"`
+	// When the stored events this rate governs were last brought to its price. Null until Schematic reprices them after the rate is created or changed.
+	RepricedAt *time.Time `json:"repriced_at,omitempty" url:"repriced_at,omitempty"`
+	// The model name the provider reports on its responses.
+	ResponseModel string `json:"response_model" url:"response_model"`
+	// Which sheet the rate belongs to. An account rate prices an event ahead of the list price.
+	Scope InferenceCostRateScope `json:"scope" url:"scope"`
+	// When this price takes effect. It applies until the next rate for the same provider, model and currency starts.
+	StartingAt time.Time `json:"starting_at" url:"starting_at"`
+	UpdatedAt  time.Time `json:"updated_at" url:"updated_at"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InferenceCostRateResponseData) GetCreatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.CreatedAt
+}
+
+func (i *InferenceCostRateResponseData) GetCurrency() string {
+	if i == nil {
+		return ""
+	}
+	return i.Currency
+}
+
+func (i *InferenceCostRateResponseData) GetID() string {
+	if i == nil {
+		return ""
+	}
+	return i.ID
+}
+
+func (i *InferenceCostRateResponseData) GetPinned() bool {
+	if i == nil {
+		return false
+	}
+	return i.Pinned
+}
+
+func (i *InferenceCostRateResponseData) GetProvider() string {
+	if i == nil {
+		return ""
+	}
+	return i.Provider
+}
+
+func (i *InferenceCostRateResponseData) GetRates() map[string]float64 {
+	if i == nil {
+		return nil
+	}
+	return i.Rates
+}
+
+func (i *InferenceCostRateResponseData) GetRepricedAt() *time.Time {
+	if i == nil {
+		return nil
+	}
+	return i.RepricedAt
+}
+
+func (i *InferenceCostRateResponseData) GetResponseModel() string {
+	if i == nil {
+		return ""
+	}
+	return i.ResponseModel
+}
+
+func (i *InferenceCostRateResponseData) GetScope() InferenceCostRateScope {
+	if i == nil {
+		return ""
+	}
+	return i.Scope
+}
+
+func (i *InferenceCostRateResponseData) GetStartingAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.StartingAt
+}
+
+func (i *InferenceCostRateResponseData) GetUpdatedAt() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.UpdatedAt
+}
+
+func (i *InferenceCostRateResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InferenceCostRateResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
+	}
+	next.Or(next, field)
+	i.explicitFields = next
+}
+
+// SetCreatedAt sets the CreatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetCreatedAt(createdAt time.Time) {
+	i.CreatedAt = createdAt
+	i.require(inferenceCostRateResponseDataFieldCreatedAt)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetCurrency(currency string) {
+	i.Currency = currency
+	i.require(inferenceCostRateResponseDataFieldCurrency)
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetID(id string) {
+	i.ID = id
+	i.require(inferenceCostRateResponseDataFieldID)
+}
+
+// SetPinned sets the Pinned field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetPinned(pinned bool) {
+	i.Pinned = pinned
+	i.require(inferenceCostRateResponseDataFieldPinned)
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetProvider(provider string) {
+	i.Provider = provider
+	i.require(inferenceCostRateResponseDataFieldProvider)
+}
+
+// SetRates sets the Rates field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetRates(rates map[string]float64) {
+	i.Rates = rates
+	i.require(inferenceCostRateResponseDataFieldRates)
+}
+
+// SetRepricedAt sets the RepricedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetRepricedAt(repricedAt *time.Time) {
+	i.RepricedAt = repricedAt
+	i.require(inferenceCostRateResponseDataFieldRepricedAt)
+}
+
+// SetResponseModel sets the ResponseModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetResponseModel(responseModel string) {
+	i.ResponseModel = responseModel
+	i.require(inferenceCostRateResponseDataFieldResponseModel)
+}
+
+// SetScope sets the Scope field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetScope(scope InferenceCostRateScope) {
+	i.Scope = scope
+	i.require(inferenceCostRateResponseDataFieldScope)
+}
+
+// SetStartingAt sets the StartingAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetStartingAt(startingAt time.Time) {
+	i.StartingAt = startingAt
+	i.require(inferenceCostRateResponseDataFieldStartingAt)
+}
+
+// SetUpdatedAt sets the UpdatedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostRateResponseData) SetUpdatedAt(updatedAt time.Time) {
+	i.UpdatedAt = updatedAt
+	i.require(inferenceCostRateResponseDataFieldUpdatedAt)
+}
+
+func (i *InferenceCostRateResponseData) UnmarshalJSON(data []byte) error {
+	type embed InferenceCostRateResponseData
+	var unmarshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		RepricedAt *internal.DateTime `json:"repriced_at,omitempty"`
+		StartingAt *internal.DateTime `json:"starting_at"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed: embed(*i),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*i = InferenceCostRateResponseData(unmarshaler.embed)
+	i.CreatedAt = unmarshaler.CreatedAt.Time()
+	i.RepricedAt = unmarshaler.RepricedAt.TimePtr()
+	i.StartingAt = unmarshaler.StartingAt.Time()
+	i.UpdatedAt = unmarshaler.UpdatedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InferenceCostRateResponseData) MarshalJSON() ([]byte, error) {
+	type embed InferenceCostRateResponseData
+	var marshaler = struct {
+		embed
+		CreatedAt  *internal.DateTime `json:"created_at"`
+		RepricedAt *internal.DateTime `json:"repriced_at,omitempty"`
+		StartingAt *internal.DateTime `json:"starting_at"`
+		UpdatedAt  *internal.DateTime `json:"updated_at"`
+	}{
+		embed:      embed(*i),
+		CreatedAt:  internal.NewDateTime(i.CreatedAt),
+		RepricedAt: internal.NewOptionalDateTime(i.RepricedAt),
+		StartingAt: internal.NewDateTime(i.StartingAt),
+		UpdatedAt:  internal.NewDateTime(i.UpdatedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InferenceCostRateResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+type InferenceCostRateScope string
+
+const (
+	InferenceCostRateScopeAccount   InferenceCostRateScope = "account"
+	InferenceCostRateScopeListPrice InferenceCostRateScope = "list_price"
+)
+
+func NewInferenceCostRateScopeFromString(s string) (InferenceCostRateScope, error) {
+	switch s {
+	case "account":
+		return InferenceCostRateScopeAccount, nil
+	case "list_price":
+		return InferenceCostRateScopeListPrice, nil
+	}
+	var t InferenceCostRateScope
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i InferenceCostRateScope) Ptr() *InferenceCostRateScope {
+	return &i
+}
+
+var (
+	inferenceCostResponseDataFieldByModel            = big.NewInt(1 << 0)
+	inferenceCostResponseDataFieldCosts              = big.NewInt(1 << 1)
+	inferenceCostResponseDataFieldEndTime            = big.NewInt(1 << 2)
+	inferenceCostResponseDataFieldEventCount         = big.NewInt(1 << 3)
+	inferenceCostResponseDataFieldStartTime          = big.NewInt(1 << 4)
+	inferenceCostResponseDataFieldUnpricedEventCount = big.NewInt(1 << 5)
+)
+
+type InferenceCostResponseData struct {
+	// Cost and event counts per provider and response model, busiest model first, for at most the 500 busiest models; the totals count every model. A model with a non-zero unpriced_event_count has calls with no known cost
+	ByModel []*InferenceModelCostResponseData `json:"by_model" url:"by_model"`
+	// Summed cost of priced inference events, one entry per currency. Amounts in different currencies are not converted or combined. Empty when no event in the window was priced
+	Costs []*InferenceCostAmountResponseData `json:"costs" url:"costs"`
+	// End of the window (exclusive)
+	EndTime time.Time `json:"end_time" url:"end_time"`
+	// Number of inference events the environment received in the window, priced or not
+	EventCount int64 `json:"event_count" url:"event_count"`
+	// Start of the window (inclusive)
+	StartTime time.Time `json:"start_time" url:"start_time"`
+	// Number of inference events in the window with no known cost: the event carried none and none could be derived from a price for its model. These add nothing to costs, so a non-zero count means the real cost is higher than reported
+	UnpricedEventCount int64 `json:"unpriced_event_count" url:"unpriced_event_count"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InferenceCostResponseData) GetByModel() []*InferenceModelCostResponseData {
+	if i == nil {
+		return nil
+	}
+	return i.ByModel
+}
+
+func (i *InferenceCostResponseData) GetCosts() []*InferenceCostAmountResponseData {
+	if i == nil {
+		return nil
+	}
+	return i.Costs
+}
+
+func (i *InferenceCostResponseData) GetEndTime() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.EndTime
+}
+
+func (i *InferenceCostResponseData) GetEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.EventCount
+}
+
+func (i *InferenceCostResponseData) GetStartTime() time.Time {
+	if i == nil {
+		return time.Time{}
+	}
+	return i.StartTime
+}
+
+func (i *InferenceCostResponseData) GetUnpricedEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.UnpricedEventCount
+}
+
+func (i *InferenceCostResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InferenceCostResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
+	}
+	next.Or(next, field)
+	i.explicitFields = next
+}
+
+// SetByModel sets the ByModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostResponseData) SetByModel(byModel []*InferenceModelCostResponseData) {
+	i.ByModel = byModel
+	i.require(inferenceCostResponseDataFieldByModel)
+}
+
+// SetCosts sets the Costs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostResponseData) SetCosts(costs []*InferenceCostAmountResponseData) {
+	i.Costs = costs
+	i.require(inferenceCostResponseDataFieldCosts)
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostResponseData) SetEndTime(endTime time.Time) {
+	i.EndTime = endTime
+	i.require(inferenceCostResponseDataFieldEndTime)
+}
+
+// SetEventCount sets the EventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostResponseData) SetEventCount(eventCount int64) {
+	i.EventCount = eventCount
+	i.require(inferenceCostResponseDataFieldEventCount)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostResponseData) SetStartTime(startTime time.Time) {
+	i.StartTime = startTime
+	i.require(inferenceCostResponseDataFieldStartTime)
+}
+
+// SetUnpricedEventCount sets the UnpricedEventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostResponseData) SetUnpricedEventCount(unpricedEventCount int64) {
+	i.UnpricedEventCount = unpricedEventCount
+	i.require(inferenceCostResponseDataFieldUnpricedEventCount)
+}
+
+func (i *InferenceCostResponseData) UnmarshalJSON(data []byte) error {
+	type embed InferenceCostResponseData
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed: embed(*i),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*i = InferenceCostResponseData(unmarshaler.embed)
+	i.EndTime = unmarshaler.EndTime.Time()
+	i.StartTime = unmarshaler.StartTime.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InferenceCostResponseData) MarshalJSON() ([]byte, error) {
+	type embed InferenceCostResponseData
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time"`
+		StartTime *internal.DateTime `json:"start_time"`
+	}{
+		embed:     embed(*i),
+		EndTime:   internal.NewDateTime(i.EndTime),
+		StartTime: internal.NewDateTime(i.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InferenceCostResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
 type InferenceCostSource string
 
 const (
@@ -4111,6 +4696,226 @@ func (g *GetEventSummariesResponse) String() string {
 }
 
 var (
+	getInferenceCostParamsFieldEndTime   = big.NewInt(1 << 0)
+	getInferenceCostParamsFieldStartTime = big.NewInt(1 << 1)
+)
+
+// Input parameters
+type GetInferenceCostParams struct {
+	// End of the window (exclusive). Pass together with start_time; when both are omitted, the current calendar month in UTC is used
+	EndTime *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Start of the window (inclusive). Pass together with end_time; when both are omitted, the current calendar month in UTC is used
+	StartTime *time.Time `json:"start_time,omitempty" url:"start_time,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetInferenceCostParams) GetEndTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.EndTime
+}
+
+func (g *GetInferenceCostParams) GetStartTime() *time.Time {
+	if g == nil {
+		return nil
+	}
+	return g.StartTime
+}
+
+func (g *GetInferenceCostParams) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetInferenceCostParams) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetEndTime sets the EndTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetInferenceCostParams) SetEndTime(endTime *time.Time) {
+	g.EndTime = endTime
+	g.require(getInferenceCostParamsFieldEndTime)
+}
+
+// SetStartTime sets the StartTime field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetInferenceCostParams) SetStartTime(startTime *time.Time) {
+	g.StartTime = startTime
+	g.require(getInferenceCostParamsFieldStartTime)
+}
+
+func (g *GetInferenceCostParams) UnmarshalJSON(data []byte) error {
+	type embed GetInferenceCostParams
+	var unmarshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed: embed(*g),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*g = GetInferenceCostParams(unmarshaler.embed)
+	g.EndTime = unmarshaler.EndTime.TimePtr()
+	g.StartTime = unmarshaler.StartTime.TimePtr()
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetInferenceCostParams) MarshalJSON() ([]byte, error) {
+	type embed GetInferenceCostParams
+	var marshaler = struct {
+		embed
+		EndTime   *internal.DateTime `json:"end_time,omitempty"`
+		StartTime *internal.DateTime `json:"start_time,omitempty"`
+	}{
+		embed:     embed(*g),
+		EndTime:   internal.NewOptionalDateTime(g.EndTime),
+		StartTime: internal.NewOptionalDateTime(g.StartTime),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetInferenceCostParams) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getInferenceCostResponseFieldData   = big.NewInt(1 << 0)
+	getInferenceCostResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetInferenceCostResponse struct {
+	Data *InferenceCostResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *GetInferenceCostParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetInferenceCostResponse) GetData() *InferenceCostResponseData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetInferenceCostResponse) GetParams() *GetInferenceCostParams {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetInferenceCostResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetInferenceCostResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetInferenceCostResponse) SetData(data *InferenceCostResponseData) {
+	g.Data = data
+	g.require(getInferenceCostResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetInferenceCostResponse) SetParams(params *GetInferenceCostParams) {
+	g.Params = params
+	g.require(getInferenceCostResponseFieldParams)
+}
+
+func (g *GetInferenceCostResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetInferenceCostResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetInferenceCostResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetInferenceCostResponse) MarshalJSON() ([]byte, error) {
+	type embed GetInferenceCostResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetInferenceCostResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
 	getOtlpEnvironmentSettingsResponseFieldData   = big.NewInt(1 << 0)
 	getOtlpEnvironmentSettingsResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -4846,6 +5651,263 @@ func (l *ListEventsResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (l *ListEventsResponse) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listInferenceCostRatesParamsFieldLimit         = big.NewInt(1 << 0)
+	listInferenceCostRatesParamsFieldOffset        = big.NewInt(1 << 1)
+	listInferenceCostRatesParamsFieldProvider      = big.NewInt(1 << 2)
+	listInferenceCostRatesParamsFieldResponseModel = big.NewInt(1 << 3)
+	listInferenceCostRatesParamsFieldScope         = big.NewInt(1 << 4)
+)
+
+// Input parameters
+type ListInferenceCostRatesParams struct {
+	// Page limit (default 100)
+	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
+	// Page offset (default 0)
+	Offset        *int64  `json:"offset,omitempty" url:"offset,omitempty"`
+	Provider      *string `json:"provider,omitempty" url:"provider,omitempty"`
+	ResponseModel *string `json:"response_model,omitempty" url:"response_model,omitempty"`
+	// Only list rates from this sheet: list_price for Schematic's list prices, account for the environment's own rate sheet.
+	Scope *InferenceCostRateScope `json:"scope,omitempty" url:"scope,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListInferenceCostRatesParams) GetLimit() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Limit
+}
+
+func (l *ListInferenceCostRatesParams) GetOffset() *int64 {
+	if l == nil {
+		return nil
+	}
+	return l.Offset
+}
+
+func (l *ListInferenceCostRatesParams) GetProvider() *string {
+	if l == nil {
+		return nil
+	}
+	return l.Provider
+}
+
+func (l *ListInferenceCostRatesParams) GetResponseModel() *string {
+	if l == nil {
+		return nil
+	}
+	return l.ResponseModel
+}
+
+func (l *ListInferenceCostRatesParams) GetScope() *InferenceCostRateScope {
+	if l == nil {
+		return nil
+	}
+	return l.Scope
+}
+
+func (l *ListInferenceCostRatesParams) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListInferenceCostRatesParams) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetLimit sets the Limit field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesParams) SetLimit(limit *int64) {
+	l.Limit = limit
+	l.require(listInferenceCostRatesParamsFieldLimit)
+}
+
+// SetOffset sets the Offset field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesParams) SetOffset(offset *int64) {
+	l.Offset = offset
+	l.require(listInferenceCostRatesParamsFieldOffset)
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesParams) SetProvider(provider *string) {
+	l.Provider = provider
+	l.require(listInferenceCostRatesParamsFieldProvider)
+}
+
+// SetResponseModel sets the ResponseModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesParams) SetResponseModel(responseModel *string) {
+	l.ResponseModel = responseModel
+	l.require(listInferenceCostRatesParamsFieldResponseModel)
+}
+
+// SetScope sets the Scope field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesParams) SetScope(scope *InferenceCostRateScope) {
+	l.Scope = scope
+	l.require(listInferenceCostRatesParamsFieldScope)
+}
+
+func (l *ListInferenceCostRatesParams) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListInferenceCostRatesParams
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListInferenceCostRatesParams(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListInferenceCostRatesParams) MarshalJSON() ([]byte, error) {
+	type embed ListInferenceCostRatesParams
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListInferenceCostRatesParams) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+var (
+	listInferenceCostRatesResponseFieldData   = big.NewInt(1 << 0)
+	listInferenceCostRatesResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type ListInferenceCostRatesResponse struct {
+	Data []*InferenceCostRateResponseData `json:"data" url:"data"`
+	// Input parameters
+	Params *ListInferenceCostRatesParams `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListInferenceCostRatesResponse) GetData() []*InferenceCostRateResponseData {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListInferenceCostRatesResponse) GetParams() *ListInferenceCostRatesParams {
+	if l == nil {
+		return nil
+	}
+	return l.Params
+}
+
+func (l *ListInferenceCostRatesResponse) GetExtraProperties() map[string]interface{} {
+	if l == nil {
+		return nil
+	}
+	return l.extraProperties
+}
+
+func (l *ListInferenceCostRatesResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if l.explicitFields != nil {
+		next.Set(l.explicitFields)
+	}
+	next.Or(next, field)
+	l.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesResponse) SetData(data []*InferenceCostRateResponseData) {
+	l.Data = data
+	l.require(listInferenceCostRatesResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListInferenceCostRatesResponse) SetParams(params *ListInferenceCostRatesParams) {
+	l.Params = params
+	l.require(listInferenceCostRatesResponseFieldParams)
+}
+
+func (l *ListInferenceCostRatesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListInferenceCostRatesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListInferenceCostRatesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListInferenceCostRatesResponse) MarshalJSON() ([]byte, error) {
+	type embed ListInferenceCostRatesResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*l),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, l.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (l *ListInferenceCostRatesResponse) String() string {
 	if l == nil {
 		return "<nil>"
 	}

@@ -3057,23 +3057,24 @@ func (p *PlanSelection) String() string {
 }
 
 var (
-	previewSubscriptionChangeResponseDataFieldAmountOff             = big.NewInt(1 << 0)
-	previewSubscriptionChangeResponseDataFieldDueNow                = big.NewInt(1 << 1)
-	previewSubscriptionChangeResponseDataFieldFinance               = big.NewInt(1 << 2)
-	previewSubscriptionChangeResponseDataFieldIsScheduledDowngrade  = big.NewInt(1 << 3)
-	previewSubscriptionChangeResponseDataFieldNewCharges            = big.NewInt(1 << 4)
-	previewSubscriptionChangeResponseDataFieldOptInRequired         = big.NewInt(1 << 5)
-	previewSubscriptionChangeResponseDataFieldOptInText             = big.NewInt(1 << 6)
-	previewSubscriptionChangeResponseDataFieldOptInTitle            = big.NewInt(1 << 7)
-	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired = big.NewInt(1 << 8)
-	previewSubscriptionChangeResponseDataFieldPercentOff            = big.NewInt(1 << 9)
-	previewSubscriptionChangeResponseDataFieldPeriodStart           = big.NewInt(1 << 10)
-	previewSubscriptionChangeResponseDataFieldProblems              = big.NewInt(1 << 11)
-	previewSubscriptionChangeResponseDataFieldPromoCodeApplied      = big.NewInt(1 << 12)
-	previewSubscriptionChangeResponseDataFieldProration             = big.NewInt(1 << 13)
-	previewSubscriptionChangeResponseDataFieldScheduledChangeTime   = big.NewInt(1 << 14)
-	previewSubscriptionChangeResponseDataFieldTrialEnd              = big.NewInt(1 << 15)
-	previewSubscriptionChangeResponseDataFieldUsageViolations       = big.NewInt(1 << 16)
+	previewSubscriptionChangeResponseDataFieldAmountOff               = big.NewInt(1 << 0)
+	previewSubscriptionChangeResponseDataFieldDueNow                  = big.NewInt(1 << 1)
+	previewSubscriptionChangeResponseDataFieldFinance                 = big.NewInt(1 << 2)
+	previewSubscriptionChangeResponseDataFieldIsScheduledDowngrade    = big.NewInt(1 << 3)
+	previewSubscriptionChangeResponseDataFieldNewCharges              = big.NewInt(1 << 4)
+	previewSubscriptionChangeResponseDataFieldOptInRequired           = big.NewInt(1 << 5)
+	previewSubscriptionChangeResponseDataFieldOptInText               = big.NewInt(1 << 6)
+	previewSubscriptionChangeResponseDataFieldOptInTitle              = big.NewInt(1 << 7)
+	previewSubscriptionChangeResponseDataFieldPaymentMethodRequired   = big.NewInt(1 << 8)
+	previewSubscriptionChangeResponseDataFieldPercentOff              = big.NewInt(1 << 9)
+	previewSubscriptionChangeResponseDataFieldPeriodStart             = big.NewInt(1 << 10)
+	previewSubscriptionChangeResponseDataFieldProblems                = big.NewInt(1 << 11)
+	previewSubscriptionChangeResponseDataFieldPromoCodeApplied        = big.NewInt(1 << 12)
+	previewSubscriptionChangeResponseDataFieldProration               = big.NewInt(1 << 13)
+	previewSubscriptionChangeResponseDataFieldScheduledChangeTime     = big.NewInt(1 << 14)
+	previewSubscriptionChangeResponseDataFieldTrialEnd                = big.NewInt(1 << 15)
+	previewSubscriptionChangeResponseDataFieldUnbilledUsageFeatureIDs = big.NewInt(1 << 16)
+	previewSubscriptionChangeResponseDataFieldUsageViolations         = big.NewInt(1 << 17)
 )
 
 type PreviewSubscriptionChangeResponseData struct {
@@ -3093,7 +3094,9 @@ type PreviewSubscriptionChangeResponseData struct {
 	Proration             int64                                   `json:"proration" url:"proration"`
 	ScheduledChangeTime   *time.Time                              `json:"scheduled_change_time,omitempty" url:"scheduled_change_time,omitempty"`
 	TrialEnd              *time.Time                              `json:"trial_end,omitempty" url:"trial_end,omitempty"`
-	UsageViolations       []*FeatureUsageResponseData             `json:"usage_violations" url:"usage_violations"`
+	// Features whose usage so far this billing period is not billed if this change is made, because the new plan does not charge for them and the billing period continues.
+	UnbilledUsageFeatureIDs []string                    `json:"unbilled_usage_feature_ids" url:"unbilled_usage_feature_ids"`
+	UsageViolations         []*FeatureUsageResponseData `json:"usage_violations" url:"usage_violations"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -3212,6 +3215,13 @@ func (p *PreviewSubscriptionChangeResponseData) GetTrialEnd() *time.Time {
 		return nil
 	}
 	return p.TrialEnd
+}
+
+func (p *PreviewSubscriptionChangeResponseData) GetUnbilledUsageFeatureIDs() []string {
+	if p == nil {
+		return nil
+	}
+	return p.UnbilledUsageFeatureIDs
 }
 
 func (p *PreviewSubscriptionChangeResponseData) GetUsageViolations() []*FeatureUsageResponseData {
@@ -3347,6 +3357,13 @@ func (p *PreviewSubscriptionChangeResponseData) SetScheduledChangeTime(scheduled
 func (p *PreviewSubscriptionChangeResponseData) SetTrialEnd(trialEnd *time.Time) {
 	p.TrialEnd = trialEnd
 	p.require(previewSubscriptionChangeResponseDataFieldTrialEnd)
+}
+
+// SetUnbilledUsageFeatureIDs sets the UnbilledUsageFeatureIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PreviewSubscriptionChangeResponseData) SetUnbilledUsageFeatureIDs(unbilledUsageFeatureIDs []string) {
+	p.UnbilledUsageFeatureIDs = unbilledUsageFeatureIDs
+	p.require(previewSubscriptionChangeResponseDataFieldUnbilledUsageFeatureIDs)
 }
 
 // SetUsageViolations sets the UsageViolations field and marks it as non-optional;

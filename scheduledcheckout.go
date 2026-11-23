@@ -150,37 +150,40 @@ func (l *ListScheduledCheckoutsRequest) SetOffset(offset *int64) {
 }
 
 var (
-	scheduledCheckoutResponseDataFieldActorType         = big.NewInt(1 << 0)
-	scheduledCheckoutResponseDataFieldCompanyID         = big.NewInt(1 << 1)
-	scheduledCheckoutResponseDataFieldCompletedAt       = big.NewInt(1 << 2)
-	scheduledCheckoutResponseDataFieldCreatedAt         = big.NewInt(1 << 3)
-	scheduledCheckoutResponseDataFieldErrorMessage      = big.NewInt(1 << 4)
-	scheduledCheckoutResponseDataFieldExecuteAfter      = big.NewInt(1 << 5)
-	scheduledCheckoutResponseDataFieldFromPlanID        = big.NewInt(1 << 6)
-	scheduledCheckoutResponseDataFieldID                = big.NewInt(1 << 7)
-	scheduledCheckoutResponseDataFieldScheduledInterval = big.NewInt(1 << 8)
-	scheduledCheckoutResponseDataFieldScheduledPrice    = big.NewInt(1 << 9)
-	scheduledCheckoutResponseDataFieldStartedAt         = big.NewInt(1 << 10)
-	scheduledCheckoutResponseDataFieldStatus            = big.NewInt(1 << 11)
-	scheduledCheckoutResponseDataFieldToPlanID          = big.NewInt(1 << 12)
-	scheduledCheckoutResponseDataFieldUpdatedAt         = big.NewInt(1 << 13)
+	scheduledCheckoutResponseDataFieldActorType              = big.NewInt(1 << 0)
+	scheduledCheckoutResponseDataFieldCompanyID              = big.NewInt(1 << 1)
+	scheduledCheckoutResponseDataFieldCompletedAt            = big.NewInt(1 << 2)
+	scheduledCheckoutResponseDataFieldCreatedAt              = big.NewInt(1 << 3)
+	scheduledCheckoutResponseDataFieldErrorMessage           = big.NewInt(1 << 4)
+	scheduledCheckoutResponseDataFieldExecuteAfter           = big.NewInt(1 << 5)
+	scheduledCheckoutResponseDataFieldFromPlanID             = big.NewInt(1 << 6)
+	scheduledCheckoutResponseDataFieldID                     = big.NewInt(1 << 7)
+	scheduledCheckoutResponseDataFieldScheduledInterval      = big.NewInt(1 << 8)
+	scheduledCheckoutResponseDataFieldScheduledIntervalCount = big.NewInt(1 << 9)
+	scheduledCheckoutResponseDataFieldScheduledPrice         = big.NewInt(1 << 10)
+	scheduledCheckoutResponseDataFieldStartedAt              = big.NewInt(1 << 11)
+	scheduledCheckoutResponseDataFieldStatus                 = big.NewInt(1 << 12)
+	scheduledCheckoutResponseDataFieldToPlanID               = big.NewInt(1 << 13)
+	scheduledCheckoutResponseDataFieldUpdatedAt              = big.NewInt(1 << 14)
 )
 
 type ScheduledCheckoutResponseData struct {
-	ActorType         string                  `json:"actor_type" url:"actor_type"`
-	CompanyID         string                  `json:"company_id" url:"company_id"`
-	CompletedAt       *time.Time              `json:"completed_at,omitempty" url:"completed_at,omitempty"`
-	CreatedAt         time.Time               `json:"created_at" url:"created_at"`
-	ErrorMessage      *string                 `json:"error_message,omitempty" url:"error_message,omitempty"`
-	ExecuteAfter      time.Time               `json:"execute_after" url:"execute_after"`
-	FromPlanID        string                  `json:"from_plan_id" url:"from_plan_id"`
-	ID                string                  `json:"id" url:"id"`
-	ScheduledInterval *string                 `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
-	ScheduledPrice    *int64                  `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
-	StartedAt         *time.Time              `json:"started_at,omitempty" url:"started_at,omitempty"`
-	Status            ScheduledCheckoutStatus `json:"status" url:"status"`
-	ToPlanID          string                  `json:"to_plan_id" url:"to_plan_id"`
-	UpdatedAt         time.Time               `json:"updated_at" url:"updated_at"`
+	ActorType         string     `json:"actor_type" url:"actor_type"`
+	CompanyID         string     `json:"company_id" url:"company_id"`
+	CompletedAt       *time.Time `json:"completed_at,omitempty" url:"completed_at,omitempty"`
+	CreatedAt         time.Time  `json:"created_at" url:"created_at"`
+	ErrorMessage      *string    `json:"error_message,omitempty" url:"error_message,omitempty"`
+	ExecuteAfter      time.Time  `json:"execute_after" url:"execute_after"`
+	FromPlanID        string     `json:"from_plan_id" url:"from_plan_id"`
+	ID                string     `json:"id" url:"id"`
+	ScheduledInterval *string    `json:"scheduled_interval,omitempty" url:"scheduled_interval,omitempty"`
+	// With scheduled_interval, the scheduled price's billing period: 3 with month is quarterly. Null for a downgrade scheduled before the price was recorded.
+	ScheduledIntervalCount *int64                  `json:"scheduled_interval_count,omitempty" url:"scheduled_interval_count,omitempty"`
+	ScheduledPrice         *int64                  `json:"scheduled_price,omitempty" url:"scheduled_price,omitempty"`
+	StartedAt              *time.Time              `json:"started_at,omitempty" url:"started_at,omitempty"`
+	Status                 ScheduledCheckoutStatus `json:"status" url:"status"`
+	ToPlanID               string                  `json:"to_plan_id" url:"to_plan_id"`
+	UpdatedAt              time.Time               `json:"updated_at" url:"updated_at"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -250,6 +253,13 @@ func (s *ScheduledCheckoutResponseData) GetScheduledInterval() *string {
 		return nil
 	}
 	return s.ScheduledInterval
+}
+
+func (s *ScheduledCheckoutResponseData) GetScheduledIntervalCount() *int64 {
+	if s == nil {
+		return nil
+	}
+	return s.ScheduledIntervalCount
 }
 
 func (s *ScheduledCheckoutResponseData) GetScheduledPrice() *int64 {
@@ -364,6 +374,13 @@ func (s *ScheduledCheckoutResponseData) SetID(id string) {
 func (s *ScheduledCheckoutResponseData) SetScheduledInterval(scheduledInterval *string) {
 	s.ScheduledInterval = scheduledInterval
 	s.require(scheduledCheckoutResponseDataFieldScheduledInterval)
+}
+
+// SetScheduledIntervalCount sets the ScheduledIntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (s *ScheduledCheckoutResponseData) SetScheduledIntervalCount(scheduledIntervalCount *int64) {
+	s.ScheduledIntervalCount = scheduledIntervalCount
+	s.require(scheduledCheckoutResponseDataFieldScheduledIntervalCount)
 }
 
 // SetScheduledPrice sets the ScheduledPrice field and marks it as non-optional;

@@ -398,6 +398,14 @@ func TestSettersCountAuditLogsRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEndUserID", func(t *testing.T) {
+		obj := &CountAuditLogsRequest{}
+		var fernTestValueEndUserID *string
+		obj.SetEndUserID(fernTestValueEndUserID)
+		assert.Equal(t, fernTestValueEndUserID, obj.EndUserID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEnvironmentID", func(t *testing.T) {
 		obj := &CountAuditLogsRequest{}
 		var fernTestValueEnvironmentID *string
@@ -511,6 +519,37 @@ func TestSettersMarkExplicitCountAuditLogsRequest(t *testing.T) {
 
 		// Act
 		obj.SetEndTime(fernTestValueEndTime)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEndUserID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountAuditLogsRequest{}
+		var fernTestValueEndUserID *string
+
+		// Act
+		obj.SetEndUserID(fernTestValueEndUserID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -1079,6 +1118,14 @@ func TestSettersListAuditLogsRequest(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEndUserID", func(t *testing.T) {
+		obj := &ListAuditLogsRequest{}
+		var fernTestValueEndUserID *string
+		obj.SetEndUserID(fernTestValueEndUserID)
+		assert.Equal(t, fernTestValueEndUserID, obj.EndUserID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEnvironmentID", func(t *testing.T) {
 		obj := &ListAuditLogsRequest{}
 		var fernTestValueEnvironmentID *string
@@ -1192,6 +1239,37 @@ func TestSettersMarkExplicitListAuditLogsRequest(t *testing.T) {
 
 		// Act
 		obj.SetEndTime(fernTestValueEndTime)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEndUserID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListAuditLogsRequest{}
+		var fernTestValueEndUserID *string
+
+		// Act
+		obj.SetEndUserID(fernTestValueEndUserID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -1544,6 +1622,22 @@ func TestSettersAuditLogResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEndUser", func(t *testing.T) {
+		obj := &AuditLogResponseData{}
+		var fernTestValueEndUser *AuditLogEndUserResponseData
+		obj.SetEndUser(fernTestValueEndUser)
+		assert.Equal(t, fernTestValueEndUser, obj.EndUser)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
+	t.Run("SetEndUserID", func(t *testing.T) {
+		obj := &AuditLogResponseData{}
+		var fernTestValueEndUserID *string
+		obj.SetEndUserID(fernTestValueEndUserID)
+		assert.Equal(t, fernTestValueEndUserID, obj.EndUserID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEndedAt", func(t *testing.T) {
 		obj := &AuditLogResponseData{}
 		var fernTestValueEndedAt *time.Time
@@ -1869,6 +1963,72 @@ func TestGettersAuditLogResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetCompanyID() // Should return zero value
+	})
+
+	t.Run("GetEndUser", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var expected *AuditLogEndUserResponseData
+		obj.EndUser = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEndUser(), "getter should return the property value")
+	})
+
+	t.Run("GetEndUser_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		obj.EndUser = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEndUser(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEndUser_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *AuditLogResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEndUser() // Should return zero value
+	})
+
+	t.Run("GetEndUserID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var expected *string
+		obj.EndUserID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEndUserID(), "getter should return the property value")
+	})
+
+	t.Run("GetEndUserID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		obj.EndUserID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEndUserID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEndUserID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *AuditLogResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEndUserID() // Should return zero value
 	})
 
 	t.Run("GetEndedAt", func(t *testing.T) {
@@ -2558,6 +2718,68 @@ func TestSettersMarkExplicitAuditLogResponseData(t *testing.T) {
 
 		// Act
 		obj.SetCompanyID(fernTestValueCompanyID)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEndUser_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var fernTestValueEndUser *AuditLogEndUserResponseData
+
+		// Act
+		obj.SetEndUser(fernTestValueEndUser)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEndUserID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &AuditLogResponseData{}
+		var fernTestValueEndUserID *string
+
+		// Act
+		obj.SetEndUserID(fernTestValueEndUserID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -6920,6 +7142,14 @@ func TestSettersCountAuditLogsParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEndUserID", func(t *testing.T) {
+		obj := &CountAuditLogsParams{}
+		var fernTestValueEndUserID *string
+		obj.SetEndUserID(fernTestValueEndUserID)
+		assert.Equal(t, fernTestValueEndUserID, obj.EndUserID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEnvironmentID", func(t *testing.T) {
 		obj := &CountAuditLogsParams{}
 		var fernTestValueEnvironmentID *string
@@ -7060,6 +7290,39 @@ func TestGettersCountAuditLogsParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetEndTime() // Should return zero value
+	})
+
+	t.Run("GetEndUserID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountAuditLogsParams{}
+		var expected *string
+		obj.EndUserID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEndUserID(), "getter should return the property value")
+	})
+
+	t.Run("GetEndUserID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountAuditLogsParams{}
+		obj.EndUserID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEndUserID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEndUserID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *CountAuditLogsParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEndUserID() // Should return zero value
 	})
 
 	t.Run("GetEnvironmentID", func(t *testing.T) {
@@ -7300,6 +7563,37 @@ func TestSettersMarkExplicitCountAuditLogsParams(t *testing.T) {
 
 		// Act
 		obj.SetEndTime(fernTestValueEndTime)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEndUserID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &CountAuditLogsParams{}
+		var fernTestValueEndUserID *string
+
+		// Act
+		obj.SetEndUserID(fernTestValueEndUserID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)
@@ -9548,6 +9842,14 @@ func TestSettersListAuditLogsParams(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEndUserID", func(t *testing.T) {
+		obj := &ListAuditLogsParams{}
+		var fernTestValueEndUserID *string
+		obj.SetEndUserID(fernTestValueEndUserID)
+		assert.Equal(t, fernTestValueEndUserID, obj.EndUserID)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEnvironmentID", func(t *testing.T) {
 		obj := &ListAuditLogsParams{}
 		var fernTestValueEnvironmentID *string
@@ -9688,6 +9990,39 @@ func TestGettersListAuditLogsParams(t *testing.T) {
 			}
 		}()
 		_ = obj.GetEndTime() // Should return zero value
+	})
+
+	t.Run("GetEndUserID", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListAuditLogsParams{}
+		var expected *string
+		obj.EndUserID = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEndUserID(), "getter should return the property value")
+	})
+
+	t.Run("GetEndUserID_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListAuditLogsParams{}
+		obj.EndUserID = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEndUserID(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEndUserID_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *ListAuditLogsParams
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEndUserID() // Should return zero value
 	})
 
 	t.Run("GetEnvironmentID", func(t *testing.T) {
@@ -9928,6 +10263,37 @@ func TestSettersMarkExplicitListAuditLogsParams(t *testing.T) {
 
 		// Act
 		obj.SetEndTime(fernTestValueEndTime)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEndUserID_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &ListAuditLogsParams{}
+		var fernTestValueEndUserID *string
+
+		// Act
+		obj.SetEndUserID(fernTestValueEndUserID)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

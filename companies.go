@@ -2013,32 +2013,35 @@ var (
 	companyBillingEntitySubscriptionResponseDataFieldDiscounts              = big.NewInt(1 << 5)
 	companyBillingEntitySubscriptionResponseDataFieldExpiredAt              = big.NewInt(1 << 6)
 	companyBillingEntitySubscriptionResponseDataFieldInterval               = big.NewInt(1 << 7)
-	companyBillingEntitySubscriptionResponseDataFieldIsInitial              = big.NewInt(1 << 8)
-	companyBillingEntitySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 9)
-	companyBillingEntitySubscriptionResponseDataFieldPauseBehavior          = big.NewInt(1 << 10)
-	companyBillingEntitySubscriptionResponseDataFieldPauseResumesAt         = big.NewInt(1 << 11)
-	companyBillingEntitySubscriptionResponseDataFieldPausedAt               = big.NewInt(1 << 12)
-	companyBillingEntitySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 13)
-	companyBillingEntitySubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 14)
-	companyBillingEntitySubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 15)
-	companyBillingEntitySubscriptionResponseDataFieldPlanName               = big.NewInt(1 << 16)
-	companyBillingEntitySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 17)
-	companyBillingEntitySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 18)
-	companyBillingEntitySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 19)
-	companyBillingEntitySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 20)
-	companyBillingEntitySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 21)
-	companyBillingEntitySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 22)
+	companyBillingEntitySubscriptionResponseDataFieldIntervalCount          = big.NewInt(1 << 8)
+	companyBillingEntitySubscriptionResponseDataFieldIsInitial              = big.NewInt(1 << 9)
+	companyBillingEntitySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 10)
+	companyBillingEntitySubscriptionResponseDataFieldPauseBehavior          = big.NewInt(1 << 11)
+	companyBillingEntitySubscriptionResponseDataFieldPauseResumesAt         = big.NewInt(1 << 12)
+	companyBillingEntitySubscriptionResponseDataFieldPausedAt               = big.NewInt(1 << 13)
+	companyBillingEntitySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 14)
+	companyBillingEntitySubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 15)
+	companyBillingEntitySubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 16)
+	companyBillingEntitySubscriptionResponseDataFieldPlanName               = big.NewInt(1 << 17)
+	companyBillingEntitySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 18)
+	companyBillingEntitySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 19)
+	companyBillingEntitySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 20)
+	companyBillingEntitySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 21)
+	companyBillingEntitySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 22)
+	companyBillingEntitySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 23)
 )
 
 type CompanyBillingEntitySubscriptionResponseData struct {
-	CancelAt               *time.Time                                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
-	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
-	Company                *CompanyResponseData                         `json:"company,omitempty" url:"company,omitempty"`
-	Currency               Currency                                     `json:"currency" url:"currency"`
-	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
-	Discounts              []*BillingSubscriptionDiscountView           `json:"discounts" url:"discounts"`
-	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	Interval               string                                       `json:"interval" url:"interval"`
+	CancelAt           *time.Time                         `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CancelAtPeriodEnd  bool                               `json:"cancel_at_period_end" url:"cancel_at_period_end"`
+	Company            *CompanyResponseData               `json:"company,omitempty" url:"company,omitempty"`
+	Currency           Currency                           `json:"currency" url:"currency"`
+	CustomerExternalID string                             `json:"customer_external_id" url:"customer_external_id"`
+	Discounts          []*BillingSubscriptionDiscountView `json:"discounts" url:"discounts"`
+	ExpiredAt          *time.Time                         `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	Interval           string                             `json:"interval" url:"interval"`
+	// With interval, the subscription's billing period: 3 with month is quarterly. Read from the subscription's line items, since interval alone is month for monthly and quarterly alike.
+	IntervalCount          *int64                                       `json:"interval_count,omitempty" url:"interval_count,omitempty"`
 	IsInitial              bool                                         `json:"is_initial" url:"is_initial"`
 	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
 	PauseBehavior          *BillingSubscriptionPauseBehavior            `json:"pause_behavior,omitempty" url:"pause_behavior,omitempty"`
@@ -2116,6 +2119,13 @@ func (c *CompanyBillingEntitySubscriptionResponseData) GetInterval() string {
 		return ""
 	}
 	return c.Interval
+}
+
+func (c *CompanyBillingEntitySubscriptionResponseData) GetIntervalCount() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.IntervalCount
 }
 
 func (c *CompanyBillingEntitySubscriptionResponseData) GetIsInitial() bool {
@@ -2293,6 +2303,13 @@ func (c *CompanyBillingEntitySubscriptionResponseData) SetExpiredAt(expiredAt *t
 func (c *CompanyBillingEntitySubscriptionResponseData) SetInterval(interval string) {
 	c.Interval = interval
 	c.require(companyBillingEntitySubscriptionResponseDataFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanyBillingEntitySubscriptionResponseData) SetIntervalCount(intervalCount *int64) {
+	c.IntervalCount = intervalCount
+	c.require(companyBillingEntitySubscriptionResponseDataFieldIntervalCount)
 }
 
 // SetIsInitial sets the IsInitial field and marks it as non-optional;
@@ -2485,7 +2502,7 @@ var (
 )
 
 type CompanyInferenceCostResponseData struct {
-	// Cost and event counts per provider and response model, busiest model first
+	// Cost and event counts per provider and response model, busiest model first, for at most the 500 busiest models; the totals count every model
 	ByModel []*InferenceModelCostResponseData `json:"by_model" url:"by_model"`
 	// The company the cost belongs to
 	CompanyID string `json:"company_id" url:"company_id"`
@@ -3119,282 +3136,6 @@ func (e *EntityTraitValue) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", e)
-}
-
-var (
-	inferenceCostAmountResponseDataFieldCost       = big.NewInt(1 << 0)
-	inferenceCostAmountResponseDataFieldCurrency   = big.NewInt(1 << 1)
-	inferenceCostAmountResponseDataFieldEventCount = big.NewInt(1 << 2)
-)
-
-type InferenceCostAmountResponseData struct {
-	// Summed cost as a decimal string in the currency's major unit (dollars, not cents), with up to 8 decimal places
-	Cost string `json:"cost" url:"cost"`
-	// Lowercase ISO 4217 currency code of the cost
-	Currency string `json:"currency" url:"currency"`
-	// Number of priced events summed into this cost
-	EventCount int64 `json:"event_count" url:"event_count"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (i *InferenceCostAmountResponseData) GetCost() string {
-	if i == nil {
-		return ""
-	}
-	return i.Cost
-}
-
-func (i *InferenceCostAmountResponseData) GetCurrency() string {
-	if i == nil {
-		return ""
-	}
-	return i.Currency
-}
-
-func (i *InferenceCostAmountResponseData) GetEventCount() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.EventCount
-}
-
-func (i *InferenceCostAmountResponseData) GetExtraProperties() map[string]interface{} {
-	if i == nil {
-		return nil
-	}
-	return i.extraProperties
-}
-
-func (i *InferenceCostAmountResponseData) require(field *big.Int) {
-	next := new(big.Int)
-	if i.explicitFields != nil {
-		next.Set(i.explicitFields)
-	}
-	next.Or(next, field)
-	i.explicitFields = next
-}
-
-// SetCost sets the Cost field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceCostAmountResponseData) SetCost(cost string) {
-	i.Cost = cost
-	i.require(inferenceCostAmountResponseDataFieldCost)
-}
-
-// SetCurrency sets the Currency field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceCostAmountResponseData) SetCurrency(currency string) {
-	i.Currency = currency
-	i.require(inferenceCostAmountResponseDataFieldCurrency)
-}
-
-// SetEventCount sets the EventCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceCostAmountResponseData) SetEventCount(eventCount int64) {
-	i.EventCount = eventCount
-	i.require(inferenceCostAmountResponseDataFieldEventCount)
-}
-
-func (i *InferenceCostAmountResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler InferenceCostAmountResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*i = InferenceCostAmountResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *i)
-	if err != nil {
-		return err
-	}
-	i.extraProperties = extraProperties
-	i.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (i *InferenceCostAmountResponseData) MarshalJSON() ([]byte, error) {
-	type embed InferenceCostAmountResponseData
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*i),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (i *InferenceCostAmountResponseData) String() string {
-	if i == nil {
-		return "<nil>"
-	}
-	if len(i.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(i); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", i)
-}
-
-var (
-	inferenceModelCostResponseDataFieldCosts              = big.NewInt(1 << 0)
-	inferenceModelCostResponseDataFieldEventCount         = big.NewInt(1 << 1)
-	inferenceModelCostResponseDataFieldProvider           = big.NewInt(1 << 2)
-	inferenceModelCostResponseDataFieldResponseModel      = big.NewInt(1 << 3)
-	inferenceModelCostResponseDataFieldUnpricedEventCount = big.NewInt(1 << 4)
-)
-
-type InferenceModelCostResponseData struct {
-	// Summed cost of this model's priced events, one entry per currency
-	Costs []*InferenceCostAmountResponseData `json:"costs" url:"costs"`
-	// Number of inference events for this model, priced or not
-	EventCount int64 `json:"event_count" url:"event_count"`
-	// The model provider the events reported, such as openai or anthropic
-	Provider string `json:"provider" url:"provider"`
-	// The model the provider reported answering the call
-	ResponseModel string `json:"response_model" url:"response_model"`
-	// Number of this model's events with no known cost
-	UnpricedEventCount int64 `json:"unpriced_event_count" url:"unpriced_event_count"`
-
-	// Private bitmask of fields set to an explicit value and therefore not to be omitted
-	explicitFields *big.Int `json:"-" url:"-"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (i *InferenceModelCostResponseData) GetCosts() []*InferenceCostAmountResponseData {
-	if i == nil {
-		return nil
-	}
-	return i.Costs
-}
-
-func (i *InferenceModelCostResponseData) GetEventCount() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.EventCount
-}
-
-func (i *InferenceModelCostResponseData) GetProvider() string {
-	if i == nil {
-		return ""
-	}
-	return i.Provider
-}
-
-func (i *InferenceModelCostResponseData) GetResponseModel() string {
-	if i == nil {
-		return ""
-	}
-	return i.ResponseModel
-}
-
-func (i *InferenceModelCostResponseData) GetUnpricedEventCount() int64 {
-	if i == nil {
-		return 0
-	}
-	return i.UnpricedEventCount
-}
-
-func (i *InferenceModelCostResponseData) GetExtraProperties() map[string]interface{} {
-	if i == nil {
-		return nil
-	}
-	return i.extraProperties
-}
-
-func (i *InferenceModelCostResponseData) require(field *big.Int) {
-	next := new(big.Int)
-	if i.explicitFields != nil {
-		next.Set(i.explicitFields)
-	}
-	next.Or(next, field)
-	i.explicitFields = next
-}
-
-// SetCosts sets the Costs field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceModelCostResponseData) SetCosts(costs []*InferenceCostAmountResponseData) {
-	i.Costs = costs
-	i.require(inferenceModelCostResponseDataFieldCosts)
-}
-
-// SetEventCount sets the EventCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceModelCostResponseData) SetEventCount(eventCount int64) {
-	i.EventCount = eventCount
-	i.require(inferenceModelCostResponseDataFieldEventCount)
-}
-
-// SetProvider sets the Provider field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceModelCostResponseData) SetProvider(provider string) {
-	i.Provider = provider
-	i.require(inferenceModelCostResponseDataFieldProvider)
-}
-
-// SetResponseModel sets the ResponseModel field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceModelCostResponseData) SetResponseModel(responseModel string) {
-	i.ResponseModel = responseModel
-	i.require(inferenceModelCostResponseDataFieldResponseModel)
-}
-
-// SetUnpricedEventCount sets the UnpricedEventCount field and marks it as non-optional;
-// this prevents an empty or null value for this field from being omitted during serialization.
-func (i *InferenceModelCostResponseData) SetUnpricedEventCount(unpricedEventCount int64) {
-	i.UnpricedEventCount = unpricedEventCount
-	i.require(inferenceModelCostResponseDataFieldUnpricedEventCount)
-}
-
-func (i *InferenceModelCostResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler InferenceModelCostResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*i = InferenceModelCostResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *i)
-	if err != nil {
-		return err
-	}
-	i.extraProperties = extraProperties
-	i.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (i *InferenceModelCostResponseData) MarshalJSON() ([]byte, error) {
-	type embed InferenceModelCostResponseData
-	var marshaler = struct {
-		embed
-	}{
-		embed: embed(*i),
-	}
-	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
-	return json.Marshal(explicitMarshaler)
-}
-
-func (i *InferenceModelCostResponseData) String() string {
-	if i == nil {
-		return "<nil>"
-	}
-	if len(i.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(i); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", i)
 }
 
 var (

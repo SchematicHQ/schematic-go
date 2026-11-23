@@ -238,6 +238,9 @@ func (c *Client) CountAPIKeys(
 //	            "2024-01-15T09:30:00Z",
 //	        ),
 //	    ),
+//	    EndUserID: schematichq.String(
+//	        "end_user_id",
+//	    ),
 //	    EnvironmentID: schematichq.String(
 //	        "environment_id",
 //	    ),
@@ -310,6 +313,9 @@ func (c *Client) GetAuditLog(
 //	        schematichq.MustParseDateTime(
 //	            "2024-01-15T09:30:00Z",
 //	        ),
+//	    ),
+//	    EndUserID: schematichq.String(
+//	        "end_user_id",
 //	    ),
 //	    EnvironmentID: schematichq.String(
 //	        "environment_id",

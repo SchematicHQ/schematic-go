@@ -128,3 +128,55 @@ func TestIsReadyAPIContextExpired(t *testing.T) {
 
 	assert.False(t, client.IsReady(ctx))
 }
+
+func TestIsReadyAPIServerErrorIsNotRetried(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).Return(whoAmIResponse(t, http.StatusServiceUnavailable), nil).Times(1)
+
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithHTTPClient(mockHTTPClient))
+	defer client.Close()
+
+	assert.False(t, client.IsReady(context.Background()))
+}
+
+func TestIsReadyAPIRequestHasDeadline(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		_, ok := req.Context().Deadline()
+		assert.True(t, ok)
+		return whoAmIResponse(t, http.StatusOK), nil
+	}).Times(1)
+
+	client := schematicclient.NewSchematicClient(option.WithAPIKey("test-api-key"), option.WithHTTPClient(mockHTTPClient))
+	defer client.Close()
+
+	assert.True(t, client.IsReady(context.Background()))
+}
+
+func TestIsReadyWebSocketNotConnectedCallsWhoAmI(t *testing.T) {
+	closed := httptest.NewServer(http.NotFoundHandler())
+	closed.Close()
+
+	var whoAmICalls atomic.Int32
+	ctrl := gomock.NewController(t)
+	mockHTTPClient := mocks.NewMockHTTPClient(ctrl)
+	mockHTTPClient.EXPECT().Do(gomock.Any()).DoAndReturn(func(req *http.Request) (*http.Response, error) {
+		if strings.HasSuffix(req.URL.Path, "/whoami") {
+			whoAmICalls.Add(1)
+		}
+		return whoAmIResponse(t, http.StatusOK), nil
+	}).AnyTimes()
+
+	client := schematicclient.NewSchematicClient(
+		option.WithAPIKey("test-api-key"),
+		option.WithHTTPClient(mockHTTPClient),
+		option.WithBaseURL(closed.URL),
+		option.WithDatastream(),
+	)
+	t.Cleanup(client.Close)
+
+	assert.True(t, client.IsReady(context.Background()))
+	assert.Equal(t, int32(1), whoAmICalls.Load())
+}

@@ -438,7 +438,7 @@ http.HandleFunc("/ready", func(w http.ResponseWriter, r *http.Request) {
 })
 ```
 
-In offline mode it returns true. When flag checks are served from the DataStream cache it returns true without a network call. Otherwise it calls the API's whoami endpoint, which checks the API key, so call it from a probe rather than on every request. It returns false on any error.
+In offline mode it returns true. When flag checks are served from the DataStream cache and DataStream is connected, it returns true without a network call. Otherwise it calls the API's whoami endpoint, which checks the API key, with no retries and a 5-second timeout (or your context's deadline, if sooner). Call it from a probe rather than on every request. It returns false on any error.
 
 ### Other API operations
 

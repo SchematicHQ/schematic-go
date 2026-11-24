@@ -147,13 +147,16 @@ func (c *SchematicClient) useDataStreamCache() bool {
 	return c.useDataStream() && c.datastreamClient.IsCacheReady()
 }
 
+const readinessTimeout = 5 * time.Second
+
 // IsReady reports whether the client can serve flag checks, for use in a
 // readiness probe. In offline mode it returns true, since flag checks serve
-// defaults. When flag checks are served from the datastream cache it returns
-// true without a network call. Otherwise flag checks go to the API, and it
-// returns whether a whoami request with the caller's ctx succeeds. In that
-// mode each call makes one network request, so call it from a probe rather
-// than on every request. It returns false on any error.
+// defaults. When flag checks are served from the datastream cache and the
+// datastream is connected, it returns true without a network call. Otherwise
+// flag checks go to the API, and it returns whether a whoami request succeeds. That request makes one attempt
+// with no retries and a 5-second timeout, or the caller's ctx deadline if
+// sooner. Since each call in that mode makes a network request, call it from
+// a probe rather than on every request. It returns false on any error.
 func (c *SchematicClient) IsReady(ctx context.Context) (ready bool) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -166,11 +169,14 @@ func (c *SchematicClient) IsReady(ctx context.Context) (ready bool) {
 		return true
 	}
 
-	if c.useDataStreamCache() {
+	if c.useDataStreamCache() && c.datastreamClient.IsConnected() {
 		return true
 	}
 
-	_, err := c.Accounts.GetWhoAmI(ctx)
+	ctx, cancel := context.WithTimeout(ctx, readinessTimeout)
+	defer cancel()
+
+	_, err := c.Accounts.GetWhoAmI(ctx, option.WithoutRetries())
 	return err == nil
 }
 

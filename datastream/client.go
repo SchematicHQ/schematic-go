@@ -1180,6 +1180,14 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 		return errors.New("no keys provided for company lookup")
 	}
 
+	quantity := int64(1)
+	if event.Quantity != nil {
+		quantity = *event.Quantity
+	}
+	if quantity == 0 {
+		return nil
+	}
+
 	company := c.getCompanyFromCache(keys)
 	if company == nil {
 		return nil
@@ -1189,13 +1197,18 @@ func (c *DataStreamClient) UpdateCompanyMetrics(ctx context.Context, event *sche
 	companyCopy := DeepCopyCompany(company)
 
 	// Update the metric value if it matches the event
+	metricUpdated := false
 	for _, metric := range companyCopy.Metrics {
 		if metric == nil {
 			continue
 		}
 		if metric.EventSubtype == event.Event {
-			metric.Value += int64(*event.Quantity)
+			metric.Value += quantity
+			metricUpdated = true
 		}
+	}
+	if !metricUpdated {
+		return nil
 	}
 
 	// In replicator mode the replicator owns these keys and their lifetime

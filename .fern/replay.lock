@@ -186,14 +186,20 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-go-sdk: 1.70.26
-current_generation: 1f099f7f0bc8fbc13509ae17d0c4f1f7a2cd709d
+  - commit_sha: c995e00ddb0d3d1d508e692a193ad9fbfb40bde0
+    tree_hash: 2b6c7aa4bac23c05f232fd594383b4535822aec1
+    timestamp: 2026-11-23T10:03:09.155Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-go-sdk: 1.70.26
+current_generation: c995e00ddb0d3d1d508e692a193ad9fbfb40bde0
 patches:
   - id: patch-c1dec125
     content_hash: sha256:9e10c5e947a6b4858cf945d6e56d6a549c72d71b692a67cbe7452d42cbd39bc7
     original_commit: c1dec12524ae4d861b313c6edb5d4c61b2b2b3a7
     original_message: "chore(deps): bump actions/setup-go from 4 to 6 (#165)"
     original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    base_generation: 1f099f7f0bc8fbc13509ae17d0c4f1f7a2cd709d
+    base_generation: c995e00ddb0d3d1d508e692a193ad9fbfb40bde0
     files:
       - .github/workflows/ci.yml
     patch_content: |
@@ -322,7 +328,7 @@ patches:
     original_commit: d6bb4c9ec6024e237b5bb21433b7249592543524
     original_message: add a bulk flag check to the rules engine (#233)
     original_author: Christopher Brady <chris@schematichq.com>
-    base_generation: 1f099f7f0bc8fbc13509ae17d0c4f1f7a2cd709d
+    base_generation: c995e00ddb0d3d1d508e692a193ad9fbfb40bde0
     files:
       - datastream/check_flags_test.go
     patch_content: |
@@ -648,7 +654,7 @@ patches:
     original_commit: e4511df9226cf032c148b85c3342f70ab65c64ff
     original_message: "chore(deps): bump actions/checkout from 4 to 7 (#257)"
     original_author: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    base_generation: 1f099f7f0bc8fbc13509ae17d0c4f1f7a2cd709d
+    base_generation: c995e00ddb0d3d1d508e692a193ad9fbfb40bde0
     files:
       - .github/workflows/ci.yml
     patch_content: |
@@ -777,7 +783,7 @@ patches:
     original_commit: 8068778c257d0dedbf0a646e9fa4617b32bf2755
     original_message: Chris/sch 7517 paginate the datastream initial payload (#241)
     original_author: Christopher Brady <chris@schematichq.com>
-    base_generation: 1f099f7f0bc8fbc13509ae17d0c4f1f7a2cd709d
+    base_generation: c995e00ddb0d3d1d508e692a193ad9fbfb40bde0
     files:
       - datastream/paginated_flags_test.go
     patch_content: |

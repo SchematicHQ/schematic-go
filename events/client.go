@@ -199,6 +199,77 @@ func (c *Client) GetEvent(
 
 // Example:
 //
+//	request := &schematichq.GetInferenceCostRequest{
+//	    EndTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	    StartTime: schematichq.Time(
+//	        schematichq.MustParseDateTime(
+//	            "2024-01-15T09:30:00Z",
+//	        ),
+//	    ),
+//	}
+//	_, err := client.Events.GetInferenceCost(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) GetInferenceCost(
+	ctx context.Context,
+	request *schematichq.GetInferenceCostRequest,
+	opts ...option.RequestOption,
+) (*schematichq.GetInferenceCostResponse, error) {
+	response, err := c.WithRawResponse.GetInferenceCost(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
+//	request := &schematichq.ListInferenceCostRatesRequest{
+//	    Provider: schematichq.String(
+//	        "provider",
+//	    ),
+//	    ResponseModel: schematichq.String(
+//	        "response_model",
+//	    ),
+//	    Scope: schematichq.InferenceCostRateScopeAccount.Ptr(),
+//	    Limit: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	    Offset: schematichq.Int64(
+//	        int64(1000000),
+//	    ),
+//	}
+//	_, err := client.Events.ListInferenceCostRates(
+//	    context.TODO(),
+//	    request,
+//	)
+func (c *Client) ListInferenceCostRates(
+	ctx context.Context,
+	request *schematichq.ListInferenceCostRatesRequest,
+	opts ...option.RequestOption,
+) (*schematichq.ListInferenceCostRatesResponse, error) {
+	response, err := c.WithRawResponse.ListInferenceCostRates(
+		ctx,
+		request,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}
+
+// Example:
+//
 //	request := &schematichq.ListAccountInferenceCostRatesRequest{
 //	    Provider: schematichq.String(
 //	        "provider",

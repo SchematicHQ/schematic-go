@@ -137,17 +137,20 @@ var (
 	countAuditLogsRequestFieldActorType     = big.NewInt(1 << 0)
 	countAuditLogsRequestFieldCompanyID     = big.NewInt(1 << 1)
 	countAuditLogsRequestFieldEndTime       = big.NewInt(1 << 2)
-	countAuditLogsRequestFieldEnvironmentID = big.NewInt(1 << 3)
-	countAuditLogsRequestFieldQ             = big.NewInt(1 << 4)
-	countAuditLogsRequestFieldStartTime     = big.NewInt(1 << 5)
-	countAuditLogsRequestFieldLimit         = big.NewInt(1 << 6)
-	countAuditLogsRequestFieldOffset        = big.NewInt(1 << 7)
+	countAuditLogsRequestFieldEndUserID     = big.NewInt(1 << 3)
+	countAuditLogsRequestFieldEnvironmentID = big.NewInt(1 << 4)
+	countAuditLogsRequestFieldQ             = big.NewInt(1 << 5)
+	countAuditLogsRequestFieldStartTime     = big.NewInt(1 << 6)
+	countAuditLogsRequestFieldLimit         = big.NewInt(1 << 7)
+	countAuditLogsRequestFieldOffset        = big.NewInt(1 << 8)
 )
 
 type CountAuditLogsRequest struct {
-	ActorType     *ActorType `json:"-" url:"actor_type,omitempty"`
-	CompanyID     *string    `json:"-" url:"company_id,omitempty"`
-	EndTime       *time.Time `json:"-" url:"end_time,omitempty"`
+	ActorType *ActorType `json:"-" url:"actor_type,omitempty"`
+	CompanyID *string    `json:"-" url:"company_id,omitempty"`
+	EndTime   *time.Time `json:"-" url:"end_time,omitempty"`
+	// Only entries made with a temporary access token issued for this user
+	EndUserID     *string    `json:"-" url:"end_user_id,omitempty"`
 	EnvironmentID *string    `json:"-" url:"environment_id,omitempty"`
 	Q             *string    `json:"-" url:"q,omitempty"`
 	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
@@ -188,6 +191,13 @@ func (c *CountAuditLogsRequest) SetCompanyID(companyID *string) {
 func (c *CountAuditLogsRequest) SetEndTime(endTime *time.Time) {
 	c.EndTime = endTime
 	c.require(countAuditLogsRequestFieldEndTime)
+}
+
+// SetEndUserID sets the EndUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAuditLogsRequest) SetEndUserID(endUserID *string) {
+	c.EndUserID = endUserID
+	c.require(countAuditLogsRequestFieldEndUserID)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -352,17 +362,20 @@ var (
 	listAuditLogsRequestFieldActorType     = big.NewInt(1 << 0)
 	listAuditLogsRequestFieldCompanyID     = big.NewInt(1 << 1)
 	listAuditLogsRequestFieldEndTime       = big.NewInt(1 << 2)
-	listAuditLogsRequestFieldEnvironmentID = big.NewInt(1 << 3)
-	listAuditLogsRequestFieldQ             = big.NewInt(1 << 4)
-	listAuditLogsRequestFieldStartTime     = big.NewInt(1 << 5)
-	listAuditLogsRequestFieldLimit         = big.NewInt(1 << 6)
-	listAuditLogsRequestFieldOffset        = big.NewInt(1 << 7)
+	listAuditLogsRequestFieldEndUserID     = big.NewInt(1 << 3)
+	listAuditLogsRequestFieldEnvironmentID = big.NewInt(1 << 4)
+	listAuditLogsRequestFieldQ             = big.NewInt(1 << 5)
+	listAuditLogsRequestFieldStartTime     = big.NewInt(1 << 6)
+	listAuditLogsRequestFieldLimit         = big.NewInt(1 << 7)
+	listAuditLogsRequestFieldOffset        = big.NewInt(1 << 8)
 )
 
 type ListAuditLogsRequest struct {
-	ActorType     *ActorType `json:"-" url:"actor_type,omitempty"`
-	CompanyID     *string    `json:"-" url:"company_id,omitempty"`
-	EndTime       *time.Time `json:"-" url:"end_time,omitempty"`
+	ActorType *ActorType `json:"-" url:"actor_type,omitempty"`
+	CompanyID *string    `json:"-" url:"company_id,omitempty"`
+	EndTime   *time.Time `json:"-" url:"end_time,omitempty"`
+	// Only entries made with a temporary access token issued for this user
+	EndUserID     *string    `json:"-" url:"end_user_id,omitempty"`
 	EnvironmentID *string    `json:"-" url:"environment_id,omitempty"`
 	Q             *string    `json:"-" url:"q,omitempty"`
 	StartTime     *time.Time `json:"-" url:"start_time,omitempty"`
@@ -403,6 +416,13 @@ func (l *ListAuditLogsRequest) SetCompanyID(companyID *string) {
 func (l *ListAuditLogsRequest) SetEndTime(endTime *time.Time) {
 	l.EndTime = endTime
 	l.require(listAuditLogsRequestFieldEndTime)
+}
+
+// SetEndUserID sets the EndUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAuditLogsRequest) SetEndUserID(endUserID *string) {
+	l.EndUserID = endUserID
+	l.require(listAuditLogsRequestFieldEndUserID)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -494,23 +514,25 @@ var (
 	auditLogResponseDataFieldAPIKeyID          = big.NewInt(1 << 3)
 	auditLogResponseDataFieldCompany           = big.NewInt(1 << 4)
 	auditLogResponseDataFieldCompanyID         = big.NewInt(1 << 5)
-	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 6)
-	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 7)
-	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 8)
-	auditLogResponseDataFieldID                = big.NewInt(1 << 9)
-	auditLogResponseDataFieldMethod            = big.NewInt(1 << 10)
-	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 11)
-	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 12)
-	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 13)
-	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 14)
-	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 15)
-	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 16)
-	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 17)
-	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 18)
-	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 19)
-	auditLogResponseDataFieldURL               = big.NewInt(1 << 20)
-	auditLogResponseDataFieldUserID            = big.NewInt(1 << 21)
-	auditLogResponseDataFieldUserName          = big.NewInt(1 << 22)
+	auditLogResponseDataFieldEndUser           = big.NewInt(1 << 6)
+	auditLogResponseDataFieldEndUserID         = big.NewInt(1 << 7)
+	auditLogResponseDataFieldEndedAt           = big.NewInt(1 << 8)
+	auditLogResponseDataFieldEnvironment       = big.NewInt(1 << 9)
+	auditLogResponseDataFieldEnvironmentID     = big.NewInt(1 << 10)
+	auditLogResponseDataFieldID                = big.NewInt(1 << 11)
+	auditLogResponseDataFieldMethod            = big.NewInt(1 << 12)
+	auditLogResponseDataFieldReqBody           = big.NewInt(1 << 13)
+	auditLogResponseDataFieldResourceID        = big.NewInt(1 << 14)
+	auditLogResponseDataFieldResourceIDString  = big.NewInt(1 << 15)
+	auditLogResponseDataFieldResourceName      = big.NewInt(1 << 16)
+	auditLogResponseDataFieldResourceType      = big.NewInt(1 << 17)
+	auditLogResponseDataFieldRespBody          = big.NewInt(1 << 18)
+	auditLogResponseDataFieldRespCode          = big.NewInt(1 << 19)
+	auditLogResponseDataFieldSecondaryResource = big.NewInt(1 << 20)
+	auditLogResponseDataFieldStartedAt         = big.NewInt(1 << 21)
+	auditLogResponseDataFieldURL               = big.NewInt(1 << 22)
+	auditLogResponseDataFieldUserID            = big.NewInt(1 << 23)
+	auditLogResponseDataFieldUserName          = big.NewInt(1 << 24)
 )
 
 type AuditLogResponseData struct {
@@ -520,12 +542,16 @@ type AuditLogResponseData struct {
 	APIKeyID        *string                      `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
 	Company         *AuditLogCompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
 	CompanyID       *string                      `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EndedAt         *time.Time                   `json:"ended_at,omitempty" url:"ended_at,omitempty"`
-	Environment     *EnvironmentResponseData     `json:"environment,omitempty" url:"environment,omitempty"`
-	EnvironmentID   *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID              string                       `json:"id" url:"id"`
-	Method          string                       `json:"method" url:"method"`
-	ReqBody         *string                      `json:"req_body,omitempty" url:"req_body,omitempty"`
+	// The user of your app the request's temporary access token was issued for. Absent when the token named no user or the user has since been deleted.
+	EndUser *AuditLogEndUserResponseData `json:"end_user,omitempty" url:"end_user,omitempty"`
+	// The ID of the user of your app the request's temporary access token was issued for
+	EndUserID     *string                  `json:"end_user_id,omitempty" url:"end_user_id,omitempty"`
+	EndedAt       *time.Time               `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	Environment   *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID *string                  `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string                   `json:"id" url:"id"`
+	Method        string                   `json:"method" url:"method"`
+	ReqBody       *string                  `json:"req_body,omitempty" url:"req_body,omitempty"`
 	// Always null. Use resource_id_string.
 	ResourceID        *int64    `json:"resource_id,omitempty" url:"resource_id,omitempty"`
 	ResourceIDString  *string   `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
@@ -586,6 +612,20 @@ func (a *AuditLogResponseData) GetCompanyID() *string {
 		return nil
 	}
 	return a.CompanyID
+}
+
+func (a *AuditLogResponseData) GetEndUser() *AuditLogEndUserResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.EndUser
+}
+
+func (a *AuditLogResponseData) GetEndUserID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EndUserID
 }
 
 func (a *AuditLogResponseData) GetEndedAt() *time.Time {
@@ -763,6 +803,20 @@ func (a *AuditLogResponseData) SetCompany(company *AuditLogCompanyResponseData) 
 func (a *AuditLogResponseData) SetCompanyID(companyID *string) {
 	a.CompanyID = companyID
 	a.require(auditLogResponseDataFieldCompanyID)
+}
+
+// SetEndUser sets the EndUser field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogResponseData) SetEndUser(endUser *AuditLogEndUserResponseData) {
+	a.EndUser = endUser
+	a.require(auditLogResponseDataFieldEndUser)
+}
+
+// SetEndUserID sets the EndUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogResponseData) SetEndUserID(endUserID *string) {
+	a.EndUserID = endUserID
+	a.require(auditLogResponseDataFieldEndUserID)
 }
 
 // SetEndedAt sets the EndedAt field and marks it as non-optional;
@@ -2805,19 +2859,22 @@ var (
 	countAuditLogsParamsFieldActorType     = big.NewInt(1 << 0)
 	countAuditLogsParamsFieldCompanyID     = big.NewInt(1 << 1)
 	countAuditLogsParamsFieldEndTime       = big.NewInt(1 << 2)
-	countAuditLogsParamsFieldEnvironmentID = big.NewInt(1 << 3)
-	countAuditLogsParamsFieldLimit         = big.NewInt(1 << 4)
-	countAuditLogsParamsFieldOffset        = big.NewInt(1 << 5)
-	countAuditLogsParamsFieldQ             = big.NewInt(1 << 6)
-	countAuditLogsParamsFieldStartTime     = big.NewInt(1 << 7)
+	countAuditLogsParamsFieldEndUserID     = big.NewInt(1 << 3)
+	countAuditLogsParamsFieldEnvironmentID = big.NewInt(1 << 4)
+	countAuditLogsParamsFieldLimit         = big.NewInt(1 << 5)
+	countAuditLogsParamsFieldOffset        = big.NewInt(1 << 6)
+	countAuditLogsParamsFieldQ             = big.NewInt(1 << 7)
+	countAuditLogsParamsFieldStartTime     = big.NewInt(1 << 8)
 )
 
 // Input parameters
 type CountAuditLogsParams struct {
-	ActorType     *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
-	CompanyID     *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
-	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ActorType *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
+	CompanyID *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime   *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Only entries made with a temporary access token issued for this user
+	EndUserID     *string `json:"end_user_id,omitempty" url:"end_user_id,omitempty"`
+	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -2851,6 +2908,13 @@ func (c *CountAuditLogsParams) GetEndTime() *time.Time {
 		return nil
 	}
 	return c.EndTime
+}
+
+func (c *CountAuditLogsParams) GetEndUserID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.EndUserID
 }
 
 func (c *CountAuditLogsParams) GetEnvironmentID() *string {
@@ -2923,6 +2987,13 @@ func (c *CountAuditLogsParams) SetCompanyID(companyID *string) {
 func (c *CountAuditLogsParams) SetEndTime(endTime *time.Time) {
 	c.EndTime = endTime
 	c.require(countAuditLogsParamsFieldEndTime)
+}
+
+// SetEndUserID sets the EndUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CountAuditLogsParams) SetEndUserID(endUserID *string) {
+	c.EndUserID = endUserID
+	c.require(countAuditLogsParamsFieldEndUserID)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;
@@ -4237,19 +4308,22 @@ var (
 	listAuditLogsParamsFieldActorType     = big.NewInt(1 << 0)
 	listAuditLogsParamsFieldCompanyID     = big.NewInt(1 << 1)
 	listAuditLogsParamsFieldEndTime       = big.NewInt(1 << 2)
-	listAuditLogsParamsFieldEnvironmentID = big.NewInt(1 << 3)
-	listAuditLogsParamsFieldLimit         = big.NewInt(1 << 4)
-	listAuditLogsParamsFieldOffset        = big.NewInt(1 << 5)
-	listAuditLogsParamsFieldQ             = big.NewInt(1 << 6)
-	listAuditLogsParamsFieldStartTime     = big.NewInt(1 << 7)
+	listAuditLogsParamsFieldEndUserID     = big.NewInt(1 << 3)
+	listAuditLogsParamsFieldEnvironmentID = big.NewInt(1 << 4)
+	listAuditLogsParamsFieldLimit         = big.NewInt(1 << 5)
+	listAuditLogsParamsFieldOffset        = big.NewInt(1 << 6)
+	listAuditLogsParamsFieldQ             = big.NewInt(1 << 7)
+	listAuditLogsParamsFieldStartTime     = big.NewInt(1 << 8)
 )
 
 // Input parameters
 type ListAuditLogsParams struct {
-	ActorType     *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
-	CompanyID     *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EndTime       *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
-	EnvironmentID *string    `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ActorType *ActorType `json:"actor_type,omitempty" url:"actor_type,omitempty"`
+	CompanyID *string    `json:"company_id,omitempty" url:"company_id,omitempty"`
+	EndTime   *time.Time `json:"end_time,omitempty" url:"end_time,omitempty"`
+	// Only entries made with a temporary access token issued for this user
+	EndUserID     *string `json:"end_user_id,omitempty" url:"end_user_id,omitempty"`
+	EnvironmentID *string `json:"environment_id,omitempty" url:"environment_id,omitempty"`
 	// Page limit (default 100)
 	Limit *int64 `json:"limit,omitempty" url:"limit,omitempty"`
 	// Page offset (default 0)
@@ -4283,6 +4357,13 @@ func (l *ListAuditLogsParams) GetEndTime() *time.Time {
 		return nil
 	}
 	return l.EndTime
+}
+
+func (l *ListAuditLogsParams) GetEndUserID() *string {
+	if l == nil {
+		return nil
+	}
+	return l.EndUserID
 }
 
 func (l *ListAuditLogsParams) GetEnvironmentID() *string {
@@ -4355,6 +4436,13 @@ func (l *ListAuditLogsParams) SetCompanyID(companyID *string) {
 func (l *ListAuditLogsParams) SetEndTime(endTime *time.Time) {
 	l.EndTime = endTime
 	l.require(listAuditLogsParamsFieldEndTime)
+}
+
+// SetEndUserID sets the EndUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (l *ListAuditLogsParams) SetEndUserID(endUserID *string) {
+	l.EndUserID = endUserID
+	l.require(listAuditLogsParamsFieldEndUserID)
 }
 
 // SetEnvironmentID sets the EnvironmentID field and marks it as non-optional;

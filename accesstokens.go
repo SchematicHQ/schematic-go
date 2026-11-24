@@ -13,11 +13,15 @@ import (
 var (
 	issueTemporaryAccessTokenRequestBodyFieldLookup       = big.NewInt(1 << 0)
 	issueTemporaryAccessTokenRequestBodyFieldResourceType = big.NewInt(1 << 1)
+	issueTemporaryAccessTokenRequestBodyFieldUserLookup   = big.NewInt(1 << 2)
 )
 
 type IssueTemporaryAccessTokenRequestBody struct {
+	// Key-value pairs that identify the company the token is for, such as {"id": "your-company-id"}.
 	Lookup       map[string]string                `json:"lookup" url:"-"`
 	ResourceType TemporaryAccessTokenResourceType `json:"resource_type" url:"-"`
+	// Optional key-value pairs that identify the user of your app the token is for, such as {"email": "user@example.com"}. The user must belong to the company named by lookup. Writes made with the token are attributed to this user in the audit log; the token's access is the same either way.
+	UserLookup map[string]string `json:"user_lookup,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -44,6 +48,13 @@ func (i *IssueTemporaryAccessTokenRequestBody) SetLookup(lookup map[string]strin
 func (i *IssueTemporaryAccessTokenRequestBody) SetResourceType(resourceType TemporaryAccessTokenResourceType) {
 	i.ResourceType = resourceType
 	i.require(issueTemporaryAccessTokenRequestBodyFieldResourceType)
+}
+
+// SetUserLookup sets the UserLookup field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IssueTemporaryAccessTokenRequestBody) SetUserLookup(userLookup map[string]string) {
+	i.UserLookup = userLookup
+	i.require(issueTemporaryAccessTokenRequestBodyFieldUserLookup)
 }
 
 func (i *IssueTemporaryAccessTokenRequestBody) UnmarshalJSON(data []byte) error {
@@ -77,6 +88,7 @@ var (
 	issueTemporaryAccessTokenResponseDataFieldResourceType  = big.NewInt(1 << 6)
 	issueTemporaryAccessTokenResponseDataFieldToken         = big.NewInt(1 << 7)
 	issueTemporaryAccessTokenResponseDataFieldUpdatedAt     = big.NewInt(1 << 8)
+	issueTemporaryAccessTokenResponseDataFieldUserID        = big.NewInt(1 << 9)
 )
 
 type IssueTemporaryAccessTokenResponseData struct {
@@ -89,6 +101,8 @@ type IssueTemporaryAccessTokenResponseData struct {
 	ResourceType  TemporaryAccessTokenResourceType `json:"resource_type" url:"resource_type"`
 	Token         string                           `json:"token" url:"token"`
 	UpdatedAt     time.Time                        `json:"updated_at" url:"updated_at"`
+	// The user the token was issued for, when the request named one in user_lookup.
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -151,6 +165,13 @@ func (i *IssueTemporaryAccessTokenResponseData) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return i.UpdatedAt
+}
+
+func (i *IssueTemporaryAccessTokenResponseData) GetUserID() *string {
+	if i == nil {
+		return nil
+	}
+	return i.UserID
 }
 
 func (i *IssueTemporaryAccessTokenResponseData) GetExtraProperties() map[string]interface{} {
@@ -230,6 +251,13 @@ func (i *IssueTemporaryAccessTokenResponseData) SetToken(token string) {
 func (i *IssueTemporaryAccessTokenResponseData) SetUpdatedAt(updatedAt time.Time) {
 	i.UpdatedAt = updatedAt
 	i.require(issueTemporaryAccessTokenResponseDataFieldUpdatedAt)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *IssueTemporaryAccessTokenResponseData) SetUserID(userID *string) {
+	i.UserID = userID
+	i.require(issueTemporaryAccessTokenResponseDataFieldUserID)
 }
 
 func (i *IssueTemporaryAccessTokenResponseData) UnmarshalJSON(data []byte) error {

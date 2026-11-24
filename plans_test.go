@@ -7888,6 +7888,14 @@ func TestSettersPublishPreviewResponseData(t *testing.T) {
 		assert.NotNil(t, obj.explicitFields)
 	})
 
+	t.Run("SetEarliestEndDate", func(t *testing.T) {
+		obj := &PublishPreviewResponseData{}
+		var fernTestValueEarliestEndDate *time.Time
+		obj.SetEarliestEndDate(fernTestValueEarliestEndDate)
+		assert.Equal(t, fernTestValueEarliestEndDate, obj.EarliestEndDate)
+		assert.NotNil(t, obj.explicitFields)
+	})
+
 	t.Run("SetEffectiveAt", func(t *testing.T) {
 		obj := &PublishPreviewResponseData{}
 		var fernTestValueEffectiveAt *time.Time
@@ -8300,6 +8308,39 @@ func TestGettersPublishPreviewResponseData(t *testing.T) {
 			}
 		}()
 		_ = obj.GetDefaultSendInvoice() // Should return zero value
+	})
+
+	t.Run("GetEarliestEndDate", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PublishPreviewResponseData{}
+		var expected *time.Time
+		obj.EarliestEndDate = expected
+
+		// Act & Assert
+		assert.Equal(t, expected, obj.GetEarliestEndDate(), "getter should return the property value")
+	})
+
+	t.Run("GetEarliestEndDate_NilValue", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PublishPreviewResponseData{}
+		obj.EarliestEndDate = nil
+
+		// Act & Assert
+		assert.Nil(t, obj.GetEarliestEndDate(), "getter should return nil when property is nil")
+	})
+
+	t.Run("GetEarliestEndDate_NilReceiver", func(t *testing.T) {
+		t.Parallel()
+		var obj *PublishPreviewResponseData
+		// Should not panic - getters should handle nil receiver gracefully
+		defer func() {
+			if r := recover(); r != nil {
+				t.Errorf("Getter panicked on nil receiver: %v", r)
+			}
+		}()
+		_ = obj.GetEarliestEndDate() // Should return zero value
 	})
 
 	t.Run("GetEffectiveAt", func(t *testing.T) {
@@ -9085,6 +9126,37 @@ func TestSettersMarkExplicitPublishPreviewResponseData(t *testing.T) {
 
 		// Act
 		obj.SetDefaultSendInvoice(fernTestValueDefaultSendInvoice)
+
+		// Assert - object with explicitly set field can be marshaled/unmarshaled
+		bytes, err := json.Marshal(obj)
+		require.NoError(t, err, "marshaling should succeed for test setup")
+
+		// This test ensures JSON marshaling and unmarshaling succeed when the field has a zero/nil value
+		// Detect if marshaled JSON is an object or primitive to use correct unmarshal target
+		if len(bytes) > 0 && bytes[0] == '{' {
+			// JSON object - unmarshal into map
+			var unmarshaled map[string]interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		} else {
+			// JSON primitive (string, number, boolean, null) - unmarshal into interface{}
+			var unmarshaled interface{}
+			err = json.Unmarshal(bytes, &unmarshaled)
+			require.NoError(t, err, "unmarshaling should succeed for test verification")
+		}
+
+		// Note: This does not explicitly assert the presence of a specific JSON field
+		// It verifies that setting a field via setter allows successful JSON round-trip
+	})
+
+	t.Run("SetEarliestEndDate_MarksExplicit", func(t *testing.T) {
+		t.Parallel()
+		// Arrange
+		obj := &PublishPreviewResponseData{}
+		var fernTestValueEarliestEndDate *time.Time
+
+		// Act
+		obj.SetEarliestEndDate(fernTestValueEarliestEndDate)
 
 		// Assert - object with explicitly set field can be marshaled/unmarshaled
 		bytes, err := json.Marshal(obj)

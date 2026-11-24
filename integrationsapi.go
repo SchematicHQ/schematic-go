@@ -817,6 +817,7 @@ type IntegrationConfig struct {
 	Orb       *OrbIntegrationConfig
 	Stripe    *StripeIntegrationConfig
 	Workos    *WorkOsIntegrationConfig
+	Zuora     *ZuoraIntegrationConfig
 
 	rawJSON json.RawMessage
 }
@@ -863,6 +864,13 @@ func (i *IntegrationConfig) GetWorkos() *WorkOsIntegrationConfig {
 	return i.Workos
 }
 
+func (i *IntegrationConfig) GetZuora() *ZuoraIntegrationConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Zuora
+}
+
 func (i *IntegrationConfig) UnmarshalJSON(data []byte) error {
 	var unmarshaler struct {
 		Type string `json:"type"`
@@ -905,6 +913,12 @@ func (i *IntegrationConfig) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		i.Workos = value
+	case "zuora":
+		value := new(ZuoraIntegrationConfig)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		i.Zuora = value
 	}
 	i.rawJSON = json.RawMessage(data)
 	return nil
@@ -929,6 +943,9 @@ func (i IntegrationConfig) MarshalJSON() ([]byte, error) {
 	if i.Workos != nil {
 		return internal.MarshalJSONWithExtraProperty(i.Workos, "type", "workos")
 	}
+	if i.Zuora != nil {
+		return internal.MarshalJSONWithExtraProperty(i.Zuora, "type", "zuora")
+	}
 	if len(i.rawJSON) > 0 {
 		return i.rawJSON, nil
 	}
@@ -941,6 +958,7 @@ type IntegrationConfigVisitor interface {
 	VisitOrb(*OrbIntegrationConfig) error
 	VisitStripe(*StripeIntegrationConfig) error
 	VisitWorkos(*WorkOsIntegrationConfig) error
+	VisitZuora(*ZuoraIntegrationConfig) error
 }
 
 func (i *IntegrationConfig) Accept(visitor IntegrationConfigVisitor) error {
@@ -958,6 +976,9 @@ func (i *IntegrationConfig) Accept(visitor IntegrationConfigVisitor) error {
 	}
 	if i.Workos != nil {
 		return visitor.VisitWorkos(i.Workos)
+	}
+	if i.Zuora != nil {
+		return visitor.VisitZuora(i.Zuora)
 	}
 	return fmt.Errorf("type %T does not define a non-empty union type", i)
 }
@@ -981,6 +1002,9 @@ func (i *IntegrationConfig) validate() error {
 	}
 	if i.Workos != nil {
 		fields = append(fields, "workos")
+	}
+	if i.Zuora != nil {
+		fields = append(fields, "zuora")
 	}
 	if len(fields) == 0 {
 		if i.Type != "" {
@@ -3008,6 +3032,236 @@ func (w *WorkOsIntegrationConfig) String() string {
 }
 
 var (
+	zuoraConnectionHealthFieldCheckedAt = big.NewInt(1 << 0)
+	zuoraConnectionHealthFieldHealthy   = big.NewInt(1 << 1)
+	zuoraConnectionHealthFieldMessage   = big.NewInt(1 << 2)
+)
+
+type ZuoraConnectionHealth struct {
+	CheckedAt time.Time `json:"checked_at" url:"checked_at"`
+	Healthy   bool      `json:"healthy" url:"healthy"`
+	Message   *string   `json:"message,omitempty" url:"message,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (z *ZuoraConnectionHealth) GetCheckedAt() time.Time {
+	if z == nil {
+		return time.Time{}
+	}
+	return z.CheckedAt
+}
+
+func (z *ZuoraConnectionHealth) GetHealthy() bool {
+	if z == nil {
+		return false
+	}
+	return z.Healthy
+}
+
+func (z *ZuoraConnectionHealth) GetMessage() *string {
+	if z == nil {
+		return nil
+	}
+	return z.Message
+}
+
+func (z *ZuoraConnectionHealth) GetExtraProperties() map[string]interface{} {
+	if z == nil {
+		return nil
+	}
+	return z.extraProperties
+}
+
+func (z *ZuoraConnectionHealth) require(field *big.Int) {
+	next := new(big.Int)
+	if z.explicitFields != nil {
+		next.Set(z.explicitFields)
+	}
+	next.Or(next, field)
+	z.explicitFields = next
+}
+
+// SetCheckedAt sets the CheckedAt field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (z *ZuoraConnectionHealth) SetCheckedAt(checkedAt time.Time) {
+	z.CheckedAt = checkedAt
+	z.require(zuoraConnectionHealthFieldCheckedAt)
+}
+
+// SetHealthy sets the Healthy field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (z *ZuoraConnectionHealth) SetHealthy(healthy bool) {
+	z.Healthy = healthy
+	z.require(zuoraConnectionHealthFieldHealthy)
+}
+
+// SetMessage sets the Message field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (z *ZuoraConnectionHealth) SetMessage(message *string) {
+	z.Message = message
+	z.require(zuoraConnectionHealthFieldMessage)
+}
+
+func (z *ZuoraConnectionHealth) UnmarshalJSON(data []byte) error {
+	type embed ZuoraConnectionHealth
+	var unmarshaler = struct {
+		embed
+		CheckedAt *internal.DateTime `json:"checked_at"`
+	}{
+		embed: embed(*z),
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	*z = ZuoraConnectionHealth(unmarshaler.embed)
+	z.CheckedAt = unmarshaler.CheckedAt.Time()
+	extraProperties, err := internal.ExtractExtraProperties(data, *z)
+	if err != nil {
+		return err
+	}
+	z.extraProperties = extraProperties
+	z.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (z *ZuoraConnectionHealth) MarshalJSON() ([]byte, error) {
+	type embed ZuoraConnectionHealth
+	var marshaler = struct {
+		embed
+		CheckedAt *internal.DateTime `json:"checked_at"`
+	}{
+		embed:     embed(*z),
+		CheckedAt: internal.NewDateTime(z.CheckedAt),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, z.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (z *ZuoraConnectionHealth) String() string {
+	if z == nil {
+		return "<nil>"
+	}
+	if len(z.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(z.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(z); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", z)
+}
+
+var (
+	zuoraIntegrationConfigFieldBaseURL  = big.NewInt(1 << 0)
+	zuoraIntegrationConfigFieldClientID = big.NewInt(1 << 1)
+)
+
+type ZuoraIntegrationConfig struct {
+	// REST endpoint of the connected Zuora tenant, such as https://rest.zuora.com
+	BaseURL *string `json:"base_url,omitempty" url:"base_url,omitempty"`
+	// OAuth client ID Schematic uses to authenticate with the Zuora tenant
+	ClientID *string `json:"client_id,omitempty" url:"client_id,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (z *ZuoraIntegrationConfig) GetBaseURL() *string {
+	if z == nil {
+		return nil
+	}
+	return z.BaseURL
+}
+
+func (z *ZuoraIntegrationConfig) GetClientID() *string {
+	if z == nil {
+		return nil
+	}
+	return z.ClientID
+}
+
+func (z *ZuoraIntegrationConfig) GetExtraProperties() map[string]interface{} {
+	if z == nil {
+		return nil
+	}
+	return z.extraProperties
+}
+
+func (z *ZuoraIntegrationConfig) require(field *big.Int) {
+	next := new(big.Int)
+	if z.explicitFields != nil {
+		next.Set(z.explicitFields)
+	}
+	next.Or(next, field)
+	z.explicitFields = next
+}
+
+// SetBaseURL sets the BaseURL field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (z *ZuoraIntegrationConfig) SetBaseURL(baseURL *string) {
+	z.BaseURL = baseURL
+	z.require(zuoraIntegrationConfigFieldBaseURL)
+}
+
+// SetClientID sets the ClientID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (z *ZuoraIntegrationConfig) SetClientID(clientID *string) {
+	z.ClientID = clientID
+	z.require(zuoraIntegrationConfigFieldClientID)
+}
+
+func (z *ZuoraIntegrationConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler ZuoraIntegrationConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*z = ZuoraIntegrationConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *z)
+	if err != nil {
+		return err
+	}
+	z.extraProperties = extraProperties
+	z.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (z *ZuoraIntegrationConfig) MarshalJSON() ([]byte, error) {
+	type embed ZuoraIntegrationConfig
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*z),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, z.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (z *ZuoraIntegrationConfig) String() string {
+	if z == nil {
+		return "<nil>"
+	}
+	if len(z.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(z.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(z); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", z)
+}
+
+var (
 	assumeStripeInstalledResponseFieldData   = big.NewInt(1 << 0)
 	assumeStripeInstalledResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -3508,6 +3762,109 @@ func (g *GetStripeSandboxKeysResponse) MarshalJSON() ([]byte, error) {
 }
 
 func (g *GetStripeSandboxKeysResponse) String() string {
+	if g == nil {
+		return "<nil>"
+	}
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+var (
+	getZuoraConnectionHealthResponseFieldData   = big.NewInt(1 << 0)
+	getZuoraConnectionHealthResponseFieldParams = big.NewInt(1 << 1)
+)
+
+type GetZuoraConnectionHealthResponse struct {
+	Data *ZuoraConnectionHealth `json:"data" url:"data"`
+	// Input parameters
+	Params map[string]any `json:"params" url:"params"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetZuoraConnectionHealthResponse) GetData() *ZuoraConnectionHealth {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GetZuoraConnectionHealthResponse) GetParams() map[string]any {
+	if g == nil {
+		return nil
+	}
+	return g.Params
+}
+
+func (g *GetZuoraConnectionHealthResponse) GetExtraProperties() map[string]interface{} {
+	if g == nil {
+		return nil
+	}
+	return g.extraProperties
+}
+
+func (g *GetZuoraConnectionHealthResponse) require(field *big.Int) {
+	next := new(big.Int)
+	if g.explicitFields != nil {
+		next.Set(g.explicitFields)
+	}
+	next.Or(next, field)
+	g.explicitFields = next
+}
+
+// SetData sets the Data field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetZuoraConnectionHealthResponse) SetData(data *ZuoraConnectionHealth) {
+	g.Data = data
+	g.require(getZuoraConnectionHealthResponseFieldData)
+}
+
+// SetParams sets the Params field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (g *GetZuoraConnectionHealthResponse) SetParams(params map[string]any) {
+	g.Params = params
+	g.require(getZuoraConnectionHealthResponseFieldParams)
+}
+
+func (g *GetZuoraConnectionHealthResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetZuoraConnectionHealthResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetZuoraConnectionHealthResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetZuoraConnectionHealthResponse) MarshalJSON() ([]byte, error) {
+	type embed GetZuoraConnectionHealthResponse
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*g),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, g.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (g *GetZuoraConnectionHealthResponse) String() string {
 	if g == nil {
 		return "<nil>"
 	}

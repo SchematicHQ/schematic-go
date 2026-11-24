@@ -478,6 +478,9 @@ request := &schematichq.ListAuditLogsRequest{
             "2024-01-15T09:30:00Z",
         ),
     ),
+    EndUserID: schematichq.String(
+        "end_user_id",
+    ),
     EnvironmentID: schematichq.String(
         "environment_id",
     ),
@@ -531,6 +534,14 @@ _, err := client.Accounts.ListAuditLogs(
 <dd>
 
 **endTime:** `*time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endUserID:** `*string` — Only entries made with a temporary access token issued for this user
     
 </dd>
 </dl>
@@ -648,6 +659,9 @@ request := &schematichq.CountAuditLogsRequest{
             "2024-01-15T09:30:00Z",
         ),
     ),
+    EndUserID: schematichq.String(
+        "end_user_id",
+    ),
     EnvironmentID: schematichq.String(
         "environment_id",
     ),
@@ -701,6 +715,14 @@ _, err := client.Accounts.CountAuditLogs(
 <dd>
 
 **endTime:** `*time.Time` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**endUserID:** `*string` — Only entries made with a temporary access token issued for this user
     
 </dd>
 </dl>
@@ -15592,7 +15614,7 @@ _, err := client.Entitlements.CreatePlanEntitlement(
 <dl>
 <dd>
 
-**overageBillingCadence:** `*schematichq.BillingArrearsCadence` — How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+**overageBillingCadence:** `*schematichq.BillingArrearsCadence` — How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. A monthly allowance on a plan with a quarterly or yearly price is billed monthly instead, because the provider would apply one allowance to the whole period; an allowance that resets daily or weekly is refused when Stripe bills the overage. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
     
 </dd>
 </dl>
@@ -15978,7 +16000,7 @@ _, err := client.Entitlements.UpdatePlanEntitlement(
 <dl>
 <dd>
 
-**overageBillingCadence:** `*schematichq.BillingArrearsCadence` — How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+**overageBillingCadence:** `*schematichq.BillingArrearsCadence` — How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. A monthly allowance on a plan with a quarterly or yearly price is billed monthly instead, because the provider would apply one allowance to the whole period; an allowance that resets daily or weekly is refused when Stripe bills the overage. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
     
 </dd>
 </dl>
@@ -16367,7 +16389,7 @@ _, err := client.Entitlements.UpsertPlanEntitlementForBillingProduct(
 <dl>
 <dd>
 
-**overageBillingCadence:** `*schematichq.BillingArrearsCadence` — How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+**overageBillingCadence:** `*schematichq.BillingArrearsCadence` — How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. A monthly allowance on a plan with a quarterly or yearly price is billed monthly instead, because the provider would apply one allowance to the whole period; an allowance that resets daily or weekly is refused when Stripe bills the overage. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
     
 </dd>
 </dl>
@@ -19627,6 +19649,14 @@ _, err := client.Planbundle.CreateCustomPlanBundle(
 <dl>
 <dd>
 
+**renewalDestination:** `*schematichq.RenewalDestinationRequestBody` — Where the company moves at term end when renewal_policy is migrate_to_plan. Required for that policy and refused for any other.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **renewalPolicy:** `*schematichq.RenewalPolicy` 
     
 </dd>
@@ -19808,6 +19838,14 @@ _, err := client.Planbundle.UpdatePlanBundle(
 <dd>
 
 **planVersionID:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**renewalDestination:** `*schematichq.RenewalDestinationRequestBody` — Where the company moves at term end when the version's renewal_policy is migrate_to_plan. Left out, the version keeps the destination it has; refused for any other policy.
     
 </dd>
 </dl>
@@ -20685,6 +20723,159 @@ _, err := client.Events.GetEvent(
 <dd>
 
 **eventID:** `string` — event_id
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.GetInferenceCost() -> *schematichq.GetInferenceCostResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.GetInferenceCostRequest{
+    EndTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+    StartTime: schematichq.Time(
+        schematichq.MustParseDateTime(
+            "2024-01-15T09:30:00Z",
+        ),
+    ),
+}
+_, err := client.Events.GetInferenceCost(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**endTime:** `*time.Time` — End of the window (exclusive). Pass together with start_time; when both are omitted, the current calendar month in UTC is used
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**startTime:** `*time.Time` — Start of the window (inclusive). Pass together with end_time; when both are omitted, the current calendar month in UTC is used
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.Events.ListInferenceCostRates() -> *schematichq.ListInferenceCostRatesResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+request := &schematichq.ListInferenceCostRatesRequest{
+    Provider: schematichq.String(
+        "provider",
+    ),
+    ResponseModel: schematichq.String(
+        "response_model",
+    ),
+    Scope: schematichq.InferenceCostRateScopeAccount.Ptr(),
+    Limit: schematichq.Int64(
+        int64(1000000),
+    ),
+    Offset: schematichq.Int64(
+        int64(1000000),
+    ),
+}
+_, err := client.Events.ListInferenceCostRates(
+    context.TODO(),
+    request,
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**provider:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**responseModel:** `*string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**scope:** `*schematichq.InferenceCostRateScope` — Only list rates from this sheet: list_price for Schematic's list prices, account for the environment's own rate sheet.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**limit:** `*int64` — Page limit (default 100)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**offset:** `*int64` — Page offset (default 0)
     
 </dd>
 </dl>
@@ -23653,6 +23844,33 @@ _, err := client.Integrationsapi.UninstallIntegration(
 </dl>
 </details>
 
+<details><summary><code>client.Integrationsapi.GetZuoraConnectionHealth() -> *schematichq.GetZuoraConnectionHealthResponse</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```go
+_, err := client.Integrationsapi.GetZuoraConnectionHealth(
+    context.TODO(),
+)
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## licenses
 <details><summary><code>client.Licenses.ListLicenses() -> *schematichq.ListLicensesResponse</code></summary>
 <dl>
@@ -25869,7 +26087,7 @@ _, err := client.Accesstokens.IssueTemporaryAccessToken(
 <dl>
 <dd>
 
-**lookup:** `map[string]string` 
+**lookup:** `map[string]string` — Key-value pairs that identify the company the token is for, such as {"id": "your-company-id"}.
     
 </dd>
 </dl>
@@ -25878,6 +26096,14 @@ _, err := client.Accesstokens.IssueTemporaryAccessToken(
 <dd>
 
 **resourceType:** `schematichq.TemporaryAccessTokenResourceType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**userLookup:** `map[string]string` — Optional key-value pairs that identify the user of your app the token is for, such as {"email": "user@example.com"}. The user must belong to the company named by lookup. Writes made with the token are attributed to this user in the audit log; the token's access is the same either way.
     
 </dd>
 </dl>

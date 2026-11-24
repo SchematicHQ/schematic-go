@@ -10,11 +10,12 @@ import (
 )
 
 var (
-	createCustomPlanBundleRequestBodyFieldBillingProduct = big.NewInt(1 << 0)
-	createCustomPlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
-	createCustomPlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
-	createCustomPlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
-	createCustomPlanBundleRequestBodyFieldRenewalPolicy  = big.NewInt(1 << 4)
+	createCustomPlanBundleRequestBodyFieldBillingProduct     = big.NewInt(1 << 0)
+	createCustomPlanBundleRequestBodyFieldCreditGrants       = big.NewInt(1 << 1)
+	createCustomPlanBundleRequestBodyFieldEntitlements       = big.NewInt(1 << 2)
+	createCustomPlanBundleRequestBodyFieldPlan               = big.NewInt(1 << 3)
+	createCustomPlanBundleRequestBodyFieldRenewalDestination = big.NewInt(1 << 4)
+	createCustomPlanBundleRequestBodyFieldRenewalPolicy      = big.NewInt(1 << 5)
 )
 
 type CreateCustomPlanBundleRequestBody struct {
@@ -22,7 +23,9 @@ type CreateCustomPlanBundleRequestBody struct {
 	CreditGrants   []*PlanBundleCreditGrantRequestBody    `json:"credit_grants,omitempty" url:"-"`
 	Entitlements   []*PlanBundleEntitlementRequestBody    `json:"entitlements" url:"-"`
 	Plan           *CreateCustomPlanBundlePlanRequestBody `json:"plan" url:"-"`
-	RenewalPolicy  *RenewalPolicy                         `json:"renewal_policy,omitempty" url:"-"`
+	// Where the company moves at term end when renewal_policy is migrate_to_plan. Required for that policy and refused for any other.
+	RenewalDestination *RenewalDestinationRequestBody `json:"renewal_destination,omitempty" url:"-"`
+	RenewalPolicy      *RenewalPolicy                 `json:"renewal_policy,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -63,6 +66,13 @@ func (c *CreateCustomPlanBundleRequestBody) SetEntitlements(entitlements []*Plan
 func (c *CreateCustomPlanBundleRequestBody) SetPlan(plan *CreateCustomPlanBundlePlanRequestBody) {
 	c.Plan = plan
 	c.require(createCustomPlanBundleRequestBodyFieldPlan)
+}
+
+// SetRenewalDestination sets the RenewalDestination field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreateCustomPlanBundleRequestBody) SetRenewalDestination(renewalDestination *RenewalDestinationRequestBody) {
+	c.RenewalDestination = renewalDestination
+	c.require(createCustomPlanBundleRequestBodyFieldRenewalDestination)
 }
 
 // SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;
@@ -367,7 +377,7 @@ type CreateEntitlementInBundleRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
-	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. A monthly allowance on a plan with a quarterly or yearly price is billed monthly instead, because the provider would apply one allowance to the whole period; an allowance that resets daily or weekly is refused when Stripe bills the overage. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
 	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"overage_billing_cadence,omitempty"`
 	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
 	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.
@@ -1525,6 +1535,110 @@ func (p *PlanBundleResponseData) String() string {
 }
 
 var (
+	renewalDestinationRequestBodyFieldBillingPeriod = big.NewInt(1 << 0)
+	renewalDestinationRequestBodyFieldPlanID        = big.NewInt(1 << 1)
+)
+
+type RenewalDestinationRequestBody struct {
+	// The billing period the company moves to. Optional when the plan has one price in the custom plan's currency; required when it has several.
+	BillingPeriod *PlanPriceCadence `json:"billing_period,omitempty" url:"billing_period,omitempty"`
+	// A published standard base plan in the plan group, priced in the custom plan's currency.
+	PlanID string `json:"plan_id" url:"plan_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RenewalDestinationRequestBody) GetBillingPeriod() *PlanPriceCadence {
+	if r == nil {
+		return nil
+	}
+	return r.BillingPeriod
+}
+
+func (r *RenewalDestinationRequestBody) GetPlanID() string {
+	if r == nil {
+		return ""
+	}
+	return r.PlanID
+}
+
+func (r *RenewalDestinationRequestBody) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RenewalDestinationRequestBody) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetBillingPeriod sets the BillingPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RenewalDestinationRequestBody) SetBillingPeriod(billingPeriod *PlanPriceCadence) {
+	r.BillingPeriod = billingPeriod
+	r.require(renewalDestinationRequestBodyFieldBillingPeriod)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RenewalDestinationRequestBody) SetPlanID(planID string) {
+	r.PlanID = planID
+	r.require(renewalDestinationRequestBodyFieldPlanID)
+}
+
+func (r *RenewalDestinationRequestBody) UnmarshalJSON(data []byte) error {
+	type unmarshaler RenewalDestinationRequestBody
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RenewalDestinationRequestBody(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RenewalDestinationRequestBody) MarshalJSON() ([]byte, error) {
+	type embed RenewalDestinationRequestBody
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RenewalDestinationRequestBody) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+var (
 	createCustomPlanBundleResponseFieldData   = big.NewInt(1 << 0)
 	createCustomPlanBundleResponseFieldParams = big.NewInt(1 << 1)
 )
@@ -1834,12 +1948,13 @@ func (u *UpdatePlanBundleResponse) String() string {
 }
 
 var (
-	updatePlanBundleRequestBodyFieldBillingProduct = big.NewInt(1 << 0)
-	updatePlanBundleRequestBodyFieldCreditGrants   = big.NewInt(1 << 1)
-	updatePlanBundleRequestBodyFieldEntitlements   = big.NewInt(1 << 2)
-	updatePlanBundleRequestBodyFieldPlan           = big.NewInt(1 << 3)
-	updatePlanBundleRequestBodyFieldPlanVersionID  = big.NewInt(1 << 4)
-	updatePlanBundleRequestBodyFieldRenewalPolicy  = big.NewInt(1 << 5)
+	updatePlanBundleRequestBodyFieldBillingProduct     = big.NewInt(1 << 0)
+	updatePlanBundleRequestBodyFieldCreditGrants       = big.NewInt(1 << 1)
+	updatePlanBundleRequestBodyFieldEntitlements       = big.NewInt(1 << 2)
+	updatePlanBundleRequestBodyFieldPlan               = big.NewInt(1 << 3)
+	updatePlanBundleRequestBodyFieldPlanVersionID      = big.NewInt(1 << 4)
+	updatePlanBundleRequestBodyFieldRenewalDestination = big.NewInt(1 << 5)
+	updatePlanBundleRequestBodyFieldRenewalPolicy      = big.NewInt(1 << 6)
 )
 
 type UpdatePlanBundleRequestBody struct {
@@ -1848,7 +1963,9 @@ type UpdatePlanBundleRequestBody struct {
 	Entitlements   []*PlanBundleEntitlementRequestBody `json:"entitlements" url:"-"`
 	Plan           *UpdatePlanRequestBody              `json:"plan" url:"-"`
 	PlanVersionID  *string                             `json:"plan_version_id,omitempty" url:"-"`
-	RenewalPolicy  *RenewalPolicy                      `json:"renewal_policy,omitempty" url:"-"`
+	// Where the company moves at term end when the version's renewal_policy is migrate_to_plan. Left out, the version keeps the destination it has; refused for any other policy.
+	RenewalDestination *RenewalDestinationRequestBody `json:"renewal_destination,omitempty" url:"-"`
+	RenewalPolicy      *RenewalPolicy                 `json:"renewal_policy,omitempty" url:"-"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -1896,6 +2013,13 @@ func (u *UpdatePlanBundleRequestBody) SetPlan(plan *UpdatePlanRequestBody) {
 func (u *UpdatePlanBundleRequestBody) SetPlanVersionID(planVersionID *string) {
 	u.PlanVersionID = planVersionID
 	u.require(updatePlanBundleRequestBodyFieldPlanVersionID)
+}
+
+// SetRenewalDestination sets the RenewalDestination field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UpdatePlanBundleRequestBody) SetRenewalDestination(renewalDestination *RenewalDestinationRequestBody) {
+	u.RenewalDestination = renewalDestination
+	u.require(updatePlanBundleRequestBodyFieldRenewalDestination)
 }
 
 // SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;

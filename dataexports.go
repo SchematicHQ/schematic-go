@@ -832,6 +832,128 @@ func (c CompanyFeatureUsageExportMetadataVisibleColumnsItem) Ptr() *CompanyFeatu
 }
 
 var (
+	creditBalanceExportMetadataFieldBillingCreditID                          = big.NewInt(1 << 0)
+	creditBalanceExportMetadataFieldCompanyID                                = big.NewInt(1 << 1)
+	creditBalanceExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 2)
+)
+
+// Rows are consistent within a page of 250 companies. The As Of column marks when the export started; in a large environment, later pages may include usage recorded after that time.
+type CreditBalanceExportMetadata struct {
+	// Restrict the export to balances of this credit type ID (starting with 'bilcr_')
+	BillingCreditID *string `json:"billing_credit_id,omitempty" url:"billing_credit_id,omitempty"`
+	// Restrict the export to balances for this company ID (starting with 'comp_')
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// Account member emails to notify when the export completes; empty means the artifact is only retrievable via the API
+	NotificationEmailRecipientEmailAddresses []string `json:"notification_email_recipient_email_addresses,omitempty" url:"notification_email_recipient_email_addresses,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CreditBalanceExportMetadata) GetBillingCreditID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.BillingCreditID
+}
+
+func (c *CreditBalanceExportMetadata) GetCompanyID() *string {
+	if c == nil {
+		return nil
+	}
+	return c.CompanyID
+}
+
+func (c *CreditBalanceExportMetadata) GetNotificationEmailRecipientEmailAddresses() []string {
+	if c == nil {
+		return nil
+	}
+	return c.NotificationEmailRecipientEmailAddresses
+}
+
+func (c *CreditBalanceExportMetadata) GetExtraProperties() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.extraProperties
+}
+
+func (c *CreditBalanceExportMetadata) require(field *big.Int) {
+	next := new(big.Int)
+	if c.explicitFields != nil {
+		next.Set(c.explicitFields)
+	}
+	next.Or(next, field)
+	c.explicitFields = next
+}
+
+// SetBillingCreditID sets the BillingCreditID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBalanceExportMetadata) SetBillingCreditID(billingCreditID *string) {
+	c.BillingCreditID = billingCreditID
+	c.require(creditBalanceExportMetadataFieldBillingCreditID)
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBalanceExportMetadata) SetCompanyID(companyID *string) {
+	c.CompanyID = companyID
+	c.require(creditBalanceExportMetadataFieldCompanyID)
+}
+
+// SetNotificationEmailRecipientEmailAddresses sets the NotificationEmailRecipientEmailAddresses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CreditBalanceExportMetadata) SetNotificationEmailRecipientEmailAddresses(notificationEmailRecipientEmailAddresses []string) {
+	c.NotificationEmailRecipientEmailAddresses = notificationEmailRecipientEmailAddresses
+	c.require(creditBalanceExportMetadataFieldNotificationEmailRecipientEmailAddresses)
+}
+
+func (c *CreditBalanceExportMetadata) UnmarshalJSON(data []byte) error {
+	type unmarshaler CreditBalanceExportMetadata
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CreditBalanceExportMetadata(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CreditBalanceExportMetadata) MarshalJSON() ([]byte, error) {
+	type embed CreditBalanceExportMetadata
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*c),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, c.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (c *CreditBalanceExportMetadata) String() string {
+	if c == nil {
+		return "<nil>"
+	}
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+var (
 	creditLedgerExportMetadataFieldBillingCreditID                          = big.NewInt(1 << 0)
 	creditLedgerExportMetadataFieldCompanyID                                = big.NewInt(1 << 1)
 	creditLedgerExportMetadataFieldEndTime                                  = big.NewInt(1 << 2)
@@ -1091,8 +1213,10 @@ type DataExportMetadata struct {
 	ExportType          string
 	AuditLog            *AuditLogExportMetadata
 	CompanyFeatureUsage *CompanyFeatureUsageExportMetadata
+	CreditBalance       *CreditBalanceExportMetadata
 	CreditLedger        *CreditLedgerExportMetadata
 	Event               *EventExportMetadata
+	User                *UserExportMetadata
 
 	rawJSON json.RawMessage
 }
@@ -1118,6 +1242,13 @@ func (d *DataExportMetadata) GetCompanyFeatureUsage() *CompanyFeatureUsageExport
 	return d.CompanyFeatureUsage
 }
 
+func (d *DataExportMetadata) GetCreditBalance() *CreditBalanceExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.CreditBalance
+}
+
 func (d *DataExportMetadata) GetCreditLedger() *CreditLedgerExportMetadata {
 	if d == nil {
 		return nil
@@ -1130,6 +1261,13 @@ func (d *DataExportMetadata) GetEvent() *EventExportMetadata {
 		return nil
 	}
 	return d.Event
+}
+
+func (d *DataExportMetadata) GetUser() *UserExportMetadata {
+	if d == nil {
+		return nil
+	}
+	return d.User
 }
 
 func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
@@ -1156,6 +1294,12 @@ func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		d.CompanyFeatureUsage = value
+	case "credit-balance":
+		value := new(CreditBalanceExportMetadata)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		d.CreditBalance = value
 	case "credit-ledger":
 		value := new(CreditLedgerExportMetadata)
 		if err := json.Unmarshal(data, &value); err != nil {
@@ -1168,6 +1312,12 @@ func (d *DataExportMetadata) UnmarshalJSON(data []byte) error {
 			return err
 		}
 		d.Event = value
+	case "user":
+		value := new(UserExportMetadata)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		d.User = value
 	}
 	d.rawJSON = json.RawMessage(data)
 	return nil
@@ -1183,11 +1333,17 @@ func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
 	if d.CompanyFeatureUsage != nil {
 		return internal.MarshalJSONWithExtraProperty(d.CompanyFeatureUsage, "export_type", "company-feature-usage")
 	}
+	if d.CreditBalance != nil {
+		return internal.MarshalJSONWithExtraProperty(d.CreditBalance, "export_type", "credit-balance")
+	}
 	if d.CreditLedger != nil {
 		return internal.MarshalJSONWithExtraProperty(d.CreditLedger, "export_type", "credit-ledger")
 	}
 	if d.Event != nil {
 		return internal.MarshalJSONWithExtraProperty(d.Event, "export_type", "event")
+	}
+	if d.User != nil {
+		return internal.MarshalJSONWithExtraProperty(d.User, "export_type", "user")
 	}
 	if len(d.rawJSON) > 0 {
 		return d.rawJSON, nil
@@ -1198,8 +1354,10 @@ func (d DataExportMetadata) MarshalJSON() ([]byte, error) {
 type DataExportMetadataVisitor interface {
 	VisitAuditLog(*AuditLogExportMetadata) error
 	VisitCompanyFeatureUsage(*CompanyFeatureUsageExportMetadata) error
+	VisitCreditBalance(*CreditBalanceExportMetadata) error
 	VisitCreditLedger(*CreditLedgerExportMetadata) error
 	VisitEvent(*EventExportMetadata) error
+	VisitUser(*UserExportMetadata) error
 }
 
 func (d *DataExportMetadata) Accept(visitor DataExportMetadataVisitor) error {
@@ -1209,11 +1367,17 @@ func (d *DataExportMetadata) Accept(visitor DataExportMetadataVisitor) error {
 	if d.CompanyFeatureUsage != nil {
 		return visitor.VisitCompanyFeatureUsage(d.CompanyFeatureUsage)
 	}
+	if d.CreditBalance != nil {
+		return visitor.VisitCreditBalance(d.CreditBalance)
+	}
 	if d.CreditLedger != nil {
 		return visitor.VisitCreditLedger(d.CreditLedger)
 	}
 	if d.Event != nil {
 		return visitor.VisitEvent(d.Event)
+	}
+	if d.User != nil {
+		return visitor.VisitUser(d.User)
 	}
 	return fmt.Errorf("type %T does not define a non-empty union type", d)
 }
@@ -1229,11 +1393,17 @@ func (d *DataExportMetadata) validate() error {
 	if d.CompanyFeatureUsage != nil {
 		fields = append(fields, "company-feature-usage")
 	}
+	if d.CreditBalance != nil {
+		fields = append(fields, "credit-balance")
+	}
 	if d.CreditLedger != nil {
 		fields = append(fields, "credit-ledger")
 	}
 	if d.Event != nil {
 		fields = append(fields, "event")
+	}
+	if d.User != nil {
+		fields = append(fields, "user")
 	}
 	if len(fields) == 0 {
 		if d.ExportType != "" {
@@ -1539,8 +1709,10 @@ type DataExportType string
 const (
 	DataExportTypeAuditLog            DataExportType = "audit-log"
 	DataExportTypeCompanyFeatureUsage DataExportType = "company-feature-usage"
+	DataExportTypeCreditBalance       DataExportType = "credit-balance"
 	DataExportTypeCreditLedger        DataExportType = "credit-ledger"
 	DataExportTypeEvent               DataExportType = "event"
+	DataExportTypeUser                DataExportType = "user"
 )
 
 func NewDataExportTypeFromString(s string) (DataExportType, error) {
@@ -1549,10 +1721,14 @@ func NewDataExportTypeFromString(s string) (DataExportType, error) {
 		return DataExportTypeAuditLog, nil
 	case "company-feature-usage":
 		return DataExportTypeCompanyFeatureUsage, nil
+	case "credit-balance":
+		return DataExportTypeCreditBalance, nil
 	case "credit-ledger":
 		return DataExportTypeCreditLedger, nil
 	case "event":
 		return DataExportTypeEvent, nil
+	case "user":
+		return DataExportTypeUser, nil
 	}
 	var t DataExportType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -1806,6 +1982,196 @@ func NewEventExportMetadataEventTypesItemFromString(s string) (EventExportMetada
 
 func (e EventExportMetadataEventTypesItem) Ptr() *EventExportMetadataEventTypesItem {
 	return &e
+}
+
+var (
+	userExportMetadataFieldCompanyID                                = big.NewInt(1 << 0)
+	userExportMetadataFieldEntityKeyDefinitionIDs                   = big.NewInt(1 << 1)
+	userExportMetadataFieldEntityTraitDefinitionIDs                 = big.NewInt(1 << 2)
+	userExportMetadataFieldIDs                                      = big.NewInt(1 << 3)
+	userExportMetadataFieldNotificationEmailRecipientEmailAddresses = big.NewInt(1 << 4)
+	userExportMetadataFieldPlanID                                   = big.NewInt(1 << 5)
+	userExportMetadataFieldQ                                        = big.NewInt(1 << 6)
+)
+
+// Exports one row per user, oldest first. Omitting every filter exports every user in the environment.
+type UserExportMetadata struct {
+	// Restrict the export to members of this company ID (starting with 'comp_')
+	CompanyID *string `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// User key definition IDs (starting with 'ekt_') to include as columns, one per key
+	EntityKeyDefinitionIDs []string `json:"entity_key_definition_ids,omitempty" url:"entity_key_definition_ids,omitempty"`
+	// User trait definition IDs (starting with 'trt_') to include as columns, one per trait
+	EntityTraitDefinitionIDs []string `json:"entity_trait_definition_ids,omitempty" url:"entity_trait_definition_ids,omitempty"`
+	// Restrict the export to these user IDs (starting with 'user_')
+	IDs []string `json:"ids,omitempty" url:"ids,omitempty"`
+	// Account member emails to notify when the export completes; empty means the artifact is only retrievable via the API
+	NotificationEmailRecipientEmailAddresses []string `json:"notification_email_recipient_email_addresses,omitempty" url:"notification_email_recipient_email_addresses,omitempty"`
+	// Restrict the export to users in a company on this plan or add-on ID (starting with 'plan_')
+	PlanID *string `json:"plan_id,omitempty" url:"plan_id,omitempty"`
+	// Search users by name, keys or string traits
+	Q *string `json:"q,omitempty" url:"q,omitempty"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (u *UserExportMetadata) GetCompanyID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.CompanyID
+}
+
+func (u *UserExportMetadata) GetEntityKeyDefinitionIDs() []string {
+	if u == nil {
+		return nil
+	}
+	return u.EntityKeyDefinitionIDs
+}
+
+func (u *UserExportMetadata) GetEntityTraitDefinitionIDs() []string {
+	if u == nil {
+		return nil
+	}
+	return u.EntityTraitDefinitionIDs
+}
+
+func (u *UserExportMetadata) GetIDs() []string {
+	if u == nil {
+		return nil
+	}
+	return u.IDs
+}
+
+func (u *UserExportMetadata) GetNotificationEmailRecipientEmailAddresses() []string {
+	if u == nil {
+		return nil
+	}
+	return u.NotificationEmailRecipientEmailAddresses
+}
+
+func (u *UserExportMetadata) GetPlanID() *string {
+	if u == nil {
+		return nil
+	}
+	return u.PlanID
+}
+
+func (u *UserExportMetadata) GetQ() *string {
+	if u == nil {
+		return nil
+	}
+	return u.Q
+}
+
+func (u *UserExportMetadata) GetExtraProperties() map[string]interface{} {
+	if u == nil {
+		return nil
+	}
+	return u.extraProperties
+}
+
+func (u *UserExportMetadata) require(field *big.Int) {
+	next := new(big.Int)
+	if u.explicitFields != nil {
+		next.Set(u.explicitFields)
+	}
+	next.Or(next, field)
+	u.explicitFields = next
+}
+
+// SetCompanyID sets the CompanyID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetCompanyID(companyID *string) {
+	u.CompanyID = companyID
+	u.require(userExportMetadataFieldCompanyID)
+}
+
+// SetEntityKeyDefinitionIDs sets the EntityKeyDefinitionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetEntityKeyDefinitionIDs(entityKeyDefinitionIDs []string) {
+	u.EntityKeyDefinitionIDs = entityKeyDefinitionIDs
+	u.require(userExportMetadataFieldEntityKeyDefinitionIDs)
+}
+
+// SetEntityTraitDefinitionIDs sets the EntityTraitDefinitionIDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetEntityTraitDefinitionIDs(entityTraitDefinitionIDs []string) {
+	u.EntityTraitDefinitionIDs = entityTraitDefinitionIDs
+	u.require(userExportMetadataFieldEntityTraitDefinitionIDs)
+}
+
+// SetIDs sets the IDs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetIDs(ids []string) {
+	u.IDs = ids
+	u.require(userExportMetadataFieldIDs)
+}
+
+// SetNotificationEmailRecipientEmailAddresses sets the NotificationEmailRecipientEmailAddresses field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetNotificationEmailRecipientEmailAddresses(notificationEmailRecipientEmailAddresses []string) {
+	u.NotificationEmailRecipientEmailAddresses = notificationEmailRecipientEmailAddresses
+	u.require(userExportMetadataFieldNotificationEmailRecipientEmailAddresses)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetPlanID(planID *string) {
+	u.PlanID = planID
+	u.require(userExportMetadataFieldPlanID)
+}
+
+// SetQ sets the Q field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (u *UserExportMetadata) SetQ(q *string) {
+	u.Q = q
+	u.require(userExportMetadataFieldQ)
+}
+
+func (u *UserExportMetadata) UnmarshalJSON(data []byte) error {
+	type unmarshaler UserExportMetadata
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*u = UserExportMetadata(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *u)
+	if err != nil {
+		return err
+	}
+	u.extraProperties = extraProperties
+	u.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (u *UserExportMetadata) MarshalJSON() ([]byte, error) {
+	type embed UserExportMetadata
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*u),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, u.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (u *UserExportMetadata) String() string {
+	if u == nil {
+		return "<nil>"
+	}
+	if len(u.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(u); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", u)
 }
 
 var (

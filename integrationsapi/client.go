@@ -371,3 +371,22 @@ func (c *Client) UninstallIntegration(
 	}
 	return response.Body, nil
 }
+
+// Example:
+//
+//	_, err := client.Integrationsapi.GetZuoraConnectionHealth(
+//	    context.TODO(),
+//	)
+func (c *Client) GetZuoraConnectionHealth(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*schematichq.GetZuoraConnectionHealthResponse, error) {
+	response, err := c.WithRawResponse.GetZuoraConnectionHealth(
+		ctx,
+		opts...,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return response.Body, nil
+}

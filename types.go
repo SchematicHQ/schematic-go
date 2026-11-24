@@ -980,38 +980,146 @@ func (a *AuditLogCompanyResponseData) String() string {
 }
 
 var (
+	auditLogEndUserResponseDataFieldID   = big.NewInt(1 << 0)
+	auditLogEndUserResponseDataFieldName = big.NewInt(1 << 1)
+)
+
+type AuditLogEndUserResponseData struct {
+	ID   string `json:"id" url:"id"`
+	Name string `json:"name" url:"name"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogEndUserResponseData) GetID() string {
+	if a == nil {
+		return ""
+	}
+	return a.ID
+}
+
+func (a *AuditLogEndUserResponseData) GetName() string {
+	if a == nil {
+		return ""
+	}
+	return a.Name
+}
+
+func (a *AuditLogEndUserResponseData) GetExtraProperties() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.extraProperties
+}
+
+func (a *AuditLogEndUserResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if a.explicitFields != nil {
+		next.Set(a.explicitFields)
+	}
+	next.Or(next, field)
+	a.explicitFields = next
+}
+
+// SetID sets the ID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogEndUserResponseData) SetID(id string) {
+	a.ID = id
+	a.require(auditLogEndUserResponseDataFieldID)
+}
+
+// SetName sets the Name field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogEndUserResponseData) SetName(name string) {
+	a.Name = name
+	a.require(auditLogEndUserResponseDataFieldName)
+}
+
+func (a *AuditLogEndUserResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler AuditLogEndUserResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AuditLogEndUserResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AuditLogEndUserResponseData) MarshalJSON() ([]byte, error) {
+	type embed AuditLogEndUserResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*a),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, a.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (a *AuditLogEndUserResponseData) String() string {
+	if a == nil {
+		return "<nil>"
+	}
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+var (
 	auditLogListResponseDataFieldActorType         = big.NewInt(1 << 0)
 	auditLogListResponseDataFieldAPIKey            = big.NewInt(1 << 1)
 	auditLogListResponseDataFieldAPIKeyID          = big.NewInt(1 << 2)
 	auditLogListResponseDataFieldCompany           = big.NewInt(1 << 3)
 	auditLogListResponseDataFieldCompanyID         = big.NewInt(1 << 4)
-	auditLogListResponseDataFieldEndedAt           = big.NewInt(1 << 5)
-	auditLogListResponseDataFieldEnvironment       = big.NewInt(1 << 6)
-	auditLogListResponseDataFieldEnvironmentID     = big.NewInt(1 << 7)
-	auditLogListResponseDataFieldID                = big.NewInt(1 << 8)
-	auditLogListResponseDataFieldMethod            = big.NewInt(1 << 9)
-	auditLogListResponseDataFieldResourceID        = big.NewInt(1 << 10)
-	auditLogListResponseDataFieldResourceIDString  = big.NewInt(1 << 11)
-	auditLogListResponseDataFieldResourceName      = big.NewInt(1 << 12)
-	auditLogListResponseDataFieldResourceType      = big.NewInt(1 << 13)
-	auditLogListResponseDataFieldRespCode          = big.NewInt(1 << 14)
-	auditLogListResponseDataFieldSecondaryResource = big.NewInt(1 << 15)
-	auditLogListResponseDataFieldStartedAt         = big.NewInt(1 << 16)
-	auditLogListResponseDataFieldURL               = big.NewInt(1 << 17)
-	auditLogListResponseDataFieldUserName          = big.NewInt(1 << 18)
+	auditLogListResponseDataFieldEndUser           = big.NewInt(1 << 5)
+	auditLogListResponseDataFieldEndUserID         = big.NewInt(1 << 6)
+	auditLogListResponseDataFieldEndedAt           = big.NewInt(1 << 7)
+	auditLogListResponseDataFieldEnvironment       = big.NewInt(1 << 8)
+	auditLogListResponseDataFieldEnvironmentID     = big.NewInt(1 << 9)
+	auditLogListResponseDataFieldID                = big.NewInt(1 << 10)
+	auditLogListResponseDataFieldMethod            = big.NewInt(1 << 11)
+	auditLogListResponseDataFieldResourceID        = big.NewInt(1 << 12)
+	auditLogListResponseDataFieldResourceIDString  = big.NewInt(1 << 13)
+	auditLogListResponseDataFieldResourceName      = big.NewInt(1 << 14)
+	auditLogListResponseDataFieldResourceType      = big.NewInt(1 << 15)
+	auditLogListResponseDataFieldRespCode          = big.NewInt(1 << 16)
+	auditLogListResponseDataFieldSecondaryResource = big.NewInt(1 << 17)
+	auditLogListResponseDataFieldStartedAt         = big.NewInt(1 << 18)
+	auditLogListResponseDataFieldURL               = big.NewInt(1 << 19)
+	auditLogListResponseDataFieldUserName          = big.NewInt(1 << 20)
 )
 
 type AuditLogListResponseData struct {
-	ActorType     ActorType                    `json:"actor_type" url:"actor_type"`
-	APIKey        *APIKeyResponseData          `json:"api_key,omitempty" url:"api_key,omitempty"`
-	APIKeyID      *string                      `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
-	Company       *AuditLogCompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
-	CompanyID     *string                      `json:"company_id,omitempty" url:"company_id,omitempty"`
-	EndedAt       *time.Time                   `json:"ended_at,omitempty" url:"ended_at,omitempty"`
-	Environment   *EnvironmentResponseData     `json:"environment,omitempty" url:"environment,omitempty"`
-	EnvironmentID *string                      `json:"environment_id,omitempty" url:"environment_id,omitempty"`
-	ID            string                       `json:"id" url:"id"`
-	Method        string                       `json:"method" url:"method"`
+	ActorType ActorType                    `json:"actor_type" url:"actor_type"`
+	APIKey    *APIKeyResponseData          `json:"api_key,omitempty" url:"api_key,omitempty"`
+	APIKeyID  *string                      `json:"api_key_id,omitempty" url:"api_key_id,omitempty"`
+	Company   *AuditLogCompanyResponseData `json:"company,omitempty" url:"company,omitempty"`
+	CompanyID *string                      `json:"company_id,omitempty" url:"company_id,omitempty"`
+	// The user of your app the request's temporary access token was issued for. Absent when the token named no user or the user has since been deleted.
+	EndUser *AuditLogEndUserResponseData `json:"end_user,omitempty" url:"end_user,omitempty"`
+	// The ID of the user of your app the request's temporary access token was issued for
+	EndUserID     *string                  `json:"end_user_id,omitempty" url:"end_user_id,omitempty"`
+	EndedAt       *time.Time               `json:"ended_at,omitempty" url:"ended_at,omitempty"`
+	Environment   *EnvironmentResponseData `json:"environment,omitempty" url:"environment,omitempty"`
+	EnvironmentID *string                  `json:"environment_id,omitempty" url:"environment_id,omitempty"`
+	ID            string                   `json:"id" url:"id"`
+	Method        string                   `json:"method" url:"method"`
 	// Always null. Use resource_id_string.
 	ResourceID        *int64    `json:"resource_id,omitempty" url:"resource_id,omitempty"`
 	ResourceIDString  *string   `json:"resource_id_string,omitempty" url:"resource_id_string,omitempty"`
@@ -1063,6 +1171,20 @@ func (a *AuditLogListResponseData) GetCompanyID() *string {
 		return nil
 	}
 	return a.CompanyID
+}
+
+func (a *AuditLogListResponseData) GetEndUser() *AuditLogEndUserResponseData {
+	if a == nil {
+		return nil
+	}
+	return a.EndUser
+}
+
+func (a *AuditLogListResponseData) GetEndUserID() *string {
+	if a == nil {
+		return nil
+	}
+	return a.EndUserID
 }
 
 func (a *AuditLogListResponseData) GetEndedAt() *time.Time {
@@ -1212,6 +1334,20 @@ func (a *AuditLogListResponseData) SetCompany(company *AuditLogCompanyResponseDa
 func (a *AuditLogListResponseData) SetCompanyID(companyID *string) {
 	a.CompanyID = companyID
 	a.require(auditLogListResponseDataFieldCompanyID)
+}
+
+// SetEndUser sets the EndUser field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogListResponseData) SetEndUser(endUser *AuditLogEndUserResponseData) {
+	a.EndUser = endUser
+	a.require(auditLogListResponseDataFieldEndUser)
+}
+
+// SetEndUserID sets the EndUserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (a *AuditLogListResponseData) SetEndUserID(endUserID *string) {
+	a.EndUserID = endUserID
+	a.require(auditLogListResponseDataFieldEndUserID)
 }
 
 // SetEndedAt sets the EndedAt field and marks it as non-optional;
@@ -13982,30 +14118,33 @@ var (
 	companySubscriptionResponseDataFieldDiscounts              = big.NewInt(1 << 4)
 	companySubscriptionResponseDataFieldExpiredAt              = big.NewInt(1 << 5)
 	companySubscriptionResponseDataFieldInterval               = big.NewInt(1 << 6)
-	companySubscriptionResponseDataFieldIsInitial              = big.NewInt(1 << 7)
-	companySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 8)
-	companySubscriptionResponseDataFieldPauseBehavior          = big.NewInt(1 << 9)
-	companySubscriptionResponseDataFieldPauseResumesAt         = big.NewInt(1 << 10)
-	companySubscriptionResponseDataFieldPausedAt               = big.NewInt(1 << 11)
-	companySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 12)
-	companySubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 13)
-	companySubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 14)
-	companySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 15)
-	companySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 16)
-	companySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 17)
-	companySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 18)
-	companySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 19)
-	companySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 20)
+	companySubscriptionResponseDataFieldIntervalCount          = big.NewInt(1 << 7)
+	companySubscriptionResponseDataFieldIsInitial              = big.NewInt(1 << 8)
+	companySubscriptionResponseDataFieldLatestInvoice          = big.NewInt(1 << 9)
+	companySubscriptionResponseDataFieldPauseBehavior          = big.NewInt(1 << 10)
+	companySubscriptionResponseDataFieldPauseResumesAt         = big.NewInt(1 << 11)
+	companySubscriptionResponseDataFieldPausedAt               = big.NewInt(1 << 12)
+	companySubscriptionResponseDataFieldPaymentMethod          = big.NewInt(1 << 13)
+	companySubscriptionResponseDataFieldPeriodEnd              = big.NewInt(1 << 14)
+	companySubscriptionResponseDataFieldPeriodStart            = big.NewInt(1 << 15)
+	companySubscriptionResponseDataFieldProducts               = big.NewInt(1 << 16)
+	companySubscriptionResponseDataFieldProviderType           = big.NewInt(1 << 17)
+	companySubscriptionResponseDataFieldStatus                 = big.NewInt(1 << 18)
+	companySubscriptionResponseDataFieldSubscriptionExternalID = big.NewInt(1 << 19)
+	companySubscriptionResponseDataFieldTotalPrice             = big.NewInt(1 << 20)
+	companySubscriptionResponseDataFieldTrialEnd               = big.NewInt(1 << 21)
 )
 
 type CompanySubscriptionResponseData struct {
-	CancelAt               *time.Time                                   `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
-	CancelAtPeriodEnd      bool                                         `json:"cancel_at_period_end" url:"cancel_at_period_end"`
-	Currency               Currency                                     `json:"currency" url:"currency"`
-	CustomerExternalID     string                                       `json:"customer_external_id" url:"customer_external_id"`
-	Discounts              []*BillingSubscriptionDiscountView           `json:"discounts" url:"discounts"`
-	ExpiredAt              *time.Time                                   `json:"expired_at,omitempty" url:"expired_at,omitempty"`
-	Interval               string                                       `json:"interval" url:"interval"`
+	CancelAt           *time.Time                         `json:"cancel_at,omitempty" url:"cancel_at,omitempty"`
+	CancelAtPeriodEnd  bool                               `json:"cancel_at_period_end" url:"cancel_at_period_end"`
+	Currency           Currency                           `json:"currency" url:"currency"`
+	CustomerExternalID string                             `json:"customer_external_id" url:"customer_external_id"`
+	Discounts          []*BillingSubscriptionDiscountView `json:"discounts" url:"discounts"`
+	ExpiredAt          *time.Time                         `json:"expired_at,omitempty" url:"expired_at,omitempty"`
+	Interval           string                             `json:"interval" url:"interval"`
+	// With interval, the subscription's billing period: 3 with month is quarterly. Read from the subscription's line items, since interval alone is month for monthly and quarterly alike.
+	IntervalCount          *int64                                       `json:"interval_count,omitempty" url:"interval_count,omitempty"`
 	IsInitial              bool                                         `json:"is_initial" url:"is_initial"`
 	LatestInvoice          *InvoiceResponseData                         `json:"latest_invoice,omitempty" url:"latest_invoice,omitempty"`
 	PauseBehavior          *BillingSubscriptionPauseBehavior            `json:"pause_behavior,omitempty" url:"pause_behavior,omitempty"`
@@ -14075,6 +14214,13 @@ func (c *CompanySubscriptionResponseData) GetInterval() string {
 		return ""
 	}
 	return c.Interval
+}
+
+func (c *CompanySubscriptionResponseData) GetIntervalCount() *int64 {
+	if c == nil {
+		return nil
+	}
+	return c.IntervalCount
 }
 
 func (c *CompanySubscriptionResponseData) GetIsInitial() bool {
@@ -14238,6 +14384,13 @@ func (c *CompanySubscriptionResponseData) SetExpiredAt(expiredAt *time.Time) {
 func (c *CompanySubscriptionResponseData) SetInterval(interval string) {
 	c.Interval = interval
 	c.require(companySubscriptionResponseDataFieldInterval)
+}
+
+// SetIntervalCount sets the IntervalCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (c *CompanySubscriptionResponseData) SetIntervalCount(intervalCount *int64) {
+	c.IntervalCount = intervalCount
+	c.require(companySubscriptionResponseDataFieldIntervalCount)
 }
 
 // SetIsInitial sets the IsInitial field and marks it as non-optional;
@@ -21506,7 +21659,7 @@ type CustomPlanBillingResponseData struct {
 	CompanyID    string    `json:"company_id" url:"company_id"`
 	CreatedAt    time.Time `json:"created_at" url:"created_at"`
 	DaysUntilDue int64     `json:"days_until_due" url:"days_until_due"`
-	// When a custom plan that doesn't renew ends: the renewal the subscription stops on and the company moves to the default plan. Null for a plan that renews.
+	// When a custom plan that doesn't renew ends: the renewal the subscription stops on and the company moves to the fallback plan. Null for a plan that renews.
 	EndDate           *time.Time `json:"end_date,omitempty" url:"end_date,omitempty"`
 	ExternalInvoiceID *string    `json:"external_invoice_id,omitempty" url:"external_invoice_id,omitempty"`
 	ID                string     `json:"id" url:"id"`
@@ -29111,6 +29264,282 @@ func (g *GroupRolloutVersionsRequestBody) String() string {
 }
 
 var (
+	inferenceCostAmountResponseDataFieldCost       = big.NewInt(1 << 0)
+	inferenceCostAmountResponseDataFieldCurrency   = big.NewInt(1 << 1)
+	inferenceCostAmountResponseDataFieldEventCount = big.NewInt(1 << 2)
+)
+
+type InferenceCostAmountResponseData struct {
+	// Summed cost as a decimal string in the currency's major unit (dollars, not cents), with up to 8 decimal places
+	Cost string `json:"cost" url:"cost"`
+	// Lowercase ISO 4217 currency code of the cost
+	Currency string `json:"currency" url:"currency"`
+	// Number of priced events summed into this cost
+	EventCount int64 `json:"event_count" url:"event_count"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InferenceCostAmountResponseData) GetCost() string {
+	if i == nil {
+		return ""
+	}
+	return i.Cost
+}
+
+func (i *InferenceCostAmountResponseData) GetCurrency() string {
+	if i == nil {
+		return ""
+	}
+	return i.Currency
+}
+
+func (i *InferenceCostAmountResponseData) GetEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.EventCount
+}
+
+func (i *InferenceCostAmountResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InferenceCostAmountResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
+	}
+	next.Or(next, field)
+	i.explicitFields = next
+}
+
+// SetCost sets the Cost field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostAmountResponseData) SetCost(cost string) {
+	i.Cost = cost
+	i.require(inferenceCostAmountResponseDataFieldCost)
+}
+
+// SetCurrency sets the Currency field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostAmountResponseData) SetCurrency(currency string) {
+	i.Currency = currency
+	i.require(inferenceCostAmountResponseDataFieldCurrency)
+}
+
+// SetEventCount sets the EventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceCostAmountResponseData) SetEventCount(eventCount int64) {
+	i.EventCount = eventCount
+	i.require(inferenceCostAmountResponseDataFieldEventCount)
+}
+
+func (i *InferenceCostAmountResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler InferenceCostAmountResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InferenceCostAmountResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InferenceCostAmountResponseData) MarshalJSON() ([]byte, error) {
+	type embed InferenceCostAmountResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InferenceCostAmountResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
+	inferenceModelCostResponseDataFieldCosts              = big.NewInt(1 << 0)
+	inferenceModelCostResponseDataFieldEventCount         = big.NewInt(1 << 1)
+	inferenceModelCostResponseDataFieldProvider           = big.NewInt(1 << 2)
+	inferenceModelCostResponseDataFieldResponseModel      = big.NewInt(1 << 3)
+	inferenceModelCostResponseDataFieldUnpricedEventCount = big.NewInt(1 << 4)
+)
+
+type InferenceModelCostResponseData struct {
+	// Summed cost of this model's priced events, one entry per currency
+	Costs []*InferenceCostAmountResponseData `json:"costs" url:"costs"`
+	// Number of inference events for this model, priced or not
+	EventCount int64 `json:"event_count" url:"event_count"`
+	// The model provider the events reported, such as openai or anthropic
+	Provider string `json:"provider" url:"provider"`
+	// The model the provider reported answering the call
+	ResponseModel string `json:"response_model" url:"response_model"`
+	// Number of this model's events with no known cost
+	UnpricedEventCount int64 `json:"unpriced_event_count" url:"unpriced_event_count"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InferenceModelCostResponseData) GetCosts() []*InferenceCostAmountResponseData {
+	if i == nil {
+		return nil
+	}
+	return i.Costs
+}
+
+func (i *InferenceModelCostResponseData) GetEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.EventCount
+}
+
+func (i *InferenceModelCostResponseData) GetProvider() string {
+	if i == nil {
+		return ""
+	}
+	return i.Provider
+}
+
+func (i *InferenceModelCostResponseData) GetResponseModel() string {
+	if i == nil {
+		return ""
+	}
+	return i.ResponseModel
+}
+
+func (i *InferenceModelCostResponseData) GetUnpricedEventCount() int64 {
+	if i == nil {
+		return 0
+	}
+	return i.UnpricedEventCount
+}
+
+func (i *InferenceModelCostResponseData) GetExtraProperties() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.extraProperties
+}
+
+func (i *InferenceModelCostResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if i.explicitFields != nil {
+		next.Set(i.explicitFields)
+	}
+	next.Or(next, field)
+	i.explicitFields = next
+}
+
+// SetCosts sets the Costs field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetCosts(costs []*InferenceCostAmountResponseData) {
+	i.Costs = costs
+	i.require(inferenceModelCostResponseDataFieldCosts)
+}
+
+// SetEventCount sets the EventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetEventCount(eventCount int64) {
+	i.EventCount = eventCount
+	i.require(inferenceModelCostResponseDataFieldEventCount)
+}
+
+// SetProvider sets the Provider field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetProvider(provider string) {
+	i.Provider = provider
+	i.require(inferenceModelCostResponseDataFieldProvider)
+}
+
+// SetResponseModel sets the ResponseModel field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetResponseModel(responseModel string) {
+	i.ResponseModel = responseModel
+	i.require(inferenceModelCostResponseDataFieldResponseModel)
+}
+
+// SetUnpricedEventCount sets the UnpricedEventCount field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (i *InferenceModelCostResponseData) SetUnpricedEventCount(unpricedEventCount int64) {
+	i.UnpricedEventCount = unpricedEventCount
+	i.require(inferenceModelCostResponseDataFieldUnpricedEventCount)
+}
+
+func (i *InferenceModelCostResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler InferenceModelCostResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InferenceModelCostResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InferenceModelCostResponseData) MarshalJSON() ([]byte, error) {
+	type embed InferenceModelCostResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*i),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, i.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (i *InferenceModelCostResponseData) String() string {
+	if i == nil {
+		return "<nil>"
+	}
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+var (
 	integrationResponseDataFieldCreatedAt = big.NewInt(1 << 0)
 	integrationResponseDataFieldID        = big.NewInt(1 << 1)
 	integrationResponseDataFieldState     = big.NewInt(1 << 2)
@@ -29306,6 +29735,7 @@ const (
 	IntegrationTypeStripe    IntegrationType = "stripe"
 	IntegrationTypeUnknown   IntegrationType = "unknown"
 	IntegrationTypeWorkos    IntegrationType = "workos"
+	IntegrationTypeZuora     IntegrationType = "zuora"
 )
 
 func NewIntegrationTypeFromString(s string) (IntegrationType, error) {
@@ -29322,6 +29752,8 @@ func NewIntegrationTypeFromString(s string) (IntegrationType, error) {
 		return IntegrationTypeUnknown, nil
 	case "workos":
 		return IntegrationTypeWorkos, nil
+	case "zuora":
+		return IntegrationTypeZuora, nil
 	}
 	var t IntegrationType
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -35150,33 +35582,36 @@ func (p PlanVersionMigrationStrategy) Ptr() *PlanVersionMigrationStrategy {
 }
 
 var (
-	planVersionResponseDataFieldCreatedAt      = big.NewInt(1 << 0)
-	planVersionResponseDataFieldDescription    = big.NewInt(1 << 1)
-	planVersionResponseDataFieldEnvironmentID  = big.NewInt(1 << 2)
-	planVersionResponseDataFieldIcon           = big.NewInt(1 << 3)
-	planVersionResponseDataFieldID             = big.NewInt(1 << 4)
-	planVersionResponseDataFieldName           = big.NewInt(1 << 5)
-	planVersionResponseDataFieldOriginalPlanID = big.NewInt(1 << 6)
-	planVersionResponseDataFieldPlanType       = big.NewInt(1 << 7)
-	planVersionResponseDataFieldRenewalPolicy  = big.NewInt(1 << 8)
-	planVersionResponseDataFieldStatus         = big.NewInt(1 << 9)
-	planVersionResponseDataFieldUpdatedAt      = big.NewInt(1 << 10)
-	planVersionResponseDataFieldVersion        = big.NewInt(1 << 11)
+	planVersionResponseDataFieldCreatedAt          = big.NewInt(1 << 0)
+	planVersionResponseDataFieldDescription        = big.NewInt(1 << 1)
+	planVersionResponseDataFieldEnvironmentID      = big.NewInt(1 << 2)
+	planVersionResponseDataFieldIcon               = big.NewInt(1 << 3)
+	planVersionResponseDataFieldID                 = big.NewInt(1 << 4)
+	planVersionResponseDataFieldName               = big.NewInt(1 << 5)
+	planVersionResponseDataFieldOriginalPlanID     = big.NewInt(1 << 6)
+	planVersionResponseDataFieldPlanType           = big.NewInt(1 << 7)
+	planVersionResponseDataFieldRenewalDestination = big.NewInt(1 << 8)
+	planVersionResponseDataFieldRenewalPolicy      = big.NewInt(1 << 9)
+	planVersionResponseDataFieldStatus             = big.NewInt(1 << 10)
+	planVersionResponseDataFieldUpdatedAt          = big.NewInt(1 << 11)
+	planVersionResponseDataFieldVersion            = big.NewInt(1 << 12)
 )
 
 type PlanVersionResponseData struct {
-	CreatedAt      time.Time         `json:"created_at" url:"created_at"`
-	Description    string            `json:"description" url:"description"`
-	EnvironmentID  string            `json:"environment_id" url:"environment_id"`
-	Icon           PlanIcon          `json:"icon" url:"icon"`
-	ID             string            `json:"id" url:"id"`
-	Name           string            `json:"name" url:"name"`
-	OriginalPlanID *string           `json:"original_plan_id,omitempty" url:"original_plan_id,omitempty"`
-	PlanType       PlanType          `json:"plan_type" url:"plan_type"`
-	RenewalPolicy  RenewalPolicy     `json:"renewal_policy" url:"renewal_policy"`
-	Status         PlanVersionStatus `json:"status" url:"status"`
-	UpdatedAt      time.Time         `json:"updated_at" url:"updated_at"`
-	Version        int64             `json:"version" url:"version"`
+	CreatedAt      time.Time `json:"created_at" url:"created_at"`
+	Description    string    `json:"description" url:"description"`
+	EnvironmentID  string    `json:"environment_id" url:"environment_id"`
+	Icon           PlanIcon  `json:"icon" url:"icon"`
+	ID             string    `json:"id" url:"id"`
+	Name           string    `json:"name" url:"name"`
+	OriginalPlanID *string   `json:"original_plan_id,omitempty" url:"original_plan_id,omitempty"`
+	PlanType       PlanType  `json:"plan_type" url:"plan_type"`
+	// Where the company moves at term end when renewal_policy is migrate_to_plan. Null for any other policy.
+	RenewalDestination *RenewalDestinationResponseData `json:"renewal_destination,omitempty" url:"renewal_destination,omitempty"`
+	RenewalPolicy      RenewalPolicy                   `json:"renewal_policy" url:"renewal_policy"`
+	Status             PlanVersionStatus               `json:"status" url:"status"`
+	UpdatedAt          time.Time                       `json:"updated_at" url:"updated_at"`
+	Version            int64                           `json:"version" url:"version"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -35239,6 +35674,13 @@ func (p *PlanVersionResponseData) GetPlanType() PlanType {
 		return ""
 	}
 	return p.PlanType
+}
+
+func (p *PlanVersionResponseData) GetRenewalDestination() *RenewalDestinationResponseData {
+	if p == nil {
+		return nil
+	}
+	return p.RenewalDestination
 }
 
 func (p *PlanVersionResponseData) GetRenewalPolicy() RenewalPolicy {
@@ -35339,6 +35781,13 @@ func (p *PlanVersionResponseData) SetOriginalPlanID(originalPlanID *string) {
 func (p *PlanVersionResponseData) SetPlanType(planType PlanType) {
 	p.PlanType = planType
 	p.require(planVersionResponseDataFieldPlanType)
+}
+
+// SetRenewalDestination sets the RenewalDestination field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (p *PlanVersionResponseData) SetRenewalDestination(renewalDestination *RenewalDestinationResponseData) {
+	p.RenewalDestination = renewalDestination
+	p.require(planVersionResponseDataFieldRenewalDestination)
 }
 
 // SetRenewalPolicy sets the RenewalPolicy field and marks it as non-optional;
@@ -35738,12 +36187,115 @@ func (p ProrationBehavior) Ptr() *ProrationBehavior {
 	return &p
 }
 
+var (
+	renewalDestinationResponseDataFieldBillingPeriod = big.NewInt(1 << 0)
+	renewalDestinationResponseDataFieldPlanID        = big.NewInt(1 << 1)
+)
+
+type RenewalDestinationResponseData struct {
+	BillingPeriod PlanPriceCadence `json:"billing_period" url:"billing_period"`
+	PlanID        string           `json:"plan_id" url:"plan_id"`
+
+	// Private bitmask of fields set to an explicit value and therefore not to be omitted
+	explicitFields *big.Int `json:"-" url:"-"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RenewalDestinationResponseData) GetBillingPeriod() PlanPriceCadence {
+	if r == nil {
+		return ""
+	}
+	return r.BillingPeriod
+}
+
+func (r *RenewalDestinationResponseData) GetPlanID() string {
+	if r == nil {
+		return ""
+	}
+	return r.PlanID
+}
+
+func (r *RenewalDestinationResponseData) GetExtraProperties() map[string]interface{} {
+	if r == nil {
+		return nil
+	}
+	return r.extraProperties
+}
+
+func (r *RenewalDestinationResponseData) require(field *big.Int) {
+	next := new(big.Int)
+	if r.explicitFields != nil {
+		next.Set(r.explicitFields)
+	}
+	next.Or(next, field)
+	r.explicitFields = next
+}
+
+// SetBillingPeriod sets the BillingPeriod field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RenewalDestinationResponseData) SetBillingPeriod(billingPeriod PlanPriceCadence) {
+	r.BillingPeriod = billingPeriod
+	r.require(renewalDestinationResponseDataFieldBillingPeriod)
+}
+
+// SetPlanID sets the PlanID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (r *RenewalDestinationResponseData) SetPlanID(planID string) {
+	r.PlanID = planID
+	r.require(renewalDestinationResponseDataFieldPlanID)
+}
+
+func (r *RenewalDestinationResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler RenewalDestinationResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RenewalDestinationResponseData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RenewalDestinationResponseData) MarshalJSON() ([]byte, error) {
+	type embed RenewalDestinationResponseData
+	var marshaler = struct {
+		embed
+	}{
+		embed: embed(*r),
+	}
+	explicitMarshaler := internal.HandleExplicitFields(marshaler, r.explicitFields)
+	return json.Marshal(explicitMarshaler)
+}
+
+func (r *RenewalDestinationResponseData) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
 type RenewalPolicy string
 
 const (
 	RenewalPolicyAutoRenew       RenewalPolicy = "auto_renew"
 	RenewalPolicyExpireToDefault RenewalPolicy = "expire_to_default"
 	RenewalPolicyHoldWithGrace   RenewalPolicy = "hold_with_grace"
+	RenewalPolicyMigrateToPlan   RenewalPolicy = "migrate_to_plan"
 )
 
 func NewRenewalPolicyFromString(s string) (RenewalPolicy, error) {
@@ -35754,6 +36306,8 @@ func NewRenewalPolicyFromString(s string) (RenewalPolicy, error) {
 		return RenewalPolicyExpireToDefault, nil
 	case "hold_with_grace":
 		return RenewalPolicyHoldWithGrace, nil
+	case "migrate_to_plan":
+		return RenewalPolicyMigrateToPlan, nil
 	}
 	var t RenewalPolicy
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -42164,6 +42718,7 @@ var (
 	temporaryAccessTokenResponseDataFieldIssuerType    = big.NewInt(1 << 5)
 	temporaryAccessTokenResponseDataFieldResourceType  = big.NewInt(1 << 6)
 	temporaryAccessTokenResponseDataFieldUpdatedAt     = big.NewInt(1 << 7)
+	temporaryAccessTokenResponseDataFieldUserID        = big.NewInt(1 << 8)
 )
 
 type TemporaryAccessTokenResponseData struct {
@@ -42175,6 +42730,8 @@ type TemporaryAccessTokenResponseData struct {
 	IssuerType    TemporaryAccessTokenIssuerType   `json:"issuer_type" url:"issuer_type"`
 	ResourceType  TemporaryAccessTokenResourceType `json:"resource_type" url:"resource_type"`
 	UpdatedAt     time.Time                        `json:"updated_at" url:"updated_at"`
+	// The user the token was issued for, when the request named one in user_lookup.
+	UserID *string `json:"user_id,omitempty" url:"user_id,omitempty"`
 
 	// Private bitmask of fields set to an explicit value and therefore not to be omitted
 	explicitFields *big.Int `json:"-" url:"-"`
@@ -42230,6 +42787,13 @@ func (t *TemporaryAccessTokenResponseData) GetUpdatedAt() time.Time {
 		return time.Time{}
 	}
 	return t.UpdatedAt
+}
+
+func (t *TemporaryAccessTokenResponseData) GetUserID() *string {
+	if t == nil {
+		return nil
+	}
+	return t.UserID
 }
 
 func (t *TemporaryAccessTokenResponseData) GetExtraProperties() map[string]interface{} {
@@ -42302,6 +42866,13 @@ func (t *TemporaryAccessTokenResponseData) SetResourceType(resourceType Temporar
 func (t *TemporaryAccessTokenResponseData) SetUpdatedAt(updatedAt time.Time) {
 	t.UpdatedAt = updatedAt
 	t.require(temporaryAccessTokenResponseDataFieldUpdatedAt)
+}
+
+// SetUserID sets the UserID field and marks it as non-optional;
+// this prevents an empty or null value for this field from being omitted during serialization.
+func (t *TemporaryAccessTokenResponseData) SetUserID(userID *string) {
+	t.UserID = userID
+	t.require(temporaryAccessTokenResponseDataFieldUserID)
 }
 
 func (t *TemporaryAccessTokenResponseData) UnmarshalJSON(data []byte) error {
@@ -44309,7 +44880,7 @@ type UsageBasedEntitlementRequestBody struct {
 	MonthlyPriceTiers       []*CreatePriceTierRequestBody `json:"monthly_price_tiers,omitempty" url:"monthly_price_tiers,omitempty"`
 	MonthlyUnitPrice        *int64                        `json:"monthly_unit_price,omitempty" url:"monthly_unit_price,omitempty"`
 	MonthlyUnitPriceDecimal *string                       `json:"monthly_unit_price_decimal,omitempty" url:"monthly_unit_price_decimal,omitempty"`
-	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
+	// How often overage charges are assessed and invoiced. Defaults to end_of_billing_period, where the billing provider aggregates usage over the subscription's own period and bills it at period end. A monthly allowance on a plan with a quarterly or yearly price is billed monthly instead, because the provider would apply one allowance to the whole period; an allowance that resets daily or weekly is refused when Stripe bills the overage. Set to monthly or quarterly to have overage assessed each month or quarter and billed on its own invoice, which is the point of the setting on annual plans. A quarter charges each month's usage against that month's allowance. Only applies to overage price behavior.
 	OverageBillingCadence   *BillingArrearsCadence `json:"overage_billing_cadence,omitempty" url:"overage_billing_cadence,omitempty"`
 	OverageBillingProductID *string                `json:"overage_billing_product_id,omitempty" url:"overage_billing_product_id,omitempty"`
 	// Which boundary closes a monthly or quarterly overage window: the subscription's own recurrence (billing_period_start) or the calendar month (month_end). Quarterly windows run in three-month blocks from the billing period start, held to the subscription's own period, or in calendar quarters at month_end. Only applies when overage_billing_cadence is monthly or quarterly, and must match metric_period_month_reset so each window closes when the allowance resets: billing_period_start for billing_cycle, month_end for first_of_month. Defaults to the anchor that matches the reset.

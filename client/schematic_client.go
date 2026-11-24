@@ -147,6 +147,33 @@ func (c *SchematicClient) useDataStreamCache() bool {
 	return c.useDataStream() && c.datastreamClient.IsCacheReady()
 }
 
+// IsReady reports whether the client can serve flag checks, for use in a
+// readiness probe. In offline mode it returns true, since flag checks serve
+// defaults. When flag checks are served from the datastream cache it returns
+// true without a network call. Otherwise flag checks go to the API, and it
+// returns whether a whoami request with the caller's ctx succeeds. In that
+// mode each call makes one network request, so call it from a probe rather
+// than on every request. It returns false on any error.
+func (c *SchematicClient) IsReady(ctx context.Context) (ready bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			c.logger.Error(ctx, "Panic occurred while checking readiness %v", r)
+			ready = false
+		}
+	}()
+
+	if c.isOffline {
+		return true
+	}
+
+	if c.useDataStreamCache() {
+		return true
+	}
+
+	_, err := c.Accounts.GetWhoAmI(ctx)
+	return err == nil
+}
+
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	ctx, span := c.startSpan(ctx, "Schematic.CheckFlag")
 	defer span.End()

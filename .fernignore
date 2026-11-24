@@ -36,6 +36,7 @@ client/conversion_test.go
 client/event_options.go
 client/schematic_client.go
 client/schematic_client_test.go
+client/ready_test.go
 client/replicator_cache_ready_test.go
 client/logger_config_test.go
 client/tracing.go

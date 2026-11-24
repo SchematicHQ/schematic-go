@@ -426,6 +426,20 @@ func main() {
 
 Results are returned in the same order as the requested keys. When any requested key is a cache miss, `CheckFlags` refreshes the full set from the API so every returned value comes from a consistent evaluation. If DataStream is enabled and connected, keys are evaluated locally — any failure causes a transparent fallback to the API. In offline mode, each key resolves to its configured default.
 
+### Checking readiness
+
+`IsReady` reports whether the client can serve flag checks, for example from a Kubernetes readiness probe:
+
+```go
+http.HandleFunc("/ready", func(w http.ResponseWriter, r *http.Request) {
+  if !client.IsReady(r.Context()) {
+    w.WriteHeader(http.StatusServiceUnavailable)
+  }
+})
+```
+
+In offline mode it returns true. When flag checks are served from the DataStream cache it returns true without a network call. Otherwise it calls the API's whoami endpoint, which checks the API key, so call it from a probe rather than on every request. It returns false on any error.
+
 ### Other API operations
 
 The Schematic API supports many operations beyond these, accessible via `client.API()`. See the [API reference](https://github.com/SchematicHQ/schematic-go/blob/main/reference.md) for a full list and documentation of supported operations.

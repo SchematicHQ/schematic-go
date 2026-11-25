@@ -426,6 +426,22 @@ func main() {
 
 Results are returned in the same order as the requested keys. When any requested key is a cache miss, `CheckFlags` refreshes the full set from the API so every returned value comes from a consistent evaluation. If DataStream is enabled and connected, keys are evaluated locally — any failure causes a transparent fallback to the API. In offline mode, each key resolves to its configured default.
 
+### Checking readiness
+
+`IsReady` reports whether the client has started and can serve flag checks. Use it as a start-up gate, or as a Kubernetes `startupProbe`:
+
+```go
+http.HandleFunc("/startup", func(w http.ResponseWriter, r *http.Request) {
+  if !client.IsReady(r.Context()) {
+    w.WriteHeader(http.StatusServiceUnavailable)
+  }
+})
+```
+
+In offline mode it returns true. When DataStream is enabled and has loaded its flags (in replicator mode, when the replicator reports ready), it returns true without a network call. Otherwise it calls the API's whoami endpoint, which checks the API key, with no retries and a 5-second timeout (or your context's deadline, if sooner), so set the probe's `timeoutSeconds` above 5. It returns false on any error.
+
+Don't use it for a liveness probe or an ongoing readiness probe. It can depend on Schematic's API, so an API outage would take every pod out of service, while flag checks would have kept serving defaults or cached values.
+
 ### Other API operations
 
 The Schematic API supports many operations beyond these, accessible via `client.API()`. See the [API reference](https://github.com/SchematicHQ/schematic-go/blob/main/reference.md) for a full list and documentation of supported operations.

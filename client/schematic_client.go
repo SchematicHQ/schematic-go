@@ -147,6 +147,40 @@ func (c *SchematicClient) useDataStreamCache() bool {
 	return c.useDataStream() && c.datastreamClient.IsCacheReady()
 }
 
+const readinessTimeout = 5 * time.Second
+
+// IsReady reports whether the client can serve flag checks. Use it as a
+// start-up gate or a Kubernetes startupProbe with timeoutSeconds above 5.
+// Don't use it for liveness or ongoing readiness: it can depend on
+// Schematic's API, and an outage would pull every pod while flag checks keep
+// serving defaults or cached values.
+//
+// Offline mode returns true. A datastream that has loaded its flags returns
+// true without a network call. Otherwise it makes one whoami request, with no
+// retries and a 5-second timeout. It returns false on any error.
+func (c *SchematicClient) IsReady(ctx context.Context) (ready bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while checking readiness: %v", r))
+			ready = false
+		}
+	}()
+
+	if c.isOffline {
+		return true
+	}
+
+	if c.useDataStreamCache() && c.datastreamClient.IsReady() {
+		return true
+	}
+
+	ctx, cancel := context.WithTimeout(ctx, readinessTimeout)
+	defer cancel()
+
+	_, err := c.Accounts.GetWhoAmI(ctx, option.WithoutRetries())
+	return err == nil
+}
+
 func (c *SchematicClient) CheckFlag(ctx context.Context, evalCtx *schematicgo.CheckFlagRequestBody, flagKey string) bool {
 	ctx, span := c.startSpan(ctx, "Schematic.CheckFlag")
 	defer span.End()

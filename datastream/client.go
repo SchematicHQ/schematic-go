@@ -204,6 +204,19 @@ func (c *DataStreamClient) IsConnected() bool {
 	return c.wsClient.IsConnected()
 }
 
+// IsReady reports whether the datastream has loaded its flags: in replicator
+// mode, the replicator's readiness; otherwise, a connected WebSocket whose
+// initial flag load has finished.
+func (c *DataStreamClient) IsReady() bool {
+	if c.replicatorMode {
+		return c.IsReplicatorReady()
+	}
+	if c.wsClient == nil {
+		return false
+	}
+	return c.wsClient.IsReady()
+}
+
 // IsCacheReady reports whether flag checks may be evaluated from the cache.
 //
 // In replicator mode this is the readiness from the replicator's last answer

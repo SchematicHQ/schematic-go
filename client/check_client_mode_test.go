@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -122,6 +123,7 @@ func datastreamMessage(entityType schematicdatastreamws.EntityType, payload any)
 type dataStreamFixture struct {
 	pushFlags    bool
 	serveCompany bool
+	connections  *atomic.Int32
 }
 
 // startDataStreamServer stands in for the DataStream: it pushes the credit flag
@@ -135,6 +137,9 @@ func startDataStreamServer(t *testing.T, fixture dataStreamFixture) *httptest.Se
 			return
 		}
 		defer func() { _ = conn.Close() }()
+		if fixture.connections != nil {
+			fixture.connections.Add(1)
+		}
 
 		if fixture.pushFlags {
 			if err := conn.WriteMessage(websocket.TextMessage, []byte(datastreamMessage(

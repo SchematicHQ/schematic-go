@@ -428,17 +428,19 @@ Results are returned in the same order as the requested keys. When any requested
 
 ### Checking readiness
 
-`IsReady` reports whether the client can serve flag checks, for example from a Kubernetes readiness probe:
+`IsReady` reports whether the client has started and can serve flag checks. Use it as a start-up gate, or as a Kubernetes `startupProbe`:
 
 ```go
-http.HandleFunc("/ready", func(w http.ResponseWriter, r *http.Request) {
+http.HandleFunc("/startup", func(w http.ResponseWriter, r *http.Request) {
   if !client.IsReady(r.Context()) {
     w.WriteHeader(http.StatusServiceUnavailable)
   }
 })
 ```
 
-In offline mode it returns true. When flag checks are served from the DataStream cache and DataStream is connected, it returns true without a network call. Otherwise it calls the API's whoami endpoint, which checks the API key, with no retries and a 5-second timeout (or your context's deadline, if sooner). Call it from a probe rather than on every request. It returns false on any error.
+In offline mode it returns true. When DataStream is enabled and has loaded its flags (in replicator mode, when the replicator reports ready), it returns true without a network call. Otherwise it calls the API's whoami endpoint, which checks the API key, with no retries and a 5-second timeout (or your context's deadline, if sooner), so set the probe's `timeoutSeconds` above 5. It returns false on any error.
+
+Don't use it for a liveness probe or an ongoing readiness probe. It can depend on Schematic's API, so an API outage would take every pod out of service, while flag checks would have kept serving defaults or cached values.
 
 ### Other API operations
 

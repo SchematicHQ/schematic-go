@@ -149,18 +149,19 @@ func (c *SchematicClient) useDataStreamCache() bool {
 
 const readinessTimeout = 5 * time.Second
 
-// IsReady reports whether the client can serve flag checks, for use in a
-// readiness probe. In offline mode it returns true, since flag checks serve
-// defaults. When flag checks are served from the datastream cache and the
-// datastream is connected, it returns true without a network call. Otherwise
-// flag checks go to the API, and it returns whether a whoami request succeeds. That request makes one attempt
-// with no retries and a 5-second timeout, or the caller's ctx deadline if
-// sooner. Since each call in that mode makes a network request, call it from
-// a probe rather than on every request. It returns false on any error.
+// IsReady reports whether the client can serve flag checks. Use it as a
+// start-up gate or a Kubernetes startupProbe with timeoutSeconds above 5.
+// Don't use it for liveness or ongoing readiness: it can depend on
+// Schematic's API, and an outage would pull every pod while flag checks keep
+// serving defaults or cached values.
+//
+// Offline mode returns true. A datastream that has loaded its flags returns
+// true without a network call. Otherwise it makes one whoami request, with no
+// retries and a 5-second timeout. It returns false on any error.
 func (c *SchematicClient) IsReady(ctx context.Context) (ready bool) {
 	defer func() {
 		if r := recover(); r != nil {
-			c.logger.Error(ctx, "Panic occurred while checking readiness %v", r)
+			c.logger.Error(ctx, fmt.Sprintf("Panic occurred while checking readiness: %v", r))
 			ready = false
 		}
 	}()
@@ -169,7 +170,7 @@ func (c *SchematicClient) IsReady(ctx context.Context) (ready bool) {
 		return true
 	}
 
-	if c.useDataStreamCache() && c.datastreamClient.IsConnected() {
+	if c.useDataStreamCache() && c.datastreamClient.IsReady() {
 		return true
 	}
 
